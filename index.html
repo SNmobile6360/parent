@@ -145,10 +145,14 @@
   .dots{display:flex;justify-content:center;gap:13px;margin:24px 0 28px}
   .dot2{width:15px;height:15px;border-radius:50%;background:#DDE3EC;transition:.15s}
   .dot2.f{background:var(--blue);transform:scale(1.12)}
-  .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;max-width:300px;margin:0 auto}
+  /* ⚠️ width:100% 필수 — 세로 flex(.center) 안에서 margin:0 auto 만 쓰면
+        stretch 가 풀려 버튼이 글자 폭(약 31px)으로 쪼그라든다. (실기기에서 발견) */
+  .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+        width:100%;max-width:330px;margin-left:auto;margin-right:auto}
   .key{
-    border:0;background:#fff;border:1.5px solid var(--line);border-radius:15px;
-    padding:17px 0;font-size:23px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--ink);
+    border:0;background:#fff;border:1.5px solid var(--line);border-radius:16px;
+    padding:0;height:62px;font-size:25px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
   }
   .key:active{background:#EEF2F7}
   .key.blank{background:transparent;border:0;cursor:default}
