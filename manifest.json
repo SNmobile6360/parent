@@ -1,0 +1,14 @@
+{
+  "name": "공신폰 관리자",
+  "short_name": "공신폰 관리자",
+  "description": "시내모바일 공신폰 - 부모님용 관리 페이지",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F7FB",
+  "theme_color": "#1B3A8F",
+  "icons": [
+    { "src": "icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>공신폰 관리자</title>
+
+<!-- 아이폰 홈 화면 추가 시 앱처럼 전체화면으로 뜨게 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="공신폰 관리자">
+<meta name="theme-color" content="#1B3A8F">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --navy:#1B3A8F; --navy2:#152D6E; --blue:#2563EB; --orange:#F97316;
+    --ink:#101828; --muted:#667085; --line:#E4E7EC;
+    --bg:#F5F7FB; --card:#fff;
+    --ok:#12B76A; --off:#98A2B3; --danger:#F04438;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-t: env(safe-area-inset-top, 0px);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+    font-size:16px; line-height:1.5; -webkit-text-size-adjust:100%;
+  }
+  .hide{display:none !important}
+
+  /* ── 상단바 ── */
+  .top{
+    position:sticky; top:0; z-index:50;
+    background:linear-gradient(135deg,var(--navy),var(--navy2)); color:#fff;
+    padding:calc(var(--safe-t) + 14px) 16px 14px;
+    display:flex; align-items:center; gap:10px;
+    box-shadow:0 2px 10px rgba(16,24,40,.12);
+  }
+  .top .back{
+    width:34px;height:34px;border-radius:10px;border:0;flex:0 0 auto;
+    background:rgba(255,255,255,.16); color:#fff; font-size:19px; line-height:1; cursor:pointer;
+  }
+  .top h1{font-size:17px;font-weight:800;margin:0;flex:1;letter-spacing:-.02em}
+  .top .sub{font-size:12px;opacity:.85;font-weight:600}
+
+  .wrap{padding:14px 14px calc(var(--safe-b) + 24px); max-width:640px; margin:0 auto}
+
+  /* ── 카드 ── */
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:16px; margin-bottom:12px; box-shadow:0 1px 3px rgba(16,24,40,.05);
+  }
+  .card.tap{cursor:pointer}
+  .card.tap:active{background:#F9FAFB}
+  .row{display:flex; align-items:center; gap:12px}
+  .row .grow{flex:1; min-width:0}
+  .ttl{font-size:15px;font-weight:800;letter-spacing:-.01em}
+  .val{font-size:14px;color:var(--muted);margin-top:3px}
+  .chev{color:#C4C9D4;font-size:20px;flex:0 0 auto}
+  .ic{
+    width:42px;height:42px;border-radius:12px;flex:0 0 auto;
+    display:flex;align-items:center;justify-content:center;font-size:21px;background:#EEF2FF;
+  }
+
+  .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:800}
+  .b-on{background:#E7F8F0;color:#067647;border:1px solid #A9EFC5}
+  .b-off{background:#F2F4F7;color:#667085;border:1px solid #E4E7EC}
+
+  /* ── 사용량 히어로 ── */
+  .hero{
+    background:linear-gradient(135deg,var(--blue),var(--navy)); color:#fff;
+    border-radius:18px; padding:18px; margin-bottom:12px;
+  }
+  .hero .lbl{font-size:13px;opacity:.9;font-weight:700}
+  .hero .big{font-size:34px;font-weight:900;letter-spacing:-.03em;margin:6px 0 2px}
+  .hero .meta{font-size:12.5px;opacity:.85}
+  .hero .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+
+  /* ── 버튼 ── */
+  .btn{
+    width:100%; border:0; border-radius:13px; padding:15px;
+    font-size:16px; font-weight:800; cursor:pointer; font-family:inherit;
+  }
+  .btn-p{background:var(--blue);color:#fff}
+  .btn-g{background:#EEF2F7;color:var(--ink)}
+  .btn-d{background:#FEF3F2;color:var(--danger)}
+  .btn:active{opacity:.85}
+  .btn+.btn{margin-top:9px}
+  .btn:disabled{opacity:.5}
+
+  input,select{
+    width:100%; padding:14px; border:1.5px solid var(--line); border-radius:12px;
+    font-size:16px; font-family:inherit; background:#fff; color:var(--ink);
+  }
+  input:focus,select:focus{outline:0;border-color:var(--blue)}
+  label{display:block;font-size:13px;font-weight:800;margin:0 0 6px;color:#344054}
+  .field{margin-bottom:13px}
+
+  .sec{font-size:12.5px;font-weight:800;color:var(--muted);margin:18px 4px 8px;letter-spacing:.02em}
+
+  /* ── 요일 편집 ── */
+  .dayrow{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #F2F4F7}
+  .dayrow:last-child{border-bottom:0}
+  .dayname{width:34px;font-weight:800;font-size:15px;flex:0 0 auto}
+  .dayname.sun{color:#F04438} .dayname.sat{color:#2563EB}
+  .dayrow input,.dayrow select{padding:10px;font-size:15px}
+
+  /* ── 목록 ── */
+  .list{max-height:none}
+  .item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #F2F4F7}
+  .item:last-child{border-bottom:0}
+  .item .nm{flex:1;min-width:0;font-size:14.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .item .sm{font-size:12px;color:var(--muted);font-weight:500}
+  .x{border:0;background:#FEF3F2;color:var(--danger);border-radius:9px;padding:8px 12px;font-size:13px;font-weight:800;cursor:pointer;flex:0 0 auto}
+  .add{border:0;background:#EFF6FF;color:var(--blue);border-radius:9px;padding:8px 13px;font-size:13px;font-weight:800;cursor:pointer;flex:0 0 auto}
+
+  .empty{text-align:center;color:var(--muted);font-size:14px;padding:26px 10px}
+
+  /* ── 토스트 ── */
+  #toast{
+    position:fixed; left:50%; bottom:calc(var(--safe-b) + 26px); transform:translateX(-50%);
+    background:#101828; color:#fff; padding:13px 20px; border-radius:12px;
+    font-size:14.5px; font-weight:700; z-index:200; max-width:88%; text-align:center;
+    opacity:0; pointer-events:none; transition:opacity .2s;
+  }
+  #toast.on{opacity:1}
+
+  /* ── 로딩 ── */
+  #load{position:fixed;inset:0;background:rgba(255,255,255,.75);z-index:150;display:flex;align-items:center;justify-content:center}
+  .spin{width:38px;height:38px;border:4px solid #E4E7EC;border-top-color:var(--blue);border-radius:50%;animation:sp .8s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  /* ── 로그인/연결 화면 ── */
+  .center{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:24px 20px calc(var(--safe-b) + 24px)}
+  .logo{text-align:center;margin-bottom:26px}
+  .logo .mark{font-size:52px;line-height:1}
+  .logo h2{font-size:23px;font-weight:900;margin:10px 0 4px;letter-spacing:-.03em}
+  .logo p{font-size:14px;color:var(--muted);margin:0}
+
+  /* ── PIN ── */
+  .dots{display:flex;justify-content:center;gap:13px;margin:24px 0 28px}
+  .dot2{width:15px;height:15px;border-radius:50%;background:#DDE3EC;transition:.15s}
+  .dot2.f{background:var(--blue);transform:scale(1.12)}
+  .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;max-width:300px;margin:0 auto}
+  .key{
+    border:0;background:#fff;border:1.5px solid var(--line);border-radius:15px;
+    padding:17px 0;font-size:23px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--ink);
+  }
+  .key:active{background:#EEF2F7}
+  .key.blank{background:transparent;border:0;cursor:default}
+
+  /* ── 안내 박스 ── */
+  .note{background:#EFF6FF;border:1px solid #BFD9FF;border-radius:13px;padding:13px 14px;font-size:13.5px;color:#1D4ED8;margin-bottom:12px;font-weight:600}
+  .note.warn{background:#FFFBEB;border-color:#FDE68A;color:#92400E}
+</style>
+</head>
+<body>
+
+<div id="load" class="hide"><div class="spin"></div></div>
+<div id="toast"></div>
+
+<!-- ══════════ 1. 자녀 연결 ══════════ -->
+<div id="scConnect" class="center">
+  <div class="logo">
+    <div class="mark">📱</div>
+    <h2>공신폰 관리자</h2>
+    <p>자녀폰을 연결해 주세요</p>
+  </div>
+  <div class="note">
+    자녀폰 화면에 표시된 <b>8자리 코드</b>를 입력하세요.<br>예) ABCD-1234
+  </div>
+  <div class="field">
+    <label>자녀폰 코드</label>
+    <input id="inCode" type="text" placeholder="ABCD-1234" autocomplete="off"
+           autocapitalize="characters" spellcheck="false" maxlength="9">
+  </div>
+  <button class="btn btn-p" onclick="doConnect()">연결하기</button>
+</div>
+
+<!-- ══════════ 2. PIN ══════════ -->
+<div id="scPin" class="center hide">
+  <div class="logo">
+    <div class="mark">🔒</div>
+    <h2>공신폰 관리자</h2>
+    <p id="pinMsg">비밀번호를 입력하세요</p>
+  </div>
+  <div class="dots">
+    <div class="dot2"></div><div class="dot2"></div><div class="dot2"></div>
+    <div class="dot2"></div><div class="dot2"></div><div class="dot2"></div>
+  </div>
+  <div class="keys">
+    <button class="key" onclick="pinTap('1')">1</button>
+    <button class="key" onclick="pinTap('2')">2</button>
+    <button class="key" onclick="pinTap('3')">3</button>
+    <button class="key" onclick="pinTap('4')">4</button>
+    <button class="key" onclick="pinTap('5')">5</button>
+    <button class="key" onclick="pinTap('6')">6</button>
+    <button class="key" onclick="pinTap('7')">7</button>
+    <button class="key" onclick="pinTap('8')">8</button>
+    <button class="key" onclick="pinTap('9')">9</button>
+    <button class="key blank"></button>
+    <button class="key" onclick="pinTap('0')">0</button>
+    <button class="key" onclick="pinDel()">⌫</button>
+  </div>
+</div>
+
+<!-- ══════════ 3. 메인 ══════════ -->
+<div id="scMain" class="hide">
+  <div class="top">
+    <h1 id="mTitle">공신폰 관리자</h1>
+    <div class="sub" id="mSub"></div>
+  </div>
+  <div class="wrap">
+    <div class="hero" onclick="openHistory()" style="cursor:pointer">
+      <div class="lbl">오늘 사용시간</div>
+      <div class="big" id="hUse">-</div>
+      <div style="font-size:11.5px;opacity:.75;margin-top:6px">눌러서 최근 7일 기록 보기 ›</div>
+      <div class="meta">
+        <span class="dot" id="hDot" style="background:#98A2B3"></span>
+        <span id="hStat">-</span> · <span id="hCode">-</span>
+      </div>
+    </div>
+
+    <div class="sec">시간 관리</div>
+    <div class="card tap" onclick="openLimit()">
+      <div class="row">
+        <div class="ic">⏱️</div>
+        <div class="grow"><div class="ttl">하루 사용시간 한도</div><div class="val" id="vLimit">-</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
+    <div class="card tap" onclick="openDt()">
+      <div class="row">
+        <div class="ic" style="background:#F3E8FF">🌙</div>
+        <div class="grow"><div class="ttl">다운타임 (취침시간)</div><div class="val" id="vDt">-</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
+
+    <div class="sec">인터넷 · 앱</div>
+    <div class="card tap" onclick="openReq()">
+      <div class="row">
+        <div class="ic" style="background:#FFF7ED">🙋</div>
+        <div class="grow"><div class="ttl">자녀의 사이트 접속 요청</div><div class="val" id="vReq">-</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
+    <div class="card tap" onclick="openAllow()">
+      <div class="row">
+        <div class="ic" style="background:#ECFDF3">🌐</div>
+        <div class="grow"><div class="ttl">허용 사이트 관리</div><div class="val" id="vAllow">-</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
+    <div class="card tap" onclick="openApps()">
+      <div class="row">
+        <div class="ic" style="background:#FEF3F2">📵</div>
+        <div class="grow"><div class="ttl">앱 차단 · 앱별 시간</div><div class="val" id="vApps">-</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
+
+    <div class="sec">앱 보호</div>
+    <div class="card tap" onclick="openUninstall()">
+      <div class="row"><div class="ic" style="background:#FFF1F3">🛡️</div>
+        <div class="grow"><div class="ttl">앱 삭제 방지</div><div class="val" id="vUninst">-</div></div><div class="chev">›</div></div>
+    </div>
+    <div class="card tap" onclick="openPinLock()">
+      <div class="row"><div class="ic" style="background:#F0F9FF">🔑</div>
+        <div class="grow"><div class="ttl">앱 PIN 잠금</div><div class="val" id="vPinLock">-</div></div><div class="chev">›</div></div>
+    </div>
+    <div class="card tap" onclick="openIgnoreDt()">
+      <div class="row"><div class="ic" style="background:#F5F3FF">🌙</div>
+        <div class="grow"><div class="ttl">다운타임 허용 앱</div><div class="val" id="vIgnoreDt">-</div></div><div class="chev">›</div></div>
+    </div>
+
+    <div class="sec">안전 · 보안</div>
+    <div class="card tap" onclick="openSos()">
+      <div class="row"><div class="ic" style="background:#FEF2F2">🆘</div>
+        <div class="grow"><div class="ttl">긴급 연락처 (SOS)</div><div class="val" id="vSos">-</div></div><div class="chev">›</div></div>
+    </div>
+    <div class="card tap" onclick="openSecurity()">
+      <div class="row"><div class="ic" style="background:#F0FDF4">🔐</div>
+        <div class="grow"><div class="ttl">보안 설정</div><div class="val" id="vSecurity">-</div></div><div class="chev">›</div></div>
+    </div>
+
+    <div class="sec">기타</div>
+    <div class="card tap" onclick="refreshAll(true)">
+      <div class="row">
+        <div class="ic" style="background:#F2F4F7">🔄</div>
+        <div class="grow"><div class="ttl">새로고침</div><div class="val" id="vSync">최신 정보 다시 불러오기</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
+    <div class="card tap" onclick="openPinChange()">
+      <div class="row"><div class="ic" style="background:#F2F4F7">🔢</div>
+        <div class="grow"><div class="ttl">비밀번호 변경</div><div class="val">부모님 확인용 6자리 비밀번호</div></div><div class="chev">›</div></div>
+    </div>
+    <div class="card tap" onclick="doLogout()">
+      <div class="row">
+        <div class="ic" style="background:#F2F4F7">🚪</div>
+        <div class="grow"><div class="ttl">연결 해제</div><div class="val">다른 자녀폰으로 바꾸기</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
+
+    <div id="iosTip" class="note hide" style="margin-top:16px">
+      💡 <b>홈 화면에 추가하면 앱처럼 쓸 수 있어요</b><br>
+      아래 <b>공유 버튼</b>(⬆️) → <b>홈 화면에 추가</b>를 누르세요.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 4. 서브 화면 ══════════ -->
+<div id="scSub" class="hide">
+  <div class="top">
+    <button class="back" onclick="closeSub()">‹</button>
+    <h1 id="sTitle">설정</h1>
+  </div>
+  <div class="wrap" id="sBody"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  시내모바일 부모용 웹앱  (아이폰 / 갤럭시 공용)
+//
+//  ⚠️ 안드로이드 부모앱(ChildDashboardActivity)과 저장 형식을 100% 맞춘다.
+//     형식이 다르면 자녀폰이 정책을 잘못 해석한다.
+//
+//   rule_<pkg> 형식
+//     제한 없음   : "0||0"                                   + whitelist 제거 + blocked 제거
+//     시간 무제한 : "0||0"                                   + whitelist 추가 + blocked 제거
+//     즉시 차단   : "2|일:0,월:0,화:0,수:0,목:0,금:0,토:0"      + blocked 추가  + whitelist 제거
+//     요일별 시간 : "2|일:N,월:N,…"   (-1 = 그 요일 무제한)
+//
+//   limit_day_1~7 : 1=일 … 7=토,  -1=무제한, 0=차단, N=분
+//   dt_day_1~7    : "HH:MM|HH:MM" 또는 "미설정"
+// ══════════════════════════════════════════════════════════
+const SERVERS = [
+  { label:'A', url:'https://ngdaggjxchjswiopbkbq.supabase.co', key:'sb_publishable_VO0HKC0R8OSDY_3cqaHXVQ_sOh764Mg' },
+  { label:'B', url:'https://fdptesnbqwpjrhofibin.supabase.co', key:'sb_publishable_Fb2j6ePib88Pr5P8aodTog_hzW0aAbJ' },
+  { label:'C', url:'https://zbfdrntqxbhawopvnasr.supabase.co', key:'sb_publishable_y1tr9s_FIxVJdOZihtfwUQ_BsOuDZw2' },
+  { label:'D', url:'https://wsmdqifdacmvcqalwsyw.supabase.co', key:'sb_publishable_VdExDmRdFC5W0JMTRUvV7w_HZLdP2tj' },
+  { label:'E', url:'https://fqsgutvfgddaempdcgyc.supabase.co', key:'sb_publishable_0CLQsA120LD4Rei7LO9cvA_7rcPvW_g' },
+  { label:'F', url:'https://yugqwxcvfwuxjrsgrpdi.supabase.co', key:'sb_publishable_TcMBJ7XjWNGmVDfx42rKAQ_t_mVGmgs' },
+  { label:'G', url:'https://cdqzokgxtlxsncxqbupx.supabase.co', key:'sb_publishable_LUiqVrMg-39vpD7QfiM9Dw_hNvPClZ-' },
+  { label:'H', url:'https://qiwjuhpyufjjnowvmhzt.supabase.co', key:'sb_publishable_MaqlPqAYlhCLBZj5Xbt0Gg_xf9liWck' },
+  { label:'I', url:'https://qlkfchffprtccnhisudp.supabase.co', key:'sb_publishable_OXJYNVLSedN89hBKlVABcw_5WiTXgsH' },
+  { label:'J', url:'https://wydblpvphhuaoqprcmoj.supabase.co', key:'sb_publishable_xtD35V8vys32qdHA-p2_ag_pEVNQQwY' },
+  { label:'K', url:'https://rrbnteoclxxpxdocedsu.supabase.co', key:'sb_publishable_FUutGhREZbKNzI_uvzc1UQ_syS4NugO' }
+];
+const DEFAULT_PIN = '636074';
+const DAYS  = ['일','월','화','수','목','금','토'];   // limit_day_1=일 … 7=토
+const DORDER = ['일','월','화','수','목','금','토'];  // rule_ 문자열 순서 (부모앱과 동일)
+
+const clients = {};
+function clientFor(label){
+  const s = SERVERS.find(x=>x.label===label) || SERVERS[0];
+  if(!clients[s.label]) clients[s.label] = window.supabase.createClient(s.url, s.key);
+  return clients[s.label];
+}
+
+let ST = { code:'', server:'', name:'', pol:{}, dev:null, usage:null, reqs:[], apps:[] };
+
+const SKEY='sinae_parent_web';
+function save(){ try{ localStorage.setItem(SKEY, JSON.stringify({code:ST.code,server:ST.server,name:ST.name})); }catch(e){} }
+function load(){ try{ return JSON.parse(localStorage.getItem(SKEY)||'null'); }catch(e){ return null; } }
+function wipe(){ try{ localStorage.removeItem(SKEY); }catch(e){} }
+
+// ── UI 유틸 ──
+function show(id){ ['scConnect','scPin','scMain','scSub'].forEach(x=>document.getElementById(x).classList.toggle('hide', x!==id)); window.scrollTo(0,0); }
+function loading(on){ document.getElementById('load').classList.toggle('hide', !on); }
+let toastT;
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),2200); }
+function esc(s){ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtMin(m){ m=Number(m)||0; if(m<60) return m+'분'; const h=Math.floor(m/60),r=m%60; return r?`${h}시간 ${r}분`:`${h}시간`; }
+function fmtSec(s){ s=Number(s)||0; const m=Math.floor(s/60),r=s%60; return m<60?(m>0?`${m}분 ${r}초`:`${r}초`):fmtMin(m); }
+function ago(iso){ if(!iso) return '기록 없음';
+  const t=(iso.endsWith('Z')||iso.includes('+'))?iso:iso+'Z'; const d=(Date.now()-new Date(t))/1000;
+  if(d<60)return'방금'; if(d<3600)return Math.floor(d/60)+'분 전'; if(d<86400)return Math.floor(d/3600)+'시간 전'; return Math.floor(d/86400)+'일 전'; }
+async function sha256(s){ const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+function J(v,d){ try{ const x=JSON.parse(v??''); return Array.isArray(x)?x:d; }catch(e){ return d; } }
+
+// ══════════ 연결 ══════════
+function normCode(v){ v=(v||'').toUpperCase().replace(/[^A-Z0-9]/g,''); return v.length>4? v.slice(0,4)+'-'+v.slice(4,8) : v; }
+document.getElementById('inCode').addEventListener('input', e=>{ e.target.value=normCode(e.target.value); });
+
+async function doConnect(){
+  const code = normCode(document.getElementById('inCode').value);
+  if(code.length!==9){ toast('코드 8자리를 정확히 입력해 주세요'); return; }
+  loading(true);
+  try{
+    let found=null;
+    for(const s of SERVERS){
+      try{
+        const { data } = await clientFor(s.label).from('child_devices')
+          .select('device_code, child_name, last_seen_at').eq('device_code', code).maybeSingle();
+        if(data){ found={server:s.label, dev:data}; break; }
+      }catch(e){}
+    }
+    loading(false);
+    if(!found){ toast('그런 코드의 자녀폰을 찾지 못했습니다'); return; }
+    ST.code=code; ST.server=found.server; ST.name=found.dev.child_name||'자녀'; ST.dev=found.dev;
+    save(); startPin();
+  }catch(e){ loading(false); toast('연결 실패: '+e.message); }
+}
+
+// ══════════ PIN ══════════
+let pinBuf='', pinBusy=false;
+function startPin(){ pinBuf=''; drawPin(); document.getElementById('pinMsg').textContent='비밀번호를 입력하세요'; show('scPin'); }
+function drawPin(){ document.querySelectorAll('#scPin .dot2').forEach((d,i)=>d.classList.toggle('f', i<pinBuf.length)); }
+function pinDel(){ if(pinBusy) return; pinBuf=pinBuf.slice(0,-1); drawPin(); }
+function pinTap(n){ if(pinBusy||pinBuf.length>=6) return; pinBuf+=n; drawPin(); if(pinBuf.length===6) verifyPin(); }
+async function verifyPin(){
+  pinBusy=true; loading(true);
+  try{
+    const h=await sha256(pinBuf);
+    let ok = (h === await sha256(DEFAULT_PIN));
+    if(!ok){
+      const { data } = await clientFor(ST.server).from('policies')
+        .select('key,value').eq('device_code',ST.code).in('key',['pin_hash','operator_pw_hash']);
+      ok=(data||[]).some(r=>r.value===h);
+    }
+    loading(false); pinBusy=false;
+    if(ok){ sessionStorage.setItem('sinae_auth','1'); enterMain(); }
+    else{ pinBuf=''; drawPin(); document.getElementById('pinMsg').textContent='비밀번호가 맞지 않습니다'; toast('비밀번호가 맞지 않습니다'); }
+  }catch(e){ loading(false); pinBusy=false; pinBuf=''; drawPin(); toast('확인 실패: '+e.message); }
+}
+
+// ══════════ 메인 ══════════
+async function enterMain(){ show('scMain'); await reportParentLink(); await refreshAll(false); showIosTip(); }
+
+// ── 전산에 "부모앱 연동됨" 기록 ────────────────────────────
+//   안드로이드 부모앱(ParentSyncManager.reportParentLink)과 같은 3개 키를 쓴다.
+//   버전 문자열만 "웹앱"으로 시작하게 해서, 전산에서 갤럭시앱과 구분된다.
+//     갤럭시 부모앱 → "1.1 8월22일 수정본"
+//     웹앱(아이폰)  → "웹앱 1.0 · 아이폰"  /  "웹앱 1.0 · 갤럭시"
+//   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
+const WEB_VER = '1.0';
+async function reportParentLink(){
+  try{
+    const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                  (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+    const ver = `웹앱 ${WEB_VER} · ${isIos ? '아이폰' : '갤럭시'}`;
+    await savePol([
+      { key:'parent_linked',      value:'true' },
+      { key:'parent_last_seen',   value:now },
+      { key:'parent_app_version', value:ver }
+    ]);
+  }catch(e){ /* 기록 실패해도 앱 동작에는 영향 없음 */ }
+}
+function showIosTip(){
+  const isIos=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  const standalone = window.navigator.standalone===true || window.matchMedia('(display-mode: standalone)').matches;
+  document.getElementById('iosTip').classList.toggle('hide', !(isIos && !standalone));
+}
+
+async function refreshAll(manual){
+  loading(true);
+  try{
+    const sb=clientFor(ST.server);
+    const today=new Date().toLocaleDateString('en-CA');
+    const [polR,devR,useR,reqR,appR] = await Promise.all([
+      sb.from('policies').select('key,value').eq('device_code',ST.code),
+      sb.from('child_devices').select('child_name,last_seen_at').eq('device_code',ST.code).maybeSingle(),
+      sb.from('usage_history').select('total_minutes,total_seconds').eq('device_code',ST.code).eq('date',today).maybeSingle(),
+      sb.from('access_requests').select('domain,requested_at').eq('device_code',ST.code),
+      sb.from('installed_apps').select('app_package,app_name').eq('device_code',ST.code)
+    ]);
+    ST.pol={}; (polR.data||[]).forEach(r=>ST.pol[r.key]=r.value);
+    ST.dev=devR.data||ST.dev; ST.usage=useR.data; ST.reqs=reqR.data||[];
+    ST.apps=(appR.data||[]).sort((a,b)=>(a.app_name||'').localeCompare(b.app_name||'','ko'));
+    paintMain();
+    if(manual) toast('최신 정보로 새로고침했습니다');
+  }catch(e){ toast('불러오기 실패: '+e.message); }
+  loading(false);
+}
+
+function badge(on, onTxt, offTxt){
+  return on ? `<span class="badge b-on">${onTxt||'사용 중'}</span>` : `<span class="badge b-off">${offTxt||'꺼짐'}</span>`;
+}
+
+function paintMain(){
+  const p=ST.pol;
+  document.getElementById('mTitle').textContent = ST.dev?.child_name || ST.name || '공신폰 관리자';
+  document.getElementById('mSub').textContent = '서버 '+ST.server;
+
+  const sec=Number(ST.usage?.total_seconds||0)||(Number(ST.usage?.total_minutes||0)*60);
+  document.getElementById('hUse').textContent = sec>0?fmtSec(sec):'0분';
+  const last=ST.dev?.last_seen_at;
+  const online = last && (Date.now()-new Date((last.endsWith('Z')||last.includes('+'))?last:last+'Z'))/60000 < 10;
+  document.getElementById('hDot').style.background = online?'#12B76A':'#98A2B3';
+  document.getElementById('hStat').textContent = online?'접속 중':'마지막 접속 '+ago(last);
+  document.getElementById('hCode').textContent = ST.code;
+
+  const limDays=[1,2,3,4,5,6,7].filter(i=>Number(p['limit_day_'+i]??-1)>=0);
+  document.getElementById('vLimit').innerHTML = badge(p.daily_limit_enabled==='true') +
+    ' ' + (limDays.length? limDays.length+'개 요일 설정됨':'요일 미설정');
+
+  const dtDays=[1,2,3,4,5,6,7].filter(i=>(p['dt_day_'+i]||'미설정')!=='미설정');
+  document.getElementById('vDt').innerHTML = badge(p.dt_enabled==='true') +
+    ' ' + (dtDays.length? dtDays.length+'개 요일 설정됨':'요일 미설정');
+
+  const n=(ST.reqs||[]).length;
+  document.getElementById('vReq').innerHTML = n? `<b style="color:#F97316">새 요청 ${n}건</b> — 확인해 주세요` : '새 요청 없음';
+
+  document.getElementById('vAllow').textContent = J(p.chrome_allowed_domains,[]).length+'개 사이트 허용 중';
+
+  // 앱 요약 — 부모앱과 동일 기준
+  let blocked=0, timed=0;
+  Object.keys(p).filter(k=>k.startsWith('rule_')).forEach(k=>{
+    const m=parseRule(p[k]);
+    if(m.mode==='BLOCK') blocked++; else if(m.mode==='WEEKLY') timed++;
+  });
+  const unlimited = J(p.whitelist_apps,[]).length;
+  document.getElementById('vApps').textContent = `차단 ${blocked} · 시간제한 ${timed} · 무제한 ${unlimited}`;
+
+  document.getElementById('vUninst').innerHTML = badge(p.uninstall_blocked==='true','켜짐') +
+    ' ' + J(p.uninstall_blocked_apps,[]).length+'개 앱 보호 중';
+  document.getElementById('vPinLock').textContent = J(p.pin_locked_apps,[]).length+'개 앱 잠금';
+  document.getElementById('vIgnoreDt').textContent = J(p.ignore_dt_apps,[]).length+'개 앱 허용';
+  document.getElementById('vSos').textContent = J(p.sos_whitelist,[]).length+'개 번호 등록';
+  document.getElementById('vSecurity').innerHTML =
+    `Play스토어 ${p.play_store_blocked==='true'?'차단':'허용'} · 오픈채팅 ${p.open_chat_blocked==='true'?'차단':'허용'}`;
+}
+
+// rule_ 값 해석 (부모앱 형식 그대로)
+function parseRule(raw){
+  raw = raw||'';
+  if(!raw || raw==='0||0') return { mode:'NONE', week:[-1,-1,-1,-1,-1,-1,-1] };
+  if(raw.startsWith('2|')){
+    const week=[-1,-1,-1,-1,-1,-1,-1];
+    raw.slice(2).split(',').forEach(t=>{
+      const [d,v]=t.split(':'); const i=DORDER.indexOf(d);
+      if(i>=0) week[i]= (v===''||v==null)? -1 : parseInt(v,10);
+    });
+    const allZero = week.every(v=>v===0);
+    return { mode: allZero?'BLOCK':'WEEKLY', week };
+  }
+  return { mode:'NONE', week:[-1,-1,-1,-1,-1,-1,-1] };
+}
+function buildWeekRule(week){ return '2|'+DORDER.map((d,i)=>`${d}:${week[i]}`).join(','); }
+
+// ── 정책 저장 ──
+async function savePol(rows){
+  const payload = rows.map(r=>({ device_code:ST.code, key:r.key, value:String(r.value) }));
+  const { error } = await clientFor(ST.server).from('policies').upsert(payload,{ onConflict:'device_code,key' });
+  if(error) throw error;
+  payload.forEach(r=> ST.pol[r.key]=r.value);
+}
+
+// ══════════ 서브 화면 ══════════
+let subStack=[];
+function openSub(title, html, backFn){
+  document.getElementById('sTitle').textContent=title;
+  document.getElementById('sBody').innerHTML=html;
+  subStack=[backFn||null];
+  show('scSub'); window.scrollTo(0,0);
+}
+function closeSub(){ const f=subStack.pop(); if(typeof f==='function'){ f(); } else { show('scMain'); paintMain(); } }
+
+// ── 하루 한도 ──
+function openLimit(){
+  const p=ST.pol; let rows='';
+  for(let i=1;i<=7;i++){
+    const v=Number(p['limit_day_'+i]??-1);
+    const cls=i===1?'sun':(i===7?'sat':'');
+    rows+=`<div class="dayrow"><div class="dayname ${cls}">${DAYS[i-1]}</div>
+      <input type="number" inputmode="numeric" id="lim${i}" placeholder="무제한" value="${v>=0?v:''}" min="0" max="1440">
+      <div style="flex:0 0 auto;color:#667085;font-size:13px">분</div></div>`;
+  }
+  openSub('하루 사용시간 한도', `
+    <div class="note">요일별로 하루에 쓸 수 있는 시간을 정합니다.<br>비워두면 <b>무제한</b>, <b>0</b>을 넣으면 그날은 사용할 수 없습니다.</div>
+    <div class="card"><div class="row"><div class="grow"><div class="ttl">하루 한도 사용</div>
+      <div class="val">꺼두면 요일 설정과 상관없이 제한하지 않습니다</div></div>
+      <input type="checkbox" id="limOn" ${p.daily_limit_enabled==='true'?'checked':''} style="width:52px;height:30px"></div></div>
+    <div class="card">${rows}</div>
+    <button class="btn btn-p" onclick="saveLimit()">저장하기</button>
+    <button class="btn btn-g" onclick="closeSub()">취소</button>`);
+}
+async function saveLimit(){
+  loading(true);
+  try{
+    const rows=[{key:'daily_limit_enabled', value:document.getElementById('limOn').checked?'true':'false'}];
+    for(let i=1;i<=7;i++){
+      const raw=document.getElementById('lim'+i).value.trim();
+      rows.push({key:'limit_day_'+i, value: raw===''? -1 : Math.max(0,Math.min(1440,parseInt(raw,10)||0))});
+    }
+    await savePol(rows); loading(false); toast('저장했습니다 — 자녀폰에 바로 반영됩니다'); closeSub();
+  }catch(e){ loading(false); toast('저장 실패: '+e.message); }
+}
+
+// ── 다운타임 ──
+function openDt(){
+  const p=ST.pol; let rows='';
+  for(let i=1;i<=7;i++){
+    const raw=p['dt_day_'+i]||'미설정';
+    const has=raw!=='미설정'&&raw.includes('|');
+    const [s,e]=has?raw.split('|'):['',''];
+    const cls=i===1?'sun':(i===7?'sat':'');
+    rows+=`<div class="dayrow"><div class="dayname ${cls}">${DAYS[i-1]}</div>
+      <input type="time" id="dtS${i}" value="${esc(s)}"><div style="flex:0 0 auto;color:#667085">~</div>
+      <input type="time" id="dtE${i}" value="${esc(e)}"></div>`;
+  }
+  openSub('다운타임 (취침시간)', `
+    <div class="note">정한 시간 동안 자녀폰이 잠깁니다.<br>비워두면 그 요일은 다운타임이 없습니다.<br>예) 22:00 ~ 07:00 처럼 자정을 넘겨도 됩니다.</div>
+    <div class="card"><div class="row"><div class="grow"><div class="ttl">다운타임 사용</div>
+      <div class="val">꺼두면 요일 설정과 상관없이 잠기지 않습니다</div></div>
+      <input type="checkbox" id="dtOn" ${p.dt_enabled==='true'?'checked':''} style="width:52px;height:30px"></div></div>
+    <div class="card">${rows}</div>
+    <div class="note warn">📞 다운타임 중에도 <b>전화 · 문자 · 알람</b>은 항상 사용할 수 있습니다.</div>
+    <button class="btn btn-p" onclick="saveDt()">저장하기</button>
+    <button class="btn btn-g" onclick="closeSub()">취소</button>`);
+}
+async function saveDt(){
+  loading(true);
+  try{
+    const rows=[{key:'dt_enabled', value:document.getElementById('dtOn').checked?'true':'false'}];
+    for(let i=1;i<=7;i++){
+      const s=document.getElementById('dtS'+i).value, e=document.getElementById('dtE'+i).value;
+      rows.push({key:'dt_day_'+i, value:(s&&e)?`${s}|${e}`:'미설정'});
+    }
+    await savePol(rows); loading(false); toast('저장했습니다 — 자녀폰에 바로 반영됩니다'); closeSub();
+  }catch(e){ loading(false); toast('저장 실패: '+e.message); }
+}
+
+// ── 접속 요청 ──
+function openReq(){
+  const list=ST.reqs||[];
+  const body=list.length? list.map(r=>`<div class="item">
+      <div class="grow"><div class="nm">${esc(r.domain)}</div><div class="sm">${ago(r.requested_at)} 요청</div></div>
+      <button class="add" onclick="approveReq('${esc(r.domain)}')">허용</button>
+      <button class="x" onclick="rejectReq('${esc(r.domain)}')">거절</button></div>`).join('')
+    : `<div class="empty">새로운 요청이 없습니다</div>`;
+  openSub('자녀의 접속 요청', `
+    <div class="note">자녀가 <b>공부에 필요하다며 요청한 사이트</b>입니다.<br>허용하면 자녀폰에서 바로 열립니다.</div>
+    <div class="card">${body}</div>
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
+async function approveReq(d){
+  loading(true);
+  try{
+    const allow=J(ST.pol.chrome_allowed_domains,[]);
+    if(!allow.includes(d)) allow.push(d);
+    await savePol([{key:'chrome_allowed_domains', value:JSON.stringify(allow)}]);
+    await clientFor(ST.server).from('access_requests').delete().eq('device_code',ST.code).eq('domain',d);
+    ST.reqs=(ST.reqs||[]).filter(r=>r.domain!==d);
+    loading(false); toast(d+' 허용했습니다'); openReq();
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+async function rejectReq(d){
+  loading(true);
+  try{
+    await clientFor(ST.server).from('access_requests').delete().eq('device_code',ST.code).eq('domain',d);
+    ST.reqs=(ST.reqs||[]).filter(r=>r.domain!==d);
+    loading(false); toast('거절했습니다'); openReq();
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+
+// ── 허용 사이트 ──
+function openAllow(){
+  const allow=J(ST.pol.chrome_allowed_domains,[]);
+  const body=allow.length? allow.map(d=>`<div class="item"><div class="grow"><div class="nm">${esc(d)}</div></div>
+      <button class="x" onclick="delAllow('${esc(d)}')">삭제</button></div>`).join('')
+    : `<div class="empty">허용된 사이트가 없습니다</div>`;
+  openSub('허용 사이트 관리', `
+    <div class="note">여기 등록된 사이트만 자녀폰 크롬에서 열립니다.<br>주소는 <b>www 없이</b> 넣어주세요. 예) ebs.co.kr</div>
+    <div class="card"><div class="field"><label>사이트 주소 추가</label>
+      <input id="newDom" type="text" placeholder="ebs.co.kr" autocapitalize="none" spellcheck="false"></div>
+      <button class="btn btn-p" onclick="addAllow()">추가하기</button></div>
+    <div class="sec">허용된 사이트 (${allow.length}개)</div>
+    <div class="card">${body}</div>
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
+function cleanDomain(v){ return (v||'').trim().toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/.*$/,'').replace(/[^a-z0-9.\-]/g,''); }
+async function addAllow(){
+  const d=cleanDomain(document.getElementById('newDom').value);
+  if(!d||!d.includes('.')){ toast('올바른 주소를 입력해 주세요 (예: ebs.co.kr)'); return; }
+  loading(true);
+  try{
+    const allow=J(ST.pol.chrome_allowed_domains,[]);
+    if(allow.includes(d)){ loading(false); toast('이미 허용된 사이트입니다'); return; }
+    allow.push(d); await savePol([{key:'chrome_allowed_domains', value:JSON.stringify(allow)}]);
+    loading(false); toast(d+' 추가했습니다'); openAllow();
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+async function delAllow(d){
+  loading(true);
+  try{
+    const allow=J(ST.pol.chrome_allowed_domains,[]).filter(x=>x!==d);
+    await savePol([{key:'chrome_allowed_domains', value:JSON.stringify(allow)}]);
+    loading(false); toast(d+' 삭제했습니다'); openAllow();
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+
+// ══════════ 앱 관리 (부모앱 4가지 모드 동일) ══════════
+let appQuery='';
+function openApps(){
+  const q=appQuery.toLowerCase();
+  const list=ST.apps.filter(a=>!q || (a.app_name||'').toLowerCase().includes(q) || a.app_package.toLowerCase().includes(q));
+  const wl=J(ST.pol.whitelist_apps,[]);
+  const body=list.length? list.map(a=>{
+    const m=parseRule(ST.pol['rule_'+a.app_package]);
+    const isWl=wl.includes(a.app_package);
+    let tag;
+    if(m.mode==='BLOCK') tag='<span class="badge" style="background:#FEF3F2;color:#B42318;border:1px solid #FDA29B">🚫 즉시 차단</span>';
+    else if(isWl)        tag='<span class="badge" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFD9FF">♾️ 시간 무제한</span>';
+    else if(m.mode==='WEEKLY') tag=`<span class="badge b-on">⌛ ${m.week.map((v,i)=>v<0?'∞':v).join('/')}분</span>`;
+    else tag='<span class="badge b-off">제한 없음</span>';
+    return `<div class="item"><div class="grow"><div class="nm">${esc(a.app_name||a.app_package)}</div><div class="sm">${tag}</div></div>
+      <button class="add" onclick="openAppMode('${esc(a.app_package)}')">설정</button></div>`;
+  }).join('') : `<div class="empty">앱이 없습니다<br><span class="sm">자녀폰이 접속하면 목록이 올라옵니다</span></div>`;
+  openSub('앱 차단 · 앱별 시간', `
+    <div class="note">자녀폰에 설치된 앱입니다. <b>설정</b>을 눌러 앱마다 다르게 정할 수 있습니다.</div>
+    <div class="card"><input type="text" id="appQ" placeholder="앱 이름 검색" value="${esc(appQuery)}"
+      oninput="appQuery=this.value; clearTimeout(window._aq); window._aq=setTimeout(openApps,250)"></div>
+    <div class="sec">앱 목록 (${list.length}개)</div>
+    <div class="card">${body}</div>
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+  const q2=document.getElementById('appQ'); if(q2 && appQuery){ q2.focus(); q2.setSelectionRange(q2.value.length,q2.value.length); }
+}
+
+function openAppMode(pkg){
+  const app=ST.apps.find(a=>a.app_package===pkg)||{app_name:pkg, app_package:pkg};
+  const m=parseRule(ST.pol['rule_'+pkg]);
+  const isWl=J(ST.pol.whitelist_apps,[]).includes(pkg);
+  let rows='';
+  for(let i=0;i<7;i++){
+    const v=m.week[i];
+    const cls=i===0?'sun':(i===6?'sat':'');
+    rows+=`<div class="dayrow"><div class="dayname ${cls}">${DAYS[i]}</div>
+      <input type="number" inputmode="numeric" id="aw${i}" placeholder="무제한" value="${v>=0?v:''}" min="0" max="1440">
+      <div style="flex:0 0 auto;color:#667085;font-size:13px">분</div></div>`;
+  }
+  openSub(app.app_name||pkg, `
+    <div class="note">이 앱을 어떻게 할지 정하세요.</div>
+    <div class="card tap" onclick="setAppMode('${esc(pkg)}','NONE')">
+      <div class="row"><div class="ic" style="background:#F2F4F7">⏳</div>
+      <div class="grow"><div class="ttl">앱 개별 시간 제한 없음</div>
+      <div class="val">하루 한도를 다 쓰면 이 앱도 같이 잠깁니다</div></div>
+      ${(m.mode==='NONE'&&!isWl)?'<span class="badge b-on">현재</span>':'<div class="chev">›</div>'}</div></div>
+    <div class="card tap" onclick="setAppMode('${esc(pkg)}','BLOCK')">
+      <div class="row"><div class="ic" style="background:#FEF3F2">🚫</div>
+      <div class="grow"><div class="ttl">앱 즉시 차단</div>
+      <div class="val">한도가 남아 있어도 항상 사용할 수 없습니다</div></div>
+      ${m.mode==='BLOCK'?'<span class="badge b-on">현재</span>':'<div class="chev">›</div>'}</div></div>
+    <div class="card tap" onclick="setAppMode('${esc(pkg)}','UNLIMITED')">
+      <div class="row"><div class="ic" style="background:#EFF6FF">♾️</div>
+      <div class="grow"><div class="ttl">시간 무제한</div>
+      <div class="val">하루 한도를 다 써도 이 앱은 계속 쓸 수 있습니다<br>(다운타임에는 잠깁니다 — 아래 '다운타임 허용 앱' 별도 설정)</div></div>
+      ${isWl?'<span class="badge b-on">현재</span>':'<div class="chev">›</div>'}</div></div>
+    <div class="sec">⌛ 요일별 시간 제한</div>
+    <div class="note">비워두면 그 요일은 <b>무제한</b>, <b>0</b>이면 그날은 사용할 수 없습니다.</div>
+    <div class="card">${rows}</div>
+    <button class="btn btn-p" onclick="saveAppWeek('${esc(pkg)}')">요일별 시간으로 저장</button>
+    <button class="btn btn-g" onclick="openApps()">뒤로</button>`, openApps);
+}
+
+async function setAppMode(pkg, mode){
+  loading(true);
+  try{
+    const wl=new Set(J(ST.pol.whitelist_apps,[]));
+    const bl=new Set(J(ST.pol.blocked_apps,[]));
+    let rule;
+    if(mode==='BLOCK'){ rule=buildWeekRule([0,0,0,0,0,0,0]); bl.add(pkg); wl.delete(pkg); }
+    else if(mode==='UNLIMITED'){ rule='0||0'; wl.add(pkg); bl.delete(pkg); }
+    else { rule='0||0'; wl.delete(pkg); bl.delete(pkg); }
+    await savePol([
+      {key:'rule_'+pkg, value:rule},
+      {key:'whitelist_apps', value:JSON.stringify([...wl])},
+      {key:'blocked_apps',   value:JSON.stringify([...bl])}
+    ]);
+    loading(false); toast('저장했습니다 — 자녀폰에 바로 반영됩니다'); openAppMode(pkg);
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+async function saveAppWeek(pkg){
+  loading(true);
+  try{
+    const week=[];
+    for(let i=0;i<7;i++){
+      const raw=document.getElementById('aw'+i).value.trim();
+      week.push(raw===''? -1 : Math.max(0,Math.min(1440,parseInt(raw,10)||0)));
+    }
+    const wl=new Set(J(ST.pol.whitelist_apps,[])); wl.delete(pkg);
+    const bl=new Set(J(ST.pol.blocked_apps,[]));
+    const allZero=week.every(v=>v===0);
+    if(allZero) bl.add(pkg); else bl.delete(pkg);
+    await savePol([
+      {key:'rule_'+pkg, value:buildWeekRule(week)},
+      {key:'whitelist_apps', value:JSON.stringify([...wl])},
+      {key:'blocked_apps',   value:JSON.stringify([...bl])}
+    ]);
+    loading(false); toast('저장했습니다 — 자녀폰에 바로 반영됩니다'); openAppMode(pkg);
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+
+// ══════════ 앱 목록형 설정 (삭제방지 / PIN잠금 / 다운타임허용) ══════════
+function openAppPicker(title, polKey, desc, extra){
+  const cur=new Set(J(ST.pol[polKey],[]));
+  const body=ST.apps.length? ST.apps.map(a=>{
+    const on=cur.has(a.app_package);
+    return `<div class="item"><div class="grow"><div class="nm">${esc(a.app_name||a.app_package)}</div></div>
+      <button class="${on?'x':'add'}" onclick="toggleAppIn('${esc(polKey)}','${esc(a.app_package)}','${esc(title)}','${esc(desc)}')">${on?'해제':'추가'}</button></div>`;
+  }).join('') : `<div class="empty">앱 목록이 없습니다</div>`;
+  openSub(title, `
+    <div class="note">${desc}</div>
+    ${extra||''}
+    <div class="sec">선택된 앱 ${cur.size}개</div>
+    <div class="card">${body}</div>
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
+async function toggleAppIn(polKey, pkg, title, desc){
+  loading(true);
+  try{
+    const s=new Set(J(ST.pol[polKey],[]));
+    s.has(pkg)? s.delete(pkg) : s.add(pkg);
+    await savePol([{key:polKey, value:JSON.stringify([...s])}]);
+    loading(false); toast('저장했습니다');
+    if(polKey==='uninstall_blocked_apps') openUninstall();
+    else if(polKey==='pin_locked_apps')  openPinLock();
+    else openIgnoreDt();
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+function openUninstall(){
+  const on=ST.pol.uninstall_blocked==='true';
+  openAppPicker('앱 삭제 방지','uninstall_blocked_apps',
+    '선택한 앱을 자녀가 <b>지우지 못하게</b> 합니다.',
+    `<div class="card"><div class="row"><div class="grow"><div class="ttl">앱 삭제 방지 사용</div>
+      <div class="val">꺼두면 아래 목록과 상관없이 삭제할 수 있습니다</div></div>
+      <input type="checkbox" ${on?'checked':''} onchange="toggleFlag('uninstall_blocked',this.checked,openUninstall)" style="width:52px;height:30px"></div></div>`);
+}
+function openPinLock(){
+  openAppPicker('앱 PIN 잠금','pin_locked_apps',
+    '선택한 앱은 열 때마다 <b>부모님 비밀번호</b>를 넣어야 열립니다.<br>한 번 풀면 5분 동안은 다시 묻지 않습니다.');
+}
+function openIgnoreDt(){
+  openAppPicker('다운타임 허용 앱','ignore_dt_apps',
+    '다운타임(취침시간)에도 <b>이 앱만은 쓸 수 있게</b> 합니다.<br>예) 알람 앱, 학습 앱');
+}
+async function toggleFlag(key, val, after){
+  loading(true);
+  try{ await savePol([{key, value: val?'true':'false'}]); loading(false); toast('저장했습니다'); if(after) after(); }
+  catch(e){ loading(false); toast('실패: '+e.message); }
+}
+
+// ══════════ SOS 번호 ══════════
+function openSos(){
+  const list=J(ST.pol.sos_whitelist,[]);
+  const body=list.length? list.map(n=>`<div class="item"><div class="grow"><div class="nm">${esc(n)}</div></div>
+      <button class="x" onclick="delSos('${esc(n)}')">삭제</button></div>`).join('')
+    : `<div class="empty">등록된 번호가 없습니다</div>`;
+  openSub('긴급 연락처 (SOS)', `
+    <div class="note">자녀폰이 잠겨 있어도 <b>이 번호로는 전화</b>할 수 있습니다.<br>숫자만 넣어주세요. 예) 01012345678</div>
+    <div class="card"><div class="field"><label>번호 추가</label>
+      <input id="newSos" type="tel" inputmode="numeric" placeholder="01012345678"></div>
+      <button class="btn btn-p" onclick="addSos()">추가하기</button></div>
+    <div class="sec">등록된 번호 (${list.length}개)</div>
+    <div class="card">${body}</div>
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
+async function addSos(){
+  const n=(document.getElementById('newSos').value||'').replace(/[^0-9]/g,'');
+  if(n.length<9){ toast('번호를 정확히 입력해 주세요'); return; }
+  loading(true);
+  try{
+    const list=J(ST.pol.sos_whitelist,[]);
+    if(list.includes(n)){ loading(false); toast('이미 등록된 번호입니다'); return; }
+    list.push(n); await savePol([{key:'sos_whitelist', value:JSON.stringify(list)}]);
+    loading(false); toast('추가했습니다'); openSos();
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+async function delSos(n){
+  loading(true);
+  try{
+    const list=J(ST.pol.sos_whitelist,[]).filter(x=>x!==n);
+    await savePol([{key:'sos_whitelist', value:JSON.stringify(list)}]);
+    loading(false); toast('삭제했습니다'); openSos();
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+
+// ══════════ 보안 설정 ══════════
+function openSecurity(){
+  const p=ST.pol;
+  const sw=(key,title,desc)=>`<div class="card"><div class="row">
+    <div class="grow"><div class="ttl">${title}</div><div class="val">${desc}</div></div>
+    <input type="checkbox" ${p[key]==='true'?'checked':''} onchange="toggleFlag('${key}',this.checked,openSecurity)" style="width:52px;height:30px"></div></div>`;
+  openSub('보안 설정', `
+    <div class="note">켜면 자녀폰에서 해당 기능이 <b>차단</b>됩니다.</div>
+    ${sw('play_store_blocked','Play 스토어 차단','자녀가 새 앱을 설치하지 못합니다')}
+    ${sw('open_chat_blocked','카톡 오픈채팅 차단','모르는 사람과의 오픈채팅방 입장을 막습니다')}
+    ${sw('kakao_inapp_browser_blocked','카톡 링크 열기 차단','대화방 링크로 인터넷에 나가는 것을 막습니다')}
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
+
+// ══════════ 비밀번호 변경 ══════════
+function openPinChange(){
+  openSub('비밀번호 변경', `
+    <div class="note">이 비밀번호는 <b>부모님 확인용</b>입니다.<br>이 웹앱, 부모앱, 자녀폰 앱 잠금에 모두 쓰입니다.</div>
+    <div class="card">
+      <div class="field"><label>새 비밀번호 (숫자 6자리)</label>
+        <input id="pw1" type="password" inputmode="numeric" maxlength="6" placeholder="● ● ● ● ● ●"></div>
+      <div class="field"><label>새 비밀번호 확인</label>
+        <input id="pw2" type="password" inputmode="numeric" maxlength="6" placeholder="● ● ● ● ● ●"></div>
+    </div>
+    <div class="note warn">⚠️ 잊어버리면 매장에 문의하셔야 합니다. 꼭 기억해 주세요.</div>
+    <button class="btn btn-p" onclick="savePin()">변경하기</button>
+    <button class="btn btn-g" onclick="closeSub()">취소</button>`);
+}
+async function savePin(){
+  const a=(document.getElementById('pw1').value||'').replace(/[^0-9]/g,'');
+  const b=(document.getElementById('pw2').value||'').replace(/[^0-9]/g,'');
+  if(a.length!==6){ toast('숫자 6자리를 넣어주세요'); return; }
+  if(a!==b){ toast('두 비밀번호가 서로 다릅니다'); return; }
+  loading(true);
+  try{
+    const h=await sha256(a);
+    await savePol([
+      {key:'pin_hash', value:h}, {key:'pin_plain', value:a},
+      {key:'operator_pw_hash', value:h}, {key:'operator_pw_plain', value:a}
+    ]);
+    loading(false); toast('비밀번호를 변경했습니다'); closeSub();
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+
+// ══════════ 7일 사용기록 ══════════
+async function openHistory(){
+  loading(true);
+  let rows=[];
+  try{
+    const from=new Date(Date.now()-6*86400000).toLocaleDateString('en-CA');
+    const { data } = await clientFor(ST.server).from('usage_history')
+      .select('date,total_minutes,total_seconds').eq('device_code',ST.code).gte('date',from).order('date');
+    rows=data||[];
+  }catch(e){}
+  loading(false);
+  const map={}; rows.forEach(r=> map[r.date]= Number(r.total_seconds||0)||Number(r.total_minutes||0)*60);
+  let max=1; Object.values(map).forEach(v=>{ if(v>max) max=v; });
+  let bars='';
+  for(let i=6;i>=0;i--){
+    const d=new Date(Date.now()-i*86400000);
+    const key=d.toLocaleDateString('en-CA');
+    const v=map[key]||0;
+    const h=Math.max(4, Math.round(v/max*110));
+    const dn=DAYS[d.getDay()];
+    bars+=`<div style="flex:1;text-align:center">
+      <div style="font-size:11px;color:#667085;margin-bottom:4px">${v>0?Math.round(v/60)+'분':'-'}</div>
+      <div style="height:${h}px;background:linear-gradient(180deg,#2563EB,#1B3A8F);border-radius:6px"></div>
+      <div style="font-size:12px;font-weight:700;margin-top:5px;color:${d.getDay()===0?'#F04438':(d.getDay()===6?'#2563EB':'#344054')}">${dn}</div></div>`;
+  }
+  openSub('최근 7일 사용기록', `
+    <div class="note">하루에 자녀폰을 얼마나 썼는지 보여줍니다.</div>
+    <div class="card"><div style="display:flex;gap:7px;align-items:flex-end;height:160px;padding:6px 0">${bars}</div></div>
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
+
+// ── 연결 해제 ──
+function doLogout(){
+  if(!confirm('연결을 해제할까요?\n다시 연결하려면 자녀폰 코드가 필요합니다.')) return;
+  wipe(); sessionStorage.removeItem('sinae_auth');
+  ST={ code:'',server:'',name:'',pol:{},dev:null,usage:null,reqs:[],apps:[] };
+  document.getElementById('inCode').value=''; show('scConnect');
+}
+
+// ── 시작 ──
+(function init(){
+  const s=load();
+  if(s&&s.code&&s.server){
+    ST.code=s.code; ST.server=s.server; ST.name=s.name||'';
+    if(sessionStorage.getItem('sinae_auth')==='1') enterMain(); else startPin();
+  } else show('scConnect');
+})();
+</script>
+</body>
+</html>
