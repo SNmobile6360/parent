@@ -135,7 +135,8 @@
   @keyframes sp{to{transform:rotate(360deg)}}
 
   /* ── 로그인/연결 화면 ── */
-  .center{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:24px 20px calc(var(--safe-b) + 24px)}
+  /* ⚠️ 100vh 를 먼저 쓰는 건 폴백 — 구형 사파리(iOS 15.3 이하)는 dvh 를 모른다. */
+  .center{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:24px 20px calc(var(--safe-b) + 24px)}
   .logo{text-align:center;margin-bottom:26px}
   .logo .mark{font-size:52px;line-height:1}
   .logo h2{font-size:23px;font-weight:900;margin:10px 0 4px;letter-spacing:-.03em}
@@ -383,8 +384,14 @@ function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.
 function esc(s){ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function fmtMin(m){ m=Number(m)||0; if(m<60) return m+'분'; const h=Math.floor(m/60),r=m%60; return r?`${h}시간 ${r}분`:`${h}시간`; }
 function fmtSec(s){ s=Number(s)||0; const m=Math.floor(s/60),r=s%60; return m<60?(m>0?`${m}분 ${r}초`:`${r}초`):fmtMin(m); }
-function ago(iso){ if(!iso) return '기록 없음';
-  const t=(iso.endsWith('Z')||iso.includes('+'))?iso:iso+'Z'; const d=(Date.now()-new Date(t))/1000;
+// ⚠️ 사파리(아이폰)는 '2026-08-22T12:06:24.505407+00:00' 처럼 소수점 6자리이거나
+//    공백으로 구분된 시각을 Invalid Date 로 뱉는 경우가 있다. 반드시 정규화해서 넘길 것.
+function toDate(iso){ if(!iso) return null;
+  let t=String(iso).trim().replace(' ','T').replace(/\.\d+/,'');
+  if(!/(Z|z|[+-]\d{2}:?\d{2})$/.test(t)) t+='Z';
+  const d=new Date(t); return isNaN(d.getTime())?null:d; }
+function ago(iso){ const dt=toDate(iso); if(!dt) return '기록 없음';
+  const d=(Date.now()-dt)/1000;
   if(d<60)return'방금'; if(d<3600)return Math.floor(d/60)+'분 전'; if(d<86400)return Math.floor(d/3600)+'시간 전'; return Math.floor(d/86400)+'일 전'; }
 async function sha256(s){ const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
   return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
@@ -498,7 +505,8 @@ function paintMain(){
   const sec=Number(ST.usage?.total_seconds||0)||(Number(ST.usage?.total_minutes||0)*60);
   document.getElementById('hUse').textContent = sec>0?fmtSec(sec):'0분';
   const last=ST.dev?.last_seen_at;
-  const online = last && (Date.now()-new Date((last.endsWith('Z')||last.includes('+'))?last:last+'Z'))/60000 < 10;
+  const _lt = toDate(last);
+  const online = !!_lt && (Date.now()-_lt)/60000 < 10;
   document.getElementById('hDot').style.background = online?'#12B76A':'#98A2B3';
   document.getElementById('hStat').textContent = online?'접속 중':'마지막 접속 '+ago(last);
   document.getElementById('hCode').textContent = ST.code;
