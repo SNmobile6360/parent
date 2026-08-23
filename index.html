@@ -103,17 +103,40 @@
   .sec{font-size:12.5px;font-weight:800;color:var(--muted);margin:18px 4px 8px;letter-spacing:.02em}
 
   /* ── 요일 편집 ── */
-  .dayrow{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #F2F4F7}
+  .dayrow{display:flex;align-items:center;gap:8px;padding:11px 0;border-bottom:1px solid #F2F4F7}
   .dayrow:last-child{border-bottom:0}
-  .dayname{width:34px;font-weight:800;font-size:15px;flex:0 0 auto}
+  .dayname{width:30px;font-weight:800;font-size:15px;flex:0 0 auto}
   .dayname.sun{color:#F04438} .dayname.sat{color:#2563EB}
   .dayrow input,.dayrow select{padding:10px;font-size:15px}
+  /* 다이얼(선택) — 직접 타이핑 대신 눌러서 고르는 방식.
+     ⚠️ 좁은 폰(347px 카드)에서 시:분 4개가 한 줄에 들어가야 하므로 padding·화살표를 줄였다. */
+  .dial{
+    padding:9px 4px; font-size:15px; font-weight:700; text-align:center; text-align-last:center;
+    border:1.5px solid var(--line); border-radius:10px; background:#fff; color:var(--ink);
+    -webkit-appearance:none; appearance:none; min-width:0;
+  }
+  .dial:focus{outline:0;border-color:var(--blue)}
+  .dial:disabled{background:#F2F4F7;color:#98A2B3}
+  .dayrow .dial{flex:1 1 0}
+  .tsep{flex:0 0 auto;color:#98A2B3;font-weight:800;font-size:14px}
+
+  /* ── 토글 스위치 (체크박스 대신) ── */
+  .sw{position:relative;display:inline-block;width:52px;height:31px;flex:0 0 auto}
+  .sw input{position:absolute;opacity:0;width:0;height:0}
+  .sw i{position:absolute;inset:0;background:#D0D5DD;border-radius:999px;transition:.2s;cursor:pointer;display:block}
+  .sw i:before{content:"";position:absolute;width:25px;height:25px;left:3px;top:3px;
+               background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(16,24,40,.25)}
+  .sw input:checked + i{background:var(--ok)}
+  .sw input:checked + i:before{transform:translateX(21px)}
 
   /* ── 목록 ── */
   .list{max-height:none}
   .item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #F2F4F7}
   .item:last-child{border-bottom:0}
-  .item .nm{flex:1;min-width:0;font-size:14.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* ⚠️ .grow 는 원래 .row 안에서만 늘어나게 돼 있어서, 목록(.item)에서는 늘어나지 않아
+        오른쪽 버튼(설정/추가/해제)이 가운데로 붙어 보였다. 목록에도 같은 규칙을 준다. */
+  .item .grow{flex:1;min-width:0}
+  .item .nm{min-width:0;font-size:14.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .item .sm{font-size:12px;color:var(--muted);font-weight:500}
   .x{border:0;background:#FEF3F2;color:var(--danger);border-radius:9px;padding:8px 12px;font-size:13px;font-weight:800;cursor:pointer;flex:0 0 auto}
   .add{border:0;background:#EFF6FF;color:var(--blue);border-radius:9px;padding:8px 13px;font-size:13px;font-weight:800;cursor:pointer;flex:0 0 auto}
@@ -185,7 +208,7 @@
   </div>
   <button class="btn btn-p" onclick="doConnect()">연결하기</button>
   <!-- 자녀를 추가하러 들어온 경우에만 보임 (이미 연결된 자녀가 있을 때) -->
-  <button class="btn btn-g hide" id="btnConnectBack" onclick="openList()">자녀 목록으로</button>
+  <button class="btn btn-g hide" id="btnConnectBack" onclick="navBack()">자녀 목록으로</button>
 </div>
 
 <!-- ══════════ 2. PIN ══════════ -->
@@ -512,10 +535,17 @@ function afterUnlock(){
   openList();
 }
 function openChild(k){
+  // 목록에서 자녀를 고른 경우 → 뒤로가기로 목록에 돌아올 수 있게
+  if(!navRestoring && !document.getElementById('scList').classList.contains('hide')) navPush(()=>openList());
   ST={ code:k.code, server:k.server, name:k.name||'', pol:{}, dev:null, usage:null, reqs:[], apps:[] };
   appQuery=''; setCurrent(k.code); enterMain();
 }
-async function openList(){ show('scList'); renderList(); await loadListStatus(); }
+async function openList(){
+  // 관리화면 → 목록 으로 들어갈 때만 history 를 쌓는다 (목록 재표시는 제외)
+  if(!navRestoring && !document.getElementById('scMain').classList.contains('hide'))
+    navPush(()=>{ show('scMain'); paintMain(); });
+  show('scList'); renderList(); await loadListStatus();
+}
 function renderList(status){
   const a=kids(), st=status||{};
   document.getElementById('listSub').textContent = a.length+'명 연결됨';
@@ -562,6 +592,8 @@ function removeChildUI(code){
   else openList();
 }
 function startAddChild(){
+  // 목록 → 자녀 추가 로 들어갈 때 history 를 쌓아야 폰 뒤로가기로 목록에 돌아온다
+  if(!navRestoring && !document.getElementById('scList').classList.contains('hide')) navPush(()=>openList());
   document.getElementById('inCode').value='';
   document.getElementById('btnConnectBack').classList.toggle('hide', !kids().length);
   show('scConnect');
@@ -702,48 +734,106 @@ async function savePol(rows){
   payload.forEach(r=> ST.pol[r.key]=r.value);
 }
 
+// ══════════ 화면 이동 · 폰 뒤로가기 버튼 ══════════
+//   한 단계 들어갈 때마다 history 항목을 쌓고, 폰 뒤로가기(popstate)에서 한 단계만 되돌린다.
+//   화면 안의 '뒤로/닫기' 버튼도 반드시 navBack() → history.back() 을 거치게 해서
+//   history 와 화면 상태가 어긋나지 않게 한다. (직접 show() 하면 뒤로가기가 한 번 헛돎)
+let navStack=[], navRestoring=false;
+function navPush(restore){ navStack.push(restore); try{ history.pushState({n:navStack.length},''); }catch(e){} }
+function navBack(){
+  if(navStack.length) history.back();          // popstate 가 실제 화면 전환을 수행
+  else { show('scMain'); paintMain(); }        // 최상위였으면 그냥 메인
+}
+window.addEventListener('popstate', ()=>{
+  const f=navStack.pop();
+  if(!f) return;                               // 우리 화면 스택이 비었으면 브라우저가 알아서 나감
+  navRestoring=true; try{ f(); } finally { navRestoring=false; }
+});
+
 // ══════════ 서브 화면 ══════════
-let subStack=[];
 function openSub(title, html, backFn){
+  const $s=document.getElementById('scSub');
+  const onSub=!$s.classList.contains('hide');
+  // 같은 제목으로 다시 그리는 건 "새 화면"이 아니라 새로고침 → history 를 쌓지 않는다.
+  // (토글 하나 누를 때마다 뒤로가기가 한 번씩 늘어나는 문제 방지)
+  const sameScreen = onSub && document.getElementById('sTitle').textContent===title;
+  if(!navRestoring && !sameScreen) navPush(backFn || (()=>{ show('scMain'); paintMain(); }));
   document.getElementById('sTitle').textContent=title;
   document.getElementById('sBody').innerHTML=html;
-  subStack=[backFn||null];
   show('scSub'); window.scrollTo(0,0);
 }
-function closeSub(){ const f=subStack.pop(); if(typeof f==='function'){ f(); } else { show('scMain'); paintMain(); } }
+function closeSub(){ navBack(); }
 
 // ── 하루 한도 ──
+// 직접 숫자를 타이핑하면 헷갈린다는 의견 → 눌러서 고르는 다이얼(select)로 변경.
+// 전산에서 넣은 값이 목록에 없는 숫자(예: 47분)일 수도 있으므로 그 값은 목록에 끼워 넣는다.
+const LIMIT_STEPS=[10,20,30,40,50,60,90,120,150,180,210,240,300,360,420,480,600,720];
+function minLabel(m){ if(m<60) return m+'분'; const h=Math.floor(m/60), r=m%60; return r? `${h}시간 ${r}분` : `${h}시간`; }
+function limitOptions(cur){
+  const list=[...LIMIT_STEPS];
+  if(cur>0 && !list.includes(cur)){ list.push(cur); list.sort((a,b)=>a-b); }
+  let o=`<option value="-1"${cur<0?' selected':''}>무제한</option>`;
+  o+=`<option value="0"${cur===0?' selected':''}>사용 불가</option>`;
+  list.forEach(m=>{ o+=`<option value="${m}"${cur===m?' selected':''}>${minLabel(m)}</option>`; });
+  return o;
+}
 function openLimit(){
   const p=ST.pol; let rows='';
   for(let i=1;i<=7;i++){
     const v=Number(p['limit_day_'+i]??-1);
     const cls=i===1?'sun':(i===7?'sat':'');
     rows+=`<div class="dayrow"><div class="dayname ${cls}">${DAYS[i-1]}</div>
-      <input type="number" inputmode="numeric" id="lim${i}" placeholder="무제한" value="${v>=0?v:''}" min="0" max="1440">
-      <div style="flex:0 0 auto;color:#667085;font-size:13px">분</div></div>`;
+      <select class="dial" id="lim${i}" onchange="limSync(${i})">${limitOptions(v)}</select></div>`;
   }
   openSub('하루 사용시간 한도', `
-    <div class="note">요일별로 하루에 쓸 수 있는 시간을 정합니다.<br>비워두면 <b>무제한</b>, <b>0</b>을 넣으면 그날은 사용할 수 없습니다.</div>
+    <div class="note">요일별로 하루에 쓸 수 있는 시간을 정합니다.<br><b>무제한</b> = 제한 없음, <b>사용 불가</b> = 그날은 쓸 수 없음</div>
     <div class="card"><div class="row"><div class="grow"><div class="ttl">하루 한도 사용</div>
       <div class="val">꺼두면 요일 설정과 상관없이 제한하지 않습니다</div></div>
-      <input type="checkbox" id="limOn" ${p.daily_limit_enabled==='true'?'checked':''} style="width:52px;height:30px"></div></div>
+      <label class="sw"><input type="checkbox" id="limOn" ${p.daily_limit_enabled==='true'?'checked':''}><i></i></label></div></div>
+    <div class="card"><div class="row"><div class="grow"><div class="ttl">모든 요일 같게</div>
+      <div class="val">켜면 한 요일만 바꿔도 7일 전부 똑같이 맞춰집니다</div></div>
+      <label class="sw"><input type="checkbox" id="limSame" onchange="limSync(1)"><i></i></label></div></div>
     <div class="card">${rows}</div>
     <button class="btn btn-p" onclick="saveLimit()">저장하기</button>
     <button class="btn btn-g" onclick="closeSub()">취소</button>`);
+}
+// '모든 요일 같게'가 켜져 있으면 방금 바꾼 요일 값을 나머지 6일에 그대로 복사
+function limSync(src){
+  if(!document.getElementById('limSame')?.checked) return;
+  const v=document.getElementById('lim'+src).value;
+  for(let i=1;i<=7;i++) document.getElementById('lim'+i).value=v;
 }
 async function saveLimit(){
   loading(true);
   try{
     const rows=[{key:'daily_limit_enabled', value:document.getElementById('limOn').checked?'true':'false'}];
     for(let i=1;i<=7;i++){
-      const raw=document.getElementById('lim'+i).value.trim();
-      rows.push({key:'limit_day_'+i, value: raw===''? -1 : Math.max(0,Math.min(1440,parseInt(raw,10)||0))});
+      const v=parseInt(document.getElementById('lim'+i).value,10);
+      rows.push({key:'limit_day_'+i, value: isNaN(v)? -1 : Math.max(-1,Math.min(1440,v))});
     }
     await savePol(rows); loading(false); toast('저장했습니다 — 자녀폰에 바로 반영됩니다'); closeSub();
   }catch(e){ loading(false); toast('저장 실패: '+e.message); }
 }
 
 // ── 다운타임 ──
+// 시계 모양 시간 입력이 불편하다는 의견 → 시 / 분 각각 눌러서 고르는 다이얼(select)로 변경.
+// 시 다이얼의 '없음'을 고르면 그 요일은 다운타임 없음(미설정)이 된다.
+function hourOptions(cur){        // cur: '00'~'23' 또는 '' (없음)
+  let o=`<option value=""${cur===''?' selected':''}>없음</option>`;
+  for(let h=0;h<24;h++){ const s=String(h).padStart(2,'0'); o+=`<option value="${s}"${cur===s?' selected':''}>${s}시</option>`; }
+  return o;
+}
+function minOptions(cur){         // 10분 단위 (전산에서 넣은 값이 다르면 그 값도 끼워 넣음)
+  const list=['00','10','20','30','40','50'];
+  if(cur && !list.includes(cur)){ list.push(cur); list.sort(); }
+  return list.map(m=>`<option value="${m}"${cur===m?' selected':''}>${m}분</option>`).join('');
+}
+function dtCell(id, hhmm){
+  const [h,m] = (hhmm && hhmm.includes(':')) ? hhmm.split(':') : ['','00'];
+  return `<select class="dial" id="${id}H" onchange="dtSync(this)">${hourOptions(h)}</select>
+          <div class="tsep">:</div>
+          <select class="dial" id="${id}M" onchange="dtSync(this)">${minOptions(m)}</select>`;
+}
 function openDt(){
   const p=ST.pol; let rows='';
   for(let i=1;i<=7;i++){
@@ -752,25 +842,39 @@ function openDt(){
     const [s,e]=has?raw.split('|'):['',''];
     const cls=i===1?'sun':(i===7?'sat':'');
     rows+=`<div class="dayrow"><div class="dayname ${cls}">${DAYS[i-1]}</div>
-      <input type="time" id="dtS${i}" value="${esc(s)}"><div style="flex:0 0 auto;color:#667085">~</div>
-      <input type="time" id="dtE${i}" value="${esc(e)}"></div>`;
+      ${dtCell('dtS'+i, s)}<div class="tsep">~</div>${dtCell('dtE'+i, e)}</div>`;
   }
   openSub('다운타임 (취침시간)', `
-    <div class="note">정한 시간 동안 자녀폰이 잠깁니다.<br>비워두면 그 요일은 다운타임이 없습니다.<br>예) 22:00 ~ 07:00 처럼 자정을 넘겨도 됩니다.</div>
+    <div class="note">정한 시간 동안 자녀폰이 잠깁니다.<br>시간을 <b>없음</b>으로 두면 그 요일은 다운타임이 없습니다.<br>예) 22시 00분 ~ 07시 00분 처럼 자정을 넘겨도 됩니다.</div>
     <div class="card"><div class="row"><div class="grow"><div class="ttl">다운타임 사용</div>
       <div class="val">꺼두면 요일 설정과 상관없이 잠기지 않습니다</div></div>
-      <input type="checkbox" id="dtOn" ${p.dt_enabled==='true'?'checked':''} style="width:52px;height:30px"></div></div>
+      <label class="sw"><input type="checkbox" id="dtOn" ${p.dt_enabled==='true'?'checked':''}><i></i></label></div></div>
+    <div class="card"><div class="row"><div class="grow"><div class="ttl">모든 요일 같게</div>
+      <div class="val">켜면 한 요일만 바꿔도 7일 전부 똑같이 맞춰집니다</div></div>
+      <label class="sw"><input type="checkbox" id="dtSame" onchange="dtSyncAll(1)"><i></i></label></div></div>
     <div class="card">${rows}</div>
     <div class="note warn">📞 다운타임 중에도 <b>전화 · 문자 · 알람</b>은 항상 사용할 수 있습니다.</div>
     <button class="btn btn-p" onclick="saveDt()">저장하기</button>
     <button class="btn btn-g" onclick="closeSub()">취소</button>`);
 }
+function dtSync(el){                                   // 어떤 다이얼을 바꿨는지 보고 그 요일을 기준으로 복사
+  if(!document.getElementById('dtSame')?.checked) return;
+  const m=el.id.match(/^dt[SE](\d)[HM]$/); if(m) dtSyncAll(Number(m[1]));
+}
+function dtSyncAll(src){
+  if(!document.getElementById('dtSame')?.checked) return;
+  ['S','E'].forEach(k=>['H','M'].forEach(u=>{
+    const v=document.getElementById(`dt${k}${src}${u}`).value;
+    for(let i=1;i<=7;i++) document.getElementById(`dt${k}${i}${u}`).value=v;
+  }));
+}
 async function saveDt(){
   loading(true);
   try{
     const rows=[{key:'dt_enabled', value:document.getElementById('dtOn').checked?'true':'false'}];
+    const get=id=>{ const h=document.getElementById(id+'H').value; return h? h+':'+document.getElementById(id+'M').value : ''; };
     for(let i=1;i<=7;i++){
-      const s=document.getElementById('dtS'+i).value, e=document.getElementById('dtE'+i).value;
+      const s=get('dtS'+i), e=get('dtE'+i);
       rows.push({key:'dt_day_'+i, value:(s&&e)?`${s}|${e}`:'미설정'});
     }
     await savePol(rows); loading(false); toast('저장했습니다 — 자녀폰에 바로 반영됩니다'); closeSub();
@@ -852,23 +956,30 @@ function openApps(){
   const q=appQuery.toLowerCase();
   const list=ST.apps.filter(a=>!q || (a.app_name||'').toLowerCase().includes(q) || a.app_package.toLowerCase().includes(q));
   const wl=J(ST.pol.whitelist_apps,[]);
-  const body=list.length? list.map(a=>{
+  // 설정이 걸린 앱을 위로 — 차단 → 요일별 시간 → 무제한 순, 그 아래에 설정 없는 앱
+  const info=a=>{
     const m=parseRule(ST.pol['rule_'+a.app_package]);
     const isWl=wl.includes(a.app_package);
-    let tag;
-    if(m.mode==='BLOCK') tag='<span class="badge" style="background:#FEF3F2;color:#B42318;border:1px solid #FDA29B">🚫 즉시 차단</span>';
-    else if(isWl)        tag='<span class="badge" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFD9FF">♾️ 시간 무제한</span>';
-    else if(m.mode==='WEEKLY') tag=`<span class="badge b-on">⌛ ${m.week.map((v,i)=>v<0?'∞':v).join('/')}분</span>`;
-    else tag='<span class="badge b-off">제한 없음</span>';
-    return `<div class="item"><div class="grow"><div class="nm">${esc(a.app_name||a.app_package)}</div><div class="sm">${tag}</div></div>
+    if(m.mode==='BLOCK')  return {rank:0, tag:'<span class="badge" style="background:#FEF3F2;color:#B42318;border:1px solid #FDA29B">🚫 즉시 차단</span>'};
+    if(m.mode==='WEEKLY') return {rank:1, tag:`<span class="badge b-on">⌛ ${m.week.map(v=>v<0?'∞':v).join('/')}분</span>`};
+    if(isWl)              return {rank:2, tag:'<span class="badge" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFD9FF">♾️ 시간 무제한</span>'};
+    return {rank:9, tag:'<span class="badge b-off">제한 없음</span>'};
+  };
+  const set=[], unset=[];
+  list.forEach(a=>{ const f=info(a); (f.rank<9?set:unset).push({a,f}); });
+  set.sort((x,y)=>x.f.rank-y.f.rank || (x.a.app_name||'').localeCompare(y.a.app_name||'','ko'));
+  const row=({a,f})=>`<div class="item"><div class="grow"><div class="nm">${esc(a.app_name||a.app_package)}</div><div class="sm">${f.tag}</div></div>
       <button class="add" onclick="openAppMode('${esc(a.app_package)}')">설정</button></div>`;
-  }).join('') : `<div class="empty">앱이 없습니다<br><span class="sm">자녀폰이 접속하면 목록이 올라옵니다</span></div>`;
+  const body = list.length
+    ? (set.length? `<div class="sec">✅ 설정된 앱 (${set.length}개)</div><div class="card">${set.map(row).join('')}</div>` : '')
+      + `<div class="sec">설정 안 된 앱 (${unset.length}개)</div>`
+      + (unset.length? `<div class="card">${unset.map(row).join('')}</div>` : `<div class="card"><div class="empty">없습니다</div></div>`)
+    : `<div class="card"><div class="empty">앱이 없습니다<br><span class="sm">자녀폰이 접속하면 목록이 올라옵니다</span></div></div>`;
   openSub('앱 차단 · 앱별 시간', `
-    <div class="note">자녀폰에 설치된 앱입니다. <b>설정</b>을 눌러 앱마다 다르게 정할 수 있습니다.</div>
+    <div class="note">자녀폰에 설치된 앱입니다. <b>설정</b>을 눌러 앱마다 다르게 정할 수 있습니다.<br>설정을 걸어둔 앱이 <b>맨 위</b>에 모여 있습니다.</div>
     <div class="card"><input type="text" id="appQ" placeholder="앱 이름 검색" value="${esc(appQuery)}"
       oninput="appQuery=this.value; clearTimeout(window._aq); window._aq=setTimeout(openApps,250)"></div>
-    <div class="sec">앱 목록 (${list.length}개)</div>
-    <div class="card">${body}</div>
+    ${body}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
   const q2=document.getElementById('appQ'); if(q2 && appQuery){ q2.focus(); q2.setSelectionRange(q2.value.length,q2.value.length); }
 }
@@ -879,11 +990,9 @@ function openAppMode(pkg){
   const isWl=J(ST.pol.whitelist_apps,[]).includes(pkg);
   let rows='';
   for(let i=0;i<7;i++){
-    const v=m.week[i];
     const cls=i===0?'sun':(i===6?'sat':'');
     rows+=`<div class="dayrow"><div class="dayname ${cls}">${DAYS[i]}</div>
-      <input type="number" inputmode="numeric" id="aw${i}" placeholder="무제한" value="${v>=0?v:''}" min="0" max="1440">
-      <div style="flex:0 0 auto;color:#667085;font-size:13px">분</div></div>`;
+      <select class="dial" id="aw${i}" onchange="awSync(${i})">${limitOptions(m.week[i])}</select></div>`;
   }
   openSub(app.app_name||pkg, `
     <div class="note">이 앱을 어떻게 할지 정하세요.</div>
@@ -903,10 +1012,13 @@ function openAppMode(pkg){
       <div class="val">하루 한도를 다 써도 이 앱은 계속 쓸 수 있습니다<br>(다운타임에는 잠깁니다 — 아래 '다운타임 허용 앱' 별도 설정)</div></div>
       ${isWl?'<span class="badge b-on">현재</span>':'<div class="chev">›</div>'}</div></div>
     <div class="sec">⌛ 요일별 시간 제한</div>
-    <div class="note">비워두면 그 요일은 <b>무제한</b>, <b>0</b>이면 그날은 사용할 수 없습니다.</div>
+    <div class="note"><b>무제한</b> = 이 앱은 시간 제한 없음, <b>사용 불가</b> = 그날은 이 앱을 쓸 수 없음</div>
+    <div class="card"><div class="row"><div class="grow"><div class="ttl">모든 요일 같게</div>
+      <div class="val">켜면 한 요일만 바꿔도 7일 전부 똑같이 맞춰집니다</div></div>
+      <label class="sw"><input type="checkbox" id="awSame" onchange="awSync(0)"><i></i></label></div></div>
     <div class="card">${rows}</div>
     <button class="btn btn-p" onclick="saveAppWeek('${esc(pkg)}')">요일별 시간으로 저장</button>
-    <button class="btn btn-g" onclick="openApps()">뒤로</button>`, openApps);
+    <button class="btn btn-g" onclick="closeSub()">뒤로</button>`, openApps);
 }
 
 async function setAppMode(pkg, mode){
@@ -926,13 +1038,18 @@ async function setAppMode(pkg, mode){
     loading(false); toast('저장했습니다 — 자녀폰에 바로 반영됩니다'); openAppMode(pkg);
   }catch(e){ loading(false); toast('실패: '+e.message); }
 }
+function awSync(src){
+  if(!document.getElementById('awSame')?.checked) return;
+  const v=document.getElementById('aw'+src).value;
+  for(let i=0;i<7;i++) document.getElementById('aw'+i).value=v;
+}
 async function saveAppWeek(pkg){
   loading(true);
   try{
     const week=[];
     for(let i=0;i<7;i++){
-      const raw=document.getElementById('aw'+i).value.trim();
-      week.push(raw===''? -1 : Math.max(0,Math.min(1440,parseInt(raw,10)||0)));
+      const v=parseInt(document.getElementById('aw'+i).value,10);
+      week.push(isNaN(v)? -1 : Math.max(-1,Math.min(1440,v)));
     }
     const wl=new Set(J(ST.pol.whitelist_apps,[])); wl.delete(pkg);
     const bl=new Set(J(ST.pol.blocked_apps,[]));
@@ -950,19 +1067,27 @@ async function saveAppWeek(pkg){
 // ══════════ 앱 목록형 설정 (삭제방지 / PIN잠금 / 다운타임허용) ══════════
 function openAppPicker(title, polKey, desc, extra){
   const cur=new Set(J(ST.pol[polKey],[]));
-  const body=ST.apps.length? ST.apps.map(a=>{
-    const on=cur.has(a.app_package);
+  // 선택된 앱을 맨 위로 모아서, 지금 뭐가 설정돼 있는지 한눈에 보이게 한다
+  const on=[], off=[];
+  ST.apps.forEach(a=>(cur.has(a.app_package)?on:off).push(a));
+  const row=a=>{
+    const sel=cur.has(a.app_package);
     return `<div class="item"><div class="grow"><div class="nm">${esc(a.app_name||a.app_package)}</div></div>
-      <button class="${on?'x':'add'}" onclick="toggleAppIn('${esc(polKey)}','${esc(a.app_package)}','${esc(title)}','${esc(desc)}')">${on?'해제':'추가'}</button></div>`;
-  }).join('') : `<div class="empty">앱 목록이 없습니다</div>`;
+      <button class="${sel?'x':'add'}" onclick="toggleAppIn('${esc(polKey)}','${esc(a.app_package)}')">${sel?'해제':'추가'}</button></div>`;
+  };
+  const body = ST.apps.length
+    ? (on.length? `<div class="sec">✅ 선택된 앱 (${on.length}개)</div><div class="card">${on.map(row).join('')}</div>`
+                : `<div class="sec">✅ 선택된 앱 (0개)</div><div class="card"><div class="empty">아직 선택한 앱이 없습니다</div></div>`)
+      + `<div class="sec">선택 안 된 앱 (${off.length}개)</div>`
+      + (off.length? `<div class="card">${off.map(row).join('')}</div>` : `<div class="card"><div class="empty">없습니다</div></div>`)
+    : `<div class="card"><div class="empty">앱 목록이 없습니다</div></div>`;
   openSub(title, `
     <div class="note">${desc}</div>
     ${extra||''}
-    <div class="sec">선택된 앱 ${cur.size}개</div>
-    <div class="card">${body}</div>
+    ${body}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
-async function toggleAppIn(polKey, pkg, title, desc){
+async function toggleAppIn(polKey, pkg){
   loading(true);
   try{
     const s=new Set(J(ST.pol[polKey],[]));
@@ -980,7 +1105,8 @@ function openUninstall(){
     '선택한 앱을 자녀가 <b>지우지 못하게</b> 합니다.',
     `<div class="card"><div class="row"><div class="grow"><div class="ttl">앱 삭제 방지 사용</div>
       <div class="val">꺼두면 아래 목록과 상관없이 삭제할 수 있습니다</div></div>
-      <input type="checkbox" ${on?'checked':''} onchange="toggleFlag('uninstall_blocked',this.checked,openUninstall)" style="width:52px;height:30px"></div></div>`);
+      <label class="sw"><input type="checkbox" ${on?'checked':''}
+        onchange="toggleFlag('uninstall_blocked',this.checked,openUninstall)"><i></i></label></div></div>`);
 }
 function openPinLock(){
   openAppPicker('앱 PIN 잠금','pin_locked_apps',
@@ -1036,7 +1162,8 @@ function openSecurity(){
   const p=ST.pol;
   const sw=(key,title,desc)=>`<div class="card"><div class="row">
     <div class="grow"><div class="ttl">${title}</div><div class="val">${desc}</div></div>
-    <input type="checkbox" ${p[key]==='true'?'checked':''} onchange="toggleFlag('${key}',this.checked,openSecurity)" style="width:52px;height:30px"></div></div>`;
+    <label class="sw"><input type="checkbox" ${p[key]==='true'?'checked':''}
+      onchange="toggleFlag('${key}',this.checked,openSecurity)"><i></i></label></div></div>`;
   openSub('보안 설정', `
     <div class="note">켜면 자녀폰에서 해당 기능이 <b>차단</b>됩니다.</div>
     ${sw('play_store_blocked','Play 스토어 차단','자녀가 새 앱을 설치하지 못합니다')}
