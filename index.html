@@ -120,6 +120,55 @@
   .dayrow .dial{flex:1 1 0}
   .tsep{flex:0 0 auto;color:#98A2B3;font-weight:800;font-size:14px}
 
+  /* ── 바텀시트 (부모앱 BottomSheetDialog 와 동일한 형태) ── */
+  .sheet{position:fixed;inset:0;z-index:300;display:flex;align-items:flex-end;
+         background:rgba(16,24,40,.45);animation:fade .18s}
+  .sheet.hide{display:none !important}
+  @keyframes fade{from{opacity:0}}
+  .sheet .sc{
+    background:#fff;width:100%;max-width:640px;margin:0 auto;
+    border-radius:22px 22px 0 0;padding:8px 18px calc(var(--safe-b) + 18px);
+    animation:up .22s cubic-bezier(.2,.8,.3,1);max-height:92dvh;overflow-y:auto;
+  }
+  @keyframes up{from{transform:translateY(100%)}}
+  .sheet .grip{width:42px;height:4px;border-radius:99px;background:#D0D5DD;margin:6px auto 12px}
+  .sheet h3{font-size:19px;font-weight:900;text-align:center;margin-bottom:14px;letter-spacing:-.02em}
+  .sheet .rowsw{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid #F2F4F7}
+  .sheet .rowsw .t{flex:1;font-size:15.5px;font-weight:800}
+  .sheet .btns{display:flex;gap:10px;margin-top:14px}
+  .sheet .btns .btn{margin:0}
+
+  /* ── 휠 피커 (패밀리 링크 / 부모앱 NumberPicker 와 같은 스크롤 다이얼) ──
+     ⚠️ 항목 높이(48px)를 CSS 와 JS(WH_ITEM) 양쪽에서 쓴다. 바꾸면 둘 다 고칠 것. */
+  .wheels{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 0 4px;position:relative}
+  .wheels.off{opacity:.35;pointer-events:none}
+  .wheel{position:relative;width:84px;height:144px;overflow:hidden;flex:0 0 auto}
+  .wheel .wsel{
+    position:absolute;left:0;right:0;top:48px;height:48px;pointer-events:none;
+    background:rgba(30,91,230,.08);border-top:2px solid var(--blue);border-bottom:2px solid var(--blue);border-radius:10px;
+  }
+  .wheel .wscroll{
+    height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;
+    scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
+  }
+  .wheel .wscroll::-webkit-scrollbar{display:none}
+  .wheel .witem{
+    height:48px;line-height:48px;text-align:center;scroll-snap-align:center;
+    font-size:20px;font-weight:800;color:#B4BCC9;transition:color .12s,font-size .12s;
+  }
+  .wheel .witem.on{color:var(--ink);font-size:25px}
+  .wheel .wpad{height:48px}
+  .wunit{font-size:15px;font-weight:800;color:var(--muted);flex:0 0 auto;padding-bottom:2px}
+
+  /* ── 요일 목록 (누르면 바텀시트) ── */
+  .dayitem{display:flex;align-items:center;gap:12px;padding:13px 2px;border-bottom:1px solid #F2F4F7;cursor:pointer}
+  .dayitem:last-child{border-bottom:0}
+  .dayitem:active{background:#F9FAFB}
+  .dayitem .dn{width:30px;font-weight:900;font-size:15.5px;flex:0 0 auto}
+  .dayitem .dn.sun{color:#F04438} .dayitem .dn.sat{color:#2563EB}
+  .dayitem .dv{flex:1;font-size:15px;font-weight:800;color:var(--ink)}
+  .dayitem .dv.off{color:#98A2B3;font-weight:700}
+
   /* ── 토글 스위치 (체크박스 대신) ── */
   .sw{position:relative;display:inline-block;width:52px;height:31px;flex:0 0 auto}
   .sw input{position:absolute;opacity:0;width:0;height:0}
@@ -364,6 +413,11 @@
       아래 <b>공유 버튼</b>(⬆️) → <b>홈 화면에 추가</b>를 누르세요.
     </div>
   </div>
+</div>
+
+<!-- ══════════ 바텀시트 (요일별 시간 설정) ══════════ -->
+<div id="sheet" class="sheet hide" onclick="if(event.target===this) closeSheet()">
+  <div class="sc" id="sheetBody"></div>
 </div>
 
 <!-- ══════════ 4. 서브 화면 ══════════ -->
@@ -764,120 +818,190 @@ function openSub(title, html, backFn){
 }
 function closeSub(){ navBack(); }
 
-// ── 하루 한도 ──
-// 직접 숫자를 타이핑하면 헷갈린다는 의견 → 눌러서 고르는 다이얼(select)로 변경.
-// 전산에서 넣은 값이 목록에 없는 숫자(예: 47분)일 수도 있으므로 그 값은 목록에 끼워 넣는다.
-const LIMIT_STEPS=[10,20,30,40,50,60,90,120,150,180,210,240,300,360,420,480,600,720];
-function minLabel(m){ if(m<60) return m+'분'; const h=Math.floor(m/60), r=m%60; return r? `${h}시간 ${r}분` : `${h}시간`; }
-function limitOptions(cur){
-  const list=[...LIMIT_STEPS];
-  if(cur>0 && !list.includes(cur)){ list.push(cur); list.sort((a,b)=>a-b); }
-  let o=`<option value="-1"${cur<0?' selected':''}>무제한</option>`;
-  o+=`<option value="0"${cur===0?' selected':''}>사용 불가</option>`;
-  list.forEach(m=>{ o+=`<option value="${m}"${cur===m?' selected':''}>${minLabel(m)}</option>`; });
-  return o;
+// ══════════ 바텀시트 + 휠 피커 ══════════
+//   부모앱(갤럭시) 의 BottomSheetDialog + NumberPicker 와 같은 조작감을 웹에서 재현한 것.
+//   패밀리 링크처럼 손가락으로 굴려서 고르고, 가운데 칸에 걸린 값이 선택된 값이다.
+const WH_ITEM = 48;                       // ⚠️ CSS .witem 높이와 반드시 같아야 함
+function wheelHtml(id, from, to, cur, pad2){
+  let items='<div class="wpad"></div>';
+  for(let v=from; v<=to; v++){
+    const t = pad2 ? String(v).padStart(2,'0') : String(v);
+    items += `<div class="witem" data-v="${v}">${t}</div>`;
+  }
+  items += '<div class="wpad"></div>';
+  return `<div class="wheel" id="${id}" data-from="${from}" data-cur="${cur}">
+    <div class="wsel"></div><div class="wscroll">${items}</div></div>`;
 }
+// 시트를 연 뒤 호출 — 스크롤 위치를 현재값에 맞추고, 굴릴 때마다 가운데 항목을 강조
+function wheelInit(id){
+  const w=document.getElementById(id); if(!w) return;
+  const sc=w.querySelector('.wscroll');
+  const from=Number(w.dataset.from), cur=Number(w.dataset.cur);
+  const paint=()=>{
+    const idx=Math.round(sc.scrollTop/WH_ITEM);
+    w.querySelectorAll('.witem').forEach((el,i)=>el.classList.toggle('on', i===idx));
+  };
+  sc.scrollTop=(cur-from)*WH_ITEM; paint();
+  let t; sc.addEventListener('scroll',()=>{ paint(); clearTimeout(t); t=setTimeout(paint,80); },{passive:true});
+}
+function wheelVal(id){
+  const w=document.getElementById(id); if(!w) return 0;
+  const sc=w.querySelector('.wscroll');
+  return Number(w.dataset.from) + Math.round(sc.scrollTop/WH_ITEM);
+}
+function openSheet(html, afterFn){
+  document.getElementById('sheetBody').innerHTML=html;
+  document.getElementById('sheet').classList.remove('hide');
+  if(afterFn) afterFn();
+}
+function closeSheet(){ document.getElementById('sheet').classList.add('hide'); }
+// 시트 안의 "이 요일 적용" 스위치 → 휠 흐리게/진하게
+function sheetToggleWheels(on){ document.querySelectorAll('#sheetBody .wheels').forEach(e=>e.classList.toggle('off', !on)); }
+
+// ── 하루 한도 ──
+//   부모앱(갤럭시)과 동일한 구조: 요일 목록 → 요일을 누르면 바텀시트(시/분 휠) → 완료.
+//   -1 = 무제한(적용 안 함), 0 = 그날 사용 불가, N = N분.
+function minLabel(m){ if(m<0) return '무제한'; if(m===0) return '사용 불가';
+  const h=Math.floor(m/60), r=m%60;
+  return h? (r? `${h}시간 ${r}분` : `${h}시간`) : `${r}분`; }
 function openLimit(){
   const p=ST.pol; let rows='';
   for(let i=1;i<=7;i++){
     const v=Number(p['limit_day_'+i]??-1);
     const cls=i===1?'sun':(i===7?'sat':'');
-    rows+=`<div class="dayrow"><div class="dayname ${cls}">${DAYS[i-1]}</div>
-      <select class="dial" id="lim${i}" onchange="limSync(${i})">${limitOptions(v)}</select></div>`;
+    rows+=`<div class="dayitem" onclick="limSheet(${i})">
+      <div class="dn ${cls}">${DAYS[i-1]}</div>
+      <div class="dv ${v<0?'off':''}">${minLabel(v)}</div><div class="chev">›</div></div>`;
   }
   openSub('하루 사용시간 한도', `
-    <div class="note">요일별로 하루에 쓸 수 있는 시간을 정합니다.<br><b>무제한</b> = 제한 없음, <b>사용 불가</b> = 그날은 쓸 수 없음</div>
+    <div class="note">요일을 눌러 하루에 쓸 수 있는 시간을 정합니다.<br><b>무제한</b> = 제한 없음, <b>사용 불가</b> = 그날은 쓸 수 없음</div>
     <div class="card"><div class="row"><div class="grow"><div class="ttl">하루 한도 사용</div>
       <div class="val">꺼두면 요일 설정과 상관없이 제한하지 않습니다</div></div>
-      <label class="sw"><input type="checkbox" id="limOn" ${p.daily_limit_enabled==='true'?'checked':''}><i></i></label></div></div>
-    <div class="card"><div class="row"><div class="grow"><div class="ttl">모든 요일 같게</div>
-      <div class="val">켜면 한 요일만 바꿔도 7일 전부 똑같이 맞춰집니다</div></div>
-      <label class="sw"><input type="checkbox" id="limSame" onchange="limSync(1)"><i></i></label></div></div>
+      <label class="sw"><input type="checkbox" ${p.daily_limit_enabled==='true'?'checked':''}
+        onchange="toggleFlag('daily_limit_enabled',this.checked,openLimit)"><i></i></label></div></div>
     <div class="card">${rows}</div>
-    <button class="btn btn-p" onclick="saveLimit()">저장하기</button>
-    <button class="btn btn-g" onclick="closeSub()">취소</button>`);
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
-// '모든 요일 같게'가 켜져 있으면 방금 바꾼 요일 값을 나머지 6일에 그대로 복사
-function limSync(src){
-  if(!document.getElementById('limSame')?.checked) return;
-  const v=document.getElementById('lim'+src).value;
-  for(let i=1;i<=7;i++) document.getElementById('lim'+i).value=v;
+// 요일 하나를 누르면 뜨는 바텀시트 (부모앱 showDailyLimitDayPopup 과 같은 구성)
+function limSheet(d){
+  const cur=Number(ST.pol['limit_day_'+d]??-1);
+  const on=cur>=0;
+  const h=on? Math.floor(cur/60) : 2, m=on? cur%60 : 0;
+  openSheet(`
+    <div class="grip"></div>
+    <h3>${DAYS[d-1]}요일 설정</h3>
+    <div class="rowsw"><div class="t">이 요일 한도 적용</div>
+      <label class="sw"><input type="checkbox" id="shOn" ${on?'checked':''}
+        onchange="sheetToggleWheels(this.checked)"><i></i></label></div>
+    <div class="wheels ${on?'':'off'}">
+      ${wheelHtml('whH',0,23,h)}<div class="wunit">시간</div>
+      ${wheelHtml('whM',0,59,m,true)}<div class="wunit">분</div>
+    </div>
+    <div class="rowsw" style="border-bottom:0"><div class="t">모든 요일에 똑같이 적용</div>
+      <label class="sw"><input type="checkbox" id="shAll"><i></i></label></div>
+    <div class="btns">
+      <button class="btn btn-g" onclick="closeSheet()">취소</button>
+      <button class="btn btn-p" onclick="limSheetSave(${d})">완료</button>
+    </div>`, ()=>{ wheelInit('whH'); wheelInit('whM'); });
 }
-async function saveLimit(){
-  loading(true);
+async function limSheetSave(d){
+  const on=document.getElementById('shOn').checked;
+  const all=document.getElementById('shAll').checked;
+  const mins = on ? Math.max(0, Math.min(1440, wheelVal('whH')*60 + wheelVal('whM'))) : -1;
+  closeSheet(); loading(true);
   try{
-    const rows=[{key:'daily_limit_enabled', value:document.getElementById('limOn').checked?'true':'false'}];
-    for(let i=1;i<=7;i++){
-      const v=parseInt(document.getElementById('lim'+i).value,10);
-      rows.push({key:'limit_day_'+i, value: isNaN(v)? -1 : Math.max(-1,Math.min(1440,v))});
-    }
-    await savePol(rows); loading(false); toast('저장했습니다 — 자녀폰에 바로 반영됩니다'); closeSub();
+    const next=[1,2,3,4,5,6,7].map(i=>Number(ST.pol['limit_day_'+i]??-1));
+    const rows=[];
+    if(all){ for(let i=1;i<=7;i++){ rows.push({key:'limit_day_'+i, value:mins}); next[i-1]=mins; } }
+    else   { rows.push({key:'limit_day_'+d, value:mins}); next[d-1]=mins; }
+    // ⚠️ 마스터 토글 자동 처리 — 부모앱과 동일.
+    //    한 요일이라도 설정돼 있으면 ON. 이게 없으면 한도를 정해도 자녀폰이 안 잠긴다.
+    if(next.some(v=>v>=0)) rows.push({key:'daily_limit_enabled', value:'true'});
+    await savePol(rows); loading(false);
+    toast(all?'7일 전부 저장했습니다':`${DAYS[d-1]}요일 저장했습니다`);
+    openLimit();
   }catch(e){ loading(false); toast('저장 실패: '+e.message); }
 }
 
 // ── 다운타임 ──
-// 시계 모양 시간 입력이 불편하다는 의견 → 시 / 분 각각 눌러서 고르는 다이얼(select)로 변경.
-// 시 다이얼의 '없음'을 고르면 그 요일은 다운타임 없음(미설정)이 된다.
-function hourOptions(cur){        // cur: '00'~'23' 또는 '' (없음)
-  let o=`<option value=""${cur===''?' selected':''}>없음</option>`;
-  for(let h=0;h<24;h++){ const s=String(h).padStart(2,'0'); o+=`<option value="${s}"${cur===s?' selected':''}>${s}시</option>`; }
-  return o;
+//   부모앱과 동일: 요일 목록 → 요일을 누르면 바텀시트(시작/종료 시·분 휠) → 완료.
+//   저장 형식은 "HH:MM|HH:MM" 또는 "미설정" (자녀앱 dt_day_N 규격, 바꾸면 안 됨)
+function dtParse(raw){
+  if(!raw || raw==='미설정' || !raw.includes('|')) return null;
+  const [s,e]=raw.split('|');
+  const [sh,sm]=s.split(':').map(Number), [eh,em]=e.split(':').map(Number);
+  if([sh,sm,eh,em].some(isNaN)) return null;
+  return {sh,sm,eh,em};
 }
-function minOptions(cur){         // 10분 단위 (전산에서 넣은 값이 다르면 그 값도 끼워 넣음)
-  const list=['00','10','20','30','40','50'];
-  if(cur && !list.includes(cur)){ list.push(cur); list.sort(); }
-  return list.map(m=>`<option value="${m}"${cur===m?' selected':''}>${m}분</option>`).join('');
-}
-function dtCell(id, hhmm){
-  const [h,m] = (hhmm && hhmm.includes(':')) ? hhmm.split(':') : ['','00'];
-  return `<select class="dial" id="${id}H" onchange="dtSync(this)">${hourOptions(h)}</select>
-          <div class="tsep">:</div>
-          <select class="dial" id="${id}M" onchange="dtSync(this)">${minOptions(m)}</select>`;
-}
+function dtLabel(raw){ const d=dtParse(raw); return d? `${p2(d.sh)}:${p2(d.sm)} ~ ${p2(d.eh)}:${p2(d.em)}` : '없음'; }
+function p2(n){ return String(n).padStart(2,'0'); }
 function openDt(){
   const p=ST.pol; let rows='';
   for(let i=1;i<=7;i++){
     const raw=p['dt_day_'+i]||'미설정';
-    const has=raw!=='미설정'&&raw.includes('|');
-    const [s,e]=has?raw.split('|'):['',''];
     const cls=i===1?'sun':(i===7?'sat':'');
-    rows+=`<div class="dayrow"><div class="dayname ${cls}">${DAYS[i-1]}</div>
-      ${dtCell('dtS'+i, s)}<div class="tsep">~</div>${dtCell('dtE'+i, e)}</div>`;
+    const has=!!dtParse(raw);
+    rows+=`<div class="dayitem" onclick="dtSheet(${i})">
+      <div class="dn ${cls}">${DAYS[i-1]}</div>
+      <div class="dv ${has?'':'off'}">${dtLabel(raw)}</div><div class="chev">›</div></div>`;
   }
   openSub('다운타임 (취침시간)', `
-    <div class="note">정한 시간 동안 자녀폰이 잠깁니다.<br>시간을 <b>없음</b>으로 두면 그 요일은 다운타임이 없습니다.<br>예) 22시 00분 ~ 07시 00분 처럼 자정을 넘겨도 됩니다.</div>
+    <div class="note">요일을 눌러 잠글 시간을 정합니다.<br>예) 22:00 ~ 07:00 처럼 <b>자정을 넘겨도</b> 됩니다.</div>
     <div class="card"><div class="row"><div class="grow"><div class="ttl">다운타임 사용</div>
       <div class="val">꺼두면 요일 설정과 상관없이 잠기지 않습니다</div></div>
-      <label class="sw"><input type="checkbox" id="dtOn" ${p.dt_enabled==='true'?'checked':''}><i></i></label></div></div>
-    <div class="card"><div class="row"><div class="grow"><div class="ttl">모든 요일 같게</div>
-      <div class="val">켜면 한 요일만 바꿔도 7일 전부 똑같이 맞춰집니다</div></div>
-      <label class="sw"><input type="checkbox" id="dtSame" onchange="dtSyncAll(1)"><i></i></label></div></div>
+      <label class="sw"><input type="checkbox" ${p.dt_enabled==='true'?'checked':''}
+        onchange="toggleFlag('dt_enabled',this.checked,openDt)"><i></i></label></div></div>
     <div class="card">${rows}</div>
     <div class="note warn">📞 다운타임 중에도 <b>전화 · 문자 · 알람</b>은 항상 사용할 수 있습니다.</div>
-    <button class="btn btn-p" onclick="saveDt()">저장하기</button>
-    <button class="btn btn-g" onclick="closeSub()">취소</button>`);
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
-function dtSync(el){                                   // 어떤 다이얼을 바꿨는지 보고 그 요일을 기준으로 복사
-  if(!document.getElementById('dtSame')?.checked) return;
-  const m=el.id.match(/^dt[SE](\d)[HM]$/); if(m) dtSyncAll(Number(m[1]));
+function dtSheet(d){
+  const cur=dtParse(ST.pol['dt_day_'+d]);
+  const on=!!cur;
+  const v=cur||{sh:22,sm:0,eh:7,em:0};
+  openSheet(`
+    <div class="grip"></div>
+    <h3>${DAYS[d-1]}요일 설정</h3>
+    <div class="rowsw"><div class="t">이 요일 다운타임 적용</div>
+      <label class="sw"><input type="checkbox" id="shOn" ${on?'checked':''}
+        onchange="sheetToggleWheels(this.checked)"><i></i></label></div>
+    <div class="sec" style="margin:12px 2px 0">잠금 시작</div>
+    <div class="wheels ${on?'':'off'}">
+      ${wheelHtml('wSH',0,23,v.sh,true)}<div class="wunit">시</div>
+      ${wheelHtml('wSM',0,59,v.sm,true)}<div class="wunit">분</div>
+    </div>
+    <div class="sec" style="margin:8px 2px 0">잠금 해제</div>
+    <div class="wheels ${on?'':'off'}">
+      ${wheelHtml('wEH',0,23,v.eh,true)}<div class="wunit">시</div>
+      ${wheelHtml('wEM',0,59,v.em,true)}<div class="wunit">분</div>
+    </div>
+    <div class="rowsw" style="border-bottom:0"><div class="t">모든 요일에 똑같이 적용</div>
+      <label class="sw"><input type="checkbox" id="shAll"><i></i></label></div>
+    <div class="btns">
+      <button class="btn btn-g" onclick="closeSheet()">취소</button>
+      <button class="btn btn-p" onclick="dtSheetSave(${d})">완료</button>
+    </div>`, ()=>{ ['wSH','wSM','wEH','wEM'].forEach(wheelInit); });
 }
-function dtSyncAll(src){
-  if(!document.getElementById('dtSame')?.checked) return;
-  ['S','E'].forEach(k=>['H','M'].forEach(u=>{
-    const v=document.getElementById(`dt${k}${src}${u}`).value;
-    for(let i=1;i<=7;i++) document.getElementById(`dt${k}${i}${u}`).value=v;
-  }));
-}
-async function saveDt(){
-  loading(true);
+async function dtSheetSave(d){
+  const on=document.getElementById('shOn').checked;
+  const all=document.getElementById('shAll').checked;
+  let val='미설정';
+  if(on){
+    const s=`${p2(wheelVal('wSH'))}:${p2(wheelVal('wSM'))}`, e=`${p2(wheelVal('wEH'))}:${p2(wheelVal('wEM'))}`;
+    if(s===e){ toast('시작과 종료 시간이 같습니다'); return; }
+    val=`${s}|${e}`;
+  }
+  closeSheet(); loading(true);
   try{
-    const rows=[{key:'dt_enabled', value:document.getElementById('dtOn').checked?'true':'false'}];
-    const get=id=>{ const h=document.getElementById(id+'H').value; return h? h+':'+document.getElementById(id+'M').value : ''; };
-    for(let i=1;i<=7;i++){
-      const s=get('dtS'+i), e=get('dtE'+i);
-      rows.push({key:'dt_day_'+i, value:(s&&e)?`${s}|${e}`:'미설정'});
-    }
-    await savePol(rows); loading(false); toast('저장했습니다 — 자녀폰에 바로 반영됩니다'); closeSub();
+    const next=[1,2,3,4,5,6,7].map(i=>ST.pol['dt_day_'+i]||'미설정');
+    const rows=[];
+    if(all){ for(let i=1;i<=7;i++){ rows.push({key:'dt_day_'+i, value:val}); next[i-1]=val; } }
+    else   { rows.push({key:'dt_day_'+d, value:val}); next[d-1]=val; }
+    // 마스터 토글 자동 처리 — 한 요일이라도 설정돼 있으면 ON (부모앱과 동일)
+    if(next.some(v=>v!=='미설정')) rows.push({key:'dt_enabled', value:'true'});
+    await savePol(rows); loading(false);
+    toast(all?'7일 전부 저장했습니다':`${DAYS[d-1]}요일 저장했습니다`);
+    openDt();
   }catch(e){ loading(false); toast('저장 실패: '+e.message); }
 }
 
@@ -991,8 +1115,10 @@ function openAppMode(pkg){
   let rows='';
   for(let i=0;i<7;i++){
     const cls=i===0?'sun':(i===6?'sat':'');
-    rows+=`<div class="dayrow"><div class="dayname ${cls}">${DAYS[i]}</div>
-      <select class="dial" id="aw${i}" onchange="awSync(${i})">${limitOptions(m.week[i])}</select></div>`;
+    const v=m.week[i];
+    rows+=`<div class="dayitem" onclick="awSheet('${esc(pkg)}',${i})">
+      <div class="dn ${cls}">${DAYS[i]}</div>
+      <div class="dv ${v<0?'off':''}">${minLabel(v)}</div><div class="chev">›</div></div>`;
   }
   openSub(app.app_name||pkg, `
     <div class="note">이 앱을 어떻게 할지 정하세요.</div>
@@ -1012,12 +1138,8 @@ function openAppMode(pkg){
       <div class="val">하루 한도를 다 써도 이 앱은 계속 쓸 수 있습니다<br>(다운타임에는 잠깁니다 — 아래 '다운타임 허용 앱' 별도 설정)</div></div>
       ${isWl?'<span class="badge b-on">현재</span>':'<div class="chev">›</div>'}</div></div>
     <div class="sec">⌛ 요일별 시간 제한</div>
-    <div class="note"><b>무제한</b> = 이 앱은 시간 제한 없음, <b>사용 불가</b> = 그날은 이 앱을 쓸 수 없음</div>
-    <div class="card"><div class="row"><div class="grow"><div class="ttl">모든 요일 같게</div>
-      <div class="val">켜면 한 요일만 바꿔도 7일 전부 똑같이 맞춰집니다</div></div>
-      <label class="sw"><input type="checkbox" id="awSame" onchange="awSync(0)"><i></i></label></div></div>
+    <div class="note">요일을 눌러 <b>이 앱만의</b> 시간을 정합니다. 정하는 순간 바로 저장됩니다.</div>
     <div class="card">${rows}</div>
-    <button class="btn btn-p" onclick="saveAppWeek('${esc(pkg)}')">요일별 시간으로 저장</button>
     <button class="btn btn-g" onclick="closeSub()">뒤로</button>`, openApps);
 }
 
@@ -1038,19 +1160,40 @@ async function setAppMode(pkg, mode){
     loading(false); toast('저장했습니다 — 자녀폰에 바로 반영됩니다'); openAppMode(pkg);
   }catch(e){ loading(false); toast('실패: '+e.message); }
 }
-function awSync(src){
-  if(!document.getElementById('awSame')?.checked) return;
-  const v=document.getElementById('aw'+src).value;
-  for(let i=0;i<7;i++) document.getElementById('aw'+i).value=v;
+// 앱별 요일 시간 — 하루한도와 같은 바텀시트(시/분 휠)
+function awSheet(pkg, i){
+  const app=ST.apps.find(a=>a.app_package===pkg)||{app_name:pkg};
+  const cur=parseRule(ST.pol['rule_'+pkg]).week[i];
+  const on=cur>=0, h=on?Math.floor(cur/60):1, m=on?cur%60:0;
+  openSheet(`
+    <div class="grip"></div>
+    <h3>${esc(app.app_name||pkg)} — ${DAYS[i]}요일</h3>
+    <div class="rowsw"><div class="t">이 요일 시간 제한</div>
+      <label class="sw"><input type="checkbox" id="shOn" ${on?'checked':''}
+        onchange="sheetToggleWheels(this.checked)"><i></i></label></div>
+    <div class="wheels ${on?'':'off'}">
+      ${wheelHtml('whH',0,23,h)}<div class="wunit">시간</div>
+      ${wheelHtml('whM',0,59,m,true)}<div class="wunit">분</div>
+    </div>
+    <div class="rowsw" style="border-bottom:0"><div class="t">모든 요일에 똑같이 적용</div>
+      <label class="sw"><input type="checkbox" id="shAll"><i></i></label></div>
+    <div class="btns">
+      <button class="btn btn-g" onclick="closeSheet()">취소</button>
+      <button class="btn btn-p" onclick="awSheetSave('${esc(pkg)}',${i})">완료</button>
+    </div>`, ()=>{ wheelInit('whH'); wheelInit('whM'); });
 }
-async function saveAppWeek(pkg){
+async function awSheetSave(pkg, i){
+  const on=document.getElementById('shOn').checked;
+  const all=document.getElementById('shAll').checked;
+  const mins = on ? Math.max(0,Math.min(1440, wheelVal('whH')*60 + wheelVal('whM'))) : -1;
+  closeSheet();
+  const week=parseRule(ST.pol['rule_'+pkg]).week.slice();
+  if(all) week.fill(mins); else week[i]=mins;
+  await saveAppWeek(pkg, week);
+}
+async function saveAppWeek(pkg, week){
   loading(true);
   try{
-    const week=[];
-    for(let i=0;i<7;i++){
-      const v=parseInt(document.getElementById('aw'+i).value,10);
-      week.push(isNaN(v)? -1 : Math.max(-1,Math.min(1440,v)));
-    }
     const wl=new Set(J(ST.pol.whitelist_apps,[])); wl.delete(pkg);
     const bl=new Set(J(ST.pol.blocked_apps,[]));
     const allZero=week.every(v=>v===0);
