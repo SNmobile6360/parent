@@ -184,6 +184,8 @@
            autocapitalize="characters" spellcheck="false" maxlength="9">
   </div>
   <button class="btn btn-p" onclick="doConnect()">연결하기</button>
+  <!-- 자녀를 추가하러 들어온 경우에만 보임 (이미 연결된 자녀가 있을 때) -->
+  <button class="btn btn-g hide" id="btnConnectBack" onclick="openList()">자녀 목록으로</button>
 </div>
 
 <!-- ══════════ 2. PIN ══════════ -->
@@ -213,9 +215,23 @@
   </div>
 </div>
 
+<!-- ══════════ 2.5 자녀 목록 (자녀 2명 이상일 때) ══════════ -->
+<div id="scList" class="hide">
+  <div class="top">
+    <h1>자녀 선택</h1>
+    <div class="sub" id="listSub"></div>
+  </div>
+  <div class="wrap">
+    <div class="note">자녀를 누르면 관리 화면으로 들어갑니다.<br><b>해제</b>를 누르면 목록에서 빠집니다.</div>
+    <div id="listBody"></div>
+    <button class="btn btn-p" onclick="startAddChild()">＋ 자녀 추가</button>
+  </div>
+</div>
+
 <!-- ══════════ 3. 메인 ══════════ -->
 <div id="scMain" class="hide">
   <div class="top">
+    <button class="back hide" id="mBack" onclick="openList()" title="자녀 목록">‹</button>
     <h1 id="mTitle">공신폰 관리자</h1>
     <div class="sub" id="mSub"></div>
   </div>
@@ -305,10 +321,17 @@
       <div class="row"><div class="ic" style="background:#F2F4F7">🔢</div>
         <div class="grow"><div class="ttl">비밀번호 변경</div><div class="val">부모님 확인용 6자리 비밀번호</div></div><div class="chev">›</div></div>
     </div>
+    <div class="card tap" onclick="openList()">
+      <div class="row">
+        <div class="ic" style="background:#FFF7ED">👨‍👩‍👧</div>
+        <div class="grow"><div class="ttl">자녀 목록 · 자녀 추가</div><div class="val" id="vKids">-</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
     <div class="card tap" onclick="doLogout()">
       <div class="row">
         <div class="ic" style="background:#F2F4F7">🚪</div>
-        <div class="grow"><div class="ttl">연결 해제</div><div class="val">다른 자녀폰으로 바꾸기</div></div>
+        <div class="grow"><div class="ttl">이 자녀 연결 해제</div><div class="val">목록에서 이 자녀폰을 뺍니다</div></div>
         <div class="chev">›</div>
       </div>
     </div>
@@ -371,13 +394,30 @@ function clientFor(label){
 
 let ST = { code:'', server:'', name:'', pol:{}, dev:null, usage:null, reqs:[], apps:[] };
 
-const SKEY='sinae_parent_web';
-function save(){ try{ localStorage.setItem(SKEY, JSON.stringify({code:ST.code,server:ST.server,name:ST.name})); }catch(e){} }
-function load(){ try{ return JSON.parse(localStorage.getItem(SKEY)||'null'); }catch(e){ return null; } }
-function wipe(){ try{ localStorage.removeItem(SKEY); }catch(e){} }
+// ══════════ 자녀 목록 저장 (갤럭시 부모앱 ChildrenPrefsManager 와 같은 구조) ══════════
+//   sinae_parent_children : [{code,server,name}, …]  ← 자녀 여러 명
+//   sinae_parent_current  : 마지막으로 보던 자녀 코드
+//   ⚠️ 구버전(자녀 1명만 저장하던 sinae_parent_web)은 첫 실행 때 목록으로 자동 변환
+//      → 이미 연결해 쓰던 부모님은 코드를 다시 넣을 필요 없음
+const SKEY='sinae_parent_web', LKEY='sinae_parent_children', CKEY='sinae_parent_current';
+function kids(){ try{ const a=JSON.parse(localStorage.getItem(LKEY)||'[]'); return Array.isArray(a)?a.filter(k=>k&&k.code&&k.server):[]; }catch(e){ return []; } }
+function saveKids(a){ try{ localStorage.setItem(LKEY, JSON.stringify(a)); }catch(e){} }
+function setCurrent(code){ try{ localStorage.setItem(CKEY, code); }catch(e){} }
+function getCurrent(){ try{ return localStorage.getItem(CKEY)||''; }catch(e){ return ''; } }
+// 있으면 그 자리에서 갱신(순서 유지), 없으면 뒤에 추가
+function upsertKid(k){ const a=kids(); const i=a.findIndex(x=>x.code===k.code); if(i>=0) a[i]=k; else a.push(k); saveKids(a); }
+function removeKid(code){ saveKids(kids().filter(x=>x.code!==code)); if(getCurrent()===code){ try{ localStorage.removeItem(CKEY); }catch(e){} } }
+function wipeAll(){ try{ [LKEY,CKEY,SKEY].forEach(k=>localStorage.removeItem(k)); }catch(e){} }
+function migrateOld(){
+  try{
+    const s=JSON.parse(localStorage.getItem(SKEY)||'null');
+    if(s&&s.code&&s.server&&!kids().length){ saveKids([{code:s.code,server:s.server,name:s.name||''}]); setCurrent(s.code); }
+    localStorage.removeItem(SKEY);
+  }catch(e){}
+}
 
 // ── UI 유틸 ──
-function show(id){ ['scConnect','scPin','scMain','scSub'].forEach(x=>document.getElementById(x).classList.toggle('hide', x!==id)); window.scrollTo(0,0); }
+function show(id){ ['scConnect','scPin','scList','scMain','scSub'].forEach(x=>document.getElementById(x).classList.toggle('hide', x!==id)); window.scrollTo(0,0); }
 function loading(on){ document.getElementById('load').classList.toggle('hide', !on); }
 let toastT;
 function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),2200); }
@@ -404,6 +444,7 @@ document.getElementById('inCode').addEventListener('input', e=>{ e.target.value=
 async function doConnect(){
   const code = normCode(document.getElementById('inCode').value);
   if(code.length!==9){ toast('코드 8자리를 정확히 입력해 주세요'); return; }
+  if(kids().some(k=>k.code===code)){ toast('이미 연결된 자녀폰입니다'); return; }
   loading(true);
   try{
     let found=null;
@@ -416,35 +457,122 @@ async function doConnect(){
     }
     loading(false);
     if(!found){ toast('그런 코드의 자녀폰을 찾지 못했습니다'); return; }
-    ST.code=code; ST.server=found.server; ST.name=found.dev.child_name||'자녀'; ST.dev=found.dev;
-    save(); startPin();
+    // 🔐 새 자녀는 "그 자녀의" 비밀번호를 맞힌 뒤에만 목록에 저장한다.
+    //    이미 로그인된 상태라도 다른 집 자녀 코드만 넣고 바로 제어하는 일이 없도록
+    //    (갤럭시 부모앱은 세션 인증만 보지만, 웹앱은 한 단계 더 엄격하게).
+    startPin({ code, server:found.server, name:found.dev.child_name||'자녀' });
   }catch(e){ loading(false); toast('연결 실패: '+e.message); }
 }
 
 // ══════════ PIN ══════════
-let pinBuf='', pinBusy=false;
-function startPin(){ pinBuf=''; drawPin(); document.getElementById('pinMsg').textContent='비밀번호를 입력하세요'; show('scPin'); }
+// 비밀번호 화면은 두 가지 용도로 쓴다 (갤럭시 부모앱 PinAuthActivity 와 동일 규칙 + 추가 확인):
+//   pinTarget = null          → 앱 열 때 세션 잠금 해제. 연결된 자녀 "누구의" 비밀번호든 맞으면 통과
+//                               (자녀1=123456, 자녀2=123123 처럼 달라도 둘 다 열림)
+//   pinTarget = {code,…}      → 자녀 추가 확인. "그 자녀"의 비밀번호만 인정
+//   운영자 비밀번호(DEFAULT_PIN)는 항상 통과. 한 번 통과하면 앱을 완전히 닫기 전까지 다시 묻지 않는다.
+let pinBuf='', pinBusy=false, pinTarget=null;
+function startPin(target){
+  pinTarget=target||null; pinBuf=''; drawPin();
+  document.getElementById('pinMsg').textContent = target ? `${target.name}의 비밀번호를 입력하세요` : '비밀번호를 입력하세요';
+  show('scPin');
+}
 function drawPin(){ document.querySelectorAll('#scPin .dot2').forEach((d,i)=>d.classList.toggle('f', i<pinBuf.length)); }
 function pinDel(){ if(pinBusy) return; pinBuf=pinBuf.slice(0,-1); drawPin(); }
 function pinTap(n){ if(pinBusy||pinBuf.length>=6) return; pinBuf+=n; drawPin(); if(pinBuf.length===6) verifyPin(); }
+async function pinMatches(h, k){
+  const { data } = await clientFor(k.server).from('policies')
+    .select('key,value').eq('device_code',k.code).in('key',['pin_hash','operator_pw_hash']);
+  return (data||[]).some(r=>r.value===h);
+}
 async function verifyPin(){
   pinBusy=true; loading(true);
   try{
     const h=await sha256(pinBuf);
     let ok = (h === await sha256(DEFAULT_PIN));
     if(!ok){
-      const { data } = await clientFor(ST.server).from('policies')
-        .select('key,value').eq('device_code',ST.code).in('key',['pin_hash','operator_pw_hash']);
-      ok=(data||[]).some(r=>r.value===h);
+      if(pinTarget) ok = await pinMatches(h, pinTarget);
+      else for(const k of kids()){ try{ if(await pinMatches(h,k)){ ok=true; break; } }catch(e){} }
     }
     loading(false); pinBusy=false;
-    if(ok){ sessionStorage.setItem('sinae_auth','1'); enterMain(); }
+    if(ok){
+      sessionStorage.setItem('sinae_auth','1');
+      if(pinTarget){ const t=pinTarget; pinTarget=null; upsertKid(t); toast(`${t.name} 연결되었습니다`); openChild(t); }
+      else afterUnlock();
+    }
     else{ pinBuf=''; drawPin(); document.getElementById('pinMsg').textContent='비밀번호가 맞지 않습니다'; toast('비밀번호가 맞지 않습니다'); }
   }catch(e){ loading(false); pinBusy=false; pinBuf=''; drawPin(); toast('확인 실패: '+e.message); }
 }
 
+// ══════════ 자녀 목록 (갤럭시 부모앱 MainActivity 목록 화면과 동일) ══════════
+// 잠금 해제 후: 자녀 1명이면 바로 관리 화면, 2명 이상이면 목록에서 고른다.
+function afterUnlock(){
+  const a=kids();
+  if(!a.length){ show('scConnect'); return; }
+  if(a.length===1){ openChild(a[0]); return; }
+  openList();
+}
+function openChild(k){
+  ST={ code:k.code, server:k.server, name:k.name||'', pol:{}, dev:null, usage:null, reqs:[], apps:[] };
+  appQuery=''; setCurrent(k.code); enterMain();
+}
+async function openList(){ show('scList'); renderList(); await loadListStatus(); }
+function renderList(status){
+  const a=kids(), st=status||{};
+  document.getElementById('listSub').textContent = a.length+'명 연결됨';
+  document.getElementById('listBody').innerHTML = a.length ? a.map(k=>{
+    const s=st[k.code]||{};
+    const dot = s.online ? '#12B76A' : '#98A2B3';
+    const line2 = s.loaded
+      ? `${s.online ? '접속 중' : '마지막 접속 '+ago(s.last)} · 오늘 ${s.use}`
+      : `${k.code} · 서버 ${k.server}`;
+    return `<div class="card tap" onclick="pickKid('${esc(k.code)}')"><div class="row">
+      <div class="ic" style="background:#FFF7ED">👧</div>
+      <div class="grow"><div class="ttl">${esc(k.name||'자녀')}</div>
+        <div class="val"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:${dot}"></span>${line2}</div></div>
+      <button class="x" onclick="event.stopPropagation();removeChildUI('${esc(k.code)}')">해제</button>
+    </div></div>`; }).join('')
+    : `<div class="empty">연결된 자녀가 없습니다</div>`;
+}
+// 자녀별 접속 상태·오늘 사용시간을 한꺼번에 조회 (갤럭시 부모앱 목록과 같은 정보)
+async function loadListStatus(){
+  const a=kids(), today=new Date().toLocaleDateString('en-CA'), st={};
+  await Promise.all(a.map(async k=>{
+    try{
+      const sb=clientFor(k.server);
+      const [d,u]=await Promise.all([
+        sb.from('child_devices').select('child_name,last_seen_at').eq('device_code',k.code).maybeSingle(),
+        sb.from('usage_history').select('total_minutes,total_seconds').eq('device_code',k.code).eq('date',today).maybeSingle()
+      ]);
+      if(d.data?.child_name && d.data.child_name!==k.name){ k.name=d.data.child_name; upsertKid(k); }  // 전산에서 이름을 바꾼 경우 반영
+      const lt=toDate(d.data?.last_seen_at);
+      const sec=Number(u.data?.total_seconds||0)||(Number(u.data?.total_minutes||0)*60);
+      st[k.code]={ loaded:true, online: !!lt && (Date.now()-lt)/60000<10, last:d.data?.last_seen_at, use: sec>0?fmtSec(sec):'0분' };
+    }catch(e){}
+  }));
+  if(!document.getElementById('scList').classList.contains('hide')) renderList(st);
+}
+function pickKid(code){ const k=kids().find(x=>x.code===code); if(k) openChild(k); }
+function removeChildUI(code){
+  const k=kids().find(x=>x.code===code); if(!k) return;
+  if(!confirm(`${k.name} (${k.code}) 연결을 해제할까요?\n다시 연결하려면 자녀폰 코드가 필요합니다.`)) return;
+  removeKid(code); toast('연결을 해제했습니다');
+  const a=kids();
+  if(!a.length){ wipeAll(); sessionStorage.removeItem('sinae_auth'); startAddChild(); }
+  else if(a.length===1) openChild(a[0]);
+  else openList();
+}
+function startAddChild(){
+  document.getElementById('inCode').value='';
+  document.getElementById('btnConnectBack').classList.toggle('hide', !kids().length);
+  show('scConnect');
+}
+
 // ══════════ 메인 ══════════
-async function enterMain(){ show('scMain'); await reportParentLink(); await refreshAll(false); showIosTip(); }
+async function enterMain(){
+  // 자녀가 2명 이상일 때만 상단에 "‹ 목록" 버튼 (갤럭시 부모앱 대시보드의 뒤로가기와 동일)
+  document.getElementById('mBack').classList.toggle('hide', kids().length<2);
+  show('scMain'); await reportParentLink(); await refreshAll(false); showIosTip();
+}
 
 // ── 전산에 "부모앱 연동됨" 기록 ────────────────────────────
 //   안드로이드 부모앱(ParentSyncManager.reportParentLink)과 같은 3개 키를 쓴다.
@@ -507,6 +635,7 @@ function paintMain(){
   const p=ST.pol;
   document.getElementById('mTitle').textContent = ST.dev?.child_name || ST.name || '공신폰 관리자';
   document.getElementById('mSub').textContent = '서버 '+ST.server;
+  document.getElementById('vKids').textContent = kids().length+'명 연결됨 · 누르면 목록 / 추가';
 
   const sec=Number(ST.usage?.total_seconds||0)||(Number(ST.usage?.total_minutes||0)*60);
   document.getElementById('hUse').textContent = sec>0?fmtSec(sec):'0분';
@@ -977,21 +1106,16 @@ async function openHistory(){
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 
-// ── 연결 해제 ──
-function doLogout(){
-  if(!confirm('연결을 해제할까요?\n다시 연결하려면 자녀폰 코드가 필요합니다.')) return;
-  wipe(); sessionStorage.removeItem('sinae_auth');
-  ST={ code:'',server:'',name:'',pol:{},dev:null,usage:null,reqs:[],apps:[] };
-  document.getElementById('inCode').value=''; show('scConnect');
-}
+// ── 이 자녀 연결 해제 (목록에서 제거) ──
+function doLogout(){ removeChildUI(ST.code); }
 
 // ── 시작 ──
+//   자녀 없음 → 코드 입력 / 있음 → (세션 인증 안 됐으면) 비밀번호 → 1명이면 바로 관리, 2명 이상이면 목록
 (function init(){
-  const s=load();
-  if(s&&s.code&&s.server){
-    ST.code=s.code; ST.server=s.server; ST.name=s.name||'';
-    if(sessionStorage.getItem('sinae_auth')==='1') enterMain(); else startPin();
-  } else show('scConnect');
+  migrateOld();
+  if(!kids().length){ show('scConnect'); return; }
+  document.getElementById('btnConnectBack').classList.remove('hide');
+  if(sessionStorage.getItem('sinae_auth')==='1') afterUnlock(); else startPin();
 })();
 </script>
 </body>
