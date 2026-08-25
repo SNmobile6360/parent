@@ -458,7 +458,12 @@ const SERVERS = [
   { label:'J', url:'https://wydblpvphhuaoqprcmoj.supabase.co', key:'sb_publishable_xtD35V8vys32qdHA-p2_ag_pEVNQQwY' },
   { label:'K', url:'https://rrbnteoclxxpxdocedsu.supabase.co', key:'sb_publishable_FUutGhREZbKNzI_uvzc1UQ_syS4NugO' }
 ];
-const DEFAULT_PIN = '636074';
+// ⚠️ 2026-08-25: 운영자 비밀번호(매장 공통) 통과를 제거했다.
+//   이 파일은 GitHub Pages 로 공개 배포되므로 "페이지 소스 보기"만으로 값이 노출된다.
+//   자녀는 자기 폰 첫 화면에서 연결코드 8자리를 볼 수 있으므로,
+//   여기에 공통 비밀번호가 있으면 [연결코드 + 소스보기] 만으로 부모 화면에 들어가
+//   사용시간·다운타임·앱차단을 스스로 풀 수 있었다.
+//   → 이제 그 자녀의 부모 PIN(pin_hash) 하나만 통과한다. 상수 자체를 두지 않는다.
 const DAYS  = ['일','월','화','수','목','금','토'];   // limit_day_1=일 … 7=토
 const DORDER = ['일','월','화','수','목','금','토'];  // rule_ 문자열 순서 (부모앱과 동일)
 
@@ -546,7 +551,7 @@ async function doConnect(){
 //   pinTarget = null          → 앱 열 때 세션 잠금 해제. 연결된 자녀 "누구의" 비밀번호든 맞으면 통과
 //                               (자녀1=123456, 자녀2=123123 처럼 달라도 둘 다 열림)
 //   pinTarget = {code,…}      → 자녀 추가 확인. "그 자녀"의 비밀번호만 인정
-//   운영자 비밀번호(DEFAULT_PIN)는 항상 통과. 한 번 통과하면 앱을 완전히 닫기 전까지 다시 묻지 않는다.
+//   그 자녀의 부모 PIN(pin_hash) 만 통과한다. 한 번 통과하면 앱을 완전히 닫기 전까지 다시 묻지 않는다.
 let pinBuf='', pinBusy=false, pinTarget=null;
 function startPin(target){
   pinTarget=target||null; pinBuf=''; drawPin();
@@ -557,26 +562,29 @@ function drawPin(){ document.querySelectorAll('#scPin .dot2').forEach((d,i)=>d.c
 function pinDel(){ if(pinBusy) return; pinBuf=pinBuf.slice(0,-1); drawPin(); }
 function pinTap(n){ if(pinBusy||pinBuf.length>=6) return; pinBuf+=n; drawPin(); if(pinBuf.length===6) verifyPin(); }
 async function pinMatches(h, k){
+  // ⚠️ 2026-08-25: operator_pw_hash(운영자 비밀번호) 를 검사 대상에서 뺐다.
+  //   부모용 웹앱에는 운영자 탭이 없어 운영자 비밀번호를 쓸 일이 없고,
+  //   매장 작업은 자녀앱 운영자 탭 / 시내모바일 전산에서 한다.
   const { data } = await clientFor(k.server).from('policies')
-    .select('key,value').eq('device_code',k.code).in('key',['pin_hash','operator_pw_hash']);
+    .select('key,value').eq('device_code',k.code).in('key',['pin_hash']);
   return (data||[]).some(r=>r.value===h);
 }
 async function verifyPin(){
   pinBusy=true; loading(true);
   try{
     const h=await sha256(pinBuf);
-    let ok = (h === await sha256(DEFAULT_PIN));
-    if(!ok){
-      if(pinTarget) ok = await pinMatches(h, pinTarget);
-      else for(const k of kids()){ try{ if(await pinMatches(h,k)){ ok=true; break; } }catch(e){} }
-    }
+    let ok = false;                                   // 공통 비밀번호 통과 없음 — 자녀별 PIN 만 인정
+    if(pinTarget) ok = await pinMatches(h, pinTarget);
+    else for(const k of kids()){ try{ if(await pinMatches(h,k)){ ok=true; break; } }catch(e){} }
     loading(false); pinBusy=false;
     if(ok){
       sessionStorage.setItem('sinae_auth','1');
       if(pinTarget){ const t=pinTarget; pinTarget=null; upsertKid(t); toast(`${t.name} 연결되었습니다`); openChild(t); }
       else afterUnlock();
     }
-    else{ pinBuf=''; drawPin(); document.getElementById('pinMsg').textContent='비밀번호가 맞지 않습니다'; toast('비밀번호가 맞지 않습니다'); }
+    else{ pinBuf=''; drawPin();
+      document.getElementById('pinMsg').textContent='비밀번호가 맞지 않습니다 · 자녀폰에 설정된 부모님 PIN을 넣어주세요';
+      toast('비밀번호가 맞지 않습니다'); }
   }catch(e){ loading(false); pinBusy=false; pinBuf=''; drawPin(); toast('확인 실패: '+e.message); }
 }
 
@@ -672,7 +680,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '8월22일 수정본';
+const WEB_LABEL = '8월25일 수정본';
 async function reportParentLink(){
   try{
     const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
@@ -1337,9 +1345,12 @@ async function savePin(){
   loading(true);
   try{
     const h=await sha256(a);
+    // ⚠️ 2026-08-25: 운영자 비밀번호(operator_pw_*) 는 더 이상 같이 바꾸지 않는다.
+    //   예전에는 부모님이 PIN 을 바꾸면 그 자녀폰의 운영자 비밀번호까지 같은 값이 되어,
+    //   매장에서 그 폰 운영자 탭을 열 때 기존 번호가 안 먹었다.
+    //   운영자 비밀번호는 매장 것으로 남겨두고, 부모님 PIN 만 바꾼다.
     await savePol([
-      {key:'pin_hash', value:h}, {key:'pin_plain', value:a},
-      {key:'operator_pw_hash', value:h}, {key:'operator_pw_plain', value:a}
+      {key:'pin_hash', value:h}, {key:'pin_plain', value:a}
     ]);
     loading(false); toast('비밀번호를 변경했습니다'); closeSub();
   }catch(e){ loading(false); toast('실패: '+e.message); }
