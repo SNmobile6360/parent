@@ -131,7 +131,10 @@
     animation:up .22s cubic-bezier(.2,.8,.3,1);max-height:92dvh;overflow-y:auto;
   }
   @keyframes up{from{transform:translateY(100%)}}
-  .sheet .grip{width:42px;height:4px;border-radius:99px;background:#D0D5DD;margin:6px auto 12px}
+  .sheet .bchips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.bchip{flex:0 0 auto;padding:11px 18px;border:1.5px solid #f59e0b;background:rgba(245,158,11,.08);color:#f59e0b;border-radius:999px;font-size:15px;font-weight:700;cursor:pointer}
+.bchip:active{background:rgba(245,158,11,.2)}
+.grip{width:42px;height:4px;border-radius:99px;background:#D0D5DD;margin:6px auto 12px}
   .sheet h3{font-size:19px;font-weight:900;text-align:center;margin-bottom:14px;letter-spacing:-.02em}
   .sheet .rowsw{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid #F2F4F7}
   .sheet .rowsw .t{flex:1;font-size:15.5px;font-weight:800}
@@ -680,7 +683,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '8월25일 수정본';
+const WEB_LABEL = '8월27일 수정본';
 async function reportParentLink(){
   try{
     const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
@@ -830,14 +833,17 @@ function closeSub(){ navBack(); }
 //   부모앱(갤럭시) 의 BottomSheetDialog + NumberPicker 와 같은 조작감을 웹에서 재현한 것.
 //   패밀리 링크처럼 손가락으로 굴려서 고르고, 가운데 칸에 걸린 값이 선택된 값이다.
 const WH_ITEM = 48;                       // ⚠️ CSS .witem 높이와 반드시 같아야 함
-function wheelHtml(id, from, to, cur, pad2){
+// 🔧 v31: step 추가 — 5분 단위(5,10,15,20…) 같은 눈금을 만들 수 있게.
+//   step 을 안 주면 예전처럼 1씩 (기존 시/분 휠은 그대로 동작).
+function wheelHtml(id, from, to, cur, pad2, step){
+  const st = step || 1;
   let items='<div class="wpad"></div>';
-  for(let v=from; v<=to; v++){
+  for(let v=from; v<=to; v+=st){
     const t = pad2 ? String(v).padStart(2,'0') : String(v);
     items += `<div class="witem" data-v="${v}">${t}</div>`;
   }
   items += '<div class="wpad"></div>';
-  return `<div class="wheel" id="${id}" data-from="${from}" data-cur="${cur}">
+  return `<div class="wheel" id="${id}" data-from="${from}" data-cur="${cur}" data-step="${st}">
     <div class="wsel"></div><div class="wscroll">${items}</div></div>`;
 }
 // 시트를 연 뒤 호출 — 스크롤 위치를 현재값에 맞추고, 굴릴 때마다 가운데 항목을 강조
@@ -849,13 +855,15 @@ function wheelInit(id){
     const idx=Math.round(sc.scrollTop/WH_ITEM);
     w.querySelectorAll('.witem').forEach((el,i)=>el.classList.toggle('on', i===idx));
   };
-  sc.scrollTop=(cur-from)*WH_ITEM; paint();
+  const st=Number(w.dataset.step||1);
+  sc.scrollTop=Math.round((cur-from)/st)*WH_ITEM; paint();
   let t; sc.addEventListener('scroll',()=>{ paint(); clearTimeout(t); t=setTimeout(paint,80); },{passive:true});
 }
 function wheelVal(id){
   const w=document.getElementById(id); if(!w) return 0;
   const sc=w.querySelector('.wscroll');
-  return Number(w.dataset.from) + Math.round(sc.scrollTop/WH_ITEM);
+  const st=Number(w.dataset.step||1);
+  return Number(w.dataset.from) + Math.round(sc.scrollTop/WH_ITEM)*st;
 }
 function openSheet(html, afterFn){
   document.getElementById('sheetBody').innerHTML=html;
@@ -872,6 +880,101 @@ function sheetToggleWheels(on){ document.querySelectorAll('#sheetBody .wheels').
 function minLabel(m){ if(m<0) return '무제한'; if(m===0) return '사용 불가';
   const h=Math.floor(m/60), r=m%60;
   return h? (r? `${h}시간 ${r}분` : `${h}시간`) : `${r}분`; }
+// ══════════════════════════════════════════════════
+// 🎁 v31 「오늘만!」 보너스 시간
+//   bonus_today     = "YYYY-MM-DD|분"
+//   app_bonus_today = "YYYY-MM-DD|{"패키지":분, …}"
+//   ⚠️ 자녀폰은 날짜가 오늘일 때만 인정 → 자정 지나면 원래 설정으로 자동 복귀.
+//      (부모가 따로 취소하지 않아도 되고, 폰이 꺼져 있었어도 안전)
+// ══════════════════════════════════════════════════
+function todayYmd(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function bonusMinsToday(){
+  const raw=ST.pol.bonus_today||''; const i=raw.indexOf('|');
+  if(i<=0 || raw.slice(0,i)!==todayYmd()) return 0;
+  return parseInt(raw.slice(i+1))||0;
+}
+function appBonusToday(){
+  const raw=ST.pol.app_bonus_today||''; const i=raw.indexOf('|');
+  if(i<=0 || raw.slice(0,i)!==todayYmd()) return {};
+  try{ return JSON.parse(raw.slice(i+1))||{}; }catch(e){ return {}; }
+}
+/** 보너스 바텀시트 (일일한도용) */
+/** 🎁 보너스 바텀시트 (일일한도) — 5분 단위 다이얼 */
+function bonusSheet(){
+  const cur=bonusMinsToday();
+  openSheet(`
+    <div class="grip"></div>
+    <h3>🎁 오늘만! 보너스 시간</h3>
+    <div class="note" style="margin:0 0 12px">
+      오늘 하루만 <b>사용시간을 늘려줍니다.</b><br>
+      요일별로 정해둔 한도는 <b>그대로</b> 있고 거기에 더해집니다.<br>
+      <b>내일이 되면 저절로 원래대로 돌아갑니다.</b> 취소하지 않으셔도 됩니다.
+    </div>
+    <div style="text-align:center;font-size:15px;font-weight:800;margin:0 0 10px;color:${cur>0?'#f59e0b':'#9aa4b2'}">
+      ${cur>0? '지금 준 보너스 : +'+minLabel(cur) : '오늘 준 보너스 없음'}
+    </div>
+    <div class="wheels">
+      ${wheelHtml('whB',0,360,cur,false,5)}<div class="wunit">분</div>
+    </div>
+    <div style="text-align:center;font-size:12.5px;color:#9aa4b2;margin-top:-4px">5분 단위 · 0분으로 두면 보너스가 없어집니다</div>
+    <div class="btns">
+      <button class="btn btn-g" onclick="closeSheet()">취소</button>
+      <button class="btn btn-p" onclick="bonusSave()">완료</button>
+    </div>`, ()=>{ wheelInit('whB'); });
+}
+async function bonusSave(){
+  const mins=Math.max(0,Math.min(720,wheelVal('whB')));
+  closeSheet(); loading(true);
+  try{
+    await savePol([{key:'bonus_today', value:`${todayYmd()}|${mins}`}]);
+    ST.pol.bonus_today=`${todayYmd()}|${mins}`;
+    loading(false);
+    toast(mins>0? `오늘 보너스 +${minLabel(mins)} — 내일 자동 해제` : '보너스를 지웠습니다');
+    openLimit();
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+/** 🎁 앱별 보너스 바텀시트 — 5분 단위 다이얼 */
+function appBonusSheet(pkg,name){
+  const cur=appBonusToday()[pkg]||0;
+  openSheet(`
+    <div class="grip"></div>
+    <h3>🎁 오늘만! ${esc(name)}</h3>
+    <div class="note" style="margin:0 0 12px">
+      오늘 하루만 <b>이 앱의 시간을 늘려줍니다.</b><br>
+      정해둔 시간은 그대로 두고 거기에 더해집니다.<br>
+      <b>내일이면 저절로 원래대로 돌아갑니다.</b><br>
+      <span style="color:#9aa4b2">「무제한」·「사용 불가」인 요일에는 적용되지 않습니다.</span>
+    </div>
+    <div style="text-align:center;font-size:15px;font-weight:800;margin:0 0 10px;color:${cur>0?'#f59e0b':'#9aa4b2'}">
+      ${cur>0? '지금 준 보너스 : +'+minLabel(cur) : '오늘 준 보너스 없음'}
+    </div>
+    <div class="wheels">
+      ${wheelHtml('whAB',0,360,cur,false,5)}<div class="wunit">분</div>
+    </div>
+    <div style="text-align:center;font-size:12.5px;color:#9aa4b2;margin-top:-4px">5분 단위 · 0분으로 두면 보너스가 없어집니다</div>
+    <div class="btns">
+      <button class="btn btn-g" onclick="closeSheet()">취소</button>
+      <button class="btn btn-p" onclick="appBonusSave('${pkg}')">완료</button>
+    </div>`, ()=>{ wheelInit('whAB'); });
+}
+async function appBonusSave(pkg){
+  const mins=Math.max(0,Math.min(720,wheelVal('whAB')));
+  const cur=appBonusToday();
+  if(mins<=0) delete cur[pkg]; else cur[pkg]=mins;
+  const raw=`${todayYmd()}|${JSON.stringify(cur)}`;
+  closeSheet(); loading(true);
+  try{
+    await savePol([{key:'app_bonus_today', value:raw}]);
+    ST.pol.app_bonus_today=raw;
+    loading(false);
+    toast(mins>0? `오늘 보너스 +${minLabel(mins)} — 내일 자동 해제` : '보너스를 지웠습니다');
+    openAppMode(pkg);
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+
 function openLimit(){
   const p=ST.pol; let rows='';
   for(let i=1;i<=7;i++){
@@ -888,6 +991,10 @@ function openLimit(){
       <label class="sw"><input type="checkbox" ${p.daily_limit_enabled==='true'?'checked':''}
         onchange="toggleFlag('daily_limit_enabled',this.checked,openLimit)"><i></i></label></div></div>
     <div class="card">${rows}</div>
+    <div class="card"><div class="row" onclick="bonusSheet()" style="cursor:pointer">
+      <div class="grow"><div class="ttl">🎁 오늘만! 보너스 시간</div>
+      <div class="val">${bonusMinsToday()>0 ? "오늘 +"+minLabel(bonusMinsToday())+" · 내일 자동 해제" : "오늘 하루만 시간을 더 줍니다"}</div></div>
+      <div class="chev">›</div></div></div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 // 요일 하나를 누르면 뜨는 바텀시트 (부모앱 showDailyLimitDayPopup 과 같은 구성)
@@ -1148,6 +1255,11 @@ function openAppMode(pkg){
     <div class="sec">⌛ 요일별 시간 제한</div>
     <div class="note">요일을 눌러 <b>이 앱만의</b> 시간을 정합니다. 정하는 순간 바로 저장됩니다.</div>
     <div class="card">${rows}</div>
+    <div class="card"><div class="row" onclick="appBonusSheet('${esc(pkg)}','${esc((app.app_name||pkg).replace(/'/g,''))}')" style="cursor:pointer">
+      <div class="ic" style="background:rgba(245,158,11,.12)">🎁</div>
+      <div class="grow"><div class="ttl">오늘만! 보너스 시간</div>
+      <div class="val">${(appBonusToday()[pkg]||0)>0 ? "오늘 +"+minLabel(appBonusToday()[pkg])+" · 내일 자동 해제" : "오늘 하루만 이 앱 시간을 더 줍니다"}</div></div>
+      <div class="chev">›</div></div></div>
     <button class="btn btn-g" onclick="closeSub()">뒤로</button>`, openApps);
 }
 
