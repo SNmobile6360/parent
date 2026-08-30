@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>공신폰 관리자</title>
+<title>자녀 공신폰 관리</title>
 
 <!-- 아이폰 홈 화면 추가 시 앱처럼 전체화면으로 뜨게 -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="공신폰 관리자">
+<meta name="apple-mobile-web-app-title" content="자녀 공신폰 관리">
 <meta name="theme-color" content="#1B3A8F">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="manifest" href="manifest.json">
@@ -90,6 +90,14 @@
   .btn-d{background:#FEF3F2;color:var(--danger)}
   .btn:active{opacity:.85}
   .btn+.btn{margin-top:9px}
+  /* 🎁 오늘만 보너스 — 노란 버튼 + 선택 상자 */
+  .btn-y{background:#F9AB00;color:#1A1A1A}
+  .btn.btn-y{width:auto;padding:12px 20px;font-size:15px;flex:0 0 auto}
+  .sel{
+    flex:1; min-width:0; padding:12px 14px; border-radius:11px;
+    border:1px solid var(--line,#E3E8EF); background:#fff; color:var(--ink);
+    font-size:15px; font-weight:700; font-family:inherit; cursor:pointer;
+  }
   .btn:disabled{opacity:.5}
 
   input,select{
@@ -131,10 +139,7 @@
     animation:up .22s cubic-bezier(.2,.8,.3,1);max-height:92dvh;overflow-y:auto;
   }
   @keyframes up{from{transform:translateY(100%)}}
-  .sheet .bchips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
-.bchip{flex:0 0 auto;padding:11px 18px;border:1.5px solid #f59e0b;background:rgba(245,158,11,.08);color:#f59e0b;border-radius:999px;font-size:15px;font-weight:700;cursor:pointer}
-.bchip:active{background:rgba(245,158,11,.2)}
-.grip{width:42px;height:4px;border-radius:99px;background:#D0D5DD;margin:6px auto 12px}
+  .sheet .grip{width:42px;height:4px;border-radius:99px;background:#D0D5DD;margin:6px auto 12px}
   .sheet h3{font-size:19px;font-weight:900;text-align:center;margin-bottom:14px;letter-spacing:-.02em}
   .sheet .rowsw{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid #F2F4F7}
   .sheet .rowsw .t{flex:1;font-size:15.5px;font-weight:800}
@@ -247,7 +252,7 @@
 <div id="scConnect" class="center">
   <div class="logo">
     <div class="mark">📱</div>
-    <h2>공신폰 관리자</h2>
+    <h2>자녀 공신폰 관리</h2>
     <p>자녀폰을 연결해 주세요</p>
   </div>
   <div class="note">
@@ -267,7 +272,7 @@
 <div id="scPin" class="center hide">
   <div class="logo">
     <div class="mark">🔒</div>
-    <h2>공신폰 관리자</h2>
+    <h2>자녀 공신폰 관리</h2>
     <p id="pinMsg">비밀번호를 입력하세요</p>
   </div>
   <div class="dots">
@@ -307,7 +312,7 @@
 <div id="scMain" class="hide">
   <div class="top">
     <button class="back hide" id="mBack" onclick="openList()" title="자녀 목록">‹</button>
-    <h1 id="mTitle">공신폰 관리자</h1>
+    <h1 id="mTitle">자녀 공신폰 관리</h1>
     <div class="sub" id="mSub"></div>
   </div>
   <div class="wrap">
@@ -557,14 +562,59 @@ async function doConnect(){
 //   pinTarget = {code,…}      → 자녀 추가 확인. "그 자녀"의 비밀번호만 인정
 //   그 자녀의 부모 PIN(pin_hash) 만 통과한다. 한 번 통과하면 앱을 완전히 닫기 전까지 다시 묻지 않는다.
 let pinBuf='', pinBusy=false, pinTarget=null;
+// ══════════ PIN 실패 잠금 (자녀앱 PinStorage 와 같은 규칙) ══════════
+//   5회 틀리면 10분 잠금. 맞으면 카운터 리셋.
+//   localStorage 에 둔다 — sessionStorage 면 탭만 닫았다 열어도 풀려서 의미가 없다.
+//   ⚠️ 브라우저 저장소라 마음먹고 지우면 우회된다. 서버측 제한은 아니다.
+const FKEY='sinae_pin_fails', UKEY='sinae_pin_lock_until';
+const PIN_MAX_FAILS = 5, PIN_LOCK_MS = 10*60*1000;
+
+function pinLockLeftSec(){
+  try{ const u=parseInt(localStorage.getItem(UKEY)||'0',10);
+       const left=u-Date.now(); return left>0? Math.ceil(left/1000) : 0; }catch(e){ return 0; }
+}
+function pinFails(){ try{ return parseInt(localStorage.getItem(FKEY)||'0',10)||0; }catch(e){ return 0; } }
+function recordPinFail(){
+  let n=pinFails()+1;
+  try{
+    if(n>=PIN_MAX_FAILS){ localStorage.setItem(UKEY, String(Date.now()+PIN_LOCK_MS));
+                          localStorage.setItem(FKEY,'0'); n=0; return true; }   // 잠금 걸림
+    localStorage.setItem(FKEY, String(n));
+  }catch(e){}
+  return false;
+}
+function resetPinFails(){ try{ localStorage.removeItem(FKEY); localStorage.removeItem(UKEY); }catch(e){} }
+function pinLockMsg(){
+  const s=pinLockLeftSec();
+  const m=Math.floor(s/60), r=s%60;
+  return `너무 여러 번 틀렸습니다 · ${m>0? m+'분 ':''}${r}초 뒤에 다시 시도해 주세요`;
+}
+// 잠긴 동안 1초마다 남은 시간을 다시 그린다
+let pinTick=null;
+function startPinTick(){
+  clearInterval(pinTick);
+  pinTick=setInterval(()=>{
+    const el=document.getElementById('pinMsg'); if(!el) return;
+    if(pinLockLeftSec()>0){ el.textContent=pinLockMsg(); }
+    else{ clearInterval(pinTick); pinTick=null;
+          el.textContent = pinTarget ? `${pinTarget.name}의 비밀번호를 입력하세요` : '비밀번호를 입력하세요'; }
+  },1000);
+}
+
 function startPin(target){
   pinTarget=target||null; pinBuf=''; drawPin();
-  document.getElementById('pinMsg').textContent = target ? `${target.name}의 비밀번호를 입력하세요` : '비밀번호를 입력하세요';
+  const el=document.getElementById('pinMsg');
+  if(pinLockLeftSec()>0){ el.textContent=pinLockMsg(); startPinTick(); }
+  else el.textContent = target ? `${target.name}의 비밀번호를 입력하세요` : '비밀번호를 입력하세요';
   show('scPin');
 }
 function drawPin(){ document.querySelectorAll('#scPin .dot2').forEach((d,i)=>d.classList.toggle('f', i<pinBuf.length)); }
 function pinDel(){ if(pinBusy) return; pinBuf=pinBuf.slice(0,-1); drawPin(); }
-function pinTap(n){ if(pinBusy||pinBuf.length>=6) return; pinBuf+=n; drawPin(); if(pinBuf.length===6) verifyPin(); }
+function pinTap(n){
+  if(pinBusy||pinBuf.length>=6) return;
+  if(pinLockLeftSec()>0){ document.getElementById('pinMsg').textContent=pinLockMsg(); startPinTick(); toast(pinLockMsg()); return; }
+  pinBuf+=n; drawPin(); if(pinBuf.length===6) verifyPin();
+}
 async function pinMatches(h, k){
   // ⚠️ 2026-08-25: operator_pw_hash(운영자 비밀번호) 를 검사 대상에서 뺐다.
   //   부모용 웹앱에는 운영자 탭이 없어 운영자 비밀번호를 쓸 일이 없고,
@@ -574,6 +624,8 @@ async function pinMatches(h, k){
   return (data||[]).some(r=>r.value===h);
 }
 async function verifyPin(){
+  if(pinLockLeftSec()>0){ pinBuf=''; drawPin();
+    document.getElementById('pinMsg').textContent=pinLockMsg(); startPinTick(); return; }
   pinBusy=true; loading(true);
   try{
     const h=await sha256(pinBuf);
@@ -582,13 +634,19 @@ async function verifyPin(){
     else for(const k of kids()){ try{ if(await pinMatches(h,k)){ ok=true; break; } }catch(e){} }
     loading(false); pinBusy=false;
     if(ok){
+      resetPinFails();                                // 🆕 성공하면 실패 기록 초기화
       sessionStorage.setItem('sinae_auth','1');
       if(pinTarget){ const t=pinTarget; pinTarget=null; upsertKid(t); toast(`${t.name} 연결되었습니다`); openChild(t); }
       else afterUnlock();
     }
     else{ pinBuf=''; drawPin();
-      document.getElementById('pinMsg').textContent='비밀번호가 맞지 않습니다 · 자녀폰에 설정된 부모님 PIN을 넣어주세요';
-      toast('비밀번호가 맞지 않습니다'); }
+      const locked = recordPinFail();                 // 🆕 실패 기록 · 5회면 10분 잠금
+      const el=document.getElementById('pinMsg');
+      if(locked){ el.textContent=pinLockMsg(); startPinTick(); toast('5번 틀렸습니다 · 10분 잠깁니다'); }
+      else{ const left=PIN_MAX_FAILS-pinFails();
+        el.textContent=`비밀번호가 맞지 않습니다 · ${left}번 더 틀리면 10분 잠깁니다`;
+        toast(`비밀번호가 맞지 않습니다 (${left}번 남음)`); }
+    }
   }catch(e){ loading(false); pinBusy=false; pinBuf=''; drawPin(); toast('확인 실패: '+e.message); }
 }
 
@@ -684,7 +742,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '8월28일 수정본';
+const WEB_LABEL = '8월30일 수정본';
 async function reportParentLink(){
   try{
     const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
@@ -731,7 +789,7 @@ function badge(on, onTxt, offTxt){
 
 function paintMain(){
   const p=ST.pol;
-  document.getElementById('mTitle').textContent = ST.dev?.child_name || ST.name || '공신폰 관리자';
+  document.getElementById('mTitle').textContent = ST.dev?.child_name || ST.name || '자녀 공신폰 관리';
   document.getElementById('mSub').textContent = '서버 '+ST.server;
   document.getElementById('vKids').textContent = kids().length+'명 연결됨 · 누르면 목록 / 추가';
 
@@ -788,6 +846,22 @@ function parseRule(raw){
     const allZero = week.every(v=>v===0);
     return { mode: allZero?'BLOCK':'WEEKLY', week };
   }
+  // 🆕 2026-08-30: v1 포맷("1|요일목록|분") 도 읽는다.
+  //   전산의 「모든 요일 같게」와 자녀앱 운영자 탭이 이 포맷으로 저장한다.
+  //   전에는 여기서 NONE 을 돌려줘 화면에 「설정 없음」으로 보였고,
+  //   부모가 그 상태로 저장하면 원래 걸려 있던 시간제한이 지워졌다.
+  if(raw.startsWith('1|')){
+    const p = raw.split('|');
+    if(p.length >= 3){
+      const days = p[1] || '';                    // 비어 있으면 전 요일
+      const mins = parseInt(p[2], 10);
+      if(!isNaN(mins)){
+        const week = DORDER.map(d => (!days || days.split(',').includes(d)) ? mins : -1);
+        const allZero = week.every(v=>v===0);
+        return { mode: allZero?'BLOCK':'WEEKLY', week };
+      }
+    }
+  }
   return { mode:'NONE', week:[-1,-1,-1,-1,-1,-1,-1] };
 }
 function buildWeekRule(week){ return '2|'+DORDER.map((d,i)=>`${d}:${week[i]}`).join(','); }
@@ -834,17 +908,14 @@ function closeSub(){ navBack(); }
 //   부모앱(갤럭시) 의 BottomSheetDialog + NumberPicker 와 같은 조작감을 웹에서 재현한 것.
 //   패밀리 링크처럼 손가락으로 굴려서 고르고, 가운데 칸에 걸린 값이 선택된 값이다.
 const WH_ITEM = 48;                       // ⚠️ CSS .witem 높이와 반드시 같아야 함
-// 🔧 v31: step 추가 — 5분 단위(5,10,15,20…) 같은 눈금을 만들 수 있게.
-//   step 을 안 주면 예전처럼 1씩 (기존 시/분 휠은 그대로 동작).
-function wheelHtml(id, from, to, cur, pad2, step){
-  const st = step || 1;
+function wheelHtml(id, from, to, cur, pad2){
   let items='<div class="wpad"></div>';
-  for(let v=from; v<=to; v+=st){
+  for(let v=from; v<=to; v++){
     const t = pad2 ? String(v).padStart(2,'0') : String(v);
     items += `<div class="witem" data-v="${v}">${t}</div>`;
   }
   items += '<div class="wpad"></div>';
-  return `<div class="wheel" id="${id}" data-from="${from}" data-cur="${cur}" data-step="${st}">
+  return `<div class="wheel" id="${id}" data-from="${from}" data-cur="${cur}">
     <div class="wsel"></div><div class="wscroll">${items}</div></div>`;
 }
 // 시트를 연 뒤 호출 — 스크롤 위치를 현재값에 맞추고, 굴릴 때마다 가운데 항목을 강조
@@ -856,15 +927,13 @@ function wheelInit(id){
     const idx=Math.round(sc.scrollTop/WH_ITEM);
     w.querySelectorAll('.witem').forEach((el,i)=>el.classList.toggle('on', i===idx));
   };
-  const st=Number(w.dataset.step||1);
-  sc.scrollTop=Math.round((cur-from)/st)*WH_ITEM; paint();
+  sc.scrollTop=(cur-from)*WH_ITEM; paint();
   let t; sc.addEventListener('scroll',()=>{ paint(); clearTimeout(t); t=setTimeout(paint,80); },{passive:true});
 }
 function wheelVal(id){
   const w=document.getElementById(id); if(!w) return 0;
   const sc=w.querySelector('.wscroll');
-  const st=Number(w.dataset.step||1);
-  return Number(w.dataset.from) + Math.round(sc.scrollTop/WH_ITEM)*st;
+  return Number(w.dataset.from) + Math.round(sc.scrollTop/WH_ITEM);
 }
 function openSheet(html, afterFn){
   document.getElementById('sheetBody').innerHTML=html;
@@ -881,101 +950,92 @@ function sheetToggleWheels(on){ document.querySelectorAll('#sheetBody .wheels').
 function minLabel(m){ if(m<0) return '무제한'; if(m===0) return '사용 불가';
   const h=Math.floor(m/60), r=m%60;
   return h? (r? `${h}시간 ${r}분` : `${h}시간`) : `${r}분`; }
-// ══════════════════════════════════════════════════
-// 🎁 v31 「오늘만!」 보너스 시간
-//   bonus_today     = "YYYY-MM-DD|분"
-//   app_bonus_today = "YYYY-MM-DD|{"패키지":분, …}"
-//   ⚠️ 자녀폰은 날짜가 오늘일 때만 인정 → 자정 지나면 원래 설정으로 자동 복귀.
-//      (부모가 따로 취소하지 않아도 되고, 폰이 꺼져 있었어도 안전)
-// ══════════════════════════════════════════════════
-function todayYmd(){
+// ══════════ 🎁 오늘만 보너스 시간 (전산과 같은 규약) ══════════
+//   bonus_today      = "YYYY-MM-DD|분"          ← 일일한도에 더해지는 시간
+//   app_bonus_today  = "YYYY-MM-DD|{패키지:분}" ← 앱별로 더해지는 시간
+//   날짜가 오늘이 아니면 0 으로 본다 → 자정이 지나면 저절로 사라진다.
+//   자녀앱 v31+ 필요.
+const BONUS_MAX = 12*60;          // 하루 상한 12시간 (전산과 동일)
+function _todayYmd(){
   const d=new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-function bonusMinsToday(){
-  const raw=ST.pol.bonus_today||''; const i=raw.indexOf('|');
-  if(i<=0 || raw.slice(0,i)!==todayYmd()) return 0;
-  return parseInt(raw.slice(i+1))||0;
+function getBonusToday(){
+  const raw = ST.pol.bonus_today || '';
+  const i = raw.indexOf('|');
+  if(i<=0 || raw.slice(0,i)!==_todayYmd()) return 0;
+  return parseInt(raw.slice(i+1),10) || 0;
 }
-function appBonusToday(){
-  const raw=ST.pol.app_bonus_today||''; const i=raw.indexOf('|');
-  if(i<=0 || raw.slice(0,i)!==todayYmd()) return {};
-  try{ return JSON.parse(raw.slice(i+1))||{}; }catch(e){ return {}; }
+function getAppBonusToday(){
+  const raw = ST.pol.app_bonus_today || '';
+  const i = raw.indexOf('|');
+  if(i<=0 || raw.slice(0,i)!==_todayYmd()) return {};
+  try{ const o=JSON.parse(raw.slice(i+1)); return (o&&typeof o==='object')?o:{}; }catch(e){ return {}; }
 }
-/** 보너스 바텀시트 (일일한도용) */
-/** 🎁 보너스 바텀시트 (일일한도) — 5분 단위 다이얼 */
-function bonusSheet(){
-  const cur=bonusMinsToday();
-  openSheet(`
-    <div class="grip"></div>
-    <h3>🎁 오늘만! 보너스 시간</h3>
-    <div class="note" style="margin:0 0 12px">
-      오늘 하루만 <b>사용시간을 늘려줍니다.</b><br>
-      요일별로 정해둔 한도는 <b>그대로</b> 있고 거기에 더해집니다.<br>
-      <b>내일이 되면 저절로 원래대로 돌아갑니다.</b> 취소하지 않으셔도 됩니다.
-    </div>
-    <div style="text-align:center;font-size:15px;font-weight:800;margin:0 0 10px;color:${cur>0?'#f59e0b':'#9aa4b2'}">
-      ${cur>0? '지금 준 보너스 : +'+minLabel(cur) : '오늘 준 보너스 없음'}
-    </div>
-    <div class="wheels">
-      ${wheelHtml('whB',0,360,cur,false,5)}<div class="wunit">분</div>
-    </div>
-    <div style="text-align:center;font-size:12.5px;color:#9aa4b2;margin-top:-4px">5분 단위 · 0분으로 두면 보너스가 없어집니다</div>
-    <div class="btns">
-      <button class="btn btn-g" onclick="closeSheet()">취소</button>
-      <button class="btn btn-p" onclick="bonusSave()">완료</button>
-    </div>`, ()=>{ wheelInit('whB'); });
+// 5분 단위 0~360분 선택지
+function bonusOptions(cur){
+  const snapped = Math.round((cur||0)/5)*5;
+  let h='';
+  for(let m=0;m<=360;m+=5) h+=`<option value="${m}" ${m===snapped?'selected':''}>${m===0?'0분 (해제)':minLabel(m)}</option>`;
+  return h;
 }
-async function bonusSave(){
-  const mins=Math.max(0,Math.min(720,wheelVal('whB')));
-  closeSheet(); loading(true);
+async function applyBonus(){
+  const m = parseInt(document.getElementById('bonusPick').value,10)||0;
+  loading(true);
   try{
-    await savePol([{key:'bonus_today', value:`${todayYmd()}|${mins}`}]);
-    ST.pol.bonus_today=`${todayYmd()}|${mins}`;
+    const next = Math.min(m, BONUS_MAX);
+    await savePol([{key:'bonus_today', value:`${_todayYmd()}|${next}`}]);
     loading(false);
-    toast(mins>0? `오늘 보너스 +${minLabel(mins)} — 내일 자동 해제` : '보너스를 지웠습니다');
+    toast(next>0 ? `오늘만 +${minLabel(next)} 적용했습니다` : '오늘 보너스를 해제했습니다');
     openLimit();
   }catch(e){ loading(false); toast('실패: '+e.message); }
 }
-/** 🎁 앱별 보너스 바텀시트 — 5분 단위 다이얼 */
-function appBonusSheet(pkg,name){
-  const cur=appBonusToday()[pkg]||0;
-  openSheet(`
-    <div class="grip"></div>
-    <h3>🎁 오늘만! ${esc(name)}</h3>
-    <div class="note" style="margin:0 0 12px">
-      오늘 하루만 <b>이 앱의 시간을 늘려줍니다.</b><br>
-      정해둔 시간은 그대로 두고 거기에 더해집니다.<br>
-      <b>내일이면 저절로 원래대로 돌아갑니다.</b><br>
-      <span style="color:#9aa4b2">「무제한」·「사용 불가」인 요일에는 적용되지 않습니다.</span>
-    </div>
-    <div style="text-align:center;font-size:15px;font-weight:800;margin:0 0 10px;color:${cur>0?'#f59e0b':'#9aa4b2'}">
-      ${cur>0? '지금 준 보너스 : +'+minLabel(cur) : '오늘 준 보너스 없음'}
-    </div>
-    <div class="wheels">
-      ${wheelHtml('whAB',0,360,cur,false,5)}<div class="wunit">분</div>
-    </div>
-    <div style="text-align:center;font-size:12.5px;color:#9aa4b2;margin-top:-4px">5분 단위 · 0분으로 두면 보너스가 없어집니다</div>
-    <div class="btns">
-      <button class="btn btn-g" onclick="closeSheet()">취소</button>
-      <button class="btn btn-p" onclick="appBonusSave('${pkg}')">완료</button>
-    </div>`, ()=>{ wheelInit('whAB'); });
-}
-async function appBonusSave(pkg){
-  const mins=Math.max(0,Math.min(720,wheelVal('whAB')));
-  const cur=appBonusToday();
-  if(mins<=0) delete cur[pkg]; else cur[pkg]=mins;
-  const raw=`${todayYmd()}|${JSON.stringify(cur)}`;
-  closeSheet(); loading(true);
+async function applyAppBonus(pkg){
+  const m = parseInt(document.getElementById('appBonusPick').value,10)||0;
+  loading(true);
   try{
-    await savePol([{key:'app_bonus_today', value:raw}]);
-    ST.pol.app_bonus_today=raw;
+    const cur = getAppBonusToday();
+    const next = Math.min(m, BONUS_MAX);
+    if(next<=0) delete cur[pkg]; else cur[pkg]=next;
+    await savePol([{key:'app_bonus_today', value:`${_todayYmd()}|${JSON.stringify(cur)}`}]);
     loading(false);
-    toast(mins>0? `오늘 보너스 +${minLabel(mins)} — 내일 자동 해제` : '보너스를 지웠습니다');
+    toast(next>0 ? `오늘만 +${minLabel(next)} 적용했습니다` : '이 앱 보너스를 해제했습니다');
     openAppMode(pkg);
   }catch(e){ loading(false); toast('실패: '+e.message); }
 }
-
+// 화면에 끼워 넣을 카드 HTML
+function bonusCard(){
+  const cur = getBonusToday();
+  return `<div class="card">
+    <div class="row"><div class="grow">
+      <div class="ttl">🎁 오늘만 보너스</div>
+      <div class="val">위에서 정한 요일별 한도는 <b>그대로</b> 두고, 오늘 하루만 시간을 더 줍니다.<br>
+        <b>내일이 되면 저절로 원래대로 돌아갑니다</b> — 따로 해제하지 않아도 됩니다.</div>
+    </div></div>
+    ${cur>0?`<div class="row"><div class="grow"><div class="val" style="color:#F9AB00;font-weight:700">
+      지금 오늘 +${minLabel(cur)} 적용 중</div></div></div>`:''}
+    <div class="row" style="gap:8px;align-items:center">
+      <select id="bonusPick" class="sel">${bonusOptions(cur)}</select>
+      <button class="btn btn-y" onclick="applyBonus()">적용</button>
+    </div>
+    <div class="row"><div class="grow"><div class="val">5분 단위 · 0분을 고르면 보너스가 없어집니다</div></div></div>
+  </div>`;
+}
+function appBonusCard(pkg){
+  const cur = getAppBonusToday()[pkg] || 0;
+  return `<div class="card">
+    <div class="row"><div class="grow">
+      <div class="ttl">🎁 오늘만 이 앱 보너스</div>
+      <div class="val">이 앱에만 오늘 하루 시간을 더 줍니다. <b>내일이면 저절로 원래대로</b> 돌아갑니다.</div>
+    </div></div>
+    ${cur>0?`<div class="row"><div class="grow"><div class="val" style="color:#F9AB00;font-weight:700">
+      지금 오늘 +${minLabel(cur)} 적용 중</div></div></div>`:''}
+    <div class="row" style="gap:8px;align-items:center">
+      <select id="appBonusPick" class="sel">${bonusOptions(cur)}</select>
+      <button class="btn btn-y" onclick="applyAppBonus('${esc(pkg)}')">적용</button>
+    </div>
+  </div>`;
+}
 function openLimit(){
   const p=ST.pol; let rows='';
   for(let i=1;i<=7;i++){
@@ -992,10 +1052,7 @@ function openLimit(){
       <label class="sw"><input type="checkbox" ${p.daily_limit_enabled==='true'?'checked':''}
         onchange="toggleFlag('daily_limit_enabled',this.checked,openLimit)"><i></i></label></div></div>
     <div class="card">${rows}</div>
-    <div class="card"><div class="row" onclick="bonusSheet()" style="cursor:pointer">
-      <div class="grow"><div class="ttl">🎁 오늘만! 보너스 시간</div>
-      <div class="val">${bonusMinsToday()>0 ? "오늘 +"+minLabel(bonusMinsToday())+" · 내일 자동 해제" : "오늘 하루만 시간을 더 줍니다"}</div></div>
-      <div class="chev">›</div></div></div>
+      ${bonusCard()}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 // 요일 하나를 누르면 뜨는 바텀시트 (부모앱 showDailyLimitDayPopup 과 같은 구성)
@@ -1256,11 +1313,7 @@ function openAppMode(pkg){
     <div class="sec">⌛ 요일별 시간 제한</div>
     <div class="note">요일을 눌러 <b>이 앱만의</b> 시간을 정합니다. 정하는 순간 바로 저장됩니다.</div>
     <div class="card">${rows}</div>
-    <div class="card"><div class="row" onclick="appBonusSheet('${esc(pkg)}','${esc((app.app_name||pkg).replace(/'/g,''))}')" style="cursor:pointer">
-      <div class="ic" style="background:rgba(245,158,11,.12)">🎁</div>
-      <div class="grow"><div class="ttl">오늘만! 보너스 시간</div>
-      <div class="val">${(appBonusToday()[pkg]||0)>0 ? "오늘 +"+minLabel(appBonusToday()[pkg])+" · 내일 자동 해제" : "오늘 하루만 이 앱 시간을 더 줍니다"}</div></div>
-      <div class="chev">›</div></div></div>
+      ${appBonusCard(pkg)}
     <button class="btn btn-g" onclick="closeSub()">뒤로</button>`, openApps);
 }
 
@@ -1470,10 +1523,6 @@ async function savePin(){
 }
 
 // ══════════ 7일 사용기록 ══════════
-// ══════════ 7일 사용기록 ══════════
-//   막대를 누르면 그날 "앱별 사용시간"을 보여준다.
-//   ⚠️ 갤럭시 부모앱(APK)에는 원래 있던 화면인데, 웹앱으로 통일하면서 빠져 있었다(고객 신고).
-//      데이터(app_usage_history)는 자녀폰이 계속 올리고 있어 웹앱만 읽어오면 된다.
 async function openHistory(){
   loading(true);
   let rows=[];
@@ -1493,77 +1542,15 @@ async function openHistory(){
     const v=map[key]||0;
     const h=Math.max(4, Math.round(v/max*110));
     const dn=DAYS[d.getDay()];
-    bars+=`<div style="flex:1;text-align:center;cursor:pointer" onclick="openDayApps('${key}')">
+    bars+=`<div style="flex:1;text-align:center">
       <div style="font-size:11px;color:#667085;margin-bottom:4px">${v>0?Math.round(v/60)+'분':'-'}</div>
       <div style="height:${h}px;background:linear-gradient(180deg,#2563EB,#1B3A8F);border-radius:6px"></div>
       <div style="font-size:12px;font-weight:700;margin-top:5px;color:${d.getDay()===0?'#F04438':(d.getDay()===6?'#2563EB':'#344054')}">${dn}</div></div>`;
   }
   openSub('최근 7일 사용기록', `
-    <div class="note">하루에 자녀폰을 얼마나 썼는지 보여줍니다.<br>
-      <b>막대를 누르면 그날 어떤 앱을 몇 분 썼는지</b> 볼 수 있습니다.</div>
+    <div class="note">하루에 자녀폰을 얼마나 썼는지 보여줍니다.</div>
     <div class="card"><div style="display:flex;gap:7px;align-items:flex-end;height:160px;padding:6px 0">${bars}</div></div>
-    <div class="card"><div class="row" onclick="openDayApps('${new Date().toLocaleDateString('en-CA')}')" style="cursor:pointer">
-      <div class="ic" style="background:#EFF6FF">📱</div>
-      <div class="grow"><div class="ttl">오늘 앱별 사용시간</div>
-      <div class="val">어떤 앱을 몇 분 썼는지 봅니다</div></div><div class="chev">›</div></div></div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
-}
-
-/** 하루치 앱별 사용시간 — 갤럭시 부모앱의 같은 화면을 웹앱에 옮긴 것 */
-async function openDayApps(dateStr){
-  loading(true);
-  let rows=[], icons={};
-  try{
-    const { data } = await clientFor(ST.server).from('app_usage_history')
-      .select('app_package,app_name,minutes').eq('device_code',ST.code).eq('date',dateStr);
-    rows=(data||[]).filter(r=>Number(r.minutes)>0).sort((a,b)=>Number(b.minutes)-Number(a.minutes));
-    if(rows.length){
-      const pkgs=rows.map(r=>r.app_package).slice(0,40);
-      const { data: ic } = await clientFor(ST.server).from('app_icons')
-        .select('app_package,icon_base64').in('app_package', pkgs);
-      (ic||[]).forEach(x=>{ if(x.icon_base64) icons[x.app_package]=x.icon_base64; });
-    }
-  }catch(e){}
-  loading(false);
-
-  const d=new Date(dateStr+'T00:00:00');
-  const today=new Date().toLocaleDateString('en-CA');
-  const yst=new Date(Date.now()-86400000).toLocaleDateString('en-CA');
-  const title = dateStr===today ? '오늘' : (dateStr===yst ? '어제'
-              : `${d.getMonth()+1}월 ${d.getDate()}일 (${DAYS[d.getDay()]})`);
-
-  if(!rows.length){
-    openSub(title+' 앱별 사용시간', `
-      <div class="note">이 날은 <b>사용 기록이 없습니다.</b><br>
-        자녀폰이 꺼져 있었거나, 아직 자녀폰이 기록을 올리지 않았을 수 있습니다.</div>
-      <button class="btn btn-g" onclick="openHistory()">뒤로</button>`, openHistory);
-    return;
-  }
-
-  const total=rows.reduce((s,r)=>s+Number(r.minutes||0),0);
-  const max=Number(rows[0].minutes)||1;
-  const list=rows.map(r=>{
-    const m=Number(r.minutes)||0;
-    const pct=Math.max(3, Math.round(m/max*100));
-    const ic=icons[r.app_package];
-    const img = ic ? `<img src="data:image/png;base64,${ic}" style="width:38px;height:38px;border-radius:9px;flex:none">`
-                   : `<div class="ic" style="background:#EFF6FF;flex:none">📱</div>`;
-    return `<div style="display:flex;align-items:center;gap:11px;padding:11px 4px;border-bottom:1px solid #EEF1F5">
-      ${img}
-      <div style="flex:1;min-width:0">
-        <div style="font-size:15px;font-weight:600;color:#101828;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.app_name||r.app_package)}</div>
-        <div style="height:7px;background:#EEF1F5;border-radius:4px;margin-top:6px;overflow:hidden">
-          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#2563EB,#1B3A8F);border-radius:4px"></div></div>
-      </div>
-      <div style="font-size:14px;font-weight:800;color:#2563EB;flex:none">${minLabel(m)}</div>
-    </div>`;
-  }).join('');
-
-  openSub(title+' 앱별 사용시간', `
-    <div class="note"><b>${title}</b> 총 <b>${minLabel(total)}</b> 사용 · 앱 ${rows.length}개<br>
-      많이 쓴 순서로 보여줍니다.</div>
-    <div class="card" style="padding:4px 12px">${list}</div>
-    <button class="btn btn-g" onclick="openHistory()">뒤로</button>`, openHistory);
 }
 
 // ── 이 자녀 연결 해제 (목록에서 제거) ──
