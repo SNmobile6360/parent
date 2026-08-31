@@ -138,6 +138,16 @@
   /* 🎁 오늘만 보너스 — 노란 버튼 + 선택 상자 */
   .btn-y{background:#F9AB00;color:#1A1A1A}
   .btn.btn-y{width:auto;padding:12px 20px;font-size:15px;flex:0 0 auto}
+  /* 💬 매장 카톡 문의 — 카카오 브랜드색(#FEE500). a 태그라 .btn 위에 flex 로 덮어쓴다 */
+  .btn-kakao{
+    background:#FEE500; color:#191600; text-decoration:none;
+    display:flex; align-items:center; justify-content:center; gap:9px;
+  }
+  .btn-kakao svg{flex:none}
+  .kkhint{margin:8px 4px 0;font-size:12.5px;color:var(--muted);text-align:center;line-height:1.5}
+  /* 💬 PIN 화면 문의 — 키패드(.keys)와 같은 폭으로 맞춘다 */
+  .pinkk{width:100%;max-width:330px;margin:26px auto 0}
+  .pinkk .q{font-size:13.5px;color:var(--muted);text-align:center;margin-bottom:9px;font-weight:600}
   .sel{
     flex:1; min-width:0; padding:12px 14px; border-radius:11px;
     border:1px solid var(--line,#E3E8EF); background:#fff; color:var(--ink);
@@ -338,6 +348,20 @@
     <button class="key" onclick="pinTap('0')">0</button>
     <button class="key" onclick="pinDel()">⌫</button>
   </div>
+
+  <!-- ══ 💬 비밀번호를 잊은 부모용 문의 (2026-08-31 추가) ══
+       비밀번호를 잊으면 여기서 더 갈 데가 없다. 5회 틀려 10분 잠긴 동안에도 이 버튼은 그대로 보인다.
+       ⚠️ 이 화면은 자녀 추가 때도 쓰이므로(startPin(대상)) 문구를 '로그인' 이 아니라 '비밀번호' 로 적었다. -->
+  <div class="pinkk">
+    <div class="q">비밀번호를 잊으셨나요?</div>
+    <a class="btn btn-kakao" href="https://pf.kakao.com/_xnDXAX/chat"
+       target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+        <path fill="#191600" d="M12 3C6.92 3 2.8 6.26 2.8 10.28c0 2.6 1.72 4.88 4.3 6.16-.19.7-.68 2.48-.78 2.87-.12.48.18.47.37.34.15-.1 2.4-1.63 3.37-2.29.63.09 1.28.14 1.94.14 5.08 0 9.2-3.26 9.2-7.28S17.08 3 12 3z"/>
+      </svg>
+      카카오톡으로 매장 문의하기
+    </a>
+  </div>
 </div>
 
 <!-- ══════════ 2.5 자녀 목록 (자녀 2명 이상일 때) ══════════ -->
@@ -480,6 +504,20 @@
       💡 <b>홈 화면에 추가하면 앱처럼 쓸 수 있어요</b><br>
       아래 <b>공유 버튼</b>(⬆️) → <b>홈 화면에 추가</b>를 누르세요.
     </div>
+
+    <!-- ══ 💬 매장 카톡 문의 (2026-08-31 추가) ══
+         · 시내모바일 카카오톡 채널 상담 : http://pf.kakao.com/_xnDXAX/chat
+           → https 로도 열리고 http 는 https 로 308 리다이렉트된다. 이 페이지가 https 라 https 로 적는다.
+         · 아이콘은 인라인 SVG. 외부 이미지를 쓰면 카톡 서버가 막히거나 느릴 때 버튼이 깨진다. -->
+    <div class="sec">문의</div>
+    <a class="btn btn-kakao" href="https://pf.kakao.com/_xnDXAX/chat"
+       target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+        <path fill="#191600" d="M12 3C6.92 3 2.8 6.26 2.8 10.28c0 2.6 1.72 4.88 4.3 6.16-.19.7-.68 2.48-.78 2.87-.12.48.18.47.37.34.15-.1 2.4-1.63 3.37-2.29.63.09 1.28.14 1.94.14 5.08 0 9.2-3.26 9.2-7.28S17.08 3 12 3z"/>
+      </svg>
+      카카오톡으로 매장 문의하기
+    </a>
+    <div class="kkhint">궁금한 점이나 문제가 있으면 눌러서 물어보세요.<br>시내모바일 매장 상담으로 바로 연결됩니다.</div>
   </div>
 </div>
 
@@ -802,7 +840,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '8월31일 수정본';
+const WEB_LABEL = '8월31일 수정본3';
 async function reportParentLink(){
   try{
     const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
