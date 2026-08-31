@@ -79,6 +79,13 @@
   .hero .big{font-size:34px;font-weight:900;letter-spacing:-.03em;margin:6px 0 2px}
   .hero .meta{font-size:12.5px;opacity:.85}
   .hero .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+  /* 🚦 실시간 제한 상황 — 큰 상태 카드 */
+  .lv{border-radius:18px;padding:17px;margin-bottom:12px;color:#fff}
+  .lv.lock{background:linear-gradient(135deg,#F04438,#B42318)}
+  .lv.free{background:linear-gradient(135deg,#12B76A,#027A48)}
+  .lv .lv-t{font-size:18px;font-weight:900;letter-spacing:-.02em}
+  .lv .lv-d{font-size:14.5px;line-height:1.65;margin-top:8px;opacity:.97;font-weight:600}
+  .lv .lv-n{font-size:12.5px;margin-top:11px;padding-top:10px;border-top:1px solid rgba(255,255,255,.32);opacity:.9;font-weight:600}
   /* 눈에 띄는 「앱별 사용시간 보기」 버튼 — 작은 회색 글씨는 부모가 안 누른다(2026-08-31) */
   .hero-cta{
     display:inline-flex; align-items:center; gap:7px;
@@ -342,6 +349,12 @@
         <span class="dot" id="hDot" style="background:#98A2B3"></span>
         <span id="hStat">-</span> · <span id="hCode">-</span>
       </div>
+    </div>
+
+    <div class="sec">지금 상황</div>
+    <div class="card tap" onclick="openLive()">
+      <div class="row"><div class="ic" style="background:#FEF3F2">🚦</div>
+        <div class="grow"><div class="ttl">자녀 실시간 제한 상황</div><div class="val" id="vLive">-</div></div><div class="chev">›</div></div>
     </div>
 
     <div class="sec">시간 관리</div>
@@ -820,6 +833,10 @@ function paintMain(){
   document.getElementById('hStat').textContent = online?'접속 중':'마지막 접속 '+ago(last);
   document.getElementById('hCode').textContent = ST.code;
 
+  const _lv = liveSummary();
+  const $lv = document.getElementById('vLive');
+  if($lv) $lv.innerHTML = '<b style="color:'+(_lv.lock?'#B42318':'#027A48')+'">'+_lv.txt+'</b>';
+
   const limDays=[1,2,3,4,5,6,7].filter(i=>Number(p['limit_day_'+i]??-1)>=0);
   document.getElementById('vLimit').innerHTML = badge(p.daily_limit_enabled==='true') +
     ' ' + (limDays.length? limDays.length+'개 요일 설정됨':'요일 미설정');
@@ -1206,6 +1223,8 @@ function openReq(){
     : `<div class="empty">새로운 요청이 없습니다</div>`;
   openSub('자녀의 접속 요청', `
     <div class="note">자녀가 <b>공부에 필요하다며 요청한 사이트</b>입니다.<br>허용하면 자녀폰에서 바로 열립니다.</div>
+    <div class="note warn"><b>크롬(안전검색)을 쓰고 싶으시면 매장에 문의해 주세요.</b><br>
+      크롬을 켜고 끄는 것은 <b>매장 전용 기능</b>이라 여기서는 바꿀 수 없습니다.</div>
     <div class="card">${body}</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
@@ -1237,6 +1256,8 @@ function openAllow(){
     : `<div class="empty">허용된 사이트가 없습니다</div>`;
   openSub('허용 사이트 관리', `
     <div class="note">여기 등록된 사이트만 자녀폰 크롬에서 열립니다.<br>주소는 <b>www 없이</b> 넣어주세요. 예) ebs.co.kr</div>
+    <div class="note warn"><b>크롬(안전검색)을 쓰고 싶으시면 매장에 문의해 주세요.</b><br>
+      크롬을 켜고 끄는 것은 <b>매장 전용 기능</b>이라 여기서는 바꿀 수 없습니다.</div>
     <div class="card"><div class="field"><label>사이트 주소 추가</label>
       <input id="newDom" type="text" placeholder="ebs.co.kr" autocapitalize="none" spellcheck="false"></div>
       <button class="btn btn-p" onclick="addAllow()">추가하기</button></div>
@@ -1568,6 +1589,229 @@ async function savePin(){
     ]);
     loading(false); toast('비밀번호를 변경했습니다'); closeSub();
   }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+
+// ══════════ 🚦 자녀 실시간 제한 상황 (2026-08-31 추가) ══════════
+//   "지금 이 순간" 자녀폰이 어떤 제한을 받고 있는지 한 화면에 모아 본다.
+//   ⚠️ 자료는 자녀폰이 서버에 올린 값이다. 폰이 꺼져 있으면 그 시점에서 멈춘다.
+//      그래서 화면 아래에 "자녀폰이 마지막으로 알린 시각"을 반드시 같이 보여준다.
+let LIVE_TIMER = null;
+
+function _dayIdx(){ return new Date().getDay() + 1; }   // limit_day_1=일 … 7=토
+function _nowMin(){ const d=new Date(); return d.getHours()*60 + d.getMinutes(); }
+function _hm2m(t){ const a=String(t||'0:0').split(':'); return (Number(a[0])||0)*60 + (Number(a[1])||0); }
+
+// 오늘 하루한도(분). -1=무제한 / 0=사용불가 / N=분. 보너스 포함.
+function liveTodayLimit(){
+  const p=ST.pol;
+  if(p.daily_limit_enabled!=='true') return -1;
+  const base = Number(p['limit_day_'+_dayIdx()] ?? -1);
+  if(!(base>=0)) return -1;
+  return base + getBonusToday();
+}
+
+// 지금 다운타임 중인가. 자정을 넘기는 구간(예 21:00~07:00)까지 본다.
+function liveDowntime(){
+  const p=ST.pol;
+  if(p.dt_enabled!=='true') return null;
+  const rng = i => { const v=p['dt_day_'+i]||'미설정';
+                     if(v==='미설정' || v.indexOf('|')<0) return null;
+                     const a=v.split('|'); return { s:a[0], e:a[1] }; };
+  const now=_nowMin(), td=_dayIdx(), yd=(td===1?7:td-1);
+  const t=rng(td);
+  if(t){ const s=_hm2m(t.s), e=_hm2m(t.e);
+    if(s<e){ if(now>=s && now<e) return { s:t.s, e:t.e }; }
+    else if(s>e){ if(now>=s)     return { s:t.s, e:t.e }; }
+  }
+  const y=rng(yd);
+  if(y){ const s=_hm2m(y.s), e=_hm2m(y.e);
+    if(s>e && now<e) return { s:y.s, e:y.e }; }
+  return null;
+}
+
+// 오늘 다운타임이 아직 시작 전이면 몇 시에 시작하는지
+function liveNextDowntime(){
+  const p=ST.pol;
+  if(p.dt_enabled!=='true') return null;
+  const v=p['dt_day_'+_dayIdx()]||'미설정';
+  if(v==='미설정' || v.indexOf('|')<0) return null;
+  const a=v.split('|'), s=_hm2m(a[0]);
+  return (_nowMin() < s) ? { s:a[0], e:a[1], inMin: s-_nowMin() } : null;
+}
+
+function liveUsedMin(){
+  const sec = Number(ST.usage?.total_seconds||0) || (Number(ST.usage?.total_minutes||0)*60);
+  return Math.floor(sec/60);
+}
+
+// 한 줄 요약 — 메인 화면 카드에 쓴다
+function liveSummary(){
+  const dt = liveDowntime();
+  if(dt) return { lock:true, txt:'🔴 지금 잠김 — 취침시간 ('+dt.e+' 해제)' };
+  const lim = liveTodayLimit();
+  if(lim === 0) return { lock:true, txt:'🔴 지금 잠김 — 오늘은 사용 불가' };
+  if(lim > 0){
+    const left = lim - liveUsedMin();
+    if(left <= 0) return { lock:true, txt:'🔴 지금 잠김 — 오늘 시간을 다 썼습니다' };
+    return { lock:false, txt:'🟢 사용 가능 — 오늘 '+minLabel(left)+' 남음' };
+  }
+  return { lock:false, txt:'🟢 사용 가능 — 오늘 하루한도 없음' };
+}
+
+function openLive(){
+  paintLive();
+  clearInterval(LIVE_TIMER);
+  // 30초마다 조용히 다시 읽는다. 화면을 벗어나면 스스로 멈춘다.
+  LIVE_TIMER = setInterval(async ()=>{
+    const t=document.getElementById('sTitle');
+    if(!t || t.textContent!=='자녀 실시간 제한 상황'){ clearInterval(LIVE_TIMER); LIVE_TIMER=null; return; }
+    await liveReload();
+    paintLive();
+  }, 30000);
+}
+
+// 로딩 화면 없이 조용히 다시 읽는다 (30초마다 도는 거라 깜빡이면 안 된다)
+async function liveReload(){
+  try{
+    const sb=clientFor(ST.server);
+    const today=new Date().toLocaleDateString('en-CA');
+    const [polR,devR,useR] = await Promise.all([
+      sb.from('policies').select('key,value').eq('device_code',ST.code),
+      sb.from('child_devices').select('child_name,last_seen_at').eq('device_code',ST.code).maybeSingle(),
+      sb.from('usage_history').select('total_minutes,total_seconds').eq('device_code',ST.code).eq('date',today).maybeSingle()
+    ]);
+    if(polR.data){ const o={}; polR.data.forEach(r=>o[r.key]=r.value); ST.pol=o; }
+    if(devR.data) ST.dev=devR.data;
+    ST.usage = useR.data;
+  }catch(e){}
+}
+
+function paintLive(){
+  const p=ST.pol, appNm = k => (ST.apps.find(a=>a.app_package===k)||{}).app_name || k;
+  const sum = liveSummary(), dt = liveDowntime(), nx = liveNextDowntime();
+  const lim = liveTodayLimit(), used = liveUsedMin(), bonus = getBonusToday();
+  const wd = new Date().getDay();
+
+  // ── ① 큰 상태 카드 ──
+  let why='', when='';
+  if(dt){ why='지금은 <b>약속한 취침시간</b>입니다'; when='<b>'+dt.e+'</b> 이 되면 저절로 풀립니다'; }
+  else if(lim===0){ why='오늘은 <b>사용 불가</b>로 정해 두셨습니다'; when='<b>내일 0시</b>에 저절로 풀립니다'; }
+  else if(lim>0 && lim-used<=0){ why='오늘 쓸 수 있는 <b>시간을 다 썼습니다</b>'; when='<b>내일 0시</b>에 저절로 풀립니다 · 지금 풀어주시려면 🎁 오늘만 보너스'; }
+  const hero = '<div class="lv '+(sum.lock?'lock':'free')+'">'
+    + '<div class="lv-t">'+(sum.lock?'🔴 지금 자녀폰이 잠겨 있습니다':'🟢 지금 자녀폰을 쓸 수 있습니다')+'</div>'
+    + (why ? '<div class="lv-d">'+why+'<br>'+when+'</div>'
+           : '<div class="lv-d">'+(lim>0?'오늘 남은 시간 <b>'+minLabel(lim-used)+'</b>':'오늘은 하루한도를 걸어두지 않으셨습니다')+'</div>')
+    + '<div class="lv-n">잠겨 있어도 <b>긴급전화</b>는 언제나 됩니다</div></div>';
+
+  // ── ② 오늘 사용시간 막대 ──
+  let bar;
+  if(lim>0){
+    const pct=Math.min(100, Math.round(used/lim*100));
+    const grad = pct>=100 ? 'linear-gradient(90deg,#F97316,#B42318)' : 'linear-gradient(90deg,#2563EB,#1B3A8F)';
+    bar = '<div class="sec">오늘 사용시간</div><div class="card">'
+      + '<div style="display:flex;align-items:baseline;gap:8px">'
+      + '<div style="flex:1;font-size:15px;font-weight:800">'+minLabel(used)+' 사용</div>'
+      + '<div style="font-size:14px;color:var(--muted);font-weight:700">한도 '+minLabel(lim)+'</div></div>'
+      + '<div class="abar" style="height:12px;margin-top:9px"><i style="width:'+pct+'%;background:'+grad+'"></i></div>'
+      + '<div style="margin-top:8px;font-size:14px;font-weight:800;color:'+(pct>=100?'#B42318':'#1B3A8F')+'">'
+      + (lim-used>0 ? '남은 시간 '+minLabel(lim-used) : '한도를 모두 사용했습니다')+'</div>'
+      + (bonus>0 ? '<div style="margin-top:7px;font-size:13.5px;color:#B54708;font-weight:700">🎁 오늘만 보너스 '+minLabel(bonus)+'가 더해진 한도입니다</div>' : '')
+      + '</div>';
+  }else{
+    bar = '<div class="sec">오늘 사용시간</div><div class="card">'
+      + '<div style="font-size:15px;font-weight:800">'+minLabel(used)+' 사용</div>'
+      + '<div style="margin-top:6px;font-size:13.5px;color:var(--muted);font-weight:600">'
+      + (lim===0?'오늘은 <b>사용 불가</b>로 설정돼 있습니다':'오늘은 하루한도가 <b>없습니다</b> (제한 없이 쓸 수 있음)')+'</div></div>';
+  }
+
+  // ── ③ 취침시간 ──
+  let dtBox;
+  if(p.dt_enabled!=='true'){
+    dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div><div class="val">꺼져 있습니다 — 밤에도 제한이 없습니다</div></div>';
+  }else if(dt){
+    dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div>'
+      + '<div class="stat on">🔴 지금 취침시간입니다 ('+dt.s+' ~ '+dt.e+')</div>'
+      + '<div class="val" style="margin-top:7px">'+dt.e+' 이 되면 저절로 풀립니다</div></div>';
+  }else if(nx){
+    dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div>'
+      + '<div class="stat off">⚪ 아직 아닙니다 — 오늘 '+nx.s+' 에 시작합니다</div>'
+      + '<div class="val" style="margin-top:7px">'+minLabel(nx.inMin)+' 뒤에 잠깁니다</div></div>';
+  }else{
+    const v=p['dt_day_'+_dayIdx()]||'미설정';
+    dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div>'
+      + '<div class="stat off">⚪ 지금은 취침시간이 아닙니다</div>'
+      + '<div class="val" style="margin-top:7px">'+(v==='미설정'?'오늘 요일은 설정돼 있지 않습니다':'오늘 '+v.replace('|',' ~ '))+'</div></div>';
+  }
+
+  // ── ④ 앱별 제한 (지금 걸려 있는 것만) ──
+  const appB = getAppBonusToday();
+  //   ⚠️ 「완전 차단」은 두 군데에 적힌다. 둘 다 봐야 한다.
+  //     · blocked_apps  — 전산 「차단」 칩은 이것만 바꾼다 (rule_ 은 손대지 않는다)
+  //     · rule_<pkg>    — 부모웹앱 「앱 즉시 차단」은 blocked_apps + 전 요일 0 을 같이 쓴다
+  //   한쪽만 보면 매장에서 차단한 앱이 이 화면에 안 나온다. (2026-08-31 확인)
+  const blSet = new Set(J(p.blocked_apps,[]));
+  const timedMap = {};
+  Object.keys(p).filter(k=>k.startsWith('rule_')).forEach(k=>{
+    const pkg=k.slice(5), m=parseRule(p[k]);
+    if(m.mode==='BLOCK'){ blSet.add(pkg); return; }
+    if(m.mode==='WEEKLY'){
+      const t=m.week[wd];
+      if(t===0) blSet.add(pkg);
+      else if(t>0) timedMap[pkg] = t + (Number(appB[pkg])||0);
+    }
+  });
+  const blocked = [...blSet];
+  const timed = Object.keys(timedMap).filter(k=>!blSet.has(k))      // 차단이 시간제한보다 우선
+    .map(k=>({ pkg:k, min:timedMap[k], bonus:Number(appB[k])||0 }))
+    .sort((a,b)=>a.min-b.min);
+  const free = J(p.whitelist_apps,[]).filter(x=>!blSet.has(x));
+  let appBox = '<div class="sec">지금 걸려 있는 앱 제한</div><div class="card">';
+  if(!blocked.length && !timed.length && !free.length){
+    appBox += '<div class="empty">앱별로 걸어둔 제한이 없습니다</div>';
+  }else{
+    if(blocked.length) appBox += '<div style="padding:10px 0"><div class="stat on">🔴 완전 차단 '+blocked.length+'개</div>'
+      + '<div class="val" style="margin-top:7px">'+blocked.map(x=>esc(appNm(x))).join(' · ')+'</div></div>';
+    if(timed.length) appBox += '<div style="padding:10px 0;border-top:'+(blocked.length?'1px solid #F2F4F7':'0')+'">'
+      + '<div class="stat on" style="background:#FFF7ED;color:#B54708;border-color:#FED7AA">⏱️ 오늘 시간제한 '+timed.length+'개</div>'
+      + timed.map(t=>'<div style="display:flex;gap:8px;margin-top:8px;font-size:14px">'
+          + '<div style="flex:1;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(appNm(t.pkg))+'</div>'
+          + '<div style="font-weight:800;color:var(--navy);white-space:nowrap">오늘 '+minLabel(t.min)+(t.bonus?' 🎁':'')+'</div></div>').join('')
+      + '</div>';
+    if(free.length) appBox += '<div style="padding:10px 0;border-top:'+((blocked.length||timed.length)?'1px solid #F2F4F7':'0')+'">'
+      + '<div class="stat off">⚪ 하루한도에서 빠지는 앱 '+free.length+'개</div>'
+      + '<div class="val" style="margin-top:7px">'+free.map(x=>esc(appNm(x))).join(' · ')+'</div></div>';
+  }
+  appBox += '</div>';
+
+  // ── ⑤ 인터넷 · 그 밖의 잠금 ──
+  const nAllow = J(p.chrome_allowed_domains,[]).length;
+  const nUn = J(p.uninstall_blocked_apps,[]).length, nPin = J(p.pin_locked_apps,[]).length;
+  const rows = [
+    ['크롬(안전검색)', p.chrome_enabled==='true', '켜짐 — 허용한 '+nAllow+'개 사이트만 열립니다', '꺼짐 — 인터넷을 쓸 수 없습니다'],
+    ['Play 스토어 차단', p.play_store_blocked==='true', '차단중 — 새 앱을 못 깝니다', '막고 있지 않습니다'],
+    ['카톡 오픈채팅 차단', p.open_chat_blocked==='true', '차단중 — 오픈채팅방에 못 들어갑니다', '막고 있지 않습니다'],
+    ['카톡 링크 열기 차단', p.kakao_inapp_browser_blocked==='true', '차단중 — 링크를 눌러도 안 열립니다', '막고 있지 않습니다'],
+    ['앱 삭제 방지', p.uninstall_blocked==='true', nUn+'개 앱을 못 지웁니다', '꺼져 있습니다'],
+    ['앱 PIN 잠금', nPin>0, nPin+'개 앱에 비밀번호가 걸려 있습니다', '걸어둔 앱이 없습니다']
+  ].map((r,i)=>'<div class="row" style="padding:11px 0'+(i?';border-top:1px solid #F2F4F7':'')+'">'
+      + '<div class="grow"><div class="ttl" style="font-size:14.5px">'+r[0]+'</div>'
+      + '<div class="val">'+(r[1]?r[2]:r[3])+'</div></div>'
+      + '<span class="badge '+(r[1]?'b-on':'b-off')+'">'+(r[1]?'켜짐':'꺼짐')+'</span></div>').join('');
+
+  // ── ⑥ 자료 시점 ──
+  const ltd = toDate(ST.dev?.last_seen_at);
+  const online = !!ltd && (Date.now()-ltd)/60000 < 10;
+  const foot = '<div class="note '+(online?'':'warn')+'" style="margin-top:12px">'
+    + (online ? '자녀폰이 <b>지금 접속 중</b>입니다. 위 내용은 최신입니다.'
+              : '자녀폰이 <b>'+ago(ST.dev?.last_seen_at)+'</b>에 마지막으로 알려온 내용입니다.<br>폰이 꺼져 있거나 인터넷이 끊기면 그 시점에서 멈춥니다.')
+    + '<br>이 화면은 <b>30초마다</b> 저절로 새로고침됩니다.</div>';
+
+  openSub('자녀 실시간 제한 상황', hero + bar
+    + '<div class="sec">취침시간 (다운타임)</div>' + dtBox
+    + appBox
+    + '<div class="sec">인터넷 · 그 밖의 잠금</div><div class="card" style="padding-top:2px">'+rows+'</div>'
+    + foot
+    + '<button class="btn btn-g" onclick="closeSub()">닫기</button>');
 }
 
 // ══════════ 7일 사용기록 (총 사용시간 + 그날 앱별 사용시간) ══════════
