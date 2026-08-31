@@ -79,6 +79,24 @@
   .hero .big{font-size:34px;font-weight:900;letter-spacing:-.03em;margin:6px 0 2px}
   .hero .meta{font-size:12.5px;opacity:.85}
   .hero .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+  /* 눈에 띄는 「앱별 사용시간 보기」 버튼 — 작은 회색 글씨는 부모가 안 누른다(2026-08-31) */
+  .hero-cta{
+    display:inline-flex; align-items:center; gap:7px;
+    margin-top:11px; padding:10px 15px;
+    background:#fff; color:var(--navy);
+    border-radius:999px; font-size:14.5px; font-weight:800;
+    box-shadow:0 3px 10px rgba(0,0,0,.22);
+  }
+  .hero-cta .arw{font-size:17px;line-height:1}
+  /* 「지금 상태」 뱃지 — 보안 설정 */
+  .stat{display:inline-block;margin-top:8px;padding:6px 11px;border-radius:9px;
+        font-size:13.5px;font-weight:800;line-height:1.35}
+  .stat.on{background:#FEF3F2;color:#B42318;border:1px solid #FECDCA}
+  .stat.off{background:#F2F4F7;color:#475467;border:1px solid #E4E7EC}
+  /* 「이렇게 작동합니다」 설명 상자 */
+  .how{background:#FFF7ED;border:1px solid #FED7AA;border-radius:13px;padding:13px 14px;margin-bottom:12px}
+  .how b.t{display:block;font-size:14.5px;font-weight:800;color:#9A3412;margin-bottom:7px}
+  .how div{font-size:13.5px;line-height:1.8;color:#7C2D12;font-weight:600}
 
   /* ── 버튼 ── */
   .btn{
@@ -319,7 +337,7 @@
     <div class="hero" onclick="openHistory()" style="cursor:pointer">
       <div class="lbl">오늘 사용시간</div>
       <div class="big" id="hUse">-</div>
-      <div style="font-size:11.5px;opacity:.75;margin-top:6px">눌러서 최근 7일 기록 보기 ›</div>
+      <div class="hero-cta">📊 앱별 사용시간 보기<span class="arw">›</span></div>
       <div class="meta">
         <span class="dot" id="hDot" style="background:#98A2B3"></span>
         <span id="hStat">-</span> · <span id="hCode">-</span>
@@ -742,7 +760,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '8월30일 수정본';
+const WEB_LABEL = '8월31일 수정본';
 async function reportParentLink(){
   try{
     const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
@@ -1446,7 +1464,19 @@ function openSos(){
       <button class="x" onclick="delSos('${esc(n)}')">삭제</button></div>`).join('')
     : `<div class="empty">등록된 번호가 없습니다</div>`;
   openSub('긴급 연락처 (SOS)', `
-    <div class="note">자녀폰이 잠겨 있어도 <b>이 번호로는 전화</b>할 수 있습니다.<br>숫자만 넣어주세요. 예) 01012345678</div>
+    <div class="note"><b>부모님이 급할 때, 자녀폰이 전화를 자동으로 받게 하는 기능</b>입니다.<br>
+      번호를 하나도 넣지 않으면 이 기능은 <b>꺼진 상태</b>입니다.</div>
+    <div class="how"><b class="t">이렇게 작동합니다</b><div>
+      ① 아래에 등록한 번호로 자녀에게 <b>전화를 겁니다</b><br>
+      ② 자녀가 안 받으면 <b>부재중 1번</b>으로 셉니다<br>
+      ③ <b>3번</b> 안 받은 뒤 <b>4번째로 걸면</b> —<br>
+      　 자녀폰이 <b>자동으로 받고 스피커폰이 켜집니다</b><br>
+      ④ 중간에 자녀가 받으면 <b>횟수는 0으로 돌아갑니다</b>
+    </div></div>
+    <div class="note warn"><b>잠금화면의 「📞 긴급전화」와는 다릅니다.</b><br>
+      그건 사용시간을 다 썼거나 취침시간이어도 자녀가 <b>아무 번호나</b> 걸 수 있는 버튼입니다.
+      여기 등록과 상관없이 항상 됩니다.</div>
+    <div class="note">숫자만 넣어주세요. 예) 01012345678</div>
     <div class="card"><div class="field"><label>번호 추가</label>
       <input id="newSos" type="tel" inputmode="numeric" placeholder="01012345678"></div>
       <button class="btn btn-p" onclick="addSos()">추가하기</button></div>
@@ -1477,15 +1507,33 @@ async function delSos(n){
 // ══════════ 보안 설정 ══════════
 function openSecurity(){
   const p=ST.pol;
-  const sw=(key,title,desc)=>`<div class="card"><div class="row">
-    <div class="grow"><div class="ttl">${title}</div><div class="val">${desc}</div></div>
-    <label class="sw"><input type="checkbox" ${p[key]==='true'?'checked':''}
-      onchange="toggleFlag('${key}',this.checked,openSecurity)"><i></i></label></div></div>`;
+  //  onTxt/offTxt = 「지금 어떤 상태인지」를 고객이 바로 알 수 있게 적는다.
+  //  스위치만 보면 켠 게 차단인지 허용인지 헷갈린다는 지적(2026-08-31)이 있었다.
+  const sw=(key,title,desc,onTxt,offTxt)=>{
+    const on = p[key]==='true';
+    return `<div class="card"><div class="row">
+      <div class="grow">
+        <div class="ttl">${title}</div>
+        <div class="val">${desc}</div>
+        <div class="stat ${on?'on':'off'}">${on?'🔴 '+onTxt:'⚪ '+offTxt}</div>
+      </div>
+      <label class="sw"><input type="checkbox" ${on?'checked':''}
+        onchange="toggleFlag('${key}',this.checked,openSecurity)"><i></i></label></div></div>`;
+  };
   openSub('보안 설정', `
-    <div class="note">켜면 자녀폰에서 해당 기능이 <b>차단</b>됩니다.</div>
-    ${sw('play_store_blocked','Play 스토어 차단','자녀가 새 앱을 설치하지 못합니다')}
-    ${sw('open_chat_blocked','카톡 오픈채팅 차단','모르는 사람과의 오픈채팅방 입장을 막습니다')}
-    ${sw('kakao_inapp_browser_blocked','카톡 링크 열기 차단','대화방 링크로 인터넷에 나가는 것을 막습니다')}
+    <div class="note">스위치를 <b>켜면 막고</b>, <b>끄면 풀립니다.</b><br>
+      각 항목 아래 <b>색깔 글씨가 지금 상태</b>입니다.</div>
+    ${sw('play_store_blocked','Play 스토어 차단','자녀가 새 앱을 설치하지 못합니다',
+         '지금 Play스토어가 차단중입니다 — 새 앱을 못 깝니다',
+         '지금은 막고 있지 않습니다 — 자녀가 앱을 깔 수 있습니다')}
+    ${sw('open_chat_blocked','카톡 오픈채팅 차단','모르는 사람과의 오픈채팅방 입장을 막습니다',
+         '지금 오픈채팅이 차단중입니다 — 오픈채팅방에 못 들어갑니다',
+         '지금은 막고 있지 않습니다 — 오픈채팅방에 들어갈 수 있습니다')}
+    ${sw('kakao_inapp_browser_blocked','카톡 링크 열기 차단','대화방 링크로 인터넷에 나가는 것을 막습니다',
+         '지금 링크 열기가 차단중입니다 — 카톡 링크를 눌러도 안 열립니다',
+         '지금은 막고 있지 않습니다 — 카톡 링크로 인터넷에 나갈 수 있습니다')}
+    <div class="note warn">여기서 바꾸면 자녀폰에 <b>바로 반영</b>됩니다.
+      자녀폰이 꺼져 있으면 <b>켜질 때</b> 반영됩니다.</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 
@@ -1522,34 +1570,105 @@ async function savePin(){
   }catch(e){ loading(false); toast('실패: '+e.message); }
 }
 
-// ══════════ 7일 사용기록 ══════════
+// ══════════ 7일 사용기록 (총 사용시간 + 그날 앱별 사용시간) ══════════
+//   막대를 누르면 그날 하루를 골라서 앱별로 몇 분 썼는지 본다.
+//   ⚠️ 앱별 합계는 총 사용시간보다 적을 수 있다. 자녀앱이
+//      ① 1분이 안 되는 앱  ② 전화·연락처·설정·구글 기본앱(essentialPackages)
+//      을 app_usage_history 에 아예 올리지 않기 때문이다.
+//      (UsageMonitorService.uploadAppUsageHistory — 전산 「앱별 사용시간」과 같은 자료)
+let HIST = null;   // { totals:{날짜:초}, apps:{날짜:[{p,n,m}]}, icons:{패키지:base64}, sel:'YYYY-MM-DD' }
+
+const ymd = d => d.toLocaleDateString('en-CA');
+
 async function openHistory(){
   loading(true);
-  let rows=[];
+  const from = ymd(new Date(Date.now()-6*86400000));
+  const totals={}, apps={}, pkgs=new Set();
   try{
-    const from=new Date(Date.now()-6*86400000).toLocaleDateString('en-CA');
-    const { data } = await clientFor(ST.server).from('usage_history')
-      .select('date,total_minutes,total_seconds').eq('device_code',ST.code).gte('date',from).order('date');
-    rows=data||[];
+    const sb = clientFor(ST.server);
+    const [tRes, aRes] = await Promise.all([
+      sb.from('usage_history')
+        .select('date,total_minutes,total_seconds')
+        .eq('device_code',ST.code).gte('date',from).order('date'),
+      sb.from('app_usage_history')
+        .select('date,app_package,app_name,minutes')
+        .eq('device_code',ST.code).gte('date',from)
+    ]);
+    (tRes.data||[]).forEach(r=>{ totals[r.date] = Number(r.total_seconds||0) || Number(r.total_minutes||0)*60; });
+    (aRes.data||[]).forEach(r=>{
+      if(!(Number(r.minutes)>0)) return;
+      (apps[r.date] = apps[r.date] || []).push({ p:r.app_package, n:r.app_name||r.app_package, m:Number(r.minutes) });
+      pkgs.add(r.app_package);
+    });
+    Object.values(apps).forEach(list=> list.sort((x,y)=> y.m-x.m));
   }catch(e){}
+
+  // 앱 아이콘 — 화면에 나오는 패키지만 한 번에. 실패해도 목록은 그대로 보인다.
+  const icons={};
+  if(pkgs.size){
+    try{
+      const { data } = await clientFor(ST.server).from('app_icons')
+        .select('app_package,icon_base64').in('app_package', Array.from(pkgs));
+      (data||[]).forEach(r=>{ if(r.icon_base64) icons[r.app_package]=r.icon_base64; });
+    }catch(e){}
+  }
   loading(false);
-  const map={}; rows.forEach(r=> map[r.date]= Number(r.total_seconds||0)||Number(r.total_minutes||0)*60);
-  let max=1; Object.values(map).forEach(v=>{ if(v>max) max=v; });
+  HIST = { totals, apps, icons, sel: ymd(new Date()) };
+  paintHistory();
+}
+
+function pickDay(k){ if(HIST){ HIST.sel=k; paintHistory(); } }
+
+function paintHistory(){
+  const H=HIST; if(!H) return;
+  let max=1; Object.values(H.totals).forEach(v=>{ if(v>max) max=v; });
+
+  // ── 막대 7개 (요일 + 날짜) ──
   let bars='';
   for(let i=6;i>=0;i--){
     const d=new Date(Date.now()-i*86400000);
-    const key=d.toLocaleDateString('en-CA');
-    const v=map[key]||0;
-    const h=Math.max(4, Math.round(v/max*110));
-    const dn=DAYS[d.getDay()];
-    bars+=`<div style="flex:1;text-align:center">
-      <div style="font-size:11px;color:#667085;margin-bottom:4px">${v>0?Math.round(v/60)+'분':'-'}</div>
-      <div style="height:${h}px;background:linear-gradient(180deg,#2563EB,#1B3A8F);border-radius:6px"></div>
-      <div style="font-size:12px;font-weight:700;margin-top:5px;color:${d.getDay()===0?'#F04438':(d.getDay()===6?'#2563EB':'#344054')}">${dn}</div></div>`;
+    const key=ymd(d), v=H.totals[key]||0, wd=d.getDay();
+    const h=Math.max(4, Math.round(v/max*105));
+    const on=(key===H.sel);
+    const wc = wd===0?'#F04438':(wd===6?'#2563EB':'#344054');
+    bars+=`<div onclick="pickDay('${key}')" style="flex:1;min-width:0;text-align:center;cursor:pointer;border-radius:9px;padding:4px 0;background:${on?'#EFF6FF':'transparent'};border:1.5px solid ${on?'#2563EB':'transparent'}">
+      <div style="font-size:10.5px;color:#667085;margin-bottom:4px">${v>0?Math.round(v/60)+'분':'-'}</div>
+      <div style="height:${h}px;margin:0 4px;border-radius:6px;background:${on?'linear-gradient(180deg,#F79009,#B54708)':'linear-gradient(180deg,#2563EB,#1B3A8F)'}"></div>
+      <div style="font-size:12px;font-weight:800;margin-top:5px;color:${wc}">${DAYS[wd]}</div>
+      <div style="font-size:10.5px;color:#98A2B3;margin-top:1px">${d.getMonth()+1}/${d.getDate()}</div></div>`;
   }
+
+  // ── 고른 날의 앱별 목록 ──
+  const sd=new Date(H.sel+'T00:00:00');
+  const selTxt=`${sd.getMonth()+1}월 ${sd.getDate()}일 (${DAYS[sd.getDay()]})`;
+  const list=H.apps[H.sel]||[];
+  const sum=list.reduce((a,b)=>a+b.m,0);
+  const mmss = m => m>=60 ? `${Math.floor(m/60)}시간 ${m%60}분` : `${m}분`;
+
+  let rows;
+  if(!list.length){
+    rows=`<div style="padding:20px 2px;text-align:center;color:#98A2B3;font-size:13.5px">이 날은 앱별 기록이 없습니다.</div>`;
+  }else{
+    const top=list[0].m||1;
+    rows=list.map(a=>{
+      const ic = H.icons[a.p]
+        ? `<img src="data:image/png;base64,${esc(H.icons[a.p])}" alt="" style="width:34px;height:34px;border-radius:9px;flex:none">`
+        : `<div style="width:34px;height:34px;border-radius:9px;background:#EAECF0;flex:none"></div>`;
+      return `<div class="item">${ic}
+        <div class="grow">
+          <div style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.n)}</div>
+          <div style="height:6px;border-radius:4px;background:#EAECF0;margin-top:6px"><div style="height:6px;border-radius:4px;background:#2563EB;width:${Math.max(4,Math.round(a.m/top*100))}%"></div></div>
+        </div>
+        <div style="font-size:13.5px;font-weight:800;color:#1B3A8F;flex:none">${mmss(a.m)}</div></div>`;
+    }).join('');
+  }
+
   openSub('최근 7일 사용기록', `
-    <div class="note">하루에 자녀폰을 얼마나 썼는지 보여줍니다.</div>
-    <div class="card"><div style="display:flex;gap:7px;align-items:flex-end;height:160px;padding:6px 0">${bars}</div></div>
+    <div class="note">막대를 누르면 그날 어떤 앱을 몇 분 썼는지 볼 수 있습니다.</div>
+    <div class="card"><div style="display:flex;gap:3px;align-items:flex-end;height:180px;padding:6px 0">${bars}</div></div>
+    <div class="sec">${selTxt} · 앱별 사용시간</div>
+    <div class="card">${rows}</div>
+    ${list.length ? `<div class="note" style="background:#F9FAFB;border-color:#EAECF0;color:#667085;font-weight:500">앱별 합계 ${mmss(sum)}. 위 막대의 총 사용시간과 다를 수 있습니다 — 1분이 안 되는 앱과 전화·연락처·설정 같은 기본 앱은 앱별 기록에서 빠집니다.</div>` : ``}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 
