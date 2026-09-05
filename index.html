@@ -840,7 +840,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '8월31일 수정본3';
+const WEB_LABEL = '9월5일 수정본';
 async function reportParentLink(){
   try{
     const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
@@ -1537,7 +1537,9 @@ function openPinLock(){
 }
 function openIgnoreDt(){
   openAppPicker('다운타임 허용 앱','ignore_dt_apps',
-    '다운타임(취침시간)에도 <b>이 앱만은 쓸 수 있게</b> 합니다.<br>예) 알람 앱, 학습 앱');
+    '다운타임(취침시간)에도 <b>이 앱만은 쓸 수 있게</b> 합니다.<br>예) 알람 앱, 학습 앱',
+    `<div class="how"><b class="t">🌙 취침시간 중에 추가해도 됩니다</b>
+      <div>자녀폰 취침 화면에 <b>15초 안에</b> 나타납니다.</div></div>`);
 }
 async function toggleFlag(key, val, after){
   loading(true);
