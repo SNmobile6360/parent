@@ -425,6 +425,16 @@
         <div class="chev">›</div>
       </div>
     </div>
+    <!-- 🔔 2026-09-09 : 접속 요청 알림 (웹 푸시). 갤럭시·아이폰 공용.
+         · 아이폰은 「홈 화면에 추가」한 상태에서만 알림이 옵니다 (애플 정책).
+         · 소리는 sw.js 에서 silent:false + renotify:true 로 납니다. -->
+    <div class="card tap" onclick="togglePush()">
+      <div class="row">
+        <div class="ic" style="background:#EEF2FF">🔔</div>
+        <div class="grow"><div class="ttl">접속 요청 알림 받기</div><div class="val" id="vPush">-</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
     <div class="card tap" onclick="openAllow()">
       <div class="row">
         <div class="ic" style="background:#ECFDF3">🌐</div>
@@ -502,7 +512,9 @@
 
     <div id="iosTip" class="note hide" style="margin-top:16px">
       💡 <b>홈 화면에 추가하면 앱처럼 쓸 수 있어요</b><br>
-      아래 <b>공유 버튼</b>(⬆️) → <b>홈 화면에 추가</b>를 누르세요.
+      아래 <b>공유 버튼</b>(⬆️) → <b>홈 화면에 추가</b>를 누르세요.<br>
+      <b style="color:#F97316">🔔 접속 요청 알림은 홈 화면에 추가해야만 옵니다.</b>
+      추가한 뒤 <b>홈 화면 아이콘으로 다시 열어</b> 「접속 요청 알림 받기」를 눌러 주세요.
     </div>
 
     <!-- ══ 💬 매장 카톡 문의 (2026-08-31 추가) ══
@@ -840,7 +852,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '9월5일 수정본';
+const WEB_LABEL = '9월9일 수정본';
 async function reportParentLink(){
   try{
     const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
@@ -853,6 +865,196 @@ async function reportParentLink(){
       { key:'parent_app_version', value:ver }
     ]);
   }catch(e){ /* 기록 실패해도 앱 동작에는 영향 없음 */ }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  🔔 접속 요청 알림 (웹 푸시) — 2026-09-09 신규
+//
+//  흐름 : 자녀가 크롬 차단화면에서 「접속 요청하기」
+//         → 자녀앱이 access_requests 에 기록
+//         → 그 서버의 트리거가 Edge Function 을 부름
+//         → Edge Function 이 아래에서 저장한 구독 주소로 암호화해 발송
+//         → sw.js 가 받아서 알림 + 소리
+//
+//  ● 갤럭시는 크롬에서 바로 됩니다.
+//  ● 아이폰은 「홈 화면에 추가」한 뒤 그 아이콘으로 열어야만 알림이 옵니다 (애플 정책).
+//    사파리 탭으로 열어두면 아무리 눌러도 안 됩니다. 고객 안내에 꼭 넣으세요.
+//
+//  ⚠️ 아래 공개키는 공개해도 되는 값입니다. 개인키는 Edge Function 비밀값에만 둡니다.
+// ══════════════════════════════════════════════════════════════════════════
+const VAPID_PUBLIC = 'BJDnMisvofN4RUiBwXYLx-G_IvxooymxJ0z9lLV6N3hjNX14s1gYr0JbeORSRvomcp05GSM__zUJZiaK8NhMswo';
+
+function pushSupported(){
+  return ('serviceWorker' in navigator) && ('PushManager' in window) && ('Notification' in window);
+}
+function isIosDev(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+function isStandalone(){
+  return window.navigator.standalone === true ||
+         window.matchMedia('(display-mode: standalone)').matches;
+}
+// base64url 문자열 → 바이트 (applicationServerKey 는 문자열이 아니라 바이트를 받는다)
+function b64uToU8(s){
+  const pad = '='.repeat((4 - (s.length % 4)) % 4);
+  const raw = atob((s + pad).replace(/-/g, '+').replace(/_/g, '/'));
+  const out = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+  return out;
+}
+// 구독의 키를 base64url 문자열로
+function subKey(sub, name){
+  const k = sub.getKey(name);
+  if (!k) return '';
+  let s = ''; for (const x of new Uint8Array(k)) s += String.fromCharCode(x);
+  return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+let swReg = null;
+async function ensureSW(){
+  if (!pushSupported()) return null;
+  if (swReg) return swReg;
+  swReg = await navigator.serviceWorker.register('./sw.js');
+  await navigator.serviceWorker.ready;
+  return swReg;
+}
+async function currentSub(){
+  try { const r = await ensureSW(); return r ? await r.pushManager.getSubscription() : null; }
+  catch (e) { return null; }
+}
+
+// ● 이 부모가 보는 자녀 「전원」의 서버에 저장한다.
+//   자녀가 서로 다른 서버에 있어도 각자 자기 서버에 1행씩 들어간다.
+async function saveSubForAllKids(sub){
+  const base = {
+    endpoint: sub.endpoint,
+    p256dh:   subKey(sub, 'p256dh'),
+    auth:     subKey(sub, 'auth'),
+    ua:       (navigator.userAgent || '').slice(0, 200)
+  };
+  const list = kids().slice();
+  if (list.length === 0 && ST.code) list.push({ code: ST.code, server: ST.server });
+  let ok = 0;
+  for (const k of list){
+    try {
+      const { error } = await clientFor(k.server).from('push_subscriptions')
+        .upsert([{ device_code: k.code, ...base }], { onConflict: 'device_code,endpoint' });
+      if (!error) ok++;
+    } catch (e) { /* 한 자녀가 실패해도 나머지는 계속 */ }
+  }
+  return ok;
+}
+async function removeSubEverywhere(endpoint){
+  const list = kids().slice();
+  if (list.length === 0 && ST.code) list.push({ code: ST.code, server: ST.server });
+  for (const k of list){
+    try {
+      await clientFor(k.server).from('push_subscriptions')
+        .delete().eq('device_code', k.code).eq('endpoint', endpoint);
+    } catch (e) {}
+  }
+}
+
+async function refreshPushUI(){
+  const el = document.getElementById('vPush');
+  if (!el) return;
+  if (!pushSupported()){ el.textContent = '이 브라우저는 알림을 지원하지 않아요'; return; }
+  if (isIosDev() && !isStandalone()){
+    el.innerHTML = '<b style="color:#F97316">홈 화면에 추가해야 켤 수 있어요</b> — 눌러서 방법 보기'; return;
+  }
+  if (Notification.permission === 'denied'){
+    el.innerHTML = '<b style="color:#EF4444">차단됨</b> — 브라우저 설정에서 알림을 허용해 주세요'; return;
+  }
+  const s = await currentSub();
+  el.innerHTML = s
+    ? '<b style="color:#16A34A">켜짐</b> — 요청이 오면 알림과 소리가 울려요'
+    : '꺼짐 — 눌러서 켜기';
+}
+
+async function togglePush(){
+  if (!pushSupported()){ toast('이 브라우저는 알림을 지원하지 않습니다'); return; }
+
+  // 아이폰은 홈 화면 아이콘으로 연 상태에서만 된다 (사파리 탭에서는 불가)
+  if (isIosDev() && !isStandalone()){
+    alert('아이폰은 이 페이지를 홈 화면에 추가한 뒤,\n' +
+          '홈 화면 아이콘으로 열어야 알림을 켤 수 있습니다.\n\n' +
+          '방법 : 아래 공유 버튼(⬆️) → 「홈 화면에 추가」\n' +
+          '그 다음 홈 화면 아이콘으로 다시 열어 이 버튼을 눌러 주세요.');
+    return;
+  }
+
+  const existing = await currentSub();
+
+  // ── 이미 켜져 있으면 끈다 ──
+  if (existing){
+    if (!confirm('접속 요청 알림을 끌까요?\n\n끄면 자녀가 사이트 접속을 요청해도 알림이 오지 않습니다.')) return;
+    try {
+      await removeSubEverywhere(existing.endpoint);
+      await existing.unsubscribe();
+      toast('알림을 껐습니다');
+    } catch (e) { toast('끄기 실패: ' + (e.message || e)); }
+    refreshPushUI();
+    return;
+  }
+
+  // ── 켠다 ──
+  try {
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted'){
+      toast(perm === 'denied' ? '알림이 차단돼 있습니다. 브라우저 설정에서 허용해 주세요' : '알림을 켜지 않았습니다');
+      refreshPushUI();
+      return;
+    }
+    const reg = await ensureSW();
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,                       // 반드시 true (아니면 브라우저가 거부한다)
+      applicationServerKey: b64uToU8(VAPID_PUBLIC)
+    });
+    const n = await saveSubForAllKids(sub);
+    if (n > 0){
+      toast(`알림을 켰습니다 — 자녀 ${n}명`);
+      // 켜자마자 한 번 보여줘서 소리까지 확인시킨다
+      try { reg.showNotification('🔔 알림이 켜졌습니다', {
+        body: '자녀가 사이트 접속을 요청하면 이렇게 알려드려요',
+        icon: './icon.png', badge: './icon.png', tag: 'sinae-test', renotify: true,
+        silent: false, vibrate: [200, 100, 200]
+      }); } catch (e) {}
+    } else {
+      toast('저장 실패 — 잠시 뒤 다시 눌러 주세요');
+    }
+  } catch (e){
+    toast('알림 켜기 실패: ' + (e.message || e));
+  }
+  refreshPushUI();
+}
+
+// 앱을 열 때마다 구독을 조용히 되살린다.
+//   · 브라우저가 endpoint 를 바꿔도 다시 저장된다
+//   · 자녀를 새로 추가했으면 그 자녀 서버에도 들어간다
+async function syncPushQuietly(){
+  try {
+    if (!pushSupported()) return;
+    if (isIosDev() && !isStandalone()) return;
+    if (Notification.permission !== 'granted') return;
+    const s = await currentSub();
+    if (s) await saveSubForAllKids(s);
+  } catch (e) {}
+}
+
+// sw.js 가 「구독이 바뀌었다」고 알려오면 다시 등록한다
+if ('serviceWorker' in navigator){
+  navigator.serviceWorker.addEventListener('message', async (ev) => {
+    if (ev.data && ev.data.type === 'resubscribe'){
+      try {
+        const reg = await ensureSW();
+        const sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true, applicationServerKey: b64uToU8(VAPID_PUBLIC)
+        });
+        await saveSubForAllKids(sub);
+      } catch (e) {}
+    }
+  });
 }
 function showIosTip(){
   const isIos=/iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -914,6 +1116,10 @@ function paintMain(){
 
   const n=(ST.reqs||[]).length;
   document.getElementById('vReq').innerHTML = n? `<b style="color:#F97316">새 요청 ${n}건</b> — 확인해 주세요` : '새 요청 없음';
+
+  // 🔔 2026-09-09 : 알림 상태 표시 + 구독 조용히 되살리기
+  refreshPushUI();
+  syncPushQuietly();
 
   document.getElementById('vAllow').textContent = J(p.chrome_allowed_domains,[]).length+'개 사이트 허용 중';
 
