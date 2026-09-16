@@ -155,6 +155,46 @@
   }
   .btn:disabled{opacity:.5}
 
+  /* 💬 부모 공지(광고) 오버레이 — 비밀번호 입력 전에 1회 표시 (2026-09-16)
+     · 광고 느낌이 세지 않게 앱과 같은 톤(네이비 배너 + 흰 카드)으로.
+     · 전체화면 fixed 라 화면전환 로직(show)과 독립적으로 맨 위에 뜬다. */
+  .noticeWrap{
+    position:fixed; inset:0; z-index:300;
+    background:var(--bg);
+    display:flex; align-items:center; justify-content:center;
+    padding:calc(var(--safe-t) + 20px) 18px calc(var(--safe-b) + 20px);
+    overflow-y:auto;
+  }
+  .noticeCard{
+    width:100%; max-width:400px; margin:auto;
+    background:var(--card); border:1px solid var(--line);
+    border-radius:22px; box-shadow:0 14px 44px rgba(16,24,40,.18);
+    overflow:hidden;
+  }
+  .nBanner{
+    background:linear-gradient(135deg,var(--navy),var(--blue));
+    color:#fff; text-align:center; padding:26px 22px 22px;
+  }
+  .nBanner .nTag{
+    display:inline-block; background:rgba(255,255,255,.18);
+    padding:4px 12px; border-radius:999px; font-size:12px; font-weight:800; letter-spacing:.02em;
+  }
+  .nEmoji{
+    width:56px; height:56px; margin:14px auto 12px; border-radius:50%;
+    background:rgba(255,255,255,.16);
+    display:flex; align-items:center; justify-content:center; font-size:28px;
+  }
+  .nBanner h2{margin:0; font-size:20px; font-weight:900; letter-spacing:-.02em; line-height:1.4; word-break:keep-all}
+  .nBody{padding:20px 22px 4px}
+  .nBody p{margin:0; font-size:15px; line-height:1.8; color:var(--ink); text-align:center; word-break:keep-all}
+  .nBody p .em{color:var(--navy); font-weight:800}
+  .nActs{padding:16px 22px calc(var(--safe-b) + 18px)}
+  .nSnooze{
+    display:block; width:100%; margin:12px auto 0; padding:9px;
+    background:none; border:0; color:var(--muted); font-family:inherit;
+    font-size:13.5px; font-weight:700; cursor:pointer; text-decoration:underline;
+  }
+
   input,select{
     width:100%; padding:14px; border:1.5px solid var(--line); border-radius:12px;
     font-size:16px; font-family:inherit; background:#fff; color:var(--ink);
@@ -302,6 +342,38 @@
 
 <div id="load" class="hide"><div class="spin"></div></div>
 <div id="toast"></div>
+
+<!-- ══════════ 💬 부모 공지(광고) — 비밀번호 입력 전에 1회 표시 (2026-09-16 추가) ══════════
+     · 부모님께 「의견을 카카오톡으로 보내주세요」 안내. 기존 카카오 채널(_xnDXAX/chat) 재사용.
+     · 「일주일 동안 보지 않기」 → localStorage sinae_notice_snooze 에 7일 스누즈.
+     · ⭐ 내용(문구/디자인)을 바꾸면 아래 스크립트의 AD_VERSION 을 +1 한다.
+        그러면 지난주에 「보지 않기」한 부모님께도 새 공지가 다시 보인다. -->
+<div id="scNotice" class="noticeWrap hide">
+  <div class="noticeCard">
+    <div class="nBanner">
+      <span class="nTag">시내모바일 소식</span>
+      <div class="nEmoji">💬</div>
+      <h2>더 좋은 공신폰을<br>함께 만들어 주세요</h2>
+    </div>
+    <div class="nBody">
+      <p>“이런 기능이 있으면 좋겠어요”,<br>
+         “이 부분이 조금 불편해요” 처럼<br>
+         부모님의 <span class="em">의견을 카카오톡</span>으로 보내주시면<br>
+         빠른 시일 내에 기능 개선에 반영하겠습니다.</p>
+    </div>
+    <div class="nActs">
+      <a class="btn btn-kakao" href="https://pf.kakao.com/_xnDXAX/chat"
+         target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <path fill="#191600" d="M12 3C6.92 3 2.8 6.26 2.8 10.28c0 2.6 1.72 4.88 4.3 6.16-.19.7-.68 2.48-.78 2.87-.12.48.18.47.37.34.15-.1 2.4-1.63 3.37-2.29.63.09 1.28.14 1.94.14 5.08 0 9.2-3.26 9.2-7.28S17.08 3 12 3z"/>
+        </svg>
+        카카오톡으로 의견 보내기
+      </a>
+      <button class="btn btn-p" onclick="closeNotice(false)">확인하고 시작하기</button>
+      <button class="nSnooze" onclick="closeNotice(true)">일주일 동안 보지 않기</button>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════ 1. 자녀 연결 ══════════ -->
 <div id="scConnect" class="center">
@@ -852,7 +924,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '9월9일 수정본';
+const WEB_LABEL = '9월16일 수정본';
 async function reportParentLink(){
   try{
     const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
@@ -1360,7 +1432,9 @@ function openLimit(){
       <label class="sw"><input type="checkbox" ${p.daily_limit_enabled==='true'?'checked':''}
         onchange="toggleFlag('daily_limit_enabled',this.checked,openLimit)"><i></i></label></div></div>
     <div class="card">${rows}</div>
+    ${lockModeCard('limit')}
       ${bonusCard()}
+    ${commsOffCard('limit')}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 // 요일 하나를 누르면 뜨는 바텀시트 (부모앱 showDailyLimitDayPopup 과 같은 구성)
@@ -1433,7 +1507,9 @@ function openDt(){
       <label class="sw"><input type="checkbox" ${p.dt_enabled==='true'?'checked':''}
         onchange="toggleFlag('dt_enabled',this.checked,openDt)"><i></i></label></div></div>
     <div class="card">${rows}</div>
-    <div class="note warn">📞 다운타임 중에도 <b>전화 · 문자 · 알람</b>은 항상 사용할 수 있습니다.</div>
+    ${lockModeCard('dt')}
+    ${commsOffCard('dt')}
+    <div class="note">⏰ <b>알람</b>은 다운타임·전화끄기와 상관없이 항상 울립니다.<br>📞 위 <b>전화·문자 끄기</b>를 켜지 않으면 다운타임 중에도 전화·문자는 됩니다.</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 function dtSheet(d){
@@ -1752,6 +1828,68 @@ async function toggleFlag(key, val, after){
   try{ await savePol([{key, value: val?'true':'false'}]); loading(false); toast('저장했습니다'); if(after) after(); }
   catch(e){ loading(false); toast('실패: '+e.message); }
 }
+
+// 🆕 v41: 다운타임/일일한도 중 전화·문자 끄기 카드 (openDt · openLimit 공용)
+//   scope='dt'  → dt_phone_off / dt_sms_off,  다운타임 시간 동안
+//   scope='limit'→ limit_phone_off / limit_sms_off, 하루 한도 소진 시
+//   ● 예외 번호 없음(대표점장 지시). SOS(3회 자동수신)만 안전상 유지 — 자녀앱에서 처리.
+//   ⚠️ 클래스 대신 인라인 스타일만 사용(정의 안 된 클래스로 안 깨지게 — .abar 사고 방지).
+function commsOffCard(scope){
+  const p = ST.pol, isDt = scope==='dt';
+  const kP = isDt?'dt_phone_off':'limit_phone_off', kS = isDt?'dt_sms_off':'limit_sms_off';
+  const when = isDt?'다운타임(취침) 동안':'하루 한도를 다 쓰면';
+  // ⛔ 이 기능은 자녀앱 v41(5.1) 이상에서만 실제로 동작한다. 구버전(또는 버전 미보고) 폰이면
+  //    토글을 켜도 "조용한 무동작"이 되므로 토글 대신 안내를 띄운다.
+  //    (2026-09-16 — 새 정책키 웹 토글의 배포순서 사고 재발방지. 버전 모르면 안전하게 안내로 처리)
+  const ver = parseInt(p.app_version_code||'0',10) || 0;
+  if(ver < 41){
+    return `<div style="margin:14px 0;padding:14px;border:2px solid #F97316;border-radius:14px;background:rgba(249,115,22,.06)">
+      <div style="font-weight:800;font-size:15px;color:#EA580C">📵 ${when} 전화·문자 끄기</div>
+      <div style="font-size:13px;color:#9A3412;margin-top:9px;line-height:1.7">
+        이 기능은 <b>자녀폰 앱이 최신(5.1)으로 업데이트된 뒤</b> 사용할 수 있어요.<br>
+        업데이트는 자녀폰이 인터넷에 연결되면 <b>자동으로</b> 진행됩니다. 잠시 뒤 다시 확인해 주세요.
+        ${ver>0?`<br><span style="color:#9ca3af;font-size:12px">(현재 자녀폰 앱 버전 ${ver} · 최신 41)</span>`:''}
+      </div>
+    </div>`;
+  }
+  const onP = p[kP]==='true', onS = p[kS]==='true';
+  const row = (k,on,t,d)=>`<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid rgba(0,0,0,.07)">
+      <div style="flex:1"><div style="font-weight:700;font-size:15px">${t}</div><div style="font-size:12.5px;color:#6b7280;margin-top:2px">${d}</div></div>
+      <label class="sw"><input type="checkbox" ${on?'checked':''} onchange="toggleComms('${k}',this.checked,'${scope}')"><i></i></label></div>`;
+  return `<div style="margin:14px 0;padding:14px;border:2px solid #F97316;border-radius:14px;background:rgba(249,115,22,.06)">
+    <div style="font-weight:800;font-size:15px;color:#EA580C">📵 ${when} 전화·문자 끄기</div>
+    ${row(kP,onP,'전화 끄기','걸기·받기 모두 차단 (112·119 긴급전화만 가능)')}
+    ${row(kS,onS,'문자 끄기','문자앱 잠금 — 읽기·답장 차단 (받은 문자는 안 사라지고, 끝나면 확인 가능)')}
+    <div style="font-size:12px;color:#6b7280;margin-top:10px;line-height:1.6">⚠️ 켜면 그 시간 동안 <b>전화</b>는 걸기·받기가 막히고, <b>문자</b>는 문자앱을 못 열어 읽기·답장이 안 됩니다. 예외 번호는 없습니다.<br>· <b>문자는 그대로 도착·보관</b>되어 끝나면 다 볼 수 있습니다.<br>· <b>긴급 연락처(SOS)</b> 번호가 3번 연속 전화하면 자동으로 받는 기능은 그대로 작동합니다.</div>
+  </div>`;
+}
+function toggleComms(key,val,scope){ toggleFlag(key,val, scope==='dt'?openDt:openLimit); }
+
+// 🆕 2026-09-16: 「강력 모드」(전체화면 락화면) 토글 — 전산 「락화면 사용」과 같은 정책키.
+//   scope='limit' → daily_limit_lock_enabled,  scope='dt' → downtime_lock_enabled
+//   ● v26+ 기능이라 모든 고객폰이 지원한다(버전게이트 불필요).
+//   · ON  = 조건이 되면 화면 전체를 잠근다(키오스크 락화면).
+//   · OFF = 잠금화면 없이 앱만 하나씩 막는다.
+//   ⚠️ 전산은 두 키를 「락화면 사용」 하나로 묶어 켠다. 부모웹앱은 메뉴별(일일한도/다운타임)로 나눠 더 세밀히 켠다.
+//     정책키가 같으므로 서로 호환되며, 값을 바꾸면 양쪽에 그대로 반영된다.
+function lockModeCard(scope){
+  const isDt = scope==='dt';
+  const key = isDt ? 'downtime_lock_enabled' : 'daily_limit_lock_enabled';
+  const on = ST.pol[key]==='true';
+  const desc = isDt
+    ? '켜면 취침 시간 동안 <b>화면 전체가 잠깁니다</b> (긴급전화·알람·허용앱만 가능).<br>끄면 잠금화면 없이 앱만 하나씩 막힙니다.'
+    : '켜면 하루 한도를 다 쓴 뒤 <b>화면 전체가 잠깁니다</b> (긴급전화·보너스 요청만 가능).<br>끄면 잠금화면 없이 앱만 하나씩 막힙니다.';
+  return `<div style="margin:14px 0;padding:14px;border:2px solid #7C3AED;border-radius:14px;background:rgba(124,58,237,.06)">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="flex:1">
+        <div style="font-weight:800;font-size:15px;color:#6D28D9">🔒 강력 모드 (전체화면 잠금)</div>
+        <div style="font-size:12.5px;color:#6b7280;margin-top:4px;line-height:1.6">${desc}</div>
+      </div>
+      <label class="sw"><input type="checkbox" ${on?'checked':''} onchange="toggleLockMode('${key}',this.checked,'${scope}')"><i></i></label>
+    </div>
+  </div>`;
+}
+function toggleLockMode(key,val,scope){ toggleFlag(key,val, scope==='dt'?openDt:openLimit); }
 
 // ══════════ SOS 번호 ══════════
 function openSos(){
@@ -2278,11 +2416,41 @@ async function shareDoc(f, title){
     toast('주소를 복사했습니다 — 붙여넣기 하세요');
   }catch(e){ window.open(url,'_blank','noopener'); }
 }
+// ══════════ 💬 부모 공지(광고) — 비밀번호 입력 전에 1회 표시 (2026-09-16) ══════════
+//   · 부모님이 앱을 열면(세션 인증 전) 비밀번호 화면 직전에 이 공지를 보고 넘어간다.
+//   · 「일주일 동안 보지 않기」를 누르면 7일간 안 뜬다(localStorage).
+//   ⭐ 공지 내용을 바꾸면 AD_VERSION 을 +1 → 지난주에 「보지 않기」한 부모님께도 새 공지가 다시 보인다.
+const AD_VERSION   = 1;                       // 내용 바꿀 때마다 +1
+const AD_KEY       = 'sinae_notice_snooze';   // {until:ms, ver:n}
+const AD_SNOOZE_MS = 7*24*60*60*1000;         // 7일
+function shouldShowNotice(){
+  try{
+    const s=JSON.parse(localStorage.getItem(AD_KEY)||'null');
+    if(!s || s.ver!==AD_VERSION) return true;   // 처음이거나, 새 공지면 무조건 보여준다
+    return Date.now() >= (Number(s.until)||0);   // 스누즈 기간이 지났으면 다시 보여준다
+  }catch(e){ return true; }
+}
+let noticeNext=null;
+function showNotice(next){
+  noticeNext = next || null;
+  document.getElementById('scNotice').classList.remove('hide');
+}
+function closeNotice(snooze){
+  if(snooze){
+    try{ localStorage.setItem(AD_KEY, JSON.stringify({ until:Date.now()+AD_SNOOZE_MS, ver:AD_VERSION })); }catch(e){}
+  }
+  document.getElementById('scNotice').classList.add('hide');
+  const n=noticeNext; noticeNext=null; if(n) n();
+}
+
 (function init(){
   migrateOld();
   if(!kids().length){ show('scConnect'); return; }
   document.getElementById('btnConnectBack').classList.remove('hide');
-  if(sessionStorage.getItem('sinae_auth')==='1') afterUnlock(); else startPin();
+  if(sessionStorage.getItem('sinae_auth')==='1'){ afterUnlock(); return; }
+  // 비밀번호 화면 전에 공지(광고)를 먼저 — 스누즈 중이면 건너뛴다
+  if(shouldShowNotice()) showNotice(()=>startPin());
+  else startPin();
 })();
 </script>
 </body>
