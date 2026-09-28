@@ -939,7 +939,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '9월29일 수정본';
+const WEB_LABEL = '9월29일 수정본2';
 async function reportParentLink(){
   try{
     const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
@@ -2162,7 +2162,7 @@ function openStealth(){
     <div class="card">
       <div class="row"><div class="grow">
         <div class="ttl">🔔 무음·진동 → 소리로 변경</div>
-        <div class="val">자녀폰이 무음·진동으로 되어 있으면 <b>소리 모드로 바꿉니다.</b> 벨소리 볼륨도 최대로 올리고, 바뀐 걸 바로 알 수 있게 30초 동안 소리가 납니다.</div>
+        <div class="val">자녀폰이 무음·진동으로 되어 있으면 <b>소리 모드로 바꾸고</b> 벨소리 볼륨도 최대로 올립니다.<br><b>소리는 나지 않고 조용히 바뀝니다.</b></div>
       </div></div>
       <button class="btn" onclick="soundOn()">소리로 바꾸기</button>
     </div>
