@@ -521,6 +521,16 @@
         <div class="chev">›</div>
       </div>
     </div>
+    <!-- 📺 2026-09-22 : 시내YouTube.
+         ⚠️ 자녀폰에 시내YouTube 가 깔려 있을 때만 보인다(installed_apps 로 판단).
+            안 쓰는 부모님께 빈 메뉴를 보여주면 "이게 뭐냐"는 문의가 늘어난다. -->
+    <div class="card tap hide" id="cardTube" onclick="openTube()">
+      <div class="row">
+        <div class="ic" style="background:#FDECEB">📺</div>
+        <div class="grow"><div class="ttl">시내YouTube — 볼 수 있는 영상</div><div class="val" id="vTube">-</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
 
     <div class="sec">앱 보호</div>
     <div class="card tap" onclick="openUninstall()">
@@ -544,6 +554,11 @@
     <div class="card tap" onclick="openSecurity()">
       <div class="row"><div class="ic" style="background:#F0FDF4">🔐</div>
         <div class="grow"><div class="ttl">보안 설정</div><div class="val" id="vSecurity">-</div></div><div class="chev">›</div></div>
+    </div>
+    <!-- 🆕 2026-09-29 (자녀앱 v43) : 무음·진동 → 소리 변경 · 자녀앱 숨기기 -->
+    <div class="card tap" onclick="openStealth()">
+      <div class="row"><div class="ic" style="background:#EEF2FF">🙈</div>
+        <div class="grow"><div class="ttl">소리 변경 · 앱 숨기기</div><div class="val" id="vStealth">-</div></div><div class="chev">›</div></div>
     </div>
 
     <div class="sec">기타</div>
@@ -924,7 +939,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '9월16일 수정본';
+const WEB_LABEL = '9월29일 수정본';
 async function reportParentLink(){
   try{
     const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
@@ -1141,7 +1156,8 @@ async function refreshAll(manual){
     const today=new Date().toLocaleDateString('en-CA');
     const [polR,devR,useR,reqR,appR] = await Promise.all([
       sb.from('policies').select('key,value').eq('device_code',ST.code),
-      sb.from('child_devices').select('child_name,last_seen_at').eq('device_code',ST.code).maybeSingle(),
+      // 📺 yt_token — 시내YouTube 서버 함수를 부를 때 쓴다 (없으면 그 서버에 SQL 미설치)
+      sb.from('child_devices').select('child_name,last_seen_at,yt_token').eq('device_code',ST.code).maybeSingle(),
       sb.from('usage_history').select('total_minutes,total_seconds').eq('device_code',ST.code).eq('date',today).maybeSingle(),
       sb.from('access_requests').select('domain,requested_at').eq('device_code',ST.code),
       sb.from('installed_apps').select('app_package,app_name').eq('device_code',ST.code)
@@ -1149,6 +1165,7 @@ async function refreshAll(manual){
     ST.pol={}; (polR.data||[]).forEach(r=>ST.pol[r.key]=r.value);
     ST.dev=devR.data||ST.dev; ST.usage=useR.data; ST.reqs=reqR.data||[];
     ST.apps=(appR.data||[]).sort((a,b)=>(a.app_name||'').localeCompare(b.app_name||'','ko'));
+    await loadTube();          // 📺 2026-09-22 : 시내YouTube 요청·목록 (앱이 깔린 폰만)
     paintMain();
     if(manual) toast('최신 정보로 새로고침했습니다');
   }catch(e){ toast('불러오기 실패: '+e.message); }
@@ -1211,6 +1228,147 @@ function paintMain(){
   document.getElementById('vSos').textContent = J(p.sos_whitelist,[]).length+'개 번호 등록';
   document.getElementById('vSecurity').innerHTML =
     `Play스토어 ${p.play_store_blocked==='true'?'차단':'허용'} · 오픈채팅 ${p.open_chat_blocked==='true'?'차단':'허용'}`;
+  // 🆕 2026-09-29 : 소리 변경 · 앱 숨기기 요약
+  document.getElementById('vStealth').innerHTML =
+    `아이콘 ${p.app_icon_hidden==='true'?'숨김':'보임'} · 알림 ${p.app_notify_hidden==='true'?'숨김':'보임'}`;
+
+  // 📺 시내YouTube — 앱이 깔린 폰에서만 카드를 보여준다
+  const $tubeCard = document.getElementById('cardTube');
+  if($tubeCard){
+    $tubeCard.classList.toggle('hide', !tubeInstalled());
+    const nq = (TUBE.reqs||[]).length;
+    document.getElementById('vTube').innerHTML = nq
+      ? `<b style="color:#F97316">허락 요청 ${nq}건</b> · 볼 수 있는 영상 ${(TUBE.videos||[]).length}개`
+      : `볼 수 있는 영상 ${(TUBE.videos||[]).length}개`;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  📺 시내YouTube (2026-09-22 신설)
+//
+//  부모가 허락한 유튜브 영상만 보는 별도 앱을 여기서 관리합니다.
+//  ● 서버 함수(rpc)만 부릅니다. 테이블을 직접 건드리지 않습니다.
+//    같은 일을 하는 곳이 네 군데(전산·부모웹앱·자녀앱·시내YouTube 앱)라
+//    각자 테이블을 만지면 규칙이 어긋나 조용히 새는 길이 생깁니다.
+//    특히 updated_at 을 안 올리면 자녀폰의 증분 동기화가 그 변경을 영영 못 봅니다.
+// ══════════════════════════════════════════════════════════════════════════
+const TUBE_PKG = 'com.sinaemobile.sinaetube';
+let TUBE = { videos:[], reqs:[] };
+
+function tubeInstalled(){ return (ST.apps||[]).some(a=>a.app_package===TUBE_PKG); }
+function tubeToken(){ return ST.dev?.yt_token || null; }
+
+/** 메인 화면을 새로고침할 때 같이 불린다. 실패해도 나머지 화면은 그대로 뜬다. */
+async function loadTube(){
+  TUBE = { videos:[], reqs:[] };
+  if(!tubeInstalled() || !tubeToken()) return;
+  try{
+    const sb=clientFor(ST.server);
+    const [v,r] = await Promise.all([
+      sb.rpc('yt_list',         { p_device_id:ST.code, p_token:tubeToken() }),
+      sb.rpc('yt_request_list', { p_device_id:ST.code, p_token:tubeToken() })
+    ]);
+    TUBE.videos = (v.data||[]).filter(x=>!x.deleted_at);
+    TUBE.reqs   = (r.data||[]).filter(x=>x.status==='pending');
+  }catch(e){ /* 조용히 넘어간다 — 시내YouTube 때문에 메인 화면이 깨지면 안 된다 */ }
+}
+
+function openTube(){
+  const reqs = TUBE.reqs||[], vids = TUBE.videos||[];
+  const reqBody = reqs.length ? reqs.map(r=>`<div class="item">
+      <div class="grow"><div class="nm">${esc(r.title||r.video_id)}</div>
+        <div class="sm">${esc(r.channel||'')} · ${ago(r.requested_at)} 요청</div></div>
+      <button class="add" onclick="tubeDecide('${esc(r.video_id)}',true)">허락</button>
+      <button class="x" onclick="tubeDecide('${esc(r.video_id)}',false)">거절</button></div>`).join('')
+    : `<div class="empty">새로운 요청이 없습니다</div>`;
+
+  const vidBody = vids.length ? vids.map(v=>`<div class="item">
+      <div class="grow"><div class="nm">${esc(v.title||v.video_id)}</div>
+        <div class="sm">${esc(v.channel||'')}</div></div>
+      <button class="x" onclick="tubeRemove('${esc(v.video_id)}')">삭제</button></div>`).join('')
+    : `<div class="empty">아직 허락한 영상이 없습니다</div>`;
+
+  openSub('시내YouTube', `
+    <div class="note">자녀는 <b>여기 있는 영상만</b> 시내YouTube 에서 볼 수 있습니다.<br>
+      자녀가 유튜브에서 <b>공유 → 시내YouTube</b> 를 누르면 아래에 요청이 올라옵니다.</div>
+    <div class="sec">자녀의 허락 요청 (${reqs.length}건)</div>
+    <div class="card">${reqBody}</div>
+    <div class="sec">영상 직접 추가</div>
+    <div class="card"><div class="field"><label>유튜브 주소</label>
+      <input id="tubeUrl" type="text" placeholder="https://youtu.be/..." autocapitalize="none" spellcheck="false"></div>
+      <button class="btn btn-p" onclick="tubeAdd()">추가하기</button>
+      <div class="kkhint">퍼가기가 막힌 영상은 허락해도 재생되지 않습니다. 추가할 때 미리 걸러집니다.</div></div>
+    <div class="sec">볼 수 있는 영상 (${vids.length}개)</div>
+    <div class="card">${vidBody}</div>
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
+
+async function tubeDecide(videoId, approve){
+  loading(true);
+  try{
+    const { error } = await clientFor(ST.server).rpc('yt_request_decide', {
+      p_device_id:ST.code, p_token:tubeToken(),
+      p_video_id:videoId, p_approve:approve, p_by:'parent' });
+    if(error) throw error;
+    await loadTube(); loading(false);
+    toast(approve?'허락했습니다':'거절했습니다'); openTube();
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+
+async function tubeRemove(videoId){
+  loading(true);
+  try{
+    const { error } = await clientFor(ST.server).rpc('yt_remove', {
+      p_device_id:ST.code, p_token:tubeToken(), p_video_id:videoId });
+    if(error) throw error;
+    await loadTube(); loading(false); toast('삭제했습니다'); openTube();
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+
+async function tubeAdd(){
+  const raw=(document.getElementById('tubeUrl').value||'').trim();
+  const id = tubeExtractId(raw);
+  if(!id){ toast('유튜브 영상 주소를 확인해 주세요'); return; }
+  if((TUBE.videos||[]).some(v=>v.video_id===id)){ toast('이미 들어 있는 영상입니다'); return; }
+  loading(true);
+  try{
+    const info = await tubeFetchInfo(id);
+    if(info.blocked){ loading(false); toast('이 영상은 퍼가기가 막혀 있어 앱에서 재생되지 않습니다'); return; }
+    if(info.notFound){ loading(false); toast('삭제되었거나 비공개된 영상입니다'); return; }
+    const { error } = await clientFor(ST.server).rpc('yt_add', {
+      p_device_id:ST.code, p_token:tubeToken(),
+      p_video_id:id, p_title:info.title, p_channel:info.channel, p_added_by:'parent' });
+    if(error) throw error;
+    await loadTube(); loading(false); toast('추가했습니다'); openTube();
+  }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+
+/** 주소에서 영상 ID 뽑기 — 앱(YoutubeUtil)·전산과 같은 규칙 */
+function tubeExtractId(raw){
+  const t=String(raw||'').trim();
+  if(/^[A-Za-z0-9_-]{11}$/.test(t)) return t;
+  let u; try{ u=new URL((t.match(/https?:\/\/\S+/)||[t])[0]); }catch(e){ return null; }
+  const h=(u.hostname||'').toLowerCase();
+  if(!(h==='youtu.be'||h==='youtube.com'||h.endsWith('.youtube.com')||
+       h==='youtube-nocookie.com'||h.endsWith('.youtube-nocookie.com'))) return null;
+  const v=u.searchParams.get('v');
+  if(v&&/^[A-Za-z0-9_-]{11}$/.test(v)) return v;
+  const seg=u.pathname.split('/').filter(Boolean);
+  if(h==='youtu.be'&&seg[0]&&/^[A-Za-z0-9_-]{11}$/.test(seg[0])) return seg[0];
+  const i=seg.findIndex(s=>['embed','shorts','live','v'].includes(s.toLowerCase()));
+  if(i>=0&&seg[i+1]&&/^[A-Za-z0-9_-]{11}$/.test(seg[i+1])) return seg[i+1];
+  return null;
+}
+
+/** 제목·채널 가져오기. 응답 코드로 퍼가기 금지(401/403)·없는 영상(404)까지 걸러진다. */
+async function tubeFetchInfo(id){
+  const res = await fetch('https://www.youtube.com/oembed?format=json&url='+
+    encodeURIComponent('https://www.youtube.com/watch?v='+id));
+  if(res.status===401||res.status===403) return { blocked:true };
+  if(res.status===404) return { notFound:true };
+  if(!res.ok) throw new Error('유튜브 응답 오류 ('+res.status+')');
+  const j=await res.json();
+  return { title:j.title||id, channel:j.author_name||'' };
 }
 
 // rule_ 값 해석 (부모앱 형식 그대로)
@@ -1969,6 +2127,79 @@ function openSecurity(){
     <div class="note warn">여기서 바꾸면 자녀폰에 <b>바로 반영</b>됩니다.
       자녀폰이 꺼져 있으면 <b>켜질 때</b> 반영됩니다.</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
+
+// ══════════ 🆕 2026-09-29 (자녀앱 v43) : 무음·진동 → 소리 변경 · 자녀앱 숨기기 ══════════
+//   ⛔ 세 기능 모두 자녀앱 v43(5.3) 이상에서만 동작한다.
+//      구버전 폰에 토글을 보여주면 켜도 아무 일이 없는 「조용한 무동작」이 된다
+//      (2026-09-16 실제 사고). 그래서 버전이 43 미만이면 안내만 띄운다.
+function openStealth(){
+  const p = ST.pol;
+  const ver = parseInt(p.app_version_code || '0', 10) || 0;
+
+  if (ver < 43) {
+    openSub('소리 변경 · 앱 숨기기', `
+      <div class="note warn">이 기능은 <b>자녀폰 앱이 최신(5.3)으로 업데이트된 뒤</b> 사용할 수 있어요.<br>
+        업데이트는 자녀폰이 인터넷에 연결되면 <b>자동으로</b> 진행됩니다. 잠시 뒤 다시 확인해 주세요.
+        ${ver > 0 ? `<br><span style="color:#9ca3af;font-size:12px">(현재 자녀폰 앱 버전 ${ver} · 최신 43)</span>` : ''}</div>
+      <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+    return;
+  }
+
+  const sw = (key, title, desc, onTxt, offTxt) => {
+    const on = p[key] === 'true';
+    return `<div class="card"><div class="row">
+      <div class="grow">
+        <div class="ttl">${title}</div>
+        <div class="val">${desc}</div>
+        <div class="stat ${on?'on':'off'}">${on ? '🔴 '+onTxt : '⚪ '+offTxt}</div>
+      </div>
+      <label class="sw"><input type="checkbox" ${on?'checked':''}
+        onchange="toggleFlag('${key}',this.checked,openStealth)"><i></i></label></div></div>`;
+  };
+
+  openSub('소리 변경 · 앱 숨기기', `
+    <div class="card">
+      <div class="row"><div class="grow">
+        <div class="ttl">🔔 무음·진동 → 소리로 변경</div>
+        <div class="val">자녀폰이 무음·진동으로 되어 있으면 <b>소리 모드로 바꿉니다.</b> 벨소리 볼륨도 최대로 올리고, 바뀐 걸 바로 알 수 있게 30초 동안 소리가 납니다.</div>
+      </div></div>
+      <button class="btn" onclick="soundOn()">소리로 바꾸기</button>
+    </div>
+    <div class="note">자녀폰이 꺼져 있거나 인터넷이 안 되면 <b>켜질 때</b> 바뀝니다. 자녀가 다시 무음으로 돌리면 한 번 더 눌러주세요.</div>
+
+    ${sw('app_icon_hidden','🙈 자녀앱 아이콘 숨기기',
+         '자녀 눈에만 안 보이게 합니다. 차단·시간계산 등 모든 기능은 그대로 작동합니다.',
+         '지금 숨김중입니다 — 자녀폰 앱 목록에 안 보입니다',
+         '지금은 보입니다 — 자녀폰 앱 목록에 아이콘이 있습니다')}
+    ${sw('app_notify_hidden','🔕 자녀앱 알림 숨기기',
+         '차단 안내·취침 시작 같은 자녀에게 보이는 안내를 띄우지 않습니다.',
+         '지금 숨김중입니다 — 자녀에게 안내가 안 보입니다',
+         '지금은 보입니다 — 차단될 때 자녀에게 안내가 뜹니다')}
+
+    <div class="note warn">⚠️ <b>아이콘을 숨겨도 앱은 그대로 돌아갑니다.</b> 다시 보이게 하려면 위 스위치를 끄세요.<br>
+      · 홈 화면이 아이콘을 잠시 기억하고 있어 <b>바로 안 사라질 수 있습니다</b>(자녀폰을 껐다 켜면 반영).<br>
+      · 알림을 숨겨도 <b>「시스템 서비스 실행 중」 한 줄은 남습니다.</b> 안드로이드가 강제하는 표시라 없앨 방법이 없습니다.<br>
+      · <b>「보호 기능이 멈춰 있습니다」 경고는 숨기지 않습니다.</b> 이걸 가리면 자녀폰이 무방비인 걸 아무도 모르게 됩니다.</div>
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
+
+/** 🔔 무음·진동 → 소리 변경 — remote_commands 에 SOUND_ON 한 건을 넣는다. 자녀폰이 Realtime 으로 즉시 받는다. */
+async function soundOn(){
+  loading(true);
+  try{
+    const sb = clientFor(ST.server);
+    // ⚠️ remote_commands 는 device_code 가 아니라 child_devices.id(UUID) 로 건다 — 자주 헷갈리는 부분
+    const { data:dev, error:e1 } = await sb.from('child_devices')
+      .select('id').eq('device_code', ST.code).maybeSingle();
+    if(e1) throw e1;
+    if(!dev) throw new Error('자녀폰을 찾을 수 없습니다');
+    const { error:e2 } = await sb.from('remote_commands')
+      .insert({ child_device_id: dev.id, command:'SOUND_ON', executed:false });
+    if(e2) throw e2;
+    loading(false);
+    toast('🔔 자녀폰을 소리 모드로 바꿨습니다');
+  }catch(e){ loading(false); toast('실패: '+e.message); }
 }
 
 // ══════════ 비밀번호 변경 ══════════
