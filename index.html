@@ -115,6 +115,10 @@
   .introAct{display:flex;gap:8px;margin-top:14px}
   .introAct .btn{flex:1}
   .introNote{font-size:12.5px;color:#98A2B3;text-align:center;margin-top:14px;line-height:1.7;word-break:keep-all}
+  /* ⏳ 건너뛰기까지 남은 시간 — 「언제 닫을 수 있나」를 미리 알려준다 (2026-10-06) */
+  .introWait{flex:1;text-align:center;font-size:14px;font-weight:700;color:#C9C2BB;
+             background:rgba(255,255,255,.07);border-radius:12px;padding:13px 10px;letter-spacing:-.01em}
+  .introWait b{color:#F6A14A;font-size:16px;font-weight:800}
   /* 사용설명서 맨 위 — 대문짝만한 대표영상 칸 */
   .bigv{display:block;width:100%;text-align:left;border:0;cursor:pointer;font-family:inherit;
         background:linear-gradient(135deg,#B42318,#F97316);color:#fff;
@@ -460,15 +464,16 @@
   <div class="introBox">
     <div class="introTop">
       <div class="introT">📺 시내모바일 공신폰 — 처음 보시는 분께</div>
-      <div class="introS">1분 20초면 다 아십니다. 소리를 켜 주세요.</div>
+      <div class="introS">1분 20초면 다 아실 수 있어요 🙂 소리를 켜 주세요.</div>
     </div>
-    <video id="introVid" class="introVid" src="video-intro.mp4" playsinline preload="auto" controls></video>
+    <video id="introVid" class="introVid" src="video-intro.mp4?v=20261006" playsinline preload="auto" controls></video>
     <div class="introAct">
+      <div id="introWait" class="introWait hide">⏳ <b id="introSec">10</b>초 뒤 건너뛰기가 가능해요</div>
       <button id="introSkip" class="btn btn-g hide" onclick="closeIntro()">건너뛰기</button>
-      <button id="introDone" class="btn btn-p hide" onclick="closeIntro()">다 봤습니다 — 시작하기</button>
+      <button id="introDone" class="btn btn-p hide" onclick="closeIntro()">다 봤어요 — 시작하기</button>
     </div>
-    <div class="introNote">이 영상은 <b>처음 한 번만</b> 나옵니다.<br>
-      나중에 다시 보시려면 맨 아래 <b>「사용설명서」</b> 에서 언제든 보실 수 있습니다.</div>
+    <div class="introNote">이 영상은 <b>처음 한 번만</b> 나와요.<br>
+      나중에 다시 보고 싶으시면 맨 아래 <b>「사용설명서」</b> 에서 언제든 보실 수 있어요.</div>
   </div>
 </div>
 
@@ -1104,24 +1109,44 @@ function markIntroSeen(){
   try { localStorage.setItem(INTRO_KEY, String(INTRO_VERSION)); } catch(e){}
 }
 let introTimer = null;
+let introTick  = null;   // ⏳ 카운트다운 타이머 — closeIntro 에서 반드시 지운다
 function showIntro(){
   const w = document.getElementById('scIntro');
   const v = document.getElementById('introVid');
   const skip = document.getElementById('introSkip');
   const done = document.getElementById('introDone');
+  const wait = document.getElementById('introWait');
+  const sec  = document.getElementById('introSec');
   w.classList.remove('hide');
   skip.classList.add('hide'); done.classList.add('hide');
+  try { v.currentTime = 0; } catch(e){}   // 항상 처음부터 (끝난 상태로 다시 열리면 버튼이 안 뜬다)
   // 끝까지 보면 「시작하기」
-  v.onended = () => { done.classList.remove('hide'); skip.classList.add('hide'); };
-  // 10초 뒤 「건너뛰기」
-  clearTimeout(introTimer);
-  introTimer = setTimeout(()=>{ if(v.ended) return; skip.classList.remove('hide'); }, SKIP_AFTER_MS);
+  v.onended = () => { done.classList.remove('hide'); skip.classList.add('hide'); wait.classList.add('hide'); clearInterval(introTick); };
+  // ⏳ 언제 닫을 수 있는지 **미리 알려준다** — 아무 버튼도 없으면 갇힌 줄 안다 (2026-10-06 대표점장 요청)
+  clearTimeout(introTimer); clearInterval(introTick);
+  let left = Math.ceil(SKIP_AFTER_MS/1000);
+  sec.textContent = left;
+  wait.classList.remove('hide');
+  introTick = setInterval(()=>{
+    left -= 1;
+    if(left <= 0){ clearInterval(introTick); return; }
+    sec.textContent = left;
+  }, 1000);
+  // 🔴 「건너뛰기」가 보이는 순간 안내 문구는 반드시 사라져야 한다.
+  //    안 그러면 버튼이 이미 떠 있는데 「10초 뒤 가능해요」가 같이 보인다.
+  const revealSkip = () => {
+    clearInterval(introTick); clearTimeout(introTimer);
+    wait.classList.add('hide');
+    if(!v.ended) skip.classList.remove('hide');
+  };
+  introTimer = setTimeout(revealSkip, SKIP_AFTER_MS);
   // 소리까지 켜서 자동재생을 시도한다. 브라우저가 막으면 부모님이 ▶ 를 누르면 된다.
+  //   ⚠️ 재생이 막히면 영상이 흐르지 않으니 기다릴 이유가 없다 → 바로 열어 준다.
   v.muted = false;
-  v.play().catch(()=>{ skip.classList.remove('hide'); });
+  v.play().catch(revealSkip);
 }
 function closeIntro(){
-  clearTimeout(introTimer);
+  clearTimeout(introTimer); clearInterval(introTick);
   const v = document.getElementById('introVid');
   try { v.pause(); } catch(e){}
   markIntroSeen();
@@ -1149,7 +1174,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '10월6일 대표영상';
+const WEB_LABEL = '10월6일 대표영상2';
 async function reportParentLink(){
   try{
     const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
@@ -2877,13 +2902,13 @@ function doLogout(){ removeChildUI(ST.code); }
 //   ⚠️ 파일명을 바꾸면 여기 src 도 같이 고쳐야 한다. 한글·대괄호는 주소에서 깨지므로 쓰지 않는다.
 const DOCS = [
   // v: 설명서 영상 (2026-10-05 신설). 없으면 「영상보기」 버튼이 안 나온다.
-  { f:'manual-app.pdf',       v:'video-app.mp4',       t:'시내모바일 앱 사용설명서',   d:'자녀폰에 깔린 앱은 무엇을 하나' },
-  { f:'manual-parentweb.pdf', v:'video-parentweb.mp4', t:'부모님 관리 웹앱 사용설명서', d:'지금 보고 계신 이 화면 쓰는 법' },
-  { f:'manual-chrome.pdf',    v:'video-chrome.mp4',    t:'공신폰 크롬 사용설명서',     d:'허용 사이트·접속 요청은 어떻게' },
-  { f:'manual-sinaetube.pdf',     v:'video-sinaetube.mp4',     t:'시내YouTube 상품설명서',   d:'부모님이 허락한 영상만 보는 유튜브', isNew:true },
-  { f:'manual-sinaetube-use.pdf', v:'video-sinaetube-use.mp4', t:'시내YouTube 사용설명서',   d:'영상 넣는 법 · 자녀 요청 받는 법',   isNew:true },
-  { f:'manual-sinaedm.pdf',   v:'video-sinaedm.mp4',   t:'시내디엠 상품설명서',        d:'인스타 DM 만 되는 전용 앱' },
-  { f:'manual-compare.pdf',   v:'video-compare.mp4',   t:'타 매장 공신폰 비교 설명서',  d:'다른 곳 공신폰과 무엇이 다른가' }
+  { f:'manual-app.pdf',       v:'video-app.mp4?v=20261006',       t:'시내모바일 앱 사용설명서',   d:'자녀폰에 깔린 앱은 무엇을 하나' },
+  { f:'manual-parentweb.pdf', v:'video-parentweb.mp4?v=20261006', t:'부모님 관리 웹앱 사용설명서', d:'지금 보고 계신 이 화면 쓰는 법' },
+  { f:'manual-chrome.pdf',    v:'video-chrome.mp4?v=20261006',    t:'공신폰 크롬 사용설명서',     d:'허용 사이트·접속 요청은 어떻게' },
+  { f:'manual-sinaetube.pdf',     v:'video-sinaetube.mp4?v=20261006',     t:'시내YouTube 상품설명서',   d:'부모님이 허락한 영상만 보는 유튜브', isNew:true },
+  { f:'manual-sinaetube-use.pdf', v:'video-sinaetube-use.mp4?v=20261006', t:'시내YouTube 사용설명서',   d:'영상 넣는 법 · 자녀 요청 받는 법',   isNew:true },
+  { f:'manual-sinaedm.pdf',   v:'video-sinaedm.mp4?v=20261006',   t:'시내디엠 상품설명서',        d:'인스타 DM 만 되는 전용 앱' },
+  { f:'manual-compare.pdf',   v:'video-compare.mp4?v=20261006',   t:'타 매장 공신폰 비교 설명서',  d:'다른 곳 공신폰과 무엇이 다른가' }
 ];
 
 function docUrl(f){ return new URL(f, location.href).href; }
@@ -2902,14 +2927,14 @@ function openDocs(){
       </div>
     </div>`).join('');
   openSub('사용설명서 모음', `
-    <button class="bigv" onclick="playDoc('video-intro.mp4','시내모바일 공신폰 — 대표 설명서 영상')">
+    <button class="bigv" onclick="playDoc('video-intro.mp4?v=20261006','시내모바일 공신폰 — 대표 설명서 영상')">
       <div class="bvt">🎬 대표 설명서 영상</div>
       <div class="bvd">공신폰이 무엇이고 이 화면으로 무엇을 할 수 있는지,
-        <b>1분 20초</b>에 전부 담았습니다. 처음 보시는 분은 이것부터 보세요.</div>
+        <b>1분 20초</b>에 전부 담았어요. 처음 보시는 분은 이것부터 보세요 🙂</div>
       <div class="bvb">▶ 지금 보기</div>
     </button>
-    <div class="note"><b>▶ 영상보기</b>는 30초 안팎으로 핵심만 설명해 드립니다(소리·자막 같이 나옵니다).
-      <b>📄 보기</b>는 설명서를 새 창에서 열고, <b>공유하기</b>는 영상이나 설명서를 카톡으로 보냅니다.</div>
+    <div class="note"><b>▶ 영상보기</b>는 30초 안팎으로 핵심만 짚어 드려요 (소리·자막 같이 나와요).
+      <b>📄 보기</b>는 설명서를 새 창에서 열고, <b>공유하기</b>는 영상이나 설명서를 카톡으로 보내요.</div>
     <div class="card" style="padding-top:4px;padding-bottom:4px">${rows}</div>
     <div class="shnote">주변에 <b>공신폰이 필요한 분</b>이 있으면 이 설명서를 공유해 주세요 🙏</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
