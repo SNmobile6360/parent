@@ -102,6 +102,17 @@
            border-radius:10px;padding:8px 12px;font-size:13.5px;font-weight:800;
            font-family:inherit;cursor:pointer;text-decoration:none;line-height:1}
   .doc .db.sh{background:var(--blue);border-color:var(--blue);color:#fff}
+  /* 🎬 설명서 영상 (2026-10-05) */
+  .doc .db.vd{background:#B42318;border-color:#B42318;color:#fff}
+  .dvwrap{margin-top:10px;border-radius:14px;overflow:hidden;background:#000}
+  .dvwrap video{width:100%;display:block;max-height:46vh;background:#000}
+  .dvnote{font-size:12px;color:var(--muted);margin:8px 2px 0;line-height:1.6;word-break:keep-all}
+  .pick{display:flex;flex-direction:column;gap:10px;margin:4px 0 2px}
+  .pick button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+      border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:14px 15px;
+      font-family:inherit;font-size:14.5px;font-weight:800;color:var(--ink);cursor:pointer}
+  .pick button .pi{font-size:22px;flex:none}
+  .pick button .ps{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-top:3px}
   .shnote{margin:10px 2px 14px;font-size:12px;color:var(--muted);text-align:right;
           line-height:1.7;word-break:keep-all}
   /* 🚦 실시간 제한 상황 — 큰 상태 카드 */
@@ -1054,7 +1065,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '10월3일 수정본4';
+const WEB_LABEL = '10월5일 설명서영상';
 async function reportParentLink(){
   try{
     const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
@@ -2781,13 +2792,14 @@ function doLogout(){ removeChildUI(ST.code); }
 //   PDF 는 웹앱과 같은 폴더(GitHub Pages)에 올린다. 상대경로라 주소가 바뀌어도 따라간다.
 //   ⚠️ 파일명을 바꾸면 여기 src 도 같이 고쳐야 한다. 한글·대괄호는 주소에서 깨지므로 쓰지 않는다.
 const DOCS = [
-  { f:'manual-app.pdf',       t:'시내모바일 앱 사용설명서',   d:'자녀폰에 깔린 앱은 무엇을 하나' },
-  { f:'manual-parentweb.pdf', t:'부모님 관리 웹앱 사용설명서', d:'지금 보고 계신 이 화면 쓰는 법' },
-  { f:'manual-chrome.pdf',    t:'공신폰 크롬 사용설명서',     d:'허용 사이트·접속 요청은 어떻게' },
-  { f:'manual-sinaetube.pdf',     t:'시내YouTube 상품설명서',   d:'부모님이 허락한 영상만 보는 유튜브', isNew:true },
-  { f:'manual-sinaetube-use.pdf', t:'시내YouTube 사용설명서',   d:'영상 넣는 법 · 자녀 요청 받는 법',   isNew:true },
-  { f:'manual-sinaedm.pdf',   t:'시내디엠 상품설명서',        d:'인스타 DM 만 되는 전용 앱' },
-  { f:'manual-compare.pdf',   t:'타 매장 공신폰 비교 설명서',  d:'다른 곳 공신폰과 무엇이 다른가' }
+  // v: 설명서 영상 (2026-10-05 신설). 없으면 「영상보기」 버튼이 안 나온다.
+  { f:'manual-app.pdf',       v:'video-app.mp4',       t:'시내모바일 앱 사용설명서',   d:'자녀폰에 깔린 앱은 무엇을 하나' },
+  { f:'manual-parentweb.pdf', v:'video-parentweb.mp4', t:'부모님 관리 웹앱 사용설명서', d:'지금 보고 계신 이 화면 쓰는 법' },
+  { f:'manual-chrome.pdf',    v:'video-chrome.mp4',    t:'공신폰 크롬 사용설명서',     d:'허용 사이트·접속 요청은 어떻게' },
+  { f:'manual-sinaetube.pdf',     v:'video-sinaetube.mp4',     t:'시내YouTube 상품설명서',   d:'부모님이 허락한 영상만 보는 유튜브', isNew:true },
+  { f:'manual-sinaetube-use.pdf', v:'video-sinaetube-use.mp4', t:'시내YouTube 사용설명서',   d:'영상 넣는 법 · 자녀 요청 받는 법',   isNew:true },
+  { f:'manual-sinaedm.pdf',   v:'video-sinaedm.mp4',   t:'시내디엠 상품설명서',        d:'인스타 DM 만 되는 전용 앱' },
+  { f:'manual-compare.pdf',   v:'video-compare.mp4',   t:'타 매장 공신폰 비교 설명서',  d:'다른 곳 공신폰과 무엇이 다른가' }
 ];
 
 function docUrl(f){ return new URL(f, location.href).href; }
@@ -2800,20 +2812,55 @@ function openDocs(){
         <div class="dg"><div class="dt">${esc(x.t)}${x.isNew?`<span class="dnew">NEW!!</span>`:``}</div><div class="dd">${esc(x.d)}</div></div>
       </div>
       <div class="dact">
+        ${x.v?`<button class="db vd" onclick="playDoc('${esc(x.v)}','${esc(x.t)}')">▶ 영상보기</button>`:``}
         <a class="db" href="${x.f}" target="_blank" rel="noopener">📄 보기</a>
-        <button class="db sh" onclick="shareDoc('${esc(x.f)}','${esc(x.t)}')">공유하기</button>
+        <button class="db sh" onclick="shareDoc('${esc(x.f)}','${esc(x.t)}','${esc(x.v||'')}')">공유하기</button>
       </div>
     </div>`).join('');
   openSub('사용설명서 모음', `
-    <div class="note">글씨가 크고 그림이 많습니다. <b>보기</b>를 누르면 새 창에서 열리고,
-      <b>공유</b>를 누르면 카톡 등으로 바로 보낼 수 있습니다.</div>
+    <div class="note"><b>▶ 영상보기</b>는 30초 안팎으로 핵심만 설명해 드립니다(소리·자막 같이 나옵니다).
+      <b>📄 보기</b>는 설명서를 새 창에서 열고, <b>공유하기</b>는 영상이나 설명서를 카톡으로 보냅니다.</div>
     <div class="card" style="padding-top:4px;padding-bottom:4px">${rows}</div>
     <div class="shnote">주변에 <b>공신폰이 필요한 분</b>이 있으면 이 설명서를 공유해 주세요 🙏</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 
+// ▶ 설명서 영상 — 앱 안에서 바로 재생한다 (새 창으로 내보내면 돌아오기가 번거롭다)
+function playDoc(v, title){
+  openSub(title, `
+    <div class="dvwrap">
+      <video src="${esc(v)}" controls playsinline preload="metadata"
+             style="width:100%" onerror="this.closest('.dvwrap').innerHTML=
+             '<div style=\\'color:#fff;padding:18px;font-size:13.5px\\'>영상을 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.</div>'"></video>
+    </div>
+    <div class="dvnote">소리와 자막이 함께 나옵니다. 조용한 곳이면 소리를 켜 주세요.<br>
+      더 자세한 내용은 <b>설명서(PDF)</b>에 있습니다.</div>
+    <div class="dact" style="justify-content:flex-start;margin-top:12px">
+      <button class="db sh" onclick="shareFile('${esc(v)}','${esc(title)} 영상')">영상 공유하기</button>
+    </div>
+    <button class="btn btn-g" style="margin-top:14px" onclick="openDocs()">설명서 목록으로</button>`,
+    ()=>openDocs());
+}
+
+// 공유 — 영상이 있으면 「영상 / 설명서」 중에 고르게 한다
+function shareDoc(f, title, v){
+  if(!v){ shareFile(f, title); return; }
+  openSub('무엇을 보낼까요?', `
+    <div class="note"><b>${esc(title)}</b></div>
+    <div class="pick">
+      <button onclick="shareFile('${esc(v)}','${esc(title)} 영상')">
+        <span class="pi">🎬</span><span>설명 영상 보내기
+          <span class="ps">30초 안팎 · 소리와 자막이 함께 나옵니다</span></span></button>
+      <button onclick="shareFile('${esc(f)}','${esc(title)}')">
+        <span class="pi">📄</span><span>설명서 보내기
+          <span class="ps">글씨가 크고 그림이 많은 PDF 입니다</span></span></button>
+    </div>
+    <button class="btn btn-g" style="margin-top:14px" onclick="openDocs()">뒤로</button>`,
+    ()=>openDocs());
+}
+
 // 폰이면 카톡·문자로 바로 보내고, PC 면 주소를 복사한다
-async function shareDoc(f, title){
+async function shareFile(f, title){
   const url = docUrl(f);
   try{
     if(navigator.share){ await navigator.share({ title:'시내모바일 · '+title, url:url }); return; }
