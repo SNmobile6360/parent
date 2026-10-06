@@ -1174,7 +1174,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '10월6일 자동업데이트';
+const WEB_LABEL = '10월6일 사용기록문구';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -2958,13 +2958,16 @@ function paintHistory(){
   }
 
   openSub('최근 7일 사용기록', `
-    <div class="note">막대를 누르면 그날 어떤 앱을 몇 분 썼는지 볼 수 있습니다.</div>
+    <div class="note">막대는 <b>하루 한도에 잡히는 시간</b>이에요. 막대를 누르면 그날 쓴 앱이 보여요.</div>
     <div class="card"><div style="display:flex;gap:3px;align-items:flex-end;height:180px;padding:6px 0">${bars}</div></div>
     <div class="sec">${selTxt} · 앱별 사용시간</div>
     <div class="card">${rows}</div>
-    ${list.length ? `<div class="note" style="background:#F9FAFB;border-color:#EAECF0;color:#667085;font-weight:500">앱별 합계 ${mmss(sum)}. 위 막대의 총 사용시간과 다를 수 있습니다 — 1분이 안 되는 앱과 전화·연락처·설정 같은 기본 앱은 앱별 기록에서 빠집니다.${
+    ${list.length ? `<div class="note" style="background:#F9FAFB;border-color:#EAECF0;color:#667085;font-weight:500">앱별 합계 ${mmss(sum)}. 1분이 안 되는 앱과 전화·연락처·설정 같은 기본 앱은 빠져요.${
+      // 🔴 2026-10-06 : 「한도 제외」 앱은 **막대에도 안 들어간다.**
+      //   예전 문구는 「하루 한도 총합에 안 들어간다」까지만 적어서, 부모님이 막대(7분)와
+      //   앱별(카톡 1시간41분)이 왜 다른지 알 수 없었다 → 실제 문의가 왔다(안재율 2A4E-QWEK 10/5).
       list.some(a=>exempt.has(a.p))
-        ? `<br><b style="color:#B54708">「한도 제외」 표시가 붙은 앱</b>은 하루 한도 총합에 <b>안 들어갑니다.</b> 그 앱을 아무리 오래 써도 잠기지 않습니다.`
+        ? `<br><b style="color:#B54708">「한도 제외」 앱은 막대에도 안 들어가요.</b> 그래서 앱별 합계가 막대보다 클 수 있어요. 아무리 오래 써도 잠기지 않아요.`
         : ``}</div>` : ``}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
