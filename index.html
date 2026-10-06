@@ -1174,20 +1174,92 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '10월6일 대표영상2';
+const WEB_LABEL = '10월6일 자동업데이트';
+// 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
+//   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
+//      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
+let LINK_REPORT_OK = false;
+
 async function reportParentLink(){
-  try{
-    const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
-    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-                  (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-    const ver = `웹앱 ${WEB_VER} · ${isIos ? '아이폰' : '갤럭시'} · ${WEB_LABEL}`;
-    await savePol([
-      { key:'parent_linked',      value:'true' },
-      { key:'parent_last_seen',   value:now },
-      { key:'parent_app_version', value:ver }
-    ]);
-  }catch(e){ /* 기록 실패해도 앱 동작에는 영향 없음 */ }
+  const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
+  const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  const ver = `웹앱 ${WEB_VER} · ${isIos ? '아이폰' : '갤럭시'} · ${WEB_LABEL}`;
+
+  // 🆕 2026-10-06 : **등록된 자녀 전부**에 기록한다.
+  //   예전에는 「지금 보고 있는 자녀」에게만 썼다. 그래서 자녀가 2명인데 부모님이 첫째만 열어 보시면
+  //   둘째는 전산에 **미연동**으로 남았다. (2026-10-06 실측 : 실제로 그런 집이 1곳 있었다)
+  //   자녀마다 서버가 다를 수 있으므로 `k.server` 로 각각 보낸다.
+  const list = kids();
+  const targets = list.length ? list
+                : (ST.code ? [{ code: ST.code, server: ST.server }] : []);
+  let allOk = targets.length > 0;
+
+  for (const k of targets){
+    try{
+      const { error } = await clientFor(k.server).from('policies').upsert([
+        { device_code:k.code, key:'parent_linked',      value:'true' },
+        { device_code:k.code, key:'parent_last_seen',   value:now },
+        { device_code:k.code, key:'parent_app_version', value:ver }
+      ], { onConflict:'device_code,key' });
+      if (error) throw error;
+      // 지금 보고 있는 자녀면 화면이 쓰는 값도 같이 맞춰 둔다
+      if (k.code === ST.code){
+        ST.pol.parent_linked = 'true';
+        ST.pol.parent_last_seen = now;
+        ST.pol.parent_app_version = ver;
+      }
+    }catch(e){
+      allOk = false;
+      console.warn('연동 기록 실패 — 다음에 다시 시도합니다:', k.code, e && e.message);
+    }
+  }
+  LINK_REPORT_OK = allOk;   // 실패했으면 앱으로 돌아올 때 재시도
 }
+
+// ══════════════════════════════════════════════════════════════════════════
+//  🆕 2026-10-06 : 새 판이 올라왔으면 스스로 새로고침
+//
+//  왜 필요한가 — 부모웹앱은 **홈화면에 띄워 두고 쓰는 앱**이라, 한 번 연 뒤로는
+//  며칠이 지나도 그 화면 그대로다. 그동안 매장이 새 판을 올려도 부모님 폰은 모른다.
+//  (2026-10-06 실측 : 연동된 50집이 9월5일~10월6일 판으로 쫙 갈려 있었다.
+//   전부 「마지막으로 연 날의 최신판」이었다 = 고장이 아니라 **열어야 받는** 구조였던 것)
+//
+//  어떻게 — 앱으로 돌아올 때(또는 30분마다) 서버의 index.html 을 캐시 없이 받아
+//  `WEB_LABEL` 만 비교한다. 다르면 새로고침.
+//
+//  ⚠️ 지켜야 할 것 3가지
+//   ① **한 번만** 새로고침한다(sessionStorage 로 막음). 무한 새로고침이 제일 무섭다.
+//   ② **설정 화면 안에 들어가 있을 때는 안 한다**(`navStack` 이 비어 있을 때만).
+//      부모님이 뭔가 고치는 중에 화면이 날아가면 안 된다.
+//   ③ 못 받아도 **조용히 넘어간다**. 버전 확인 하나 때문에 앱이 멈추면 안 된다.
+// ══════════════════════════════════════════════════════════════════════════
+const BUILD_CHECK_EVERY_MS = 10 * 60 * 1000;   // 아무리 자주 돌아와도 10분에 한 번만 확인
+let lastBuildCheck = 0;
+
+async function checkNewBuild(){
+  if (Date.now() - lastBuildCheck < BUILD_CHECK_EVERY_MS) return;
+  lastBuildCheck = Date.now();
+  try{
+    const res = await fetch('./index.html?_=' + Date.now(), { cache:'no-store' });
+    if (!res.ok) return;
+    const html = await res.text();
+    const m = html.match(/WEB_LABEL\s*=\s*'([^']*)'/);
+    const live = m && m[1];
+    if (!live || live === WEB_LABEL) return;          // 같은 판이면 그냥 둔다
+    if (navStack.length) return;                      // 설정 화면 안이면 건드리지 않는다
+    try{                                              // 같은 판으로 두 번 새로고침하지 않는다
+      if (sessionStorage.getItem('sinae_build_reloaded') === live) return;
+      sessionStorage.setItem('sinae_build_reloaded', live);
+    }catch(_){}
+    location.reload();
+  }catch(e){ /* 못 받아도 앱 동작에는 영향 없음 */ }
+}
+
+// ● 앱으로 돌아올 때(visibilitychange) 부르는 곳은 **파일 아래 리스너 한 곳**이다.
+//   여기에 따로 달면 리스너가 2개가 된다 (점검 프롬프트 PART 4-12).
+// 며칠씩 켜 둔 채 한 번도 안 숨겨지는 경우를 대비해 주기적으로도 본다
+setInterval(checkNewBuild, 30 * 60 * 1000);
 
 // ══════════════════════════════════════════════════════════════════════════
 //  🔔 접속 요청 알림 (웹 푸시) — 2026-09-09 신규
@@ -2529,7 +2601,13 @@ let LIVE_APPUSE = {};   // { 패키지: 오늘 쓴 분 } — 앱별 남은 시�
 //  화면이 다시 보이면, 쉬는 동안 낡아진 값을 즉시 맞춘다.
 //  ⚠️ 리스너는 파일 전체에서 한 번만 단다. openLive 안에 넣으면 열 때마다 쌓인다.
 document.addEventListener('visibilitychange', async ()=>{
-  if(document.hidden || !LIVE_TIMER) return;
+  if(document.hidden) return;
+  // 🆕 2026-10-06 : 앱으로 돌아올 때 ①새 판이 올라왔는지 ②연동 기록이 실패했으면 재시도
+  //   ⚠️ 리스너를 따로 달지 않고 **여기 한 곳에** 모은다 (위 주석 — 파일 전체에서 하나만)
+  checkNewBuild();
+  if (!LINK_REPORT_OK && ST.code) reportParentLink();
+  // ── 아래는 「자녀 실시간 제한 상황」 화면일 때만 ──────────────────
+  if(!LIVE_TIMER) return;
   const t=document.getElementById('sTitle');
   if(!t || t.textContent!=='자녀 실시간 제한 상황') return;
   await liveReload();
