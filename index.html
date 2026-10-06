@@ -1174,7 +1174,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '10월6일 사용기록문구';
+const WEB_LABEL = '10월7일 명상모드삭제';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -1904,7 +1904,6 @@ function openLimit(){
         onchange="toggleFlag('daily_limit_enabled',this.checked,openLimit)"><i></i></label></div></div>
     <div class="card">${rows}</div>
     ${lockModeCard('limit')}
-    ${meditationCard('limit')}
       ${bonusCard()}
     ${commsOffCard('limit')}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
@@ -1980,7 +1979,6 @@ function openDt(){
         onchange="toggleFlag('dt_enabled',this.checked,openDt)"><i></i></label></div></div>
     <div class="card">${rows}</div>
     ${lockModeCard('dt')}
-    ${meditationCard('dt')}
     ${commsOffCard('dt')}
     <div class="note">⏰ <b>알람</b>은 다운타임·전화끄기와 상관없이 항상 울립니다.<br>📞 위 <b>전화·문자 끄기</b>를 켜지 않으면 다운타임 중에도 전화·문자는 됩니다.</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
@@ -2364,46 +2362,9 @@ function lockModeCard(scope){
 }
 function toggleLockMode(key,val,scope){ toggleFlag(key,val, scope==='dt'?openDt:openLimit); }
 
-// 🧘 2026-10-01 : 「강력 명상 모드」 — 락화면 배경에 영상을 튼다 (소리 없음).
-//   scope='limit' → meditation_limit (공부·응원 영상) / scope='dt' → meditation_dt (명상 영상)
-//   ⛔ 자녀앱 **v45 이상**에서만 동작한다. 구버전에 토글을 보여주면 켜도 아무 일이 없는
-//      「조용한 무동작」이 된다 (2026-09-16 실제 사고) → 토글 대신 안내를 띄운다.
-//   ● 락화면이 안 뜨면(= 강력 모드 OFF) 배경도 없다. 그래서 꺼져 있으면 같이 알려준다.
-function meditationCard(scope){
-  const p = ST.pol, isDt = scope==='dt';
-  const key  = isDt ? 'meditation_dt' : 'meditation_limit';
-  const lockKey = isDt ? 'downtime_lock_enabled' : 'daily_limit_lock_enabled';
-  const ver = parseInt(p.app_version_code||'0',10) || 0;
-  const box = (inner)=>`<div style="margin:14px 0;padding:14px;border:2px solid #0EA5E9;border-radius:14px;background:rgba(14,165,233,.06)">${inner}</div>`;
-
-  if(ver < 45){
-    return box(`<div style="font-weight:800;font-size:15px;color:#0369A1">🧘 강력 명상 모드</div>
-      <div style="font-size:13px;color:#075985;margin-top:9px;line-height:1.7">
-        이 기능은 <b>자녀폰 앱이 최신으로 업데이트된 뒤</b> 사용할 수 있어요.<br>
-        업데이트는 자녀폰이 인터넷에 연결되면 <b>자동으로</b> 진행됩니다. 잠시 뒤 다시 확인해 주세요.
-        ${ver>0?`<br><span style="color:#9ca3af;font-size:12px">(현재 자녀폰 앱 버전 ${ver} · 필요 45)</span>`:''}
-      </div>`);
-  }
-
-  const on = p[key]==='true';
-  const lockOn = p[lockKey]==='true';
-  const mins = parseInt(p.meditation_dt_minutes||'10',10) || 10;
-  const desc = isDt
-    ? `취침 시간에 잠기면 <b>잔잔한 명상 영상</b>이 나옵니다.<br>화면을 어둡게 하고 <b>${mins}분 뒤 자동으로 꺼집니다.</b>`
-    : '하루 한도를 다 써서 잠기면 <b>공부·응원 영상</b>이 나옵니다.';
-
-  return box(`<div style="display:flex;align-items:center;gap:10px">
-      <div style="flex:1">
-        <div style="font-weight:800;font-size:15px;color:#0369A1">🧘 강력 명상 모드</div>
-        <div style="font-size:12.5px;color:#6b7280;margin-top:4px;line-height:1.6">${desc}<br><b>소리는 나지 않습니다.</b></div>
-      </div>
-      <label class="sw"><input type="checkbox" ${on?'checked':''} onchange="toggleMeditation('${key}',this.checked,'${scope}')"><i></i></label>
-    </div>
-    ${!lockOn ? `<div style="font-size:12.5px;color:#EA580C;margin-top:10px;line-height:1.6;font-weight:700">⚠️ 위 <b>강력 모드</b>가 꺼져 있어 지금은 잠금화면이 안 뜹니다. 같이 켜셔야 영상이 나옵니다.</div>` : ''}
-    ${isDt ? `<div style="font-size:12px;color:#6b7280;margin-top:10px;line-height:1.6">⚠️ 취침 시간에는 <b>${mins}분 뒤 영상을 끕니다.</b> 밤새 켜두면 빛이 잠을 방해하고 배터리가 닳습니다.<br>· 시간을 바꾸시려면 매장으로 말씀해 주세요.</div>` : ''}
-    <div style="font-size:12px;color:#9ca3af;margin-top:8px;line-height:1.6">· 영상은 <b>Wi-Fi 에서만</b> 내려받습니다. 데이터 요금이 들지 않습니다.<br>· 영상이 아직 없으면 <b>응원 문구 화면</b>이 나옵니다.</div>`);
-}
-function toggleMeditation(key,val,scope){ toggleFlag(key,val, scope==='dt'?openDt:openLimit); }
+// ⛔ 2026-10-07 : 「강력 명상 모드」(meditationCard / toggleMeditation) 삭제.
+//    자녀앱에서 기능을 통째로 뺐다 — 락화면 배경 영상이 없어졌다.
+//    강력 모드(lockModeCard · daily_limit_lock_enabled / downtime_lock_enabled)는 그대로다.
 
 // ══════════ SOS 번호 ══════════
 function openSos(){
