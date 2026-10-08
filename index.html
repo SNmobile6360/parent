@@ -893,6 +893,25 @@ function toDate(iso){ if(!iso) return null;
 function ago(iso){ const dt=toDate(iso); if(!dt) return '기록 없음';
   const d=(Date.now()-dt)/1000;
   if(d<60)return'방금'; if(d<3600)return Math.floor(d/60)+'분 전'; if(d<86400)return Math.floor(d/3600)+'시간 전'; return Math.floor(d/86400)+'일 전'; }
+
+// ══════════ 📡 2026-10-09 : 「지금 연결돼 있나」 판정 ══════════
+//   🔴 **last_seen_at 으로 판정하면 안 된다.**
+//   그 값은 자녀가 **시내모바일 앱을 직접 열 때**와 서비스가 시작될 때만 갱신된다
+//   (자녀앱 MainActivity.kt:275 · UsageMonitorService.kt:778 — 주기 갱신 코드가 아예 없다).
+//   자녀는 그 앱을 거의 안 열어서, **멀쩡히 켜져 있는 폰도 「꺼져 있다」고 떴다.**
+//   ※ 2026-10-09 실측 : 298대 중 **237대가 켜져 있는데 부모웹앱은 3대만** 「접속 중」으로
+//     보여주고 있었다. 부모 **234명**이 「자녀폰이 꺼져 있습니다」라는 거짓 경고를 봤다.
+//   ✅ 진짜 신호는 **usage_history.updated_at** — 자녀앱이 5분마다 올린다
+//     (UsageMonitorService.kt:1725. 절전으로 루프가 멈춰도 30초 알람이 깨워 올린다).
+//   ⚠️ 오늘 사용기록이 아직 없는 폰(자정 직후 등)은 last_seen_at 으로 버틴다.
+function isOnline(usageRow, devRow){
+  const t = toDate(usageRow?.updated_at) || toDate(devRow?.last_seen_at);
+  return !!t && (Date.now()-t)/60000 < 10;
+}
+/** 마지막으로 살아 있던 시각. 통신기록이 있으면 그것, 없으면 앱 연 시각. */
+function lastSeenText(usageRow, devRow){
+  return ago(usageRow?.updated_at || devRow?.last_seen_at);
+}
 async function sha256(s){ const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
   return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
 function J(v,d){ try{ const x=JSON.parse(v??''); return Array.isArray(x)?x:d; }catch(e){ return d; } }
@@ -1064,12 +1083,12 @@ async function loadListStatus(){
       const sb=clientFor(k.server);
       const [d,u]=await Promise.all([
         sb.from('child_devices').select('child_name,last_seen_at').eq('device_code',k.code).maybeSingle(),
-        sb.from('usage_history').select('total_minutes,total_seconds').eq('device_code',k.code).eq('date',today).maybeSingle()
+        sb.from('usage_history').select('total_minutes,total_seconds,updated_at').eq('device_code',k.code).eq('date',today).maybeSingle()
       ]);
       if(d.data?.child_name && d.data.child_name!==k.name){ k.name=d.data.child_name; upsertKid(k); }  // 전산에서 이름을 바꾼 경우 반영
       const lt=toDate(d.data?.last_seen_at);
       const sec=Number(u.data?.total_seconds||0)||(Number(u.data?.total_minutes||0)*60);
-      st[k.code]={ loaded:true, online: !!lt && (Date.now()-lt)/60000<10, last:d.data?.last_seen_at, use: sec>0?fmtSec(sec):'0분' };
+      st[k.code]={ loaded:true, online: isOnline(u.data, d.data), last: (u.data?.updated_at || d.data?.last_seen_at), use: sec>0?fmtSec(sec):'0분' };
     }catch(e){}
   }));
   if(!document.getElementById('scList').classList.contains('hide')) renderList(st);
@@ -1174,7 +1193,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '10월7일 명상모드삭제';
+const WEB_LABEL = '10월9일 연결상태수정';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -1465,7 +1484,7 @@ async function refreshAll(manual){
       sb.from('policies').select('key,value').eq('device_code',ST.code),
       // 📺 yt_token — 시내YouTube 서버 함수를 부를 때 쓴다 (없으면 그 서버에 SQL 미설치)
       sb.from('child_devices').select('child_name,last_seen_at,yt_token').eq('device_code',ST.code).maybeSingle(),
-      sb.from('usage_history').select('total_minutes,total_seconds').eq('device_code',ST.code).eq('date',today).maybeSingle(),
+      sb.from('usage_history').select('total_minutes,total_seconds,updated_at').eq('device_code',ST.code).eq('date',today).maybeSingle(),
       sb.from('access_requests').select('domain,requested_at').eq('device_code',ST.code),
       sb.from('installed_apps').select('app_package,app_name').eq('device_code',ST.code)
     ]);
@@ -1494,9 +1513,9 @@ function paintMain(){
   document.getElementById('hUse').textContent = sec>0?fmtSec(sec):'0분';
   const last=ST.dev?.last_seen_at;
   const _lt = toDate(last);
-  const online = !!_lt && (Date.now()-_lt)/60000 < 10;
+  const online = isOnline(ST.usage, ST.dev);
   document.getElementById('hDot').style.background = online?'#12B76A':'#98A2B3';
-  document.getElementById('hStat').textContent = online?'접속 중':'마지막 접속 '+ago(last);
+  document.getElementById('hStat').textContent = online?'접속 중':'마지막 접속 '+lastSeenText(ST.usage, ST.dev);
   document.getElementById('hCode').textContent = ST.code;
 
   const _lv = liveSummary();
@@ -2661,7 +2680,7 @@ async function liveReload(){
     const [polR,devR,useR,appR] = await Promise.all([
       sb.from('policies').select('key,value').eq('device_code',ST.code),
       sb.from('child_devices').select('child_name,last_seen_at').eq('device_code',ST.code).maybeSingle(),
-      sb.from('usage_history').select('total_minutes,total_seconds').eq('device_code',ST.code).eq('date',today).maybeSingle(),
+      sb.from('usage_history').select('total_minutes,total_seconds,updated_at').eq('device_code',ST.code).eq('date',today).maybeSingle(),
       // 앱별 「오늘 얼마나 썼나」 — 남은 시간을 보여주려면 필요하다
       sb.from('app_usage_history').select('app_package,minutes').eq('device_code',ST.code).eq('date',today)
     ]);
@@ -2804,7 +2823,7 @@ function paintLive(){
   //     부모가 "그럼 지금 화면이 틀렸다는 건가" 하고 혼란스러워한다(2026-08-31 대표점장 지적).
   //     지금 연결돼 있는지 아닌지만 짧게 알린다.
   const ltd = toDate(ST.dev?.last_seen_at);
-  const online = !!ltd && (Date.now()-ltd)/60000 < 10;
+  const online = isOnline(ST.usage, ST.dev);
   const foot = '<div class="note '+(online?'':'warn')+'" style="margin-top:12px">'
     + (online ? '자녀폰이 <b>지금 연결돼 있습니다.</b>'
               : '자녀폰이 <b>지금 꺼져 있거나 인터넷이 끊겨 있습니다.</b><br>다시 켜지면 저절로 맞춰집니다.')
