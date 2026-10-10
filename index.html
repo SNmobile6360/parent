@@ -441,6 +441,12 @@
   .key.blank{background:transparent;border:0;cursor:default}
 
   /* ── 안내 박스 ── */
+  /* 🗂 2026-10-10 허용 사이트 폴더 — summary 기본 삼각형을 숨긴다 */
+  details > summary::-webkit-details-marker{display:none}
+  details > summary::marker{content:''}
+  details[open] > summary span:last-child::after{content:' ▾'}
+  details:not([open]) > summary span:last-child::after{content:' ▸'}
+  details[open] > summary span:last-child{color:#2563EB}
   .note{background:#EFF6FF;border:1px solid #BFD9FF;border-radius:13px;padding:13px 14px;font-size:13.5px;color:#1D4ED8;margin-bottom:12px;font-weight:600}
   .note.warn{background:#FFFBEB;border-color:#FDE68A;color:#92400E}
 </style>
@@ -1207,7 +1213,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '10월10일 숨긴앱 목록복구';
+const WEB_LABEL = '10월10일 허용사이트 폴더';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -2540,20 +2546,79 @@ async function rejectReq(d){
 }
 
 // ── 허용 사이트 ──
+//
+// 🗂 2026-10-10 : **매장이 넣어 둔 주소를 폴더로 접어 둔다.** (대표점장 지시)
+//   🔴 왜 : 부모님이 목록을 열면 accounts.kakao.com · m.facebook.com · google.com 같은 게 보여서
+//      「어? 이거 내가 넣은 링크가 아닌데?」 하고 오해하시는 일이 많았다.
+//      31개가 한 줄로 쭉 나오니 **본인이 넣은 것이 어느 것인지 구분이 안 됐다.**
+//   ▸ 「직접 추가하신 사이트」만 펼쳐 두고, 매장 기본 3묶음은 접어 둔다.
+//   ⚠️ 아래 세 목록은 **전산의 DEFAULT_CHROME_DOMAINS · GOOGLE_SAFESEARCH_DOMAINS ·
+//      SOCIAL_LOGIN_DOMAINS 와 글자까지 같아야 한다.** 전산에서 목록을 고치면 여기도 고친다.
+//      (안 맞추면 매장이 넣은 주소가 「직접 추가」로 잘못 분류돼 오해가 그대로 남는다)
+const PRESET_GROUPS = [
+  { key:'learn', icon:'📚', name:'기본 학습 사이트',
+    desc:'처음 설정할 때 매장에서 넣어드린 교육·학습 사이트예요',
+    list:["classroom.google.com","drive.google.com","docs.google.com",
+          "sheets.google.com","slides.google.com","meet.google.com",
+          "scholar.google.com","ebs.co.kr","ebsi.co.kr","ebsmath.co.kr",
+          "wedorang.com","schoolife.com","goe.go.kr","sen.go.kr",
+          "sjeb.go.kr","cbe.go.kr","kice.re.kr","khan.org",
+          "khanacademy.org","kakaocorp.com","app.classting.com"] },
+  { key:'safe', icon:'🔍', name:'구글 안전검색',
+    desc:'구글에서 유해한 결과를 걸러주려면 꼭 필요한 주소들이에요',
+    list:["google.com","www.google.com","google.co.kr",
+          "www.gstatic.com","ssl.gstatic.com","www.googleapis.com"] },
+  { key:'login', icon:'🔑', name:'앱 로그인용',
+    desc:'학습앱에서 「카카오로 로그인」 같은 걸 누를 때 쓰여요. 카톡·네이버 본체는 안 열려요',
+    list:["accounts.kakao.com","kauth.kakao.com","nid.naver.com","m.facebook.com"] },
+];
+/** 이 주소가 매장 기본 묶음에 속하나 → 속하면 그 묶음을 돌려준다 */
+function presetGroupOf(d){ return PRESET_GROUPS.find(g => g.list.includes(d)) || null; }
+
 function openAllow(){
-  const allow=J(ST.pol.chrome_allowed_domains,[]);
-  const body=allow.length? allow.map(d=>`<div class="item"><div class="grow"><div class="nm">${esc(d)}</div></div>
-      <button class="x" onclick="delAllow('${esc(d)}')">삭제</button></div>`).join('')
-    : `<div class="empty">허용된 사이트가 없습니다</div>`;
+  const allow = J(ST.pol.chrome_allowed_domains,[]);
+  const row = d => `<div class="item"><div class="grow"><div class="nm">${esc(d)}</div></div>
+      <button class="x" onclick="delAllow('${esc(d)}')">삭제</button></div>`;
+
+  // 매장 기본 묶음에 속한 것과 부모님이 직접 넣은 것을 가른다
+  const mine = allow.filter(d => !presetGroupOf(d));
+  const folders = PRESET_GROUPS.map(g => ({ g, items: allow.filter(d => g.list.includes(d)) }))
+                               .filter(x => x.items.length);
+
+  const mineBox = mine.length
+    ? `<div class="card">${mine.map(row).join('')}</div>`
+    : `<div class="card"><div class="empty">아직 직접 추가하신 사이트가 없어요</div></div>`;
+
+  const folderBox = folders.map(({g, items}) => `
+    <details style="background:#fff;border:1px solid #E7EAF0;border-radius:14px;margin-bottom:10px;overflow:hidden">
+      <summary style="list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:19px">${g.icon}</span>
+        <span style="flex:1;min-width:0">
+          <span style="display:block;font-size:14.5px;font-weight:700;color:#111827">${g.name} ${items.length}개</span>
+          <span style="display:block;font-size:12.5px;color:#6B7280;font-weight:500;margin-top:2px">${g.desc}</span>
+        </span>
+        <span style="color:#9CA3AF;font-size:13px;font-weight:700">펼치기</span>
+      </summary>
+      <div style="padding:0 16px 6px">${items.map(row).join('')}</div>
+    </details>`).join('');
+
   openSub('허용 사이트 관리', `
-    <div class="note">여기 등록된 사이트만 자녀폰 크롬에서 열립니다.<br>주소는 <b>www 없이</b> 넣어주세요. 예) ebs.co.kr</div>
-    <div class="note warn"><b>크롬(안전검색)을 쓰고 싶으시면 매장에 문의해 주세요.</b><br>
-      크롬을 켜고 끄는 것은 <b>매장 전용 기능</b>이라 여기서는 바꿀 수 없습니다.</div>
+    <div class="note">여기 있는 사이트만 자녀폰 크롬에서 열려요.<br>주소는 <b>www 없이</b> 넣어주시면 돼요. 예) ebs.co.kr</div>
     <div class="card"><div class="field"><label>사이트 주소 추가</label>
       <input id="newDom" type="text" placeholder="ebs.co.kr" autocapitalize="none" spellcheck="false"></div>
       <button class="btn btn-p" onclick="addAllow()">추가하기</button></div>
-    <div class="sec">허용된 사이트 (${allow.length}개)</div>
-    <div class="card">${body}</div>
+
+    <div class="sec">직접 추가하신 사이트 (${mine.length}개)</div>
+    ${mineBox}
+
+    ${folders.length ? `<div class="sec">매장에서 넣어드린 사이트</div>
+      <div class="note" style="background:#F0FDF4;border-color:#BBF7D0;color:#15803D">
+        아래는 <b>처음 설정할 때 매장에서 넣어드린 주소</b>예요. 부모님이 넣으신 게 아니에요 🙂<br>
+        학습앱 로그인이나 안전검색에 쓰이니 <b>그대로 두시는 걸 권해 드려요.</b>
+      </div>${folderBox}` : ''}
+
+    <div class="note warn"><b>크롬(안전검색)을 쓰고 싶으시면 매장에 문의해 주세요.</b><br>
+      크롬을 켜고 끄는 건 <b>매장 전용 기능</b>이라 여기서는 바꿀 수 없어요.</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 function cleanDomain(v){ return (v||'').trim().toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/.*$/,'').replace(/[^a-z0-9.\-]/g,''); }
@@ -2569,6 +2634,17 @@ async function addAllow(){
   }catch(e){ loading(false); toast('실패: '+e.message); }
 }
 async function delAllow(d){
+  // 🔴 2026-10-10 : 매장이 넣어 둔 주소는 지우기 전에 한 번 묻는다.
+  //   nid.naver.com 같은 걸 지우면 **학습앱 로그인이 아무 반응 없이 멈춘다**(오류창도 안 뜸).
+  //   폴더로 접어 두긴 했지만 열어서 누를 수는 있으므로 여기서 한 번 더 잡는다.
+  const _g = presetGroupOf(d);
+  if (_g && !confirm(`${d} 는 매장에서 넣어드린 주소예요.
+
+${_g.icon} ${_g.name}
+${_g.desc}
+
+지우면 학습앱이나 안전검색이 안 될 수 있어요.
+그래도 지울까요?`)) return;
   loading(true);
   try{
     const allow=J(ST.pol.chrome_allowed_domains,[]).filter(x=>x!==d);
