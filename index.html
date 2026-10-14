@@ -746,6 +746,11 @@
       <div class="row"><div class="ic" style="background:#F0FDF4">🔐</div>
         <div class="grow"><div class="ttl">보안 설정</div><div class="val" id="vSecurity">-</div></div><div class="chev">›</div></div>
     </div>
+    <!-- 💬 2026-10-15 : 카톡 차단이 7개로 늘어 한 곳에 모았어요 -->
+    <div class="card tap" onclick="openKakao()">
+      <div class="row"><div class="ic" style="background:#FEF9C3">💬</div>
+        <div class="grow"><div class="ttl">카톡 차단</div><div class="val" id="vKakao">-</div></div><div class="chev">›</div></div>
+    </div>
     <!-- 🆕 2026-09-29 (자녀앱 v43) : 무음·진동 → 소리 변경 · 자녀앱 숨기기 -->
     <div class="card tap" onclick="openStealth()">
       <div class="row"><div class="ic" style="background:#EEF2FF">🙈</div>
@@ -788,12 +793,31 @@
       </div>
     </div>
 
-    <div id="iosTip" class="note hide" style="margin-top:16px">
-      💡 <b>홈 화면에 추가하면 앱처럼 쓸 수 있어요</b><br>
-      아래 <b>공유 버튼</b>(⬆️) → <b>홈 화면에 추가</b>를 누르세요.<br>
-      <b style="color:#F97316">🔔 접속 요청 알림은 홈 화면에 추가해야만 옵니다.</b>
-      추가한 뒤 <b>홈 화면 아이콘으로 다시 열어</b> 「접속 요청 알림 받기」를 눌러 주세요.
+    <!-- ══ 🆕 2026-10-15 : 「홈 화면에 추가해서 쓰세요」 안내 (대표점장 문안) ══
+         · 홈화면 앱으로 열었으면 **안 뜬다.**
+         · 카톡 등 앱 안의 브라우저면 제목이 경고로 바뀌고 「브라우저로 열기」 버튼이 생긴다.
+         · ⚠️ 예전 `iosTip`(아이폰 전용)과 `inAppTip` **두 개를 이 하나로 합쳤다.**
+           같은 말이 두 군데 나와서 길고 헷갈렸다(2026-10-15 대표점장 지적). -->
+    <div id="installTip" class="note warn hide" style="margin-top:16px">
+      <div id="installHead" style="font-weight:800;font-size:15px;margin-bottom:8px"></div>
+      <div style="line-height:1.75">
+        홈 화면에 추가하면 <b>비밀번호를 매번 넣지 않아도 되고</b>,
+        <b>🔔 접속 요청 알림</b>도 받을 수 있어요.
+      </div>
+      <div style="margin-top:11px;padding:12px 13px;background:#fff;border:1px solid #F3E3C8;border-radius:11px;line-height:1.85;color:#5C4414;font-weight:500">
+        <b>▶ 갤럭시</b> — 「삼성인터넷」 또는 「크롬」만 가능<br>
+        &nbsp;&nbsp;우측 상단 <b>⋮</b> → <b>설치 및 바로가기 만들기</b> → <b>바로가기 만들기</b>
+        <div style="height:10px"></div>
+        <b>▶ 아이폰</b> — 「사파리」만 가능<br>
+        &nbsp;&nbsp;<b>공유 버튼(↑)</b> → <b>홈 화면에 추가</b> → <b>추가</b>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:#B54708;font-weight:700;line-height:1.7">
+        ※ 카카오톡 내부 브라우저와 다른 브라우저에서는 이용하지 마세요.
+      </div>
+      <div id="installBtns" style="display:flex;gap:8px;margin-top:11px;flex-wrap:wrap"></div>
     </div>
+
+
 
     <!-- ══ 💬 매장 카톡 문의 (2026-08-31 추가) ══
          · 시내모바일 카카오톡 채널 상담 : http://pf.kakao.com/_xnDXAX/chat
@@ -1213,7 +1237,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '10월12일 사용시간 안내 정정';
+const WEB_LABEL = '10월15일 카톡차단 모음';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -1223,7 +1247,8 @@ async function reportParentLink(){
   const now = new Date().toISOString().slice(0,19);   // UTC, 부모앱과 같은 형식
   const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
                 (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-  const ver = `웹앱 ${WEB_VER} · ${isIos ? '아이폰' : '갤럭시'} · ${WEB_LABEL}`;
+  // 🆕 2026-10-15 : 접속 방식을 같이 적는다(전산에서 「카톡브라우저」 집을 골라내려고).
+  const ver = `웹앱 ${WEB_VER} · ${isIos ? '아이폰' : '갤럭시'} · ${openModeInfo().label} · ${WEB_LABEL}`;
 
   // 🆕 2026-10-06 : **등록된 자녀 전부**에 기록한다.
   //   예전에는 「지금 보고 있는 자녀」에게만 썼다. 그래서 자녀가 2명인데 부모님이 첫째만 열어 보시면
@@ -1327,6 +1352,28 @@ function isIosDev(){
 function isStandalone(){
   return window.navigator.standalone === true ||
          window.matchMedia('(display-mode: standalone)').matches;
+}
+// 🆕 2026-10-15 : **부모님이 어떻게 들어오셨는지** 기록한다 (대표점장 요청)
+//   왜 — 카톡 대화방 링크로 들어오면 **카카오톡 안의 브라우저**(웹뷰)가 열린다. 그러면
+//     ① 「접속 요청 알림」(웹푸시)을 못 켜는 경우가 있다
+//     ② 홈화면에 추가가 안 된다 → 매번 링크를 찾아 들어와야 한다
+//     ③ 대화방을 나가면 세션이 끊겨 PIN 을 다시 넣어야 한다
+//   그래서 전산에서 **그 집만 골라내** 「홈화면에 추가해 쓰시라」고 안내할 수 있어야 한다.
+//   ⚠️ 알림 가능 여부는 **추측하지 말고 브라우저가 알려주는 값**(pushSupported)을 그대로 적는다.
+//      카톡 웹뷰에서 웹푸시가 되는지는 공식 문서가 없다 — 실제 값을 모으는 게 맞다.
+const IN_APP_UA = [
+  ['kakaotalk','카톡'], ['instagram','인스타'], ['fbav','페북'], ['fban','페북'],
+  ['naver(inapp','네이버'], ['line/','라인'], ['daumapps','다음'], ['band/','밴드']
+];
+function openModeInfo(){
+  const ua = (navigator.userAgent || '').toLowerCase();
+  const hit = IN_APP_UA.find(function(x){ return ua.indexOf(x[0]) >= 0; });
+  const inApp = hit ? hit[1] : '';
+  const how = inApp ? (inApp + '브라우저')
+                    : (isStandalone() ? '홈화면앱' : '브라우저');
+  const push = pushSupported();
+  return { inApp: inApp, how: how, push: push,
+           label: how + (push ? '' : '·알림불가') };
 }
 // base64url 문자열 → 바이트 (applicationServerKey 는 문자열이 아니라 바이트를 받는다)
 function b64uToU8(s){
@@ -1489,11 +1536,56 @@ if ('serviceWorker' in navigator){
     }
   });
 }
-function showIosTip(){
-  const isIos=/iPad|iPhone|iPod/.test(navigator.userAgent);
-  const standalone = window.navigator.standalone===true || window.matchMedia('(display-mode: standalone)').matches;
-  document.getElementById('iosTip').classList.toggle('hide', !(isIos && !standalone));
+// 🆕 2026-10-15 : 「앱 안의 브라우저」 안내 — 카톡은 전용 스킴으로 바로 밖으로 내보낼 수 있다.
+//   kakaotalk://web/openExternal?url=… 는 카카오 개발자포럼에서 쓰이는 방식이다.
+//   다른 앱은 공통 스킴이 없어서 「주소 복사」로 안내한다.
+function openInRealBrowser(){
+  const info = openModeInfo();
+  const here = location.href;
+  if (info.inApp === '카톡'){
+    location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(here);
+    return;
+  }
+  // 카톡이 아니면 스킴이 없다 — 주소를 복사해 드리고 안내한다
+  copyAppLink();
+  toast('주소를 복사했어요. 크롬이나 사파리에 붙여넣어 주세요');
 }
+function copyAppLink(){
+  const url = location.origin + location.pathname;
+  const done = function(){ toast('주소를 복사했어요'); };
+  try{
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(done, function(){ fallbackCopy(url, done); });
+    } else fallbackCopy(url, done);
+  }catch(e){ fallbackCopy(url, done); }
+}
+function fallbackCopy(text, done){
+  try{
+    const t = document.createElement('textarea');
+    t.value = text; t.setAttribute('readonly','');
+    t.style.position='fixed'; t.style.left='-9999px';
+    document.body.appendChild(t); t.select(); document.execCommand('copy');
+    document.body.removeChild(t); done();
+  }catch(e){ toast('복사가 안 돼요. 주소창을 길게 눌러 복사해 주세요'); }
+}
+// 🆕 2026-10-15 : 설치 안내 한 장으로 통합 (예전 showIosTip + showInAppTip)
+//   · 홈화면 앱으로 열었으면 안 띄운다 — 이미 잘 쓰고 계신 분께 잔소리하지 않는다.
+//   · 앱 안의 브라우저(카톡 등)면 제목을 경고로 바꾸고 「브라우저로 열기」를 붙인다.
+function showInstallTip(){
+  const el = document.getElementById('installTip');
+  if (!el) return;
+  const info = openModeInfo();
+  const standalone = isStandalone();
+  el.classList.toggle('hide', standalone);
+  if (standalone) return;
+  document.getElementById('installHead').innerHTML = info.inApp
+    ? '⚠️ 지금 <b>' + info.inApp + ' 안의 브라우저</b>로 열려 있어요'
+    : '💡 홈 화면에 추가해서 쓰세요';
+  document.getElementById('installBtns').innerHTML =
+    (info.inApp ? '<button class="btn btn-g" style="flex:1;min-width:140px" onclick="openInRealBrowser()">브라우저로 열기</button>' : '') +
+    '<button class="btn btn-g" style="flex:1;min-width:140px" onclick="copyAppLink()">주소 복사</button>';
+}
+function showIosTip(){ showInstallTip(); }   // 예전 이름으로 부르는 곳이 있어 남겨 둔다
 
 async function refreshAll(manual){
   loading(true);
@@ -1594,7 +1686,13 @@ function paintMain(){
   document.getElementById('vIgnoreDt').textContent = J(p.ignore_dt_apps,[]).length+'개 앱 허용';
   document.getElementById('vSos').textContent = J(p.sos_whitelist,[]).length+'개 번호 등록';
   document.getElementById('vSecurity').innerHTML =
-    `Play스토어 ${p.play_store_blocked==='true'?'차단':'허용'} · 오픈채팅 ${p.open_chat_blocked==='true'?'차단':'허용'}`;
+    `Play스토어 ${p.play_store_blocked==='true'?'차단':'허용'}`;
+  // 💬 2026-10-15 : 카톡 차단 몇 개 켜져 있나
+  { const ks = ['open_chat_blocked','kakao_inapp_browser_blocked','kakao_openchat_create_blocked',
+                'kakao_openprofile_blocked','kakao_multiprofile_blocked','kakao_shortform_blocked','kakao_now_tab_blocked'];
+    const on = ks.filter(k => p[k] === 'true').length;
+    const el = document.getElementById('vKakao');
+    if (el) el.innerHTML = on === 0 ? '모두 꺼져 있어요' : badge(true, on + '가지 막는 중'); }
   // 🆕 2026-09-29 : 소리 변경 · 앱 숨기기 요약
   document.getElementById('vStealth').innerHTML =
     `아이콘 ${p.app_icon_hidden==='true'?'숨김':'보임'} · 알림 ${p.app_notify_hidden==='true'?'숨김':'보임'}`;
@@ -2095,7 +2193,15 @@ function openLimit(){
       <div class="dv ${v<0?'off':''}">${minLabel(v)}</div><div class="chev">›</div></div>`;
   }
   openSub('하루 사용시간 한도', `
-    <div class="note">요일을 눌러 하루에 쓸 수 있는 시간을 정합니다.<br><b>무제한</b> = 제한 없음, <b>사용 불가</b> = 그날은 쓸 수 없음</div>
+    <div class="note">요일을 눌러 하루에 쓸 수 있는 시간을 정해요.<br><b>무제한</b> = 제한 없음, <b>사용 불가</b> = 그날은 쓸 수 없어요</div>
+    <div style="margin:14px 0;padding:14px 15px;border:1px solid #FCD9A8;border-left:5px solid #F59E0B;border-radius:14px;background:#FFFBF2">
+      <div style="font-weight:800;font-size:15.5px;color:#92400E">🔔 전화·문자도 시간이 깎여요</div>
+      <div style="font-size:13.5px;color:#7C4A11;margin-top:8px;line-height:1.7">
+        통화를 오래 하는 날엔 그것만으로 한도가 찰 수 있어요.<br>
+        계속 쓰게 할 앱은 <b>「앱 관리」에서 ♾️ 시간 무제한</b>으로 켜 주세요.
+      </div>
+      <button class="btn btn-g" style="margin-top:10px" onclick="openApps()">앱 관리로 가서 고르기</button>
+    </div>
     <div class="card"><div class="row"><div class="grow"><div class="ttl">하루 한도 사용</div>
       <div class="val">꺼두면 요일 설정과 상관없이 제한하지 않습니다</div></div>
       <label class="sw"><input type="checkbox" ${p.daily_limit_enabled==='true'?'checked':''}
@@ -2104,6 +2210,21 @@ function openLimit(){
     ${lockModeCard('limit')}
       ${bonusCard()}
     ${commsOffCard('limit')}
+    <div style="margin:16px 0 0;padding:14px 15px;border:1px solid #DCE4EE;border-radius:14px;background:#F7F9FC">
+      <div style="font-weight:800;font-size:15.5px;color:#1B3A8F">📏 시간은 이렇게 세요</div>
+      <div style="font-size:13.5px;color:#475467;margin-top:9px;line-height:1.9">
+        · <b>화면이 켜져 있으면 뭘 하든 세요.</b> 홈 화면·전화·문자·설정까지요.<br>
+        · 화면을 끄면 <b>멈춰요.</b><br>
+        · 빼고 싶은 앱은 <b>「앱 관리 → ♾️ 시간 무제한」</b><br>
+        · 매일 <b>자정에 0분</b>으로 다시 시작해요.
+      </div>
+      <div style="margin-top:10px;padding:10px 12px;background:#fff;border:1px solid #E3E8EF;border-radius:10px;font-size:13px;color:#475467;line-height:1.7">
+        한도를 다 써도 <b>통화 중이면 전화가 끊기지 않아요.</b> 끊고 나오실 때 잠겨요.
+      </div>
+      <div style="margin-top:8px;font-size:12.5px;color:#98A2B3;line-height:1.7">
+        숫자는 <b>5분마다</b> 올라와요. 조금 늦게 보여도 고장이 아니에요.
+      </div>
+    </div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 // 요일 하나를 누르면 뜨는 바텀시트 (부모앱 showDailyLimitDayPopup 과 같은 구성)
@@ -2445,7 +2566,15 @@ function openDt(){
       <div class="dv ${has?'':'off'}">${dtLabel(raw)}</div><div class="chev">›</div></div>`;
   }
   openSub('다운타임 (취침시간)', `
-    <div class="note">요일을 눌러 잠글 시간을 정합니다.<br>예) 22:00 ~ 07:00 처럼 <b>자정을 넘겨도</b> 됩니다.</div>
+    <div class="note">요일을 눌러 잠글 시간을 정해요.<br>예) 22:00 ~ 07:00 처럼 <b>자정을 넘겨도</b> 돼요.</div>
+    <div style="margin:14px 0;padding:14px 15px;border:1px solid #FCD9A8;border-left:5px solid #F59E0B;border-radius:14px;background:#FFFBF2">
+      <div style="font-weight:800;font-size:15.5px;color:#92400E">🔔 취침시간엔 앱이 거의 다 잠겨요</div>
+      <div style="font-size:13.5px;color:#7C4A11;margin-top:8px;line-height:1.7">
+        그때도 쓰게 할 앱은 <b>「다운타임 허용 앱」</b>에서 골라 주세요.<br>
+        <b>전화·문자는 그대로 돼요</b> — 막으시려면 아래 「전화·문자 끄기」를 켜 주세요.
+      </div>
+      <button class="btn btn-g" style="margin-top:10px" onclick="openIgnoreDt()">다운타임 허용 앱 고르기</button>
+    </div>
     <div class="card"><div class="row"><div class="grow"><div class="ttl">다운타임 사용</div>
       <div class="val">꺼두면 요일 설정과 상관없이 잠기지 않습니다</div></div>
       <label class="sw"><input type="checkbox" ${p.dt_enabled==='true'?'checked':''}
@@ -3043,12 +3172,8 @@ function openSecurity(){
     ${sw('play_store_blocked','Play 스토어 차단','자녀가 새 앱을 설치하지 못합니다',
          '지금 Play스토어가 차단중입니다 — 새 앱을 못 깝니다',
          '지금은 막고 있지 않습니다 — 자녀가 앱을 깔 수 있습니다')}
-    ${sw('open_chat_blocked','카톡 오픈채팅 차단','모르는 사람과의 오픈채팅방 입장을 막습니다',
-         '지금 오픈채팅이 차단중입니다 — 오픈채팅방에 못 들어갑니다',
-         '지금은 막고 있지 않습니다 — 오픈채팅방에 들어갈 수 있습니다')}
-    ${sw('kakao_inapp_browser_blocked','카톡 링크 열기 차단','대화방 링크로 인터넷에 나가는 것을 막습니다',
-         '지금 링크 열기가 차단중입니다 — 카톡 링크를 눌러도 안 열립니다',
-         '지금은 막고 있지 않습니다 — 카톡 링크로 인터넷에 나갈 수 있습니다')}
+    <div class="note">💬 <b>카톡 관련 차단</b>은 앞 화면의 <b>「카톡 차단」</b>으로 옮겼어요.
+      <button class="btn btn-g" style="margin-top:9px" onclick="closeSub();openKakao()">카톡 차단 열기</button></div>
     <div class="note warn">여기서 바꾸면 자녀폰에 <b>바로 반영</b>됩니다.
       자녀폰이 꺼져 있으면 <b>켜질 때</b> 반영됩니다.</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
@@ -3058,6 +3183,61 @@ function openSecurity(){
 //   ⛔ 세 기능 모두 자녀앱 v43(5.3) 이상에서만 동작한다.
 //      구버전 폰에 토글을 보여주면 켜도 아무 일이 없는 「조용한 무동작」이 된다
 //      (2026-09-16 실제 사고). 그래서 버전이 43 미만이면 안내만 띄운다.
+// ══════════ 💬 2026-10-15 : 카톡 차단 모음 (대표점장 지시) ══════════
+//   카톡 차단이 7개로 늘어 「보안 설정」에 섞여 있던 것을 한 폴더로 모았다.
+//   ⛔ 아래 5개(만들기·오픈프로필·멀티프로필·숏폼·커뮤니티)는 **자녀앱 v54 이상**에서만 동작한다.
+//      구버전 폰에 토글을 보여주면 켜도 아무 일이 없는 「조용한 무동작」이 된다(2026-09-16 실제 사고).
+//      그래서 버전이 54 미만이면 그 5개는 **보여주지 않고** 안내만 띄운다.
+function openKakao(){
+  const p = ST.pol;
+  const ver = parseInt(p.app_version_code || '0', 10) || 0;
+  const sw = (key, title, desc, onTxt, offTxt) => {
+    const on = p[key] === 'true';
+    return `<div class="card"><div class="row">
+      <div class="grow">
+        <div class="ttl">${title}</div>
+        <div class="val">${desc}</div>
+        <div class="stat ${on?'on':'off'}">${on ? '🔴 '+onTxt : '⚪ '+offTxt}</div>
+      </div>
+      <label class="sw"><input type="checkbox" ${on?'checked':''}
+        onchange="toggleFlag('${key}',this.checked,openKakao)"><i></i></label></div></div>`;
+  };
+  const basic =
+    sw('open_chat_blocked','오픈채팅 참여 차단','모르는 사람과의 오픈채팅방에 들어가지 못하게 해요',
+       '지금 막고 있어요 — 새 오픈채팅방에 못 들어가요 (이미 들어가 있는 방은 그대로 써요)',
+       '지금은 막고 있지 않아요 — 오픈채팅방에 들어갈 수 있어요') +
+    sw('kakao_inapp_browser_blocked','링크로 인터넷 열기 차단','대화방 링크를 눌러 인터넷으로 나가는 것을 막아요',
+       '지금 막고 있어요 — 링크를 눌러도 안 열려요',
+       '지금은 막고 있지 않아요 — 링크로 인터넷에 나갈 수 있어요');
+  const adv = ver >= 54 ? (
+    sw('kakao_openchat_create_blocked','오픈채팅방 만들기 차단','그룹채팅·커뮤니티·1:1채팅을 새로 만들지 못하게 해요',
+       '지금 막고 있어요 — 오픈채팅방을 못 만들어요',
+       '지금은 막고 있지 않아요') +
+    sw('kakao_openprofile_blocked','오픈프로필 만들기 차단','새 오픈프로필을 못 만들게 해요 (기존 오픈프로필 수정도 같이 막혀요)',
+       '지금 막고 있어요 — 오픈프로필을 못 만들어요',
+       '지금은 막고 있지 않아요') +
+    sw('kakao_multiprofile_blocked','멀티프로필 차단','멀티프로필 목록에 들어가지 못하게 해요 (내 프로필 편집은 그대로 돼요)',
+       '지금 막고 있어요 — 멀티프로필을 못 써요',
+       '지금은 막고 있지 않아요') +
+    sw('kakao_shortform_blocked','카톡 숏폼 차단','「지금」 탭의 짧은 영상(숏폼)을 못 보게 해요',
+       '지금 막고 있어요 — 숏폼을 열면 오픈채팅 쪽으로 돌려보내요',
+       '지금은 막고 있지 않아요') +
+    sw('kakao_now_tab_blocked','「지금 뜨는 커뮤니티」 차단','커뮤니티 글 목록은 보이지만, 누르면 못 들어가요',
+       '지금 막고 있어요 — 누르면 카톡이 닫히고 안내가 떠요',
+       '지금은 막고 있지 않아요')
+  ) : `<div class="note warn">아래 <b>5가지</b>(오픈채팅방 만들기 · 오픈프로필 · 멀티프로필 · 숏폼 · 커뮤니티)는
+        <b>자녀폰 앱이 최신으로 업데이트된 뒤</b> 쓸 수 있어요.<br>
+        업데이트는 자녀폰이 인터넷에 연결되면 <b>저절로</b> 진행돼요. 잠시 뒤 다시 확인해 주세요.
+        ${ver > 0 ? `<br><span style="color:#9ca3af;font-size:12px">(지금 자녀폰 앱 ${ver} · 필요한 버전 54)</span>` : ''}</div>`;
+  openSub('카톡 차단', `
+    <div class="note">스위치를 <b>켜면 막고</b>, <b>끄면 풀려요.</b><br>
+      항목 아래 <b>색깔 글씨가 지금 상태</b>예요.</div>
+    ${basic}
+    ${adv}
+    <div class="note warn">여기서 바꾸면 자녀폰에 <b>바로 반영</b>돼요.
+      자녀폰이 꺼져 있으면 <b>켜질 때</b> 반영돼요.</div>
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
 function openStealth(){
   const p = ST.pol;
   const ver = parseInt(p.app_version_code || '0', 10) || 0;
@@ -3407,6 +3587,13 @@ function paintLive(){
     ['Play 스토어 차단', p.play_store_blocked==='true', '차단중 — 새 앱을 못 깝니다', '막고 있지 않습니다'],
     ['카톡 오픈채팅 차단', p.open_chat_blocked==='true', '차단중 — 오픈채팅방에 못 들어갑니다', '막고 있지 않습니다'],
     ['카톡 링크 열기 차단', p.kakao_inapp_browser_blocked==='true', '차단중 — 링크를 눌러도 안 열립니다', '막고 있지 않습니다'],
+    // 💬 2026-10-15 카톡 세부차단 5가지 (자녀앱 v54+)
+    ['카톡 세부차단',
+      ['kakao_openchat_create_blocked','kakao_openprofile_blocked','kakao_multiprofile_blocked',
+       'kakao_shortform_blocked','kakao_now_tab_blocked'].some(k=>p[k]==='true'),
+      ['kakao_openchat_create_blocked','kakao_openprofile_blocked','kakao_multiprofile_blocked',
+       'kakao_shortform_blocked','kakao_now_tab_blocked'].filter(k=>p[k]==='true').length + '가지 막는 중',
+      '만들기·오픈프로필·멀티프로필·숏폼·커뮤니티 전부 꺼져 있습니다'],
     ['앱 삭제 방지', p.uninstall_blocked==='true', nUn+'개 앱을 못 지웁니다', '꺼져 있습니다'],
     ['앱 PIN 잠금', nPin>0, nPin+'개 앱에 비밀번호가 걸려 있습니다', '걸어둔 앱이 없습니다']
   ].map((r,i)=>'<div class="row" style="padding:11px 0'+(i?';border-top:1px solid #F2F4F7':'')+'">'
