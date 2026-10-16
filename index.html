@@ -1237,7 +1237,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '10월15일 시간측정 안내';
+const WEB_LABEL = '10월16일 만지작시간';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -3727,18 +3727,56 @@ function paintHistory(){
     }).join('');
   }
 
+  // ── 🆕 2026-10-16 : 「휴대폰 만지작거린 시간」 + 막대·앱별 덧셈 설명 (대표점장 지시) ──
+  //   왜 — 「막대랑 앱별 합계가 왜 달라요?」 문의가 몰렸다. 화면에서 바로 풀어 준다.
+  //
+  //   🔴 여기 적혀 있던 「「한도 제외」 앱은 막대에도 안 들어간다」는 **틀린 말이라 지웠다.**
+  //     v51 까진 맞았지만 v54 에서 막대가 「화면이 켜져 있던 시간 전부」가 되면서 예외앱도 센다.
+  //     (UsageMonitorService.kt:2867 — liveDisplayMs 는 예외앱을 거르지 않는다)
+  //     앱별 목록에도 그대로 뜬다 (:1871 shouldCount 는 런처 아이콘만 본다).
+  //     「한도 제외」가 뜻하는 건 **하루 한도를 안 깎는다** 그것 하나뿐이다.
+  //
+  //   ● 막대 > 앱별합계 가 보통이다 — 홈 화면(런처)·알림창은 런처 아이콘이 없어
+  //     app_usage_history 에 안 올라간다. 1분 미만 앱과 분 버림도 여기로 모인다. → 「만지작 시간」
+  //   ● 거꾸로 앱별합계 > 막대 인 날도 **정상이다** — 분할화면·팝업으로 두 앱을 같이 보면
+  //     (:2874) 양쪽 앱에 1초씩 다 더하는데 막대(:2867)는 1초만 더한다.
+  //   ※ 설정·전화·연락처는 v51 부터 **앱으로 따로** 뜬다(:1865~1869) → 만지작에 안 들어간다.
+  const totMin  = Math.round((H.totals[H.sel]||0)/60);
+  const miscMin = Math.max(0, totMin - sum);
+  const miscCard = (list.length && miscMin >= 1) ? `
+    <div class="sec">앱이 아닌 화면</div>
+    <div class="card"><div class="item">
+      <div style="width:34px;height:34px;border-radius:9px;background:#FFF4EC;border:1px solid #FCE4D2;flex:none;display:flex;align-items:center;justify-content:center;font-size:17px">📱</div>
+      <div class="grow">
+        <div style="font-size:14px;font-weight:700">휴대폰 만지작거린 시간</div>
+        <div style="font-size:11.5px;color:#98A2B3;margin-top:3px;font-weight:500">홈 화면·알림창 + 1분이 안 되는 앱</div>
+      </div>
+      <div style="font-size:13.5px;font-weight:800;color:#B54708;flex:none">${mmss(miscMin)}</div>
+    </div></div>` : ``;
+  //   ⚠️ 2026-10-16 대표점장 지시 : 아래 설명은 **한 번에 이해되게** 쓴다.
+  //     처음 쓴 「양쪽에 다 세기 때문」은 너무 추상적이어서 반려됐다. 예를 들어 보여 준다.
+  const eqLine = (sum <= totMin)
+    ? `<b style="color:#1B3A8F">막대 ${mmss(totMin)}</b> = 앱별 합계 ${mmss(sum)} + 만지작 ${mmss(miscMin)}`
+    : `<b style="color:#B54708;font-size:14px">진짜 쓴 시간은 막대 ${mmss(totMin)}이에요.</b><br>
+       아래 앱별 시간을 다 더하면 ${mmss(sum)}이 되는데, <b>같은 시간을 두 번 센 것</b>이 섞여 있어서예요.
+       <div style="margin-top:10px;background:#fff;border:1px solid #EAECF0;border-radius:12px;padding:11px 12px">
+         <div style="font-size:12.5px;color:#475467;margin-bottom:8px">예를 들어 — 화면을 <b>반으로 나눠 두 앱을 20분 같이</b> 봤다면</div>
+         <div style="display:flex;gap:6px;margin-bottom:8px">
+           <div style="flex:1;background:#FEF9C3;border:1px solid #FDE68A;border-radius:9px;padding:8px 4px;text-align:center;font-size:12px;font-weight:800;color:#854D0E">카카오톡<br>20분</div>
+           <div style="flex:1;background:#DCFCE7;border:1px solid #BBF7D0;border-radius:9px;padding:8px 4px;text-align:center;font-size:12px;font-weight:800;color:#166534">네이버 사전<br>20분</div>
+         </div>
+         <div style="font-size:12.5px;color:#475467;line-height:1.75">양쪽에 <b>똑같이 20분씩</b> 적혀요 → 더하면 40분<br><b style="color:#B54708">하지만 실제로 쓴 시간은 20분이에요.</b></div>
+       </div>`;
+  const exLine = list.some(a=>exempt.has(a.p))
+    ? `<br><b style="color:#B54708">「한도 제외」 앱도 막대와 이 목록에 들어가요.</b> 다만 <b>하루 한도를 깎지 않아요</b> — 그 앱만 오래 써도 잠기지 않아요.`
+    : ``;
+
   openSub('최근 7일 사용기록', `
     <div class="note">막대는 <b>화면이 켜져 있던 시간</b>이에요 — 홈 화면·전화·설정까지 전부 들어가요.<br>막대를 누르면 그날 쓴 앱이 보여요.</div>
     <div class="card"><div style="display:flex;gap:3px;align-items:flex-end;height:180px;padding:6px 0">${bars}</div></div>
     <div class="sec">${selTxt} · 앱별 사용시간</div>
-    <div class="card">${rows}</div>
-    ${list.length ? `<div class="note" style="background:#F9FAFB;border-color:#EAECF0;color:#667085;font-weight:500">앱별 합계 ${mmss(sum)}. 1분이 안 되는 앱과 <b>홈 화면·알림창처럼 앱이 아닌 것</b>은 빠져요.${
-      // 🔴 2026-10-06 : 「한도 제외」 앱은 **막대에도 안 들어간다.**
-      //   예전 문구는 「하루 한도 총합에 안 들어간다」까지만 적어서, 부모님이 막대(7분)와
-      //   앱별(카톡 1시간41분)이 왜 다른지 알 수 없었다 → 실제 문의가 왔다(안재율 2A4E-QWEK 10/5).
-      list.some(a=>exempt.has(a.p))
-        ? `<br><b style="color:#B54708">「한도 제외」 앱은 막대에도 안 들어가요.</b> 그래서 앱별 합계가 막대보다 클 수 있어요. 아무리 오래 써도 잠기지 않아요.`
-        : ``}</div>` : ``}
+    <div class="card">${rows}</div>${miscCard}
+    ${list.length ? `<div class="note" style="background:#F9FAFB;border-color:#EAECF0;color:#667085;font-weight:500">${eqLine}${exLine}</div>` : ``}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 
