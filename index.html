@@ -53,22 +53,31 @@
     border-radius:999px; padding:8px 13px; font-size:12.5px; font-weight:800;
   }
   .topAct:active{ transform:scale(.97) }
-  /* 원격설치신청 화면 */
-  .rqRow{ display:flex; align-items:center; gap:12px; padding:14px 2px; border-bottom:1px solid var(--line) }
-  .rqRow:last-child{ border-bottom:0 }
-  .rqIco{ width:42px;height:42px;border-radius:12px;flex:0 0 auto;
-          display:flex;align-items:center;justify-content:center;font-size:21px;background:#EEF2FF }
-  .rqG{ flex:1; min-width:0 }
-  .rqT{ font-size:15px; font-weight:800; color:var(--ink) }
-  .rqD{ font-size:12.5px; color:var(--ink3); margin-top:2px; line-height:1.5 }
-  .rqB{ flex:0 0 auto; border:1.6px solid var(--navy); background:#fff; color:var(--navy);
-        border-radius:10px; padding:9px 13px; font-size:13px; font-weight:800; cursor:pointer }
-  .rqB[disabled]{ opacity:.5; cursor:default }
-  .rqB.done{ border-color:#BBF7D0; background:#F0FDF4; color:#166534 }
-  .rqB.on{ border-color:#BBF7D0; background:#16A34A; color:#fff }
-  /* 신청화면 전용 카톡 버튼 — .b 계열은 `.adActs` 안에서만 먹어서 여기선 따로 쓴다 */
+  /* 🆕 2026-10-20 : 설명서 항목 옆 [🛠 설치신청] 버튼 */
+  .dreq{ flex:0 0 auto; border:1.6px solid var(--navy); background:#fff; color:var(--navy);
+         border-radius:10px; padding:7px 11px; font-size:12.5px; font-weight:800;
+         white-space:nowrap; cursor:pointer; margin-left:8px }
+  .dreq:active{ transform:scale(.97) }
+  .dreq.on{ border-color:#BBF7D0; background:#F0FDF4; color:#166534 }
+
+  /* ① 확인 · ② 완료 화면 (부모용이라 둥글고 부드럽게) */
+  .rqAsk,.rqOk{ border-radius:14px; padding:17px 16px; margin-bottom:12px }
+  .rqAsk{ background:#FFF7ED; border:1.5px solid #FED7AA }
+  .rqOk{ background:#F0FDF4; border:1.5px solid #BBF7D0 }
+  .rqAskT,.rqOkT{ font-size:17px; font-weight:800; margin-bottom:8px }
+  .rqAskT{ color:#9A3412 } .rqOkT{ color:#166534 }
+  .rqAskM,.rqOkM{ font-size:13.5px; line-height:1.65; color:#475467 }
+  .rqOkM{ margin-bottom:13px }
+  .rqBtns{ display:flex; gap:9px; margin-top:4px }
+  .rqBtns .btn{ flex:1; margin-top:0; white-space:nowrap }
+  .rqCopy{ display:flex; align-items:center; gap:8px; justify-content:center; flex-wrap:wrap;
+           margin-top:11px; font-size:12.5px; color:#475467 }
+  .rqCopy b{ color:#1B3A8F }
+  .rqCopyB{ border:1.3px solid #CBD5E1; background:#fff; color:#475467;
+            border-radius:8px; padding:5px 11px; font-size:12.5px; font-weight:700; cursor:pointer }
+  /* 카톡 버튼 — .b 계열은 `.adActs` 안에서만 먹어서 여기선 따로 쓴다 */
   .rqKakao{ display:flex; align-items:center; justify-content:center; gap:7px;
-            width:100%; margin-top:12px; padding:14px; border:0; border-radius:14px;
+            width:100%; padding:14px; border:0; border-radius:14px;
             background:#FEE500; color:#191600; font-size:15px; font-weight:800;
             text-decoration:none; cursor:pointer }
   .rqKakao:active{ transform:scale(.99) }
@@ -1225,7 +1234,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '10월20일 원격설치신청';
+const WEB_LABEL = '10월20일 설명서별 설치신청';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -3786,85 +3795,112 @@ const DOCS = [
   // v: 설명서 영상 (2026-10-05 신설). 없으면 「영상보기」 버튼이 안 나온다.
   { f:'manual-app.pdf',       v:'video-app.mp4?v=20261006',       t:'시내모바일 앱 사용설명서',   d:'자녀폰에 깔린 앱은 무엇을 하나' },
   { f:'manual-parentweb.pdf', v:'video-parentweb.mp4?v=20261006', t:'부모님 관리 웹앱 사용설명서', d:'지금 보고 계신 이 화면 쓰는 법' },
-  { f:'manual-chrome.pdf',    v:'video-chrome.mp4?v=20261006',    t:'공신폰 크롬 사용설명서',     d:'허용 사이트·접속 요청은 어떻게' },
-  { f:'manual-sinaetube.pdf',     v:'video-sinaetube.mp4?v=20261006',     t:'시내YouTube 상품설명서',   d:'부모님이 허락한 영상만 보는 유튜브' },
-  { f:'manual-sinaetube-use.pdf', v:'video-sinaetube-use.mp4?v=20261006', t:'시내YouTube 사용설명서',   d:'영상 넣는 법 · 자녀 요청 받는 법' },
-  { f:'manual-sinaedm.pdf',   v:'video-sinaedm.mp4?v=20261006',   t:'시내디엠 상품설명서',        d:'인스타 DM 만 되는 전용 앱' },
+  // 🆕 2026-10-20 : req 가 있는 항목에만 **그 자리에서 신청하는 버튼**이 붙는다.
+  //   설명서를 보다가 바로 신청하는 게 자연스럽다(대표점장). 오른쪽 위 통합 버튼은 뺐다.
+  { f:'manual-chrome.pdf',    v:'video-chrome.mp4?v=20261006',    t:'공신폰 크롬 사용설명서',     d:'허용 사이트·접속 요청은 어떻게', req:'chrome_requested',       rt:'공신폰 크롬' },
+  { f:'manual-sinaetube.pdf',     v:'video-sinaetube.mp4?v=20261006',     t:'시내YouTube 상품설명서',   d:'부모님이 허락한 영상만 보는 유튜브', req:'tube_install_requested', rt:'시내YouTube' },
+  // ⚠️ 유튜브는 설명서가 둘인데 **키는 하나**다. 한쪽에서 신청하면 다른 쪽도 「신청함」이 된다(의도).
+  { f:'manual-sinaetube-use.pdf', v:'video-sinaetube-use.mp4?v=20261006', t:'시내YouTube 사용설명서',   d:'영상 넣는 법 · 자녀 요청 받는 법', req:'tube_install_requested', rt:'시내YouTube' },
+  { f:'manual-sinaedm.pdf',   v:'video-sinaedm.mp4?v=20261006',   t:'시내디엠 상품설명서',        d:'인스타 DM 만 되는 전용 앱', req:'dm_install_requested',   rt:'시내디엠' },
   { f:'manual-compare.pdf',   v:'video-compare.mp4?v=20261006',   t:'타 매장 공신폰 비교 설명서',  d:'다른 곳 공신폰과 무엇이 다른가' }
 ];
 
 function docUrl(f){ return new URL(f, location.href).href; }
 
 
-// ══════════ 🛠 원격 설치·사용 신청 (2026-10-20 신설) ══════════
+// ══════════ 🛠 원격 설치·사용 신청 (2026-10-20 신설 · 같은 날 전면 개편) ══════════
 //
-// 🔴 **왜 만들었나** — 예전엔 시내YouTube 를 **광고 화면에서만** 신청할 수 있었다.
-//   ① 광고는 「안 깔린 폰 + 이번 로드 1회」에만 떠서 **다시 찾을 수가 없었고**
-//   ② 광고를 닫으려다 **잘못 누르는 신청이 많았다**(대표점장).
-//   ③ **시내디엠·크롬은 부모가 신청할 길이 아예 없었다** — 전화로만 가능했다.
-//   → 광고를 내리고, **사용설명서 오른쪽 위에 상시 창구**를 뒀다.
+// 🔴 **왜 이 자리인가** — 처음엔 「사용설명서」 오른쪽 위에 **통합 버튼** 하나를 뒀는데,
+//   대표점장이 **「설명서 항목 바로 옆」**을 원했다. 설명서를 보다가 그 자리에서 신청하는 게 자연스럽다.
+//   → 통합 버튼은 빼고, `DOCS` 에 `req` 가 있는 항목에만 **[🛠 설치신청]** 을 붙였다.
 //
-// ⚠️ **키는 「신청」이지 「설치」가 아니다.** 매장이 전산에서 승인해야 실제로 깔리거나 켜진다.
-//    전산에 세 가지 배지가 뜬다(`tube_install_requested`·`dm_install_requested`·`chrome_requested`).
+// 🔴 **흐름은 3단계다** (오신청이 많아서 — 대표점장)
+//   ① 확인 : 바로 신청하지 않고 **한 번 묻는다**
+//   ② 완료 : 2.2초 토스트 대신 **화면**으로. 카톡은 **`<a href>`** 로 연다
+//            (`window.open` 은 **아이폰 사파리 팝업차단**에 막히면 아무 일도 안 일어난다)
+//   ③ 취소 : 잘못 눌러도 **부모가 직접 지운다** → 매장에 확인 전화를 돌릴 일이 없다
 //
-// 🔴 **크롬은 「설치」가 아니라 「켜기」다.** 폰에 이미 깔려 있고 매장이 전산에서 켜 준다.
-//    그래서 화면 제목을 「원격 설치·사용 신청」으로 두고 크롬만 문구를 다르게 쓴다.
-const REQ_ITEMS = [
-  { key:'tube_install_requested', ico:'📺', t:'시내YouTube',
-    d:'부모님이 허락한 영상만 보는 유튜브예요', doc:'manual-sinaetube.pdf' },
-  { key:'dm_install_requested',   ico:'💬', t:'시내디엠',
-    d:'인스타 DM 만 쓸 수 있는 전용 앱이에요', doc:'manual-sinaedm.pdf' },
-  { key:'chrome_requested',       ico:'🌐', t:'공신폰 크롬',
-    d:'허락한 사이트만 열리는 인터넷이에요 (설치가 아니라 켜 드려요)', doc:'manual-chrome.pdf' },
-];
+// ⚠️ **키는 「신청」이지 「설치」가 아니다.** 매장이 전산에서 승인해야 깔리거나 켜진다.
+//    전산 「설치신청」 탭 3개에 뜬다(tube_install_requested · dm_install_requested · chrome_requested).
+// 🔴 **크롬은 「설치」가 아니라 「켜기」다** — 폰에 이미 깔려 있다. 문구를 따로 쓴다.
+const KAKAO_CHAT_URL = 'https://pf.kakao.com/_xnDXAX/chat';
+const REQ_META = {
+  tube_install_requested: { t:'시내YouTube', msg:'시내유튜브 설치 요청',
+    d:'부모님이 허락한 영상만 보는 유튜브예요.' },
+  dm_install_requested:   { t:'시내디엠',   msg:'시내디엠 설치 요청',
+    d:'인스타 DM 만 쓸 수 있는 전용 앱이에요.' },
+  chrome_requested:       { t:'공신폰 크롬', msg:'공신폰 크롬 사용 요청',
+    d:'허락한 사이트만 열리는 인터넷이에요. 설치가 아니라 **켜 드리는** 거예요.' },
+};
 
 function reqDone(k){ return ST?.pol?.[k] === 'true'; }
 
-/** 사용설명서 오른쪽 위 버튼 → 이 화면 */
-function openRequests(){
-  const rows = REQ_ITEMS.map(x=>{
-    const on = reqDone(x.key);
-    return `<div class="rqRow">
-      <div class="rqIco">${x.ico}</div>
-      <div class="rqG">
-        <div class="rqT">${esc(x.t)}</div>
-        <div class="rqD">${esc(x.d)}</div>
-      </div>
-      <button class="rqB ${on?'done':''}" id="rq_${esc(x.key)}"
-        onclick="toggleRequest('${esc(x.key)}')">${on?'신청함 · 취소':'신청하기'}</button>
-    </div>`;
-  }).join('');
-  openSub('원격 설치·사용 신청', `
-    <div class="note">쓰고 싶은 것을 눌러 주세요. <b>바로 깔리는 건 아니에요</b> —
-      매장에서 확인하고 <b>원격으로</b> 설치하거나 켜 드립니다.<br>
-      잘못 누르셨으면 <b>같은 버튼을 다시 눌러</b> 취소하시면 돼요.</div>
-    <div class="card" style="padding:4px 14px">${rows}</div>
-    <div class="note" style="background:#F9FAFB;border-color:#EAECF0;color:#667085">
-      각각 무엇인지는 <b>설명서</b>에서 보실 수 있어요.
-      급하시면 <b>카카오톡 채널</b>로 문의해 주세요.</div>
-    <a class="rqKakao" href="https://pf.kakao.com/_xnDXAX/chat" target="_blank" rel="noopener noreferrer">💬 카카오톡으로 문의</a>
-    <button class="btn btn-g" style="margin-top:12px" onclick="openDocs()">설명서 목록으로</button>`,
+/** ① 설명서 옆 [🛠 설치신청] → 바로 신청하지 않고 **묻는다** (이미 신청했으면 ③ 취소 화면) */
+function openReqOne(key, title){
+  const m = REQ_META[key] || { t:title, msg:title+' 요청', d:'' };
+  if(reqDone(key)) return paintReqDone(key, m);
+  openSub(m.t + ' 신청', `
+    <div class="rqAsk">
+      <div class="rqAskT">설치를 신청할까요?</div>
+      <div class="rqAskM">지금 바로 깔리는 건 아니에요.<br>매장에서 확인하고 연락드려요.</div>
+    </div>
+    <div class="note">${m.d}</div>
+    <div class="rqBtns">
+      <button class="btn btn-g" onclick="openDocs()">아니요</button>
+      <button class="btn btn-p" id="rqYes" onclick="doReq('${esc(key)}')">네, 신청할게요</button>
+    </div>`,
     ()=>openDocs());
 }
 
-/** 신청 / 취소 — 같은 버튼으로 토글한다 (잘못 눌러도 부모가 직접 되돌린다) */
-async function toggleRequest(key){
-  const btn = document.getElementById('rq_'+key);
-  const next = !reqDone(key);
-  if(btn){ btn.disabled = true; btn.textContent = next ? '신청 중…' : '취소 중…'; }
+/** ① 「네, 신청할게요」 → 저장하고 ② 완료 화면 */
+async function doReq(key){
+  const m = REQ_META[key] || {};
+  const b = document.getElementById('rqYes');
+  if(b){ b.disabled = true; b.textContent = '신청 중…'; }
   try{
-    await savePol([{ key, value: next ? 'true' : 'false' }]);
-    if(btn){
-      btn.classList.toggle('done', next);
-      btn.textContent = next ? '신청함 · 취소' : '신청하기';
-    }
-    toast(next ? '신청했어요 · 매장에서 확인 후 연락드려요' : '신청을 취소했어요');
+    await savePol([{ key, value:'true' }]);
+    paintReqDone(key, m);
+    try{ if(navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(m.msg||''); }catch(e){}
   }catch(e){
-    if(btn) btn.textContent = next ? '신청하기' : '신청함 · 취소';
-    toast('실패: '+e.message);
-  }finally{
-    if(btn) btn.disabled = false;
+    if(b){ b.disabled = false; b.textContent = '네, 신청할게요'; }
+    toast('신청 실패: '+e.message);
   }
+}
+
+/** ② 완료 화면 + ③ 취소 */
+function paintReqDone(key, m){
+  openSub((m.t||'') + ' 신청', `
+    <div class="rqOk">
+      <div class="rqOkT">✓ 신청이 접수됐어요</div>
+      <div class="rqOkM">매장에서 확인 후 연락드릴게요.<br>더 빨리 받고 싶으시면 카톡으로 알려주세요.</div>
+      <a class="rqKakao" href="${KAKAO_CHAT_URL}" target="_blank" rel="noopener noreferrer">💬 카카오톡으로 알리기</a>
+      <div class="rqCopy">보내실 말 · <b>${esc(m.msg||'')}</b>
+        <button class="rqCopyB" onclick="reqCopy('${esc(m.msg||'')}',this)">복사</button></div>
+    </div>
+    <button class="btn btn-d" style="margin-top:12px" onclick="undoReq('${esc(key)}')">신청 취소</button>
+    <button class="btn btn-g" style="margin-top:8px" onclick="openDocs()">설명서 목록으로</button>`,
+    ()=>openDocs());
+}
+
+/** ③ 「신청 취소」 — 잘못 눌러도 부모가 직접 지운다 */
+async function undoReq(key){
+  try{
+    await savePol([{ key, value:'false' }]);
+    toast('신청을 취소했어요');
+    openDocs();
+  }catch(e){ toast('취소 실패: '+e.message); }
+}
+
+/** ② 보낼 문구 복사 */
+async function reqCopy(msg, btn){
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(msg);
+      if(btn){ const o=btn.textContent; btn.textContent='복사됨'; setTimeout(()=>btn.textContent=o,1500); }
+      return;
+    }
+  }catch(e){}
+  toast('「'+msg+'」 을 카톡에 보내주세요');
 }
 function openDocs(){
   const rows = DOCS.map(x=>`
@@ -3872,6 +3908,8 @@ function openDocs(){
       <div class="dtop">
         <div class="di">📕</div>
         <div class="dg"><div class="dt">${esc(x.t)}${x.isNew?`<span class="dnew">NEW!!</span>`:``}</div><div class="dd">${esc(x.d)}</div></div>
+        ${x.req?`<button class="dreq ${reqDone(x.req)?'on':''}" id="dq_${esc(x.req)}_${esc(x.f)}"
+           onclick="openReqOne('${esc(x.req)}','${esc(x.rt)}')">${reqDone(x.req)?'신청함':'🛠 설치신청'}</button>`:``}
       </div>
       <div class="dact">
         ${x.v?`<button class="db vd" onclick="playDoc('${esc(x.v)}','${esc(x.t)}')">▶ 영상보기</button>`:``}
@@ -3890,7 +3928,7 @@ function openDocs(){
       <b>📄 보기</b>는 설명서를 새 창에서 열고, <b>공유하기</b>는 영상이나 설명서를 카톡으로 보내요.</div>
     <div class="card" style="padding-top:4px;padding-bottom:4px">${rows}</div>
     <div class="shnote">주변에 <b>공신폰이 필요한 분</b>이 있으면 이 설명서를 공유해 주세요 🙏</div>
-    <button class="btn btn-g" onclick="closeSub()">닫기</button>`, undefined, { label:'🛠 원격설치신청', fn:openRequests });
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 
 // ▶ 설명서 영상 — 앱 안에서 바로 재생한다 (새 창으로 내보내면 돌아오기가 번거롭다)
