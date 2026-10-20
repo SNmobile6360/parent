@@ -46,6 +46,32 @@
   }
   .top h1{font-size:17px;font-weight:800;margin:0;flex:1;letter-spacing:-.02em}
   .top .sub{font-size:12px;opacity:.85;font-weight:600}
+  /* 🆕 2026-10-20 : 서브화면 오른쪽 상단 버튼 (지금은 사용설명서 → 원격설치신청) */
+  .topAct{
+    flex:0 0 auto; border:0; cursor:pointer; white-space:nowrap;
+    background:rgba(255,255,255,.18); color:#fff;
+    border-radius:999px; padding:8px 13px; font-size:12.5px; font-weight:800;
+  }
+  .topAct:active{ transform:scale(.97) }
+  /* 원격설치신청 화면 */
+  .rqRow{ display:flex; align-items:center; gap:12px; padding:14px 2px; border-bottom:1px solid var(--line) }
+  .rqRow:last-child{ border-bottom:0 }
+  .rqIco{ width:42px;height:42px;border-radius:12px;flex:0 0 auto;
+          display:flex;align-items:center;justify-content:center;font-size:21px;background:#EEF2FF }
+  .rqG{ flex:1; min-width:0 }
+  .rqT{ font-size:15px; font-weight:800; color:var(--ink) }
+  .rqD{ font-size:12.5px; color:var(--ink3); margin-top:2px; line-height:1.5 }
+  .rqB{ flex:0 0 auto; border:1.6px solid var(--navy); background:#fff; color:var(--navy);
+        border-radius:10px; padding:9px 13px; font-size:13px; font-weight:800; cursor:pointer }
+  .rqB[disabled]{ opacity:.5; cursor:default }
+  .rqB.done{ border-color:#BBF7D0; background:#F0FDF4; color:#166534 }
+  .rqB.on{ border-color:#BBF7D0; background:#16A34A; color:#fff }
+  /* 신청화면 전용 카톡 버튼 — .b 계열은 `.adActs` 안에서만 먹어서 여기선 따로 쓴다 */
+  .rqKakao{ display:flex; align-items:center; justify-content:center; gap:7px;
+            width:100%; margin-top:12px; padding:14px; border:0; border-radius:14px;
+            background:#FEE500; color:#191600; font-size:15px; font-weight:800;
+            text-decoration:none; cursor:pointer }
+  .rqKakao:active{ transform:scale(.99) }
 
   .wrap{padding:14px 14px calc(var(--safe-b) + 24px); max-width:640px; margin:0 auto}
 
@@ -509,49 +535,6 @@
   </div>
 </div>
 
-<!-- ══════════ 📺 광고 ② 시내YouTube — 잠금 해제 후 1회 (2026-10-01 추가) ══════════
-     · 시내YouTube 가 **안 깔린 폰**의 부모님께만 보인다 (tubeInstalled() === false).
-     · 「설치 신청하기」는 즉시 설치가 아니라 **매장에 신청**이다 (tube_install_requested).
-       매장이 전산에서 승인하면 그때 자녀폰에 깔린다.
-     · ⭐ 내용을 바꾸면 아래 스크립트의 TUBE_AD_VERSION 을 +1 한다. -->
-<div id="scTubeAd" class="noticeWrap hide">
-  <div class="ad">
-    <div class="adHero">
-      <img src="ad-tube.jpg?v=20261001" alt="">
-      <span class="adTag red">시내모바일 소식</span>
-    </div>
-    <div class="adBody">
-      <h2>유튜브 강의만<br>보게 할 수 있습니다</h2>
-      <p>인터넷 강의가 유튜브에 올라와 난처하셨다면 —<br>
-         <span class="em">「시내YouTube」</span>는 부모님이
-         <span class="em">허락한 영상만</span> 보이는 유튜브입니다.</p>
-      <div class="adPoints">
-        <div class="adPoint"><span class="c">✓</span>추천 영상 없음</div>
-        <div class="adPoint"><span class="c">✓</span>쇼츠 없음</div>
-        <div class="adPoint"><span class="c">✓</span>검색 없음</div>
-      </div>
-      <p style="margin-top:15px">자녀가 유튜브에서 <span class="em">「공유 → 시내YouTube」</span>를 누르면
-         부모님께 허락 요청이 오고, 허락한 영상만 자녀폰에 내려갑니다.</p>
-      <div class="adHi">매장에 오지 않아도 원격으로 설치해 드립니다.</div>
-    </div>
-    <div class="adActs">
-      <div id="tubeAdDone" class="adDone hide"></div>
-      <button id="btnTubeInstall" class="b b-red" onclick="tubeAdRequestInstall()">설치 신청하기</button>
-      <a class="b b-doc" href="manual-sinaetube.pdf" target="_blank" rel="noopener">📘 상품설명서 보기</a>
-      <a class="b b-kakao2" href="https://pf.kakao.com/_xnDXAX/chat"
-         target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true" focusable="false">
-          <path fill="#191600" d="M12 3C6.92 3 2.8 6.26 2.8 10.28c0 2.6 1.72 4.88 4.3 6.16-.19.7-.68 2.48-.78 2.87-.12.48.18.47.37.34.15-.1 2.4-1.63 3.37-2.29.63.09 1.28.14 1.94.14 5.08 0 9.2-3.26 9.2-7.28S17.08 3 12 3z"/>
-        </svg>
-        카카오톡으로 문의
-      </a>
-      <div class="adMini">
-        <a onclick="closeTubeAd(false)">다음에 볼게요</a><i>·</i><a onclick="closeTubeAd(true)">일주일 동안 보지 않기</a>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- ══════════ 1. 자녀 연결 ══════════ -->
 <div id="scConnect" class="center">
   <div class="logo">
@@ -788,7 +771,7 @@
     <div class="card tap" onclick="openDocs()">
       <div class="row">
         <div class="ic" style="background:#EEF2F7">📘</div>
-        <div class="grow"><div class="ttl">사용설명서 모음<span class="dnew">NEW!!</span></div><div class="val">공신폰 설명서 7가지 · <b>시내YouTube 설명서 2종 추가</b></div></div>
+        <div class="grow"><div class="ttl">사용설명서 모음</div><div class="val">공신폰 설명서 7가지 · 영상으로도 보실 수 있어요</div></div>
         <div class="chev">›</div>
       </div>
     </div>
@@ -845,6 +828,9 @@
   <div class="top">
     <button class="back" onclick="closeSub()">‹</button>
     <h1 id="sTitle">설정</h1>
+    <!-- 🆕 2026-10-20 : 서브화면 **오른쪽 상단**에 붙는 버튼 자리.
+         지금은 「사용설명서 모음」에서만 쓴다(원격설치신청). 쓰는 화면에서만 openSub 4번째 인자로 켠다. -->
+    <button id="topAct" class="topAct hide" onclick="(window.__topAct||function(){})()"></button>
   </div>
   <div class="wrap" id="sBody"></div>
 </div>
@@ -1239,7 +1225,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '10월17일 서버N추가';
+const WEB_LABEL = '10월20일 원격설치신청';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -1607,7 +1593,6 @@ async function refreshAll(manual){
     ST.apps=(appR.data||[]).sort((a,b)=>(a.app_name||'').localeCompare(b.app_name||'','ko'));
     await loadTube();          // 📺 2026-09-22 : 시내YouTube 요청·목록 (앱이 깔린 폰만)
     paintMain();
-    maybeShowTubeAd();         // 📺 광고 ② (시내YouTube 안 깔린 폰만 · 이번 로드에 1회 · 광고 ① 과 무관)
     if(manual) toast('최신 정보로 새로고침했습니다');
   }catch(e){ toast('불러오기 실패: '+e.message); }
   loading(false);
@@ -1945,7 +1930,7 @@ window.addEventListener('popstate', ()=>{
 });
 
 // ══════════ 서브 화면 ══════════
-function openSub(title, html, backFn){
+function openSub(title, html, backFn, act){
   const $s=document.getElementById('scSub');
   const onSub=!$s.classList.contains('hide');
   // 같은 제목으로 다시 그리는 건 "새 화면"이 아니라 새로고침 → history 를 쌓지 않는다.
@@ -1954,6 +1939,12 @@ function openSub(title, html, backFn){
   if(!navRestoring && !sameScreen) navPush(backFn || (()=>{ show('scMain'); paintMain(); }));
   document.getElementById('sTitle').textContent=title;
   document.getElementById('sBody').innerHTML=html;
+  // 🆕 2026-10-20 : 오른쪽 상단 버튼 — act 를 넘긴 화면에서만 보인다
+  const $a=document.getElementById('topAct');
+  if($a){
+    if(act && act.label && act.fn){ $a.textContent=act.label; window.__topAct=act.fn; $a.classList.remove('hide'); }
+    else { window.__topAct=null; $a.classList.add('hide'); }
+  }
   show('scSub'); window.scrollTo(0,0);
 }
 function closeSub(){ navBack(); }
@@ -3796,14 +3787,85 @@ const DOCS = [
   { f:'manual-app.pdf',       v:'video-app.mp4?v=20261006',       t:'시내모바일 앱 사용설명서',   d:'자녀폰에 깔린 앱은 무엇을 하나' },
   { f:'manual-parentweb.pdf', v:'video-parentweb.mp4?v=20261006', t:'부모님 관리 웹앱 사용설명서', d:'지금 보고 계신 이 화면 쓰는 법' },
   { f:'manual-chrome.pdf',    v:'video-chrome.mp4?v=20261006',    t:'공신폰 크롬 사용설명서',     d:'허용 사이트·접속 요청은 어떻게' },
-  { f:'manual-sinaetube.pdf',     v:'video-sinaetube.mp4?v=20261006',     t:'시내YouTube 상품설명서',   d:'부모님이 허락한 영상만 보는 유튜브', isNew:true },
-  { f:'manual-sinaetube-use.pdf', v:'video-sinaetube-use.mp4?v=20261006', t:'시내YouTube 사용설명서',   d:'영상 넣는 법 · 자녀 요청 받는 법',   isNew:true },
+  { f:'manual-sinaetube.pdf',     v:'video-sinaetube.mp4?v=20261006',     t:'시내YouTube 상품설명서',   d:'부모님이 허락한 영상만 보는 유튜브' },
+  { f:'manual-sinaetube-use.pdf', v:'video-sinaetube-use.mp4?v=20261006', t:'시내YouTube 사용설명서',   d:'영상 넣는 법 · 자녀 요청 받는 법' },
   { f:'manual-sinaedm.pdf',   v:'video-sinaedm.mp4?v=20261006',   t:'시내디엠 상품설명서',        d:'인스타 DM 만 되는 전용 앱' },
   { f:'manual-compare.pdf',   v:'video-compare.mp4?v=20261006',   t:'타 매장 공신폰 비교 설명서',  d:'다른 곳 공신폰과 무엇이 다른가' }
 ];
 
 function docUrl(f){ return new URL(f, location.href).href; }
 
+
+// ══════════ 🛠 원격 설치·사용 신청 (2026-10-20 신설) ══════════
+//
+// 🔴 **왜 만들었나** — 예전엔 시내YouTube 를 **광고 화면에서만** 신청할 수 있었다.
+//   ① 광고는 「안 깔린 폰 + 이번 로드 1회」에만 떠서 **다시 찾을 수가 없었고**
+//   ② 광고를 닫으려다 **잘못 누르는 신청이 많았다**(대표점장).
+//   ③ **시내디엠·크롬은 부모가 신청할 길이 아예 없었다** — 전화로만 가능했다.
+//   → 광고를 내리고, **사용설명서 오른쪽 위에 상시 창구**를 뒀다.
+//
+// ⚠️ **키는 「신청」이지 「설치」가 아니다.** 매장이 전산에서 승인해야 실제로 깔리거나 켜진다.
+//    전산에 세 가지 배지가 뜬다(`tube_install_requested`·`dm_install_requested`·`chrome_requested`).
+//
+// 🔴 **크롬은 「설치」가 아니라 「켜기」다.** 폰에 이미 깔려 있고 매장이 전산에서 켜 준다.
+//    그래서 화면 제목을 「원격 설치·사용 신청」으로 두고 크롬만 문구를 다르게 쓴다.
+const REQ_ITEMS = [
+  { key:'tube_install_requested', ico:'📺', t:'시내YouTube',
+    d:'부모님이 허락한 영상만 보는 유튜브예요', doc:'manual-sinaetube.pdf' },
+  { key:'dm_install_requested',   ico:'💬', t:'시내디엠',
+    d:'인스타 DM 만 쓸 수 있는 전용 앱이에요', doc:'manual-sinaedm.pdf' },
+  { key:'chrome_requested',       ico:'🌐', t:'공신폰 크롬',
+    d:'허락한 사이트만 열리는 인터넷이에요 (설치가 아니라 켜 드려요)', doc:'manual-chrome.pdf' },
+];
+
+function reqDone(k){ return ST?.pol?.[k] === 'true'; }
+
+/** 사용설명서 오른쪽 위 버튼 → 이 화면 */
+function openRequests(){
+  const rows = REQ_ITEMS.map(x=>{
+    const on = reqDone(x.key);
+    return `<div class="rqRow">
+      <div class="rqIco">${x.ico}</div>
+      <div class="rqG">
+        <div class="rqT">${esc(x.t)}</div>
+        <div class="rqD">${esc(x.d)}</div>
+      </div>
+      <button class="rqB ${on?'done':''}" id="rq_${esc(x.key)}"
+        onclick="toggleRequest('${esc(x.key)}')">${on?'신청함 · 취소':'신청하기'}</button>
+    </div>`;
+  }).join('');
+  openSub('원격 설치·사용 신청', `
+    <div class="note">쓰고 싶은 것을 눌러 주세요. <b>바로 깔리는 건 아니에요</b> —
+      매장에서 확인하고 <b>원격으로</b> 설치하거나 켜 드립니다.<br>
+      잘못 누르셨으면 <b>같은 버튼을 다시 눌러</b> 취소하시면 돼요.</div>
+    <div class="card" style="padding:4px 14px">${rows}</div>
+    <div class="note" style="background:#F9FAFB;border-color:#EAECF0;color:#667085">
+      각각 무엇인지는 <b>설명서</b>에서 보실 수 있어요.
+      급하시면 <b>카카오톡 채널</b>로 문의해 주세요.</div>
+    <a class="rqKakao" href="https://pf.kakao.com/_xnDXAX/chat" target="_blank" rel="noopener noreferrer">💬 카카오톡으로 문의</a>
+    <button class="btn btn-g" style="margin-top:12px" onclick="openDocs()">설명서 목록으로</button>`,
+    ()=>openDocs());
+}
+
+/** 신청 / 취소 — 같은 버튼으로 토글한다 (잘못 눌러도 부모가 직접 되돌린다) */
+async function toggleRequest(key){
+  const btn = document.getElementById('rq_'+key);
+  const next = !reqDone(key);
+  if(btn){ btn.disabled = true; btn.textContent = next ? '신청 중…' : '취소 중…'; }
+  try{
+    await savePol([{ key, value: next ? 'true' : 'false' }]);
+    if(btn){
+      btn.classList.toggle('done', next);
+      btn.textContent = next ? '신청함 · 취소' : '신청하기';
+    }
+    toast(next ? '신청했어요 · 매장에서 확인 후 연락드려요' : '신청을 취소했어요');
+  }catch(e){
+    if(btn) btn.textContent = next ? '신청하기' : '신청함 · 취소';
+    toast('실패: '+e.message);
+  }finally{
+    if(btn) btn.disabled = false;
+  }
+}
 function openDocs(){
   const rows = DOCS.map(x=>`
     <div class="doc">
@@ -3828,7 +3890,7 @@ function openDocs(){
       <b>📄 보기</b>는 설명서를 새 창에서 열고, <b>공유하기</b>는 영상이나 설명서를 카톡으로 보내요.</div>
     <div class="card" style="padding-top:4px;padding-bottom:4px">${rows}</div>
     <div class="shnote">주변에 <b>공신폰이 필요한 분</b>이 있으면 이 설명서를 공유해 주세요 🙏</div>
-    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`, undefined, { label:'🛠 원격설치신청', fn:openRequests });
 }
 
 // ▶ 설명서 영상 — 앱 안에서 바로 재생한다 (새 창으로 내보내면 돌아오기가 번거롭다)
@@ -3905,120 +3967,6 @@ function closeNotice(snooze){
   const n=noticeNext; noticeNext=null; if(n) n();
 }
 
-// ══════════ 📺 광고 ② 시내YouTube — 잠금 해제 후 1회 (2026-10-01) ══════════
-//   · 앱이 안 깔린 폰의 부모님께만 보여준다. 설치 여부는 자녀폰 정보(ST.apps)를 받아야 알 수 있고
-//     그건 **인증 뒤에** 오므로, 비밀번호 전이 아니라 메인 화면을 그린 직후에 띄운다.
-//     (비밀번호 전에 띄우면 이미 쓰고 계신 분께도 「설치하세요」가 간다)
-//   · 한 번 열 때 광고는 하나만 — 광고 ①을 방금 봤으면 이번엔 건너뛴다.
-//   · 「설치 신청하기」는 **즉시 설치가 아니다.** 매장에 신청만 넣는다(tube_install_requested).
-//     매장이 전산에서 승인해야 자녀폰에 깔린다.
-//   ⭐ 내용을 바꾸면 TUBE_AD_VERSION 을 +1 → 「보지 않기」한 부모님께도 새 광고가 다시 보인다.
-const TUBE_AD_VERSION   = 1;                        // 내용 바꿀 때마다 +1
-const TUBE_AD_KEY       = 'sinae_tube_ad_snooze';   // {until:ms, ver:n}
-const TUBE_AD_SNOOZE_MS = 7*24*60*60*1000;          // 7일
-
-// ✅ 2026-10-03 : 자녀앱 v45 릴리스 완료 → 켰다.
-//    ⚠️ 아직 v44 인 폰의 부모가 신청하면 **신청은 기록되지만, 설치는 그 폰이 v45 로 올라간 뒤**에 된다.
-//       v44 이하는 tube_install_allowed 키를 아예 모르기 때문이다.
-//       전산이 「이 폰은 자녀앱 v45 이상이어야 합니다」라고 먼저 경고하므로 매장이 헛걸음하지는 않는다.
-const TUBE_AD_ENABLED = true;
-
-let tubeAdShownThisOpen = false;   // 이번 페이지 로드에 한 번만 (새로고침 눌러도 또 안 뜬다)
-
-function tubeAdRequested(){ return ST?.pol?.tube_install_requested === 'true'; }
-
-function shouldShowTubeAd(){
-  if(!TUBE_AD_ENABLED) return false;
-  if(tubeAdShownThisOpen) return false;
-  // 🔴 2026-10-03 : 「광고 ①을 봤으면 광고 ②는 쉰다」를 **없앴다.**
-  //   그 규칙이 **일관되게 적용되지 않아** 부모님께 광고 ②가 「나왔다 안 나왔다」 했다.
-  //   원인 : `noticeShownThisOpen` 은 **그 페이지 로드에서만** 기억하는 변수인데,
-  //          `sessionStorage.sinae_auth==='1'` 이면 init() 이 광고 ① 분기를 **통째로 건너뛴다.**
-  //          → 앱을 완전히 닫았다 열면 광고 ①이 먼저 떠서 ②가 안 보이고,
-  //            홈으로 갔다 다시 들어오면 ①을 건너뛰어 ②가 보였다. **무작위가 아니라 구조였다.**
-  //   → 둘은 **나오는 자리가 다르다**(①은 비밀번호 전, ②는 잠금 해제 후 메인). 서로 안 가린다.
-  //     그래서 **독립시킨다.** 각자 자기 스누즈(7일)만 지킨다. (2026-10-03 대표점장 결정)
-  if(!ST || !ST.code) return false;
-  if(tubeInstalled()) return false;              // 이미 쓰고 계신 분께는 안 보여준다
-  try{
-    const s=JSON.parse(localStorage.getItem(TUBE_AD_KEY)||'null');
-    if(!s || s.ver!==TUBE_AD_VERSION) return true;
-    return Date.now() >= (Number(s.until)||0);
-  }catch(e){ return true; }
-}
-
-function paintTubeAdState(){
-  const done = document.getElementById('tubeAdDone');
-  const btn  = document.getElementById('btnTubeInstall');
-  if(!done || !btn) return;
-  if(tubeAdRequested()){
-    done.textContent = '신청하셨습니다 · 매장 확인 중';
-    done.classList.remove('hide');
-    btn.disabled = true;
-    btn.textContent = '신청 완료';
-  }else{
-    done.classList.add('hide');
-    btn.disabled = false;
-    btn.textContent = '설치 신청하기';
-  }
-}
-
-function maybeShowTubeAd(){
-  if(!shouldShowTubeAd()) return;
-  tubeAdShownThisOpen = true;
-  paintTubeAdState();
-  document.getElementById('scTubeAd').classList.remove('hide');
-}
-
-function closeTubeAd(snooze){
-  if(snooze){
-    try{ localStorage.setItem(TUBE_AD_KEY,
-        JSON.stringify({ until:Date.now()+TUBE_AD_SNOOZE_MS, ver:TUBE_AD_VERSION })); }catch(e){}
-  }
-  document.getElementById('scTubeAd').classList.add('hide');
-}
-
-/** 「설치 신청하기」 — 매장에 신청만 넣는다. 즉시 설치가 아니다. */
-// 🔴 매장 카톡 채널 — 「설치 신청」을 누르면 매장에도 바로 알리기 위해 쓴다.
-const KAKAO_CHAT_URL = 'https://pf.kakao.com/_xnDXAX/chat';
-
-/**
- * 📺 시내YouTube 설치 신청.
- *
- * ① 정책키 `tube_install_requested` 를 올린다 → 전산에 「📺 설치 신청」 배지가 뜬다
- * ② **매장 카톡 채널 대화창을 열고** 보낼 문구를 클립보드에 넣는다
- *
- * ⚠️ **카톡은 웹에서 대신 보낼 수 없다.** 카카오가 외부 링크로 메시지를 자동 발송하는 길을
- *    열어두지 않았다(알림톡은 사업자 발신 전용이라 반대 방향이다).
- *    그래서 **대화창을 열어주고 문구를 복사해 두는 것**까지가 할 수 있는 전부다.
- *    부모님은 **붙여넣고 보내기** 두 번만 누르면 된다.
- */
-async function tubeAdRequestInstall(){
-  const btn = document.getElementById('btnTubeInstall');
-  if(btn) btn.disabled = true;
-  const msg = '시내유튜브 설치 요청';
-  try{
-    await savePol([{ key:'tube_install_requested', value:'true' }]);
-    paintTubeAdState();
-
-    // 문구를 미리 복사해 둔다 — 실패해도 신청 자체는 이미 접수됐으므로 그냥 넘어간다
-    let copied = false;
-    try{
-      if(navigator.clipboard && window.isSecureContext){
-        await navigator.clipboard.writeText(msg); copied = true;
-      }
-    }catch(e){}
-
-    // 🔴 카톡 창은 **사용자가 버튼을 누른 흐름 안에서** 열어야 팝업 차단에 안 막힌다.
-    try{ window.open(KAKAO_CHAT_URL, '_blank', 'noopener'); }catch(e){}
-
-    toast(copied ? '신청 완료 · 카톡에 붙여넣고 보내주세요'
-                 : '신청 완료 · 카톡에 「시내유튜브 설치 요청」을 보내주세요');
-  }catch(e){
-    if(btn) btn.disabled = false;
-    toast('신청 실패: '+e.message);
-  }
-}
 
 (function init(){
   migrateOld();
