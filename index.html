@@ -3717,15 +3717,18 @@ function paintHistory(){
       const ic = H.icons[a.p]
         ? `<img src="data:image/png;base64,${esc(H.icons[a.p])}" alt="" style="width:34px;height:34px;border-radius:9px;flex:none">`
         : `<div style="width:34px;height:34px;border-radius:9px;background:#EAECF0;flex:none"></div>`;
-      const exTag = exempt.has(a.p)
-        ? ` <span style="display:inline-block;background:#FFF4EC;color:#B54708;border:1px solid #FCE4D2;padding:1px 7px;border-radius:9px;font-size:10.5px;font-weight:800;vertical-align:1px">한도 제외</span>`
+      // 🆕 2026-10-21 : 제외앱은 **배지만 달지 말고 통째로 회색**으로 내린다.
+      //   배지 하나로는 '그래서 이게 깎인 거야 아닌 거야'가 안 읽힌다. 색으로 먼저 갈라 준다.
+      const isEx = exempt.has(a.p);
+      const exTag = isEx
+        ? ` <span style="display:inline-block;background:#EEF1F6;color:#6B7687;border:1px solid #E0E5EC;padding:1px 7px;border-radius:9px;font-size:10.5px;font-weight:800;vertical-align:1px;white-space:nowrap">한도 안 깎음</span>`
         : ``;
-      return `<div class="item">${ic}
+      return `<div class="item">${isEx?`<div style="opacity:.42;display:flex">${ic}</div>`:ic}
         <div class="grow">
-          <div style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.n)}${exTag}</div>
-          <div style="height:6px;border-radius:4px;background:#EAECF0;margin-top:6px"><div style="height:6px;border-radius:4px;background:#2563EB;width:${Math.max(4,Math.round(a.m/top*100))}%"></div></div>
+          <div style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:${isEx?'#98A2B3':'inherit'}">${esc(a.n)}${exTag}</div>
+          <div style="height:6px;border-radius:4px;background:#EAECF0;margin-top:6px"><div style="height:6px;border-radius:4px;background:${isEx?'#CBD2DC':'#2563EB'};width:${Math.max(4,Math.round(a.m/top*100))}%"></div></div>
         </div>
-        <div style="font-size:13.5px;font-weight:800;color:#1B3A8F;flex:none">${mmss(a.m)}</div></div>`;
+        <div style="font-size:13.5px;font-weight:800;color:${isEx?'#AEB6C2':'#1B3A8F'};flex:none">${mmss(a.m)}</div></div>`;
     }).join('');
   }
 
@@ -3739,26 +3742,52 @@ function paintHistory(){
   //     「한도 제외」가 뜻하는 건 **하루 한도를 안 깎는다** 그것 하나뿐이다.
   //
   //   ● 막대 > 앱별합계 가 보통이다 — 홈 화면(런처)·알림창은 런처 아이콘이 없어
-  //     app_usage_history 에 안 올라간다. 1분 미만 앱과 분 버림도 여기로 모인다. → 「만지작 시간」
+  //     app_usage_history 에 안 올라간다. 1분 미만 앱과 분 버림도 여기로 모인다.
+  //   🔴 2026-10-21 : **이게 「만지작」의 정체였다.** v54(10-14)가 막대를 「화면 켜진 시간 전부」로
+  //     바꿨는데 자녀앱 업로드 쪽(shouldCount)은 안 바꿔서, 전 고객 하루평균 2.9분 → 17.9분(**8배**).
+  //     → 자녀앱 **v57** 에서 홈 화면·통화 중을 이름 붙여 올리도록 고쳤다(프로젝트 문서 8-10장).
+  //     ⚠️ **v56 이하 폰은 그대로**다. 이 화면은 두 경우 다 맞아야 한다.
   //   ● 거꾸로 앱별합계 > 막대 인 날도 **정상이다** — 분할화면·팝업으로 두 앱을 같이 보면
   //     (:2874) 양쪽 앱에 1초씩 다 더하는데 막대(:2867)는 1초만 더한다.
-  //   ※ 설정·전화·연락처는 v51 부터 **앱으로 따로** 뜬다(:1865~1869) → 만지작에 안 들어간다.
+  //   ※ 설정·전화**앱**·연락처는 v51 부터 앱으로 따로 뜬다 → 여기 안 들어간다.
+  //     ⚠️ 다만 **통화 중 화면**(incallui·telecom)은 전화앱과 **다른 패키지**라 v56 까진 빠졌다.
   const totMin  = Math.round((H.totals[H.sel]||0)/60);
   const miscMin = Math.max(0, totMin - sum);
+
+  // 🆕 2026-10-21 : 🔴 **이름을 바꿨다.** 「휴대폰 만지작거린 시간」은 **자녀를 탓하는 이름**이었다.
+  //   실체는 홈 화면·통화 중 화면이고, 자녀가 가만히 있어도 쌓인다.
+  //   ※ 김해성 6S9N-37G6 : 「독서실에 있었는데 만지작 59분」 → 부모가 자녀를 거짓말쟁이로 봤다.
+  //   ⚠️ **자녀앱 v57 이상**은 홈 화면·통화 중이 위 앱 목록에 **이름으로** 뜨므로 여기는 거의 0이 된다.
+  //      v56 이하 폰은 그대로 크게 남는다 → 두 경우 다 맞는 문구여야 한다.
   const miscCard = (list.length && miscMin >= 1) ? `
-    <div class="sec">앱이 아닌 화면</div>
+    <div class="sec">앱 목록에 안 잡힌 시간</div>
     <div class="card"><div class="item">
-      <div style="width:34px;height:34px;border-radius:9px;background:#FFF4EC;border:1px solid #FCE4D2;flex:none;display:flex;align-items:center;justify-content:center;font-size:17px">📱</div>
+      <div style="width:34px;height:34px;border-radius:9px;background:#EEF4FF;border:1px solid #D3E0FA;flex:none;display:flex;align-items:center;justify-content:center;font-size:17px">🏠</div>
       <div class="grow">
-        <div style="font-size:14px;font-weight:700">휴대폰 만지작거린 시간</div>
-        <div style="font-size:11.5px;color:#98A2B3;margin-top:3px;font-weight:500">홈 화면·알림창 + 1분이 안 되는 앱</div>
+        <div style="font-size:14px;font-weight:700">홈 화면·통화 등</div>
+        <div style="font-size:11.5px;color:#98A2B3;margin-top:3px;font-weight:500">앱 이름이 안 붙는 화면 + 1분이 안 되는 앱</div>
       </div>
-      <div style="font-size:13.5px;font-weight:800;color:#B54708;flex:none">${mmss(miscMin)}</div>
+      <div style="font-size:13.5px;font-weight:800;color:#1B3A8F;flex:none">${mmss(miscMin)}</div>
     </div></div>` : ``;
+
+  // 🆕 2026-10-21 : 「한도 제외」 앱이 얼마나 먹었는지 **합계로 한 줄** 보여준다.
+  //   ※ 2026-10-21 전수 조회 : 14대가 하루평균 30분 이상 이 시간 때문에 한도가 안 깎이고 있었다.
+  //     최악은 막대 284분 중 248분(87%). 부모는 「4시간 썼는데 왜 안 잠겨?」가 된다.
+  const exMin   = list.filter(a=>exempt.has(a.p)).reduce((t,a)=>t+a.m,0);
+  const exCount = list.filter(a=>exempt.has(a.p)).length;
+  const cutMin  = Math.max(0, totMin - exMin);   // 하루 한도에서 실제로 깎인 시간
+  const exCard  = exMin >= 1 ? `
+    <div class="card" style="background:#F9FAFB;border-color:#EAECF0;padding:13px 14px">
+      <div style="font-size:13px;color:#475467;line-height:1.75;font-weight:600">
+        회색 <b>${exCount}개</b>는 매장에서 <b>「한도 제외」</b>로 설정한 앱이에요 · 합계 <b>${mmss(exMin)}</b><br>
+        <b style="color:#1B3A8F">이 날 하루 한도에서 깎인 시간은 ${mmss(cutMin)}이에요.</b>
+        <span style="color:#98A2B3">(화면을 켠 시간은 ${mmss(totMin)})</span>
+      </div>
+    </div>` : ``;
   //   ⚠️ 2026-10-16 대표점장 지시 : 아래 설명은 **한 번에 이해되게** 쓴다.
   //     처음 쓴 「양쪽에 다 세기 때문」은 너무 추상적이어서 반려됐다. 예를 들어 보여 준다.
   const eqLine = (sum <= totMin)
-    ? `<b style="color:#1B3A8F">막대 ${mmss(totMin)}</b> = 앱별 합계 ${mmss(sum)} + 만지작 ${mmss(miscMin)}`
+    ? `<b style="color:#1B3A8F">막대 ${mmss(totMin)}</b> = 앱별 합계 ${mmss(sum)} + 홈 화면·통화 등 ${mmss(miscMin)}`
     : `<b style="color:#B54708;font-size:14px">진짜 쓴 시간은 막대 ${mmss(totMin)}이에요.</b><br>
        아래 앱별 시간을 다 더하면 ${mmss(sum)}이 되는데, <b>같은 시간을 두 번 센 것</b>이 섞여 있어서예요.
        <div style="margin-top:10px;background:#fff;border:1px solid #EAECF0;border-radius:12px;padding:11px 12px">
@@ -3768,16 +3797,17 @@ function paintHistory(){
            <div style="flex:1;background:#DCFCE7;border:1px solid #BBF7D0;border-radius:9px;padding:8px 4px;text-align:center;font-size:12px;font-weight:800;color:#166534">네이버 사전<br>20분</div>
          </div>
          <div style="font-size:12.5px;color:#475467;line-height:1.75">양쪽에 <b>똑같이 20분씩</b> 적혀요 → 더하면 40분<br><b style="color:#B54708">하지만 실제로 쓴 시간은 20분이에요.</b></div>
+         <div style="font-size:12px;color:#98A2B3;margin-top:9px;line-height:1.7">앱이 많은 날은 <b>분 단위 반올림</b> 때문에 1~2분 차이가 날 수도 있어요. 정상이에요.</div>
        </div>`;
-  const exLine = list.some(a=>exempt.has(a.p))
-    ? `<br><b style="color:#B54708">「한도 제외」 앱도 막대와 이 목록에 들어가요.</b> 다만 <b>하루 한도를 깎지 않아요</b> — 그 앱만 오래 써도 잠기지 않아요.`
+  const exLine = exMin >= 1
+    ? `<br><b style="color:#475467">회색 앱도 막대와 이 목록에는 들어가요.</b> 다만 <b>하루 한도를 깎지 않아요</b> — 그 앱만 오래 써도 잠기지 않아요.<br><span style="color:#98A2B3">바꾸시려면 매장으로 말씀해 주세요.</span>`
     : ``;
 
   openSub('최근 7일 사용기록', `
     <div class="note">막대는 <b>화면이 켜져 있던 시간</b>이에요 — 홈 화면·전화·설정까지 전부 들어가요.<br>막대를 누르면 그날 쓴 앱이 보여요.</div>
     <div class="card"><div style="display:flex;gap:3px;align-items:flex-end;height:180px;padding:6px 0">${bars}</div></div>
     <div class="sec">${selTxt} · 앱별 사용시간</div>
-    <div class="card">${rows}</div>${miscCard}
+    <div class="card">${rows}</div>${exCard}${miscCard}
     ${list.length ? `<div class="note" style="background:#F9FAFB;border-color:#EAECF0;color:#667085;font-weight:500">${eqLine}${exLine}</div>` : ``}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
