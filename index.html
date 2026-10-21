@@ -636,6 +636,9 @@
       </div>
     </div>
 
+    <!-- 🙋 2026-10-21 : 자녀가 「더 쓰고 싶다」고 누르면 여기에 뜬다 (평소엔 비어 있다) -->
+    <div id="timeReqBox"></div>
+
     <div class="sec">지금 상황</div>
     <div class="card tap" onclick="openLive()">
       <div class="row"><div class="ic" style="background:#FEF3F2">🚦</div>
@@ -1630,6 +1633,8 @@ function paintMain(){
   const $lv = document.getElementById('vLive');
   if($lv) $lv.innerHTML = '<b style="color:'+(_lv.lock?'#B42318':'#027A48')+'">'+_lv.txt+'</b>';
 
+  paintTimeRequest();
+
   const limDays=[1,2,3,4,5,6,7].filter(i=>Number(p['limit_day_'+i]??-1)>=0);
   document.getElementById('vLimit').innerHTML = badge(p.daily_limit_enabled==='true') +
     ' ' + (limDays.length? limDays.length+'개 요일 설정됨':'요일 미설정');
@@ -2033,6 +2038,76 @@ function bonusOptions(cur){
   for(let m=0;m<=360;m+=5) h+=`<option value="${m}" ${m===snapped?'selected':''}>${m===0?'0분 (해제)':minLabel(m)}</option>`;
   return h;
 }
+// ══════════════════════════════════════════════════════════════════
+// 🙋 2026-10-21 : 자녀 → 부모 「시간 더 주세요」 요청
+//
+//   🔴 왜 만들었나 (개편 ②)
+//     지금까지 자녀가 한도를 다 쓰면 할 수 있는 건 **부모한테 전화해서 조르는 것**뿐이었다.
+//     자녀폰 락화면의 「보너스 시간 요청하기」는 이름만 요청이고 **부모 PIN 을 그 자리에서**
+//     눌러야 해서, 부모가 옆에 없으면 아무것도 못 했다. 그게 싸움의 구조였다.
+//
+//   ● 자녀는 「더 쓰고 싶다」만 누른다. **얼마 줄지는 여기서 부모가 정한다.**
+//     (자녀가 1시간을 고르게 하면, 부모가 15분을 줬을 때 그 차이가 또 싸움이 된다)
+//   ● 자녀앱이 policies 의 time_request 에 **요청 시각**을 적는다. 비우는 건 **부모 쪽**이다.
+//   ● 2시간이 지난 요청은 **저절로 사라진다**(자녀가 이미 잊었을 시간이다).
+// ══════════════════════════════════════════════════════════════════
+const TIME_REQ_TTL_MS = 2 * 60 * 60 * 1000;
+
+function timeRequestAgeMin(){
+  const raw = (ST.pol && ST.pol.time_request || "").trim();
+  if(!raw) return -1;
+  const t = Date.parse(raw);
+  if(isNaN(t)) return -1;
+  const age = Date.now() - t;
+  if(age < 0 || age > TIME_REQ_TTL_MS) return -1;
+  return Math.max(0, Math.round(age/60000));
+}
+
+function paintTimeRequest(){
+  const box = document.getElementById("timeReqBox");
+  if(!box) return;
+  const age = timeRequestAgeMin();
+  if(age < 0){ box.innerHTML = ""; return; }
+  const who = (ST.dev && ST.dev.child_name) || ST.name || "자녀";
+  const ago = age < 1 ? "방금" : (age + "분 전");
+  const btn = (m,label) => "<button class='btn' style='flex:1;min-width:84px;padding:12px 6px;font-size:15px' onclick='grantTimeRequest(" + m + ")'>" + label + "</button>";
+  box.innerHTML =
+    "<div class='card' style='border:2px solid #2563EB;background:#F5F8FF'>" +
+      "<div style='font-size:15.5px;font-weight:800;color:#1B3A8F'>🙋 " + esc(who) + " 님이 시간을 더 쓰고 싶어해요</div>" +
+      "<div style='font-size:13px;color:#667085;margin-top:5px;font-weight:600'>" + ago + "에 알림을 보냈어요 · 얼마나 줄지 골라 주세요</div>" +
+      "<div style='display:flex;gap:7px;margin-top:12px;flex-wrap:wrap'>" +
+        btn(15,"15분") + btn(30,"30분") + btn(60,"1시간") +
+      "</div>" +
+      "<div style='margin-top:8px'><button class='btn btn-g' style='width:100%;padding:11px;font-size:14px' onclick='dismissTimeRequest()'>오늘은 그만</button></div>" +
+    "</div>";
+}
+
+/** 시간을 준다 — 오늘 보너스에 **더한다**(덮어쓰지 않는다) + 요청을 지운다. */
+async function grantTimeRequest(mins){
+  loading(true);
+  try{
+    const next = Math.min((getBonusToday()||0) + mins, BONUS_MAX);
+    await savePol([
+      {key:"bonus_today",  value:_todayYmd() + "|" + next},
+      {key:"time_request", value:""}
+    ]);
+    loading(false);
+    toast("+" + minLabel(mins) + " 줬어요 (오늘 보너스 " + minLabel(next) + ")");
+    paintTimeRequest();
+  }catch(e){ loading(false); toast("실패: " + e.message); }
+}
+
+/** 이번에는 안 준다 — 요청만 지운다. 자녀폰은 10분 뒤 다시 보낼 수 있다. */
+async function dismissTimeRequest(){
+  loading(true);
+  try{
+    await savePol([{key:"time_request", value:""}]);
+    loading(false);
+    toast("오늘은 그만 두기로 했어요");
+    paintTimeRequest();
+  }catch(e){ loading(false); toast("실패: " + e.message); }
+}
+
 async function applyBonus(){
   const m = parseInt(document.getElementById('bonusPick').value,10)||0;
   loading(true);
