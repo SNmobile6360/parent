@@ -3859,21 +3859,34 @@ function paintHistory(){
         <span style="color:#98A2B3">(화면을 켠 시간은 ${mmss(totMin)})</span>
       </div>
     </div>` : ``;
-  //   ⚠️ 2026-10-16 대표점장 지시 : 아래 설명은 **한 번에 이해되게** 쓴다.
-  //     처음 쓴 「양쪽에 다 세기 때문」은 너무 추상적이어서 반려됐다. 예를 들어 보여 준다.
-  const eqLine = (sum <= totMin)
-    ? `<b style="color:#1B3A8F">막대 ${mmss(totMin)}</b> = 앱별 합계 ${mmss(sum)} + 홈 화면·통화 등 ${mmss(miscMin)}`
-    : `<b style="color:#B54708;font-size:14px">진짜 쓴 시간은 막대 ${mmss(totMin)}이에요.</b><br>
-       아래 앱별 시간을 다 더하면 ${mmss(sum)}이 되는데, <b>같은 시간을 두 번 센 것</b>이 섞여 있어서예요.
-       <div style="margin-top:10px;background:#fff;border:1px solid #EAECF0;border-radius:12px;padding:11px 12px">
-         <div style="font-size:12.5px;color:#475467;margin-bottom:8px">예를 들어 — 화면을 <b>반으로 나눠 두 앱을 20분 같이</b> 봤다면</div>
-         <div style="display:flex;gap:6px;margin-bottom:8px">
-           <div style="flex:1;background:#FEF9C3;border:1px solid #FDE68A;border-radius:9px;padding:8px 4px;text-align:center;font-size:12px;font-weight:800;color:#854D0E">카카오톡<br>20분</div>
-           <div style="flex:1;background:#DCFCE7;border:1px solid #BBF7D0;border-radius:9px;padding:8px 4px;text-align:center;font-size:12px;font-weight:800;color:#166534">네이버 사전<br>20분</div>
-         </div>
-         <div style="font-size:12.5px;color:#475467;line-height:1.75">양쪽에 <b>똑같이 20분씩</b> 적혀요 → 더하면 40분<br><b style="color:#B54708">하지만 실제로 쓴 시간은 20분이에요.</b></div>
-         <div style="font-size:12px;color:#98A2B3;margin-top:9px;line-height:1.7">앱이 많은 날은 <b>분 단위 반올림</b> 때문에 1~2분 차이가 날 수도 있어요. 정상이에요.</div>
-       </div>`;
+  // ⚠️ 이 설명은 **한 번에 이해되게** 쓴다. (2026-10-16 대표점장 지시)
+  //
+  // 🔴 2026-10-22 두 번째 재작성 — 대표점장 반려
+  //   「홈 화면이랑 메시지를 **동시에 같이 쓸 수가 있어?** 아닌 걸로 다들 알 텐데」
+  //   맞는 지적이다. 「두 가지를 같이 본다」는 **부모가 믿지 않는 설명**이었다.
+  //
+  //   ✅ 실제 원인을 데이터로 찾았다 (2026-10-22) —
+  //     자녀앱은 **작은 창(PIP)으로 도는 영상**과 **뒤에 떠 있는 앱**도 센다.
+  //     그게 없으면 자녀가 PIP 로 영상 보는 시간이 **앱별 제한에 안 걸린다**
+  //     (UsageMonitorService 의 visibleApps — PIP 를 세려고 일부러 넣은 것. 지우지 마라).
+  //     ※ 시연폰 실측 : 10/20 「화면꺼짐방지 522분 = 막대 522분」 →
+  //       10/21 「홈 화면 387 + 화면꺼짐방지 370 = 757분 / 막대 387분」
+  //       **화면꺼짐방지처럼 계속 떠 있는 앱**이 홈 화면과 나란히 세어진 것이다.
+  //
+  //   ▸ 그래서 **설명으로 풀지 않는다.** 부모가 애초에 더하지 않게 만든다 —
+  //     ① 목록 카드 **맨 위에 「오늘 쓴 시간」**을 박아 둔다(아래 openSub)
+  //     ② 긴 설명 대신 **회색 한 줄**만 둔다
+  //   ⛔ 「두 앱을 같이 본다」는 식으로 되돌리지 마라. 두 번 반려됐다.
+  const gapMin = sum - totMin;
+
+  const eqLine = (gapMin <= 0)
+    ? (miscMin >= 1
+        ? `목록 합계 ${mmss(sum)} + 홈 화면·통화 등 ${mmss(miscMin)}을 더한 값이에요.`
+        : ``)
+    : (gapMin <= 3
+        ? `목록을 더하면 ${gapMin}분쯤 더 나오는데 <b>분 단위 반올림</b> 때문이에요. 정상이에요.`
+        : `작은 창(PIP)으로 켜 둔 영상이나 <b>뒤에 계속 떠 있는 앱</b>은, 다른 걸 쓰는 동안에도 같이 세어져요.`
+          + ` 그래서 <b>목록을 더하면 위 시간보다 클 수 있어요.</b>`);
   const exLine = exMin >= 1
     ? `<br><b style="color:#475467">회색 앱도 막대와 이 목록에는 들어가요.</b> 다만 <b>하루 한도를 깎지 않아요</b> — 그 앱만 오래 써도 잠기지 않아요.<br><span style="color:#98A2B3">바꾸시려면 매장으로 말씀해 주세요.</span>`
     : ``;
@@ -3882,7 +3895,13 @@ function paintHistory(){
     <div class="note">막대는 <b>화면이 켜져 있던 시간</b>이에요 — 홈 화면·전화·설정까지 전부 들어가요.<br>막대를 누르면 그날 쓴 앱이 보여요.</div>
     <div class="card"><div style="display:flex;gap:3px;align-items:flex-end;height:180px;padding:6px 0">${bars}</div></div>
     <div class="sec">${selTxt} · 앱별 사용시간</div>
-    <div class="card">${rows}</div>${exCard}${miscCard}
+    <div class="card">
+      <!-- 🔴 2026-10-22 : 맨 위에 못을 박는다. 부모가 목록을 더하지 않게 하는 게 핵심이다. -->
+      <div style="display:flex;align-items:baseline;gap:9px;padding:4px 2px 12px;border-bottom:1px solid #F0F2F5;margin-bottom:6px">
+        <div style="font-size:13px;color:#667085;font-weight:700">오늘 쓴 시간</div>
+        <div style="font-size:20px;font-weight:800;color:#1B3A8F;letter-spacing:-.5px">${mmss(totMin)}</div>
+      </div>
+      ${rows}</div>${exCard}${miscCard}
     ${list.length ? `<div class="note" style="background:#F9FAFB;border-color:#EAECF0;color:#667085;font-weight:500">${eqLine}${exLine}</div>` : ``}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
