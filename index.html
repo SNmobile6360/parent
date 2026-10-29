@@ -507,7 +507,7 @@
       <div class="introT">📺 시내모바일 공신폰 — 처음 보시는 분께</div>
       <div class="introS">1분 20초면 다 아실 수 있어요 🙂 소리를 켜 주세요.</div>
     </div>
-    <video id="introVid" class="introVid" src="video-intro.mp4?v=20261006" playsinline preload="auto" controls></video>
+    <video id="introVid" class="introVid" src="video-intro.mp4?v=20261029" playsinline preload="auto" controls></video>
     <div class="introAct">
       <div id="introWait" class="introWait hide">⏳ <b id="introSec">10</b>초 뒤 건너뛰기가 가능해요</div>
       <button id="introSkip" class="btn btn-g hide" onclick="closeIntro()">건너뛰기</button>
@@ -1160,7 +1160,7 @@ function startAddChild(){
 //   · 끝까지 보면 「시작하기」, 10초 뒤부터 「건너뛰기」가 생긴다.
 //     🔴 완전히 못 닫게 막지는 않았다. 급한 부모님이 갇히면 그게 더 큰 문제다.
 //        (완전 강제로 바꾸려면 아래 SKIP_AFTER_MS 를 지우면 된다)
-const INTRO_VERSION  = 1;
+const INTRO_VERSION  = 2;
 const INTRO_KEY      = 'sinae_intro_seen';     // 저장값: 본 버전 번호
 const SKIP_AFTER_MS  = 10000;
 
@@ -3783,12 +3783,32 @@ function paintHistory(){
   //   그걸 안 보여주면 「시간은 늘어나는데 왜 안 잠기지?」로 오해한다.
   const exempt = new Set([ ...J(ST.pol.whitelist_apps,[]), ...J(ST.pol.time_exempt_apps,[]) ]);
 
+  // ── 🆕 2026-10-29 : 「홈 화면」을 **앱 목록에서 빼서** 아래 따로 보여준다 ──
+  //
+  //   🔴 왜 — 부모가 「홈 화면이라는 앱을 1시간 20분 했다」로 읽는다. 카카오톡과 **나란히** 서 있으니까.
+  //     ※ 2026-10-28 임서연 `7JJR-ZZSQ` 문의 : 「갑자기 홈화면시간이 늘었는데 뭘 하면 늘어나나요?」
+  //     ※ 전 고객 실측(2026-10-29) : 「홈 화면」은 앱별 합계의 **16.5%** 로 **카카오톡(16.8%) 다음 2위**,
+  //       **305/308대**에서 하루평균 **23분**. 앱처럼 생긴 2위 항목이니 안 물어볼 수가 없다.
+  //
+  //   ● **세는 것은 그대로 둔다.** 빼면 2026-10-12 박소윤 `3GV6-B7FB` 민원(「측정이 고장났다」)이
+  //     그대로 돌아온다 — 그때 대표점장 지시가 「화면이 켜져 있는 순간 무엇을 하든 깎이게」였다.
+  //     패밀리링크·디지털웰빙도 홈 화면을 센다. 우리만 빼면 **우리 숫자가 작아 보인다.**
+  //   ● 바꾸는 것은 **자리와 설명**뿐이다.
+  //
+  //   ⚠️ 「통화 중」은 **안 뺀다.** 그건 자녀가 실제로 통화한 시간이라 부모가 알고 싶어 한다.
+  //   ⚠️ 이름으로 거른다 — 자녀앱 v57+ 가 런처 패키지를 `홈 화면` 이라는 이름으로 올린다
+  //      (UsageMonitorService 의 friendlyName). 패키지명은 기종마다 달라서 못 쓴다.
+  const HOME_NAME = '홈 화면';
+  const homeRow = list.find(a => a.n === HOME_NAME);
+  const homeMin = homeRow ? homeRow.m : 0;
+  const appOnly = list.filter(a => a.n !== HOME_NAME);
+
   let rows;
-  if(!list.length){
+  if(!appOnly.length){
     rows=`<div style="padding:20px 2px;text-align:center;color:#98A2B3;font-size:13.5px">이 날은 앱별 기록이 없습니다.</div>`;
   }else{
-    const top=list[0].m||1;
-    rows=list.map(a=>{
+    const top=appOnly[0].m||1;
+    rows=appOnly.map(a=>{
       const ic = H.icons[a.p]
         ? `<img src="data:image/png;base64,${esc(H.icons[a.p])}" alt="" style="width:34px;height:34px;border-radius:9px;flex:none">`
         : `<div style="width:34px;height:34px;border-radius:9px;background:#EAECF0;flex:none"></div>`;
@@ -3837,12 +3857,27 @@ function paintHistory(){
   const miscCard = (list.length && miscMin >= 1) ? `
     <div class="sec">앱 목록에 안 잡힌 시간</div>
     <div class="card"><div class="item">
-      <div style="width:34px;height:34px;border-radius:9px;background:#EEF4FF;border:1px solid #D3E0FA;flex:none;display:flex;align-items:center;justify-content:center;font-size:17px">🏠</div>
+      <div style="width:34px;height:34px;border-radius:9px;background:#F2F4F7;border:1px solid #E4E7EC;flex:none;display:flex;align-items:center;justify-content:center;font-size:17px;color:#98A2B3">⋯</div>
       <div class="grow">
-        <div style="font-size:14px;font-weight:700">홈 화면·통화 등</div>
-        <div style="font-size:11.5px;color:#98A2B3;margin-top:3px;font-weight:500">앱 이름이 안 붙는 화면 + 1분이 안 되는 앱</div>
+        <div style="font-size:14px;font-weight:700">그 밖의 시간</div>
+        <div style="font-size:11.5px;color:#98A2B3;margin-top:3px;font-weight:500">1분이 안 되는 앱과, 이름이 안 붙는 화면이에요</div>
       </div>
       <div style="font-size:13.5px;font-weight:800;color:#1B3A8F;flex:none">${mmss(miscMin)}</div>
+    </div></div>` : ``;
+
+  // 🆕 2026-10-29 : 「홈 화면」 전용 카드 — 앱이 아니라는 걸 **자리로** 알려준다.
+  //   ⛔ 자녀를 탓하는 이름을 쓰지 마라. 「만지작거린 시간」은 2026-10-20 에 반려됐다
+  //      (김해성 `6S9N-37G6` : 「독서실에 있었는데 만지작 59분」 → 부모가 자녀를 거짓말쟁이로 봤다).
+  //   ● 설명은 **부모가 바로 떠올릴 수 있는 장면**으로 쓴다. 「앱이 아닌 화면」 같은 말은 안 통한다.
+  const homeCard = homeMin >= 1 ? `
+    <div class="sec">앱을 안 쓴 시간</div>
+    <div class="card"><div class="item">
+      <div style="width:34px;height:34px;border-radius:9px;background:#F2F4F7;border:1px solid #E4E7EC;flex:none;display:flex;align-items:center;justify-content:center;font-size:17px">🏠</div>
+      <div class="grow">
+        <div style="font-size:14px;font-weight:700">홈 화면</div>
+        <div style="font-size:11.5px;color:#98A2B3;margin-top:3px;font-weight:500;line-height:1.55">앱을 켜지 않고 <b>화면만 켜져 있던 시간</b>이에요<br>앱을 찾느라 넘기거나, 알림창을 보거나, 켜 둔 채로 둔 시간이에요</div>
+      </div>
+      <div style="font-size:13.5px;font-weight:800;color:#475467;flex:none">${mmss(homeMin)}</div>
     </div></div>` : ``;
 
   // 🆕 2026-10-21 : 「한도 제외」 앱이 얼마나 먹었는지 **합계로 한 줄** 보여준다.
@@ -3879,9 +3914,16 @@ function paintHistory(){
   //   ⛔ 「두 앱을 같이 본다」는 식으로 되돌리지 마라. 두 번 반려됐다.
   const gapMin = sum - totMin;
 
+  // 🆕 2026-10-29 : 홈 화면을 목록에서 뺐으니 **덧셈식도 보이는 대로** 고쳐야 한다.
+  //   🔴 안 고치면 「목록 합계」가 **화면에 없는 숫자**가 되어, 부모가 눈에 보이는 걸 더해도 안 맞는다.
+  //      (고치다가 바로 이 실수를 했다 — 375px 미리보기로 잡았다)
+  const listMin = Math.max(0, sum - homeMin);   // 화면에 실제로 보이는 앱 목록의 합
+  const parts = [`앱 목록 ${mmss(listMin)}`];
+  if (homeMin >= 1) parts.push(`홈 화면 ${mmss(homeMin)}`);
+  if (miscMin >= 1) parts.push(`그 밖의 시간 ${mmss(miscMin)}`);
   const eqLine = (gapMin <= 0)
-    ? (miscMin >= 1
-        ? `목록 합계 ${mmss(sum)} + 홈 화면·통화 등 ${mmss(miscMin)}을 더한 값이에요.`
+    ? (parts.length > 1
+        ? `위 <b>${mmss(totMin)}</b> 은 ${parts.join(' + ')} 을 더한 값이에요.`
         : ``)
     : (gapMin <= 3
         ? `목록을 더하면 ${gapMin}분쯤 더 나오는데 <b>분 단위 반올림</b> 때문이에요. 정상이에요.`
@@ -3901,7 +3943,7 @@ function paintHistory(){
         <div style="font-size:13px;color:#667085;font-weight:700">오늘 쓴 시간</div>
         <div style="font-size:20px;font-weight:800;color:#1B3A8F;letter-spacing:-.5px">${mmss(totMin)}</div>
       </div>
-      ${rows}</div>${exCard}${miscCard}
+      ${rows}</div>${homeCard}${exCard}${miscCard}
     ${list.length ? `<div class="note" style="background:#F9FAFB;border-color:#EAECF0;color:#667085;font-weight:500">${eqLine}${exLine}</div>` : ``}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
@@ -3917,16 +3959,16 @@ function doLogout(){ removeChildUI(ST.code); }
 //   ⚠️ 파일명을 바꾸면 여기 src 도 같이 고쳐야 한다. 한글·대괄호는 주소에서 깨지므로 쓰지 않는다.
 const DOCS = [
   // v: 설명서 영상 (2026-10-05 신설). 없으면 「영상보기」 버튼이 안 나온다.
-  { f:'manual-app.pdf',       v:'video-app.mp4?v=20261006',       t:'시내모바일 앱 사용설명서',   d:'자녀폰에 깔린 앱은 무엇을 하나' },
-  { f:'manual-parentweb.pdf', v:'video-parentweb.mp4?v=20261006', t:'부모님 관리 웹앱 사용설명서', d:'지금 보고 계신 이 화면 쓰는 법' },
+  { f:'manual-app.pdf',       v:'video-app.mp4?v=20261029',       t:'시내모바일 앱 사용설명서',   d:'자녀폰에 깔린 앱은 무엇을 하나' },
+  { f:'manual-parentweb.pdf', v:'video-parentweb.mp4?v=20261029', t:'부모님 관리 웹앱 사용설명서', d:'지금 보고 계신 이 화면 쓰는 법' },
   // 🆕 2026-10-20 : req 가 있는 항목에만 **그 자리에서 신청하는 버튼**이 붙는다.
   //   설명서를 보다가 바로 신청하는 게 자연스럽다(대표점장). 오른쪽 위 통합 버튼은 뺐다.
-  { f:'manual-chrome.pdf',    v:'video-chrome.mp4?v=20261006',    t:'공신폰 크롬 사용설명서',     d:'허용 사이트·접속 요청은 어떻게', req:'chrome_requested',       rt:'공신폰 크롬' },
-  { f:'manual-sinaetube.pdf',     v:'video-sinaetube.mp4?v=20261006',     t:'시내YouTube 상품설명서',   d:'부모님이 허락한 영상만 보는 유튜브', req:'tube_install_requested', rt:'시내YouTube' },
+  { f:'manual-chrome.pdf',    v:'video-chrome.mp4?v=20261029',    t:'공신폰 크롬 사용설명서',     d:'허용 사이트·접속 요청은 어떻게', req:'chrome_requested',       rt:'공신폰 크롬' },
+  { f:'manual-sinaetube.pdf',     v:'video-sinaetube.mp4?v=20261029',     t:'시내YouTube 상품설명서',   d:'부모님이 허락한 영상만 보는 유튜브', req:'tube_install_requested', rt:'시내YouTube' },
   // ⚠️ 유튜브는 설명서가 둘인데 **키는 하나**다. 한쪽에서 신청하면 다른 쪽도 「신청함」이 된다(의도).
-  { f:'manual-sinaetube-use.pdf', v:'video-sinaetube-use.mp4?v=20261006', t:'시내YouTube 사용설명서',   d:'영상 넣는 법 · 자녀 요청 받는 법', req:'tube_install_requested', rt:'시내YouTube' },
-  { f:'manual-sinaedm.pdf',   v:'video-sinaedm.mp4?v=20261006',   t:'시내디엠 상품설명서',        d:'인스타 DM 만 되는 전용 앱', req:'dm_install_requested',   rt:'시내디엠' },
-  { f:'manual-compare.pdf',   v:'video-compare.mp4?v=20261006',   t:'타 매장 공신폰 비교 설명서',  d:'다른 곳 공신폰과 무엇이 다른가' }
+  { f:'manual-sinaetube-use.pdf', v:'video-sinaetube-use.mp4?v=20261029', t:'시내YouTube 사용설명서',   d:'영상 넣는 법 · 자녀 요청 받는 법', req:'tube_install_requested', rt:'시내YouTube' },
+  { f:'manual-sinaedm.pdf',   v:'video-sinaedm.mp4?v=20261029',   t:'시내디엠 상품설명서',        d:'인스타 DM 만 되는 전용 앱', req:'dm_install_requested',   rt:'시내디엠' },
+  { f:'manual-compare.pdf',   v:'video-compare.mp4?v=20261029',   t:'타 매장 공신폰 비교 설명서',  d:'다른 곳 공신폰과 무엇이 다른가' }
 ];
 
 function docUrl(f){ return new URL(f, location.href).href; }
@@ -4042,7 +4084,7 @@ function openDocs(){
       </div>
     </div>`).join('');
   openSub('사용설명서 모음', `
-    <button class="bigv" onclick="playDoc('video-intro.mp4?v=20261006','시내모바일 공신폰 — 대표 설명서 영상')">
+    <button class="bigv" onclick="playDoc('video-intro.mp4?v=20261029','시내모바일 공신폰 — 대표 설명서 영상')">
       <div class="bvt">🎬 대표 설명서 영상</div>
       <div class="bvd">공신폰이 무엇이고 이 화면으로 무엇을 할 수 있는지,
         <b>1분 20초</b>에 전부 담았어요. 처음 보시는 분은 이것부터 보세요 🙂</div>
