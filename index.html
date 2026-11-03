@@ -483,6 +483,34 @@
   details:not([open]) > summary span:last-child::after{content:' ▸'}
   details[open] > summary span:last-child{color:#2563EB}
   .note{background:#EFF6FF;border:1px solid #BFD9FF;border-radius:13px;padding:13px 14px;font-size:13.5px;color:#1D4ED8;margin-bottom:12px;font-weight:600}
+  /* 📖 기능 설명 (2026-11-03) — 둥근 모서리·넉넉한 여백·부드러운 색 (톤 지침) */
+  .gthumb{background:#F7F9FC;border-radius:12px;padding:8px 6px 2px}
+  .gbig{background:#F7F9FC;border-radius:14px;padding:12px 8px 4px}
+  .gcard{padding:12px}
+  .gbul{font-size:13.8px;line-height:1.62;color:#3F4A5A;font-weight:500;padding:7px 0;
+         border-bottom:1px solid #F2F4F7}
+  .gbul:last-child{border-bottom:0}
+  .gwarn .gbul{color:#6B4A22}
+  .gwarn{background:#FFFBF2;border:1px solid #F6E3BE}
+  .gask{display:flex;align-items:center;gap:10px;background:#F4F8FF;border:1px solid #D6E4FB;
+        border-radius:14px;padding:12px 13px;margin-bottom:12px;cursor:pointer;
+        font-size:13.5px;color:#27508F;font-weight:600}
+  .gask:active{background:#E9F1FE}
+  .gaskI{font-size:19px;flex:none}
+  .gaskS{display:block;font-size:12px;color:#6E86AE;font-weight:500;margin-top:1px}
+  /* 🆕 앱 목록 — 아이콘 + 처음 쓴 날 */
+  .aico{width:34px;height:34px;border-radius:9px;flex:none;object-fit:cover}
+  .aico-x{width:34px;height:34px;border-radius:9px;flex:none;background:#EAECF0}
+  .agel{display:inline-block;background:#F2F4F7;color:#667085;border:1px solid #E4E7EC;
+         padding:1px 8px;border-radius:9px;font-size:10.5px;font-weight:800;white-space:nowrap}
+  .agel-n{background:#EAF7F0;color:#1F7A4D;border-color:#BFE6D1}
+  .agel-x{background:#FFFBF2;color:#8A6212;border-color:#F6E3BE}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin:0 2px 10px}
+  .chip{border:1px solid #D7DEE8;background:#fff;color:#475467;border-radius:999px;
+        padding:7px 13px;font-size:12.5px;font-weight:800;cursor:pointer}
+  .chip.on{background:#2563EB;border-color:#2563EB;color:#fff}
+  /* 설명을 또 파란 상자로 쌓지 않는다 — 안내가 세 덩어리가 되면 목록이 안 보인다 */
+  .agenote{font-size:12.3px;color:#7A8698;font-weight:500;line-height:1.55;margin:-2px 4px 11px}
   .note.warn{background:#FFFBEB;border-color:#FDE68A;color:#92400E}
   /* 🧪 2026-11-03 : 도우미는 아직 시험 중이라는 표시 (대표점장 지시) */
   .betabadge{display:inline-block;background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;
@@ -791,6 +819,15 @@
     </div>
 
     <div class="sec">설명서</div>
+    <!-- 📖 2026-11-03 : 「이거 뭔 기능이에요?」 — 그림+설명. FEATURES 한 곳에서 나온다 -->
+    <div class="card tap" onclick="openGuide()">
+      <div class="row">
+        <div class="ic" style="background:#F4F8FF">📖</div>
+        <div class="grow"><div class="ttl">기능 설명 — 이게 무슨 기능이에요?</div>
+          <div class="val">기능마다 <b>그림으로</b> 쉽게 알려드려요</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
     <div class="card tap" onclick="openDocs()">
       <div class="row">
         <div class="ic" style="background:#EEF2F7">📘</div>
@@ -1254,7 +1291,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월3일 시간측정';
+const WEB_LABEL = '11월3일 기능설명';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -1969,7 +2006,10 @@ function openSub(title, html, backFn, act){
   const sameScreen = onSub && document.getElementById('sTitle').textContent===title;
   if(!navRestoring && !sameScreen) navPush(backFn || (()=>{ show('scMain'); paintMain(); }));
   document.getElementById('sTitle').textContent=title;
-  document.getElementById('sBody').innerHTML=html;
+  // 🆕 2026-11-03 : 제목이 FEATURES 에 있는 화면이면 「📖 이게 뭐예요?」를 맨 위에 붙인다.
+  //   🔴 제목 글자로 찾는다 — 화면 제목을 바꾸면 조용히 안 뜬다(틀린 답을 주지는 않는다).
+  //      최종점검 PART G-2 에 「FEATURES.sub 가 openSub 제목과 전부 맞는지」 항목이 있다.
+  document.getElementById('sBody').innerHTML=guideStrip(title)+html;
   // 🆕 2026-10-20 : 오른쪽 상단 버튼 — act 를 넘긴 화면에서만 보인다
   const $a=document.getElementById('topAct');
   if($a){
@@ -1979,6 +2019,555 @@ function openSub(title, html, backFn, act){
   show('scSub'); window.scrollTo(0,0);
 }
 function closeSub(){ navBack(); }
+
+// ══════════════════════════════════════════════════════════════════
+//  📖 기능 설명 (2026-11-03 신설)
+//  대표점장 : 「자녀앱 아이콘 숨기기, 알림 숨기기 — 이거 뭔 기능인지도 모름 다들.
+//              이미지+설명 같이 해서 전체 기능 전부 보기 쉽게」
+//
+//  🔴 그림은 **인라인 SVG** 다. 외부 이미지를 쓰지 않는다 —
+//     부모님 상당수가 **카톡 안에서** 이 페이지를 연다. 인앱브라우저는 외부 이미지를
+//     막거나 느리게 받아서 **설명만 남고 그림이 안 나오는** 일이 생긴다.
+//     (이 파일 831행이 카톡 버튼을 SVG 로 만든 것과 같은 이유)
+//  🔴 문구는 **FEATURES 한 곳에만** 있다. 화면 이름을 바꾸면 여기만 고친다.
+//     (💬 도우미의 DOUMI_FAQ 와 같은 규칙)
+// ══════════════════════════════════════════════════════════════════
+
+// ── 그림 재료 ──────────────────────────────────────────────────────
+//  폰 두 대를 나란히 놓고 「켜기 전 → 켠 뒤」를 보여주는 틀 하나로 전부 그린다.
+//  종류를 늘리지 않는다 — 부모님이 매번 새 그림을 해석하지 않아도 되게.
+const GA_W = 268, GA_H = 212;          // 그림 전체 크기
+const GA_C = ['#5B8DEF','#EF7D7D','#6FC48A','#F5B544','#9B8BEF','#54C3D8',
+              '#EF9BC4','#7E93B8','#8FC45B'];   // 앱 아이콘 색 (파스텔 — 톤 지침)
+
+/** 폰 한 대. inner 는 화면 안에 그릴 것, cap 은 아래 설명 한 줄 */
+function gaPhone(x, inner, cap, capColor){
+  return `<g transform="translate(${x},4)">
+    <rect x="0" y="0" width="112" height="170" rx="17" fill="#fff" stroke="#D7DEE8" stroke-width="2"/>
+    <rect x="40" y="8" width="32" height="4.5" rx="2.2" fill="#E4EAF1"/>
+    <g clip-path="url(#gaClip)">${inner}</g>
+    ${cap ? `<text x="56" y="192" text-anchor="middle" font-size="11" font-weight="800"
+             fill="${capColor||'#667085'}">${cap}</text>` : ''}
+  </g>`;
+}
+/** 화살표 — 「이렇게 바뀌어요」 */
+function gaArrow(){
+  return `<g transform="translate(120,78)">
+    <path d="M2 6 H22" stroke="#B8C4D4" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M16 1 L22 6 L16 11" fill="none" stroke="#B8C4D4" stroke-width="2.6"
+          stroke-linecap="round" stroke-linejoin="round"/></g>`;
+}
+/** 앱 아이콘 격자 (3×3). st: 'on' 보통 · 'gone' 사라짐 · 'grey' 회색 · 'lock' 잠김 · 'time' 시간배지 */
+function gaGrid(opt){
+  const o = opt || {}, hi = o.hi, n = o.n || 6;
+  let s = '';
+  for (let i = 0; i < n; i++){
+    const x = 14 + (i % 3) * 32, y = 26 + Math.floor(i / 3) * 34;
+    const st = (i === hi) ? (o.st || 'on') : (o.others || 'on');
+    if (st === 'gone'){
+      s += `<rect x="${x}" y="${y}" width="24" height="24" rx="7.5" fill="none"
+             stroke="#E8EDF3" stroke-width="1.6" stroke-dasharray="3.5 3"/>`;
+      continue;
+    }
+    const c = (st === 'grey' || st === 'lock') ? '#C9D2DD' : GA_C[i % GA_C.length];
+    s += `<rect x="${x}" y="${y}" width="24" height="24" rx="7.5" fill="${c}"/>`;
+    if (i === hi && o.ring)
+      s += `<rect x="${x - 3.5}" y="${y - 3.5}" width="31" height="31" rx="10"
+             fill="none" stroke="#F2A33C" stroke-width="2.4"/>`;
+    if (st === 'lock')
+      s += `<g transform="translate(${x + 7},${y + 6})"><rect x="0" y="5" width="10" height="7.5" rx="2" fill="#fff"/>
+             <path d="M2 5 V3.4 a3 3 0 0 1 6 0 V5" fill="none" stroke="#fff" stroke-width="1.8"/></g>`;
+    if (st === 'time')
+      s += `<circle cx="${x + 24}" cy="${y}" r="7" fill="#F2A33C"/>
+            <path d="M${x + 24} ${y - 4} V${y} h3" stroke="#fff" stroke-width="1.7"
+                  stroke-linecap="round" fill="none"/>`;
+  }
+  return s;
+}
+/** 화면 가운데 큰 안내 — 잠김·취침 같은 전체화면 */
+function gaFull(opt){
+  const o = opt || {};
+  return `<rect x="4" y="18" width="104" height="148" rx="13" fill="${o.bg || '#F4F7FC'}"/>
+    <text x="56" y="${o.sub ? 78 : 86}" text-anchor="middle" font-size="26">${o.emo || ''}</text>
+    <text x="56" y="${o.sub ? 104 : 112}" text-anchor="middle" font-size="11"
+          font-weight="800" fill="${o.fg || '#475467'}">${o.txt || ''}</text>
+    ${o.sub ? `<text x="56" y="120" text-anchor="middle" font-size="9.5"
+          font-weight="600" fill="#8A95A6">${o.sub}</text>` : ''}`;
+}
+/** 사용시간 막대 */
+function gaBar(pct, label, over){
+  const w = Math.max(4, Math.round(94 * Math.min(1, pct / 100)));
+  return `<rect x="9" y="42" width="94" height="11" rx="5.5" fill="#EDF1F6"/>
+    <rect x="9" y="42" width="${w}" height="11" rx="5.5" fill="${over ? '#E9705F' : '#5B8DEF'}"/>
+    <text x="9" y="32" font-size="10" font-weight="800" fill="#475467">${label}</text>
+    ${gaGrid({ n: 6, others: over ? 'grey' : 'on', hi: -1 }).replace(/y="26"/g, 'y="68"')
+        .replace(/y="60"/g, 'y="102"')}`;
+}
+/** 목록 — ✓ 허용 / ✗ 차단 */
+function gaList(rows){
+  return rows.map((r, i) =>
+    `<rect x="9" y="${24 + i * 25}" width="94" height="20" rx="6" fill="#F7F9FC"/>
+     <circle cx="20" cy="${34 + i * 25}" r="6.5" fill="${r.ok ? '#6FC48A' : '#E9A0A0'}"/>
+     <text x="20" y="${37.5 + i * 25}" text-anchor="middle" font-size="8.5"
+           font-weight="900" fill="#fff">${r.ok ? '✓' : '✕'}</text>
+     <rect x="31" y="${30 + i * 25}" width="${r.w || 50}" height="7" rx="3.5" fill="#D8E0EA"/>`
+  ).join('');
+}
+/** 알림 한 줄 */
+function gaNoti(txt, hidden){
+  if (hidden) return `<rect x="9" y="24" width="94" height="26" rx="8" fill="none"
+    stroke="#E8EDF3" stroke-width="1.6" stroke-dasharray="3.5 3"/>` + gaGrid({ n: 6, hi: -1 });
+  return `<rect x="9" y="24" width="94" height="26" rx="8" fill="#FFF7E8" stroke="#F6DFAE" stroke-width="1.4"/>
+    <circle cx="21" cy="37" r="6" fill="#F2A33C"/>
+    <text x="21" y="40.5" text-anchor="middle" font-size="8" font-weight="900" fill="#fff">!</text>
+    <text x="32" y="40" font-size="8.2" font-weight="700" fill="#8A6212">${txt}</text>`
+    + gaGrid({ n: 6, hi: -1 });
+}
+
+/** 그림 하나를 완성한다 — FEATURES[].art 를 받아 SVG 문자열로 */
+function gaDraw(art, big){
+  const a = art || {};
+  let left = '', right = '', lc = a.lc || '켜기 전', rc = a.rc || '켠 뒤';
+  if (a.kind === 'grid'){
+    left  = gaGrid({ n: 6, hi: a.hi, st: 'on', ring: true });
+    right = gaGrid({ n: 6, hi: a.hi, st: a.st || 'gone', ring: a.st !== 'gone' });
+  } else if (a.kind === 'full'){
+    left  = a.l ? gaFull(a.l) : gaGrid({ n: 6, hi: -1 });
+    right = gaFull(a.r || {});
+  } else if (a.kind === 'bar'){
+    left  = gaBar(a.p1 != null ? a.p1 : 40, a.t1 || '40분 / 2시간', false);
+    right = gaBar(100, a.t2 || '2시간 / 2시간', true);
+  } else if (a.kind === 'list'){
+    left  = gaList(a.rows || []);
+    right = null;                       // 한 대만 그린다
+  } else if (a.kind === 'noti'){
+    left  = gaNoti(a.txt || '', false);
+    right = gaNoti(a.txt || '', true);
+  } else {
+    left = gaGrid({ n: 6, hi: -1 }); right = gaGrid({ n: 6, hi: -1 });
+  }
+  const one = right === null;
+  const w = one ? 150 : GA_W;
+  const body = one
+    ? gaPhone(19, left, a.lc || '', '#475467')
+    : gaPhone(0, left, lc) + gaArrow() + gaPhone(152, right, rc, a.rok ? '#2B8A5A' : '#B5531A');
+  return `<svg viewBox="0 0 ${w} ${GA_H}" width="100%" style="max-width:${big ? (one ? 220 : 340) : (one ? 150 : 268)}px;height:auto;display:block;margin:0 auto"
+    xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(a.alt || '기능 설명 그림')}">
+    <defs><clipPath id="gaClip"><rect x="2" y="16" width="108" height="152" rx="14"/></clipPath></defs>
+    ${body}</svg>`;
+}
+
+// ── 기능 설명 본문 ─────────────────────────────────────────────────
+//  one  : 한 줄 요약 (목록에 보이는 글)
+//  what : 「이게 뭐예요?」
+//  when : 「언제 켜면 좋아요?」
+//  note : 「알아두세요」 (없으면 생략)
+//  sub  : 이 설명이 붙을 기능 화면의 제목 — openSub 제목과 **글자까지 같아야** 한다
+const FEATURES = [
+{ k:'live', t:'🚦 자녀 실시간 제한 상황', sub:'자녀 실시간 제한 상황',
+  one:'지금 이 순간 자녀폰이 잠겨 있는지, 얼마나 남았는지 봐요.',
+  what:['자녀폰이 <b>지금</b> 어떤 상태인지 한 화면에 모아 보여드려요. 오늘 쓴 시간, 남은 시간, 잠겨 있는지 아닌지요.',
+        '자녀폰이 인터넷에 연결될 때마다 올려보내는 기록을 읽어옵니다. 그래서 <b>자녀폰이 꺼져 있으면 마지막으로 올라온 값</b>이 보여요.'],
+  when:['「지금 쓰고 있나?」가 궁금할 때 가장 먼저 열어보는 화면이에요.'],
+  art:{ kind:'bar', t1:'38분 / 2시간', t2:'2시간 / 2시간', lc:'아직 남았어요', rc:'다 썼어요 — 잠겨요', alt:'남은 시간과 다 쓴 상태 비교' } },
+
+{ k:'doumi', t:'💬 도우미에게 물어보기', sub:'도우미',
+  one:'「지금 크롬 쓸 수 있나요?」처럼 궁금한 걸 물으면 바로 답해 드려요.',
+  what:['앱 이름을 넣으면 그 앱이 <b>지금</b> 되는지 안 되는지, 왜 그런지 답해 드려요.',
+        '자주 묻는 것들은 버튼으로 모아 뒀어요 — 「왜 안 잠겼나요?」, 「앱별 시간이 왜 더 길어요?」 같은 것들이요.'],
+  when:['설정을 바꾸기 전에 「이러면 어떻게 되나?」가 헷갈릴 때요.'],
+  note:['모르는 건 <b>모른다고 말하고</b> 매장으로 안내해요. 지어내서 답하지 않아요.',
+        '요금·개통·폰 고장은 도우미가 답할 수 없어요. 매장에 물어봐 주세요.'],
+  art:{ kind:'full', l:{ emo:'❓', txt:'지금 크롬', sub:'쓸 수 있나요?', bg:'#F4F7FC' },
+        r:{ emo:'💬', txt:'23분 남았어요', sub:'크롬에 걸어둔 시간이에요', bg:'#EFF6FF', fg:'#1D4ED8' },
+        lc:'물어보면', rc:'바로 답해요', rok:true, alt:'질문과 답' } },
+
+{ k:'limit', t:'⏱️ 하루 사용시간 한도', sub:'하루 사용시간 한도',
+  one:'하루에 폰을 쓸 수 있는 시간을 정해요. 다 쓰면 앱이 잠겨요.',
+  what:['요일마다 다르게 정할 수 있어요. 평일은 1시간, 주말은 2시간처럼요.',
+        '<b>화면이 켜져 있는 시간</b>을 셉니다. 어떤 앱을 쓰든, 홈 화면만 보고 있어도 줄어들어요.',
+        '다 쓰면 앱이 잠기고, 자녀에게 「오늘은 다 썼어요」 안내가 떠요.'],
+  when:['가장 먼저 정하시는 기능이에요. 이것만 걸어도 하루 사용량이 눈에 띄게 줄어요.'],
+  note:['⚠️ <b>앱별 시간을 따로 걸어둔 앱은 하루 한도를 다 써도 열려요.</b> 둘이 더해집니다 — 하루 1시간 + 크롬 30분이면 <b>최대 1시간 30분</b>이에요.',
+        '전화·문자·설정 같은 꼭 필요한 기능은 한도를 다 써도 쓸 수 있어요.'],
+  art:{ kind:'bar', t1:'40분 / 2시간', t2:'2시간 / 2시간', lc:'쓰는 중', rc:'다 쓰면 잠겨요', alt:'하루 한도 막대' } },
+
+{ k:'dt', t:'🌙 다운타임 (취침시간)', sub:'다운타임 (취침시간)',
+  one:'밤 몇 시부터 몇 시까지는 폰을 아예 못 쓰게 해요.',
+  what:['정해둔 시간이 되면 자녀폰 화면이 <b>잠금 화면으로 덮여요.</b> 남은 하루 한도가 있어도 잠겨요.',
+        '요일마다 다르게 정할 수 있어요. 평일 22시~7시, 주말은 24시~8시처럼요.'],
+  when:['밤에 이불 속에서 폰 보는 걸 막고 싶을 때요. 가장 효과가 큰 기능이에요.'],
+  note:['전화는 받을 수 있어요. 알람도 울려요.',
+        '🔴 <b>맨 위 스위치를 켜야</b> 요일 시간이 작동해요. 시간만 넣고 스위치를 안 켜면 아무 일도 일어나지 않아요.'],
+  art:{ kind:'full', l:{ emo:'🎮', txt:'21:40', sub:'아직 쓸 수 있어요' },
+        r:{ emo:'🌙', txt:'22:00 — 취침 시간', sub:'이제 쉬는 시간이에요', bg:'#F3EEFC', fg:'#6D4AAE' },
+        lc:'21시 40분', rc:'22시가 되면', alt:'취침시간 잠금' } },
+
+{ k:'academy', t:'📚 학원 시간', sub:'학원 시간',
+  one:'학원·독서실에 있는 시간에만 폰을 잠가요.',
+  what:['취침시간과 <b>똑같은 방식</b>인데, 낮 시간용으로 하나 더 있는 거예요.',
+        '요일마다 다르게 정할 수 있어요 — 화·목 17시~20시처럼요.'],
+  when:['학원 수업 중에 폰을 보는 게 걱정될 때요.'],
+  note:['취침시간과 학원시간은 <b>따로 켜고 끌 수 있어요.</b>',
+        '학원 시간에도 전화는 받을 수 있어요.'],
+  art:{ kind:'full', l:{ emo:'📱', txt:'17:00', sub:'학원 가는 시간' },
+        r:{ emo:'📚', txt:'학원 시간이에요', sub:'20시에 풀려요', bg:'#EAF7F0', fg:'#2B8A5A' },
+        lc:'학원 전', rc:'학원 시간', rok:true, alt:'학원시간 잠금' } },
+
+{ k:'force', t:'🔒 폰 즉시 차단', sub:'폰 즉시 차단',
+  one:'지금 당장 자녀폰을 잠가요. 시간을 정해서 잠글 수도 있어요.',
+  what:['버튼을 누르면 <b>바로</b> 자녀폰이 잠겨요. 30분·1시간처럼 시간을 정하거나, 직접 풀 때까지 계속 잠가둘 수도 있어요.',
+        '자녀폰이 꺼져 있으면 <b>켜지는 순간</b> 잠겨요.'],
+  when:['밥 먹을 때, 숙제할 때, 혼낼 일이 있을 때처럼 <b>지금 바로</b> 필요할 때요.'],
+  note:['하루 한도·취침시간과 <b>따로</b> 움직여요. 이걸 켜면 다른 설정과 상관없이 잠겨요.',
+        '전화는 받을 수 있어요.'],
+  art:{ kind:'full', l:{ emo:'📱', txt:'쓰는 중' },
+        r:{ emo:'🔒', txt:'지금 잠겼어요', sub:'부모님이 잠갔어요', bg:'#FDEEEC', fg:'#B5401E' },
+        lc:'누르기 전', rc:'누른 즉시', alt:'즉시 차단' } },
+
+{ k:'req', t:'🙋 자녀의 사이트 접속 요청', sub:'자녀의 접속 요청',
+  one:'자녀가 막힌 사이트를 열고 싶을 때 보내는 요청을 여기서 받아요.',
+  what:['자녀가 막힌 사이트에 들어가면 「부모님께 요청하기」 버튼이 떠요. 누르면 <b>이 화면에 올라와요.</b>',
+        '허용을 누르면 그 사이트가 바로 열려요. 거절도 할 수 있어요.',
+        '자녀가 「시간을 더 주세요」라고 보내는 요청도 여기로 와요.'],
+  when:['숙제하다 갑자기 필요한 사이트가 생길 때요. 매장에 전화하지 않아도 부모님이 바로 열어줄 수 있어요.'],
+  note:['🔔 <b>「접속 요청 알림 받기」를 켜두시면</b> 요청이 올 때 폰으로 알려드려요. 안 켜두면 이 화면에 들어와야 보여요.'],
+  art:{ kind:'full', l:{ emo:'🙋', txt:'이 사이트', sub:'열어주세요' },
+        r:{ emo:'✅', txt:'열어줬어요', sub:'바로 들어가요', bg:'#EAF7F0', fg:'#2B8A5A' },
+        lc:'자녀가 요청', rc:'부모님이 허용', rok:true, alt:'접속 요청과 허용' } },
+
+{ k:'push', t:'🔔 접속 요청 알림 받기', sub:null,
+  one:'자녀가 요청을 보내면 부모님 폰으로 알려드려요.',
+  what:['이 웹앱을 열어두지 않아도, 자녀가 요청을 보내면 <b>부모님 폰에 알림</b>이 떠요.'],
+  when:['자녀가 요청을 보냈는데 몇 시간 동안 모르고 있던 적이 있다면 켜주세요.'],
+  note:['📱 <b>아이폰은 「홈 화면에 추가」를 한 뒤 그 아이콘으로 열어야</b> 알림을 켤 수 있어요. 애플 정책이라 사파리 탭에서는 안 돼요.',
+        '갤럭시는 그냥 켜면 돼요.'],
+  art:{ kind:'noti', txt:'자녀가 요청을 보냈어요', lc:'켜면 알림이 와요', rc:'끄면 안 와요', alt:'알림 받기' } },
+
+{ k:'allow', t:'🌐 허용 사이트 관리', sub:'허용 사이트 관리',
+  one:'인터넷은 다 막혀 있고, 여기 넣은 주소만 열려요.',
+  what:['공신폰은 인터넷이 <b>기본적으로 전부 막혀</b> 있어요. 여기 넣은 주소만 열립니다.',
+        '교과서 QR, 인강, 학교 알림장처럼 자주 쓰는 묶음은 <b>버튼 하나로</b> 한꺼번에 넣을 수 있어요.'],
+  when:['자녀가 「이 사이트가 안 열려요」라고 할 때요.'],
+  note:['⚠️ 주소를 손으로 적다 한 글자만 틀려도 <b>아무 일도 일어나지 않아요</b>(오류도 안 나요). 자녀폰 차단 화면에 뜬 주소를 그대로 쓰시는 게 가장 정확해요.',
+        '카톡·토스·네이버사전 같은 앱 <b>안에서</b> 인터넷으로 빠져나가는 것도 같이 막혀 있어요.'],
+  art:{ kind:'list', rows:[{ ok:true, w:52 },{ ok:true, w:40 },{ ok:false, w:58 },{ ok:false, w:34 },{ ok:true, w:46 }],
+        lc:'넣은 주소만 열려요', alt:'허용 사이트 목록' } },
+
+{ k:'apps', t:'📵 앱 차단 · 앱별 시간', sub:'앱 차단 · 앱별 시간',
+  one:'앱마다 다르게 정해요. 아예 막거나, 요일별로 시간을 줄 수 있어요.',
+  what:['앱 하나를 골라 <b>①아예 차단 ②요일마다 몇 분 ③시간 무제한</b> 중에서 정해요.',
+        '「차단 + 아이콘 숨기기」를 고르면 <b>아이콘 자체가 사라져요</b> — 앱이 있는 줄도 모르게 돼요.'],
+  when:['게임은 막고 싶지만 카톡은 열어두고 싶을 때요. 유튜브만 하루 30분처럼 정하고 싶을 때요.'],
+  note:['⚠️ <b>요일별 시간을 걸어둔 앱은 하루 한도를 다 써도 열려요.</b> 하루 1시간 + 유튜브 30분 = <b>최대 1시간 30분</b>이에요. 더 조이시려면 앱별 시간을 줄이는 쪽이 맞아요.',
+        '숨긴 앱을 되돌리려면 이 화면에서 그 앱을 찾아 숨김을 풀어주세요.'],
+  art:{ kind:'grid', hi:1, st:'time', lc:'제한 없음', rc:'하루 30분', alt:'앱별 시간 제한' } },
+
+{ k:'newapp', t:'🆕 새로 생긴 앱 알아보기', sub:'앱 차단 · 앱별 시간',
+  one:'앱 목록에서 「처음 쓴 날」로 새 앱을 바로 찾아요.',
+  what:['앱 목록에 <b>앱 아이콘</b>이 같이 나와요. 이름만 보고 무슨 앱인지 짐작하지 않아도 돼요.',
+        '앱마다 <b>「처음 쓴 날」</b>이 붙어요. 최근에 생긴 앱은 위쪽 <b>🆕 버튼</b>으로 따로 모아 볼 수 있어요.',
+        '한 달이 넘은 앱은 전부 <b>「1개월 이상」</b>으로 묶어서 보여드려요. 오래된 앱은 날짜를 세는 게 의미가 없으니까요.'],
+  when:['「우리 아이가 뭘 새로 깔았지?」가 궁금할 때요.'],
+  note:['🔴 <b>「설치한 날」이 아니라 「처음 쓴 날」이에요.</b> 자녀폰은 앱을 <b>설치한 날짜를 기록하지 않아요.</b> 그래서 그 앱이 사용기록에 <b>처음 나타난 날</b>을 보여드립니다. 보통은 깔고 바로 쓰기 때문에 거의 같아요.',
+        '깔아만 두고 <b>한 번도 안 쓴 앱</b>은 「쓴 기록 없어요」로 나와요. 날짜를 지어내지 않습니다.'],
+  art:{ kind:'grid', hi:4, st:'on', others:'grey', lc:'그냥 목록', rc:'새 앱이 눈에 띄어요', rok:true, alt:'새로 생긴 앱 표시' } },
+
+{ k:'tube', t:'📺 시내YouTube — 볼 수 있는 영상', sub:'시내YouTube',
+  one:'부모님이 고른 영상만 볼 수 있는 유튜브예요.',
+  what:['유튜브 앱 대신 쓰는 <b>시내모바일 전용 영상 앱</b>이에요. 부모님이 넣어준 영상·채널만 보여요.',
+        '자녀가 「이 영상 보고 싶어요」라고 신청하면 여기서 승인하거나 거절해요.'],
+  when:['인강이나 공부 영상은 보여주고 싶지만 유튜브를 통째로 열어주긴 불안할 때요.'],
+  note:['자녀폰에 시내YouTube 가 깔려 있을 때만 이 메뉴가 보여요.'],
+  art:{ kind:'list', rows:[{ ok:true, w:56 },{ ok:true, w:44 },{ ok:true, w:50 },{ ok:false, w:38 }],
+        lc:'고른 영상만 보여요', alt:'볼 수 있는 영상 목록' } },
+
+{ k:'uninst', t:'🛡️ 앱 삭제 방지', sub:'앱 삭제 방지',
+  one:'자녀가 시내모바일 앱을 지우지 못하게 막아요.',
+  what:['자녀가 앱을 지우거나 끄려고 해도 <b>안 되게</b> 해요.',
+        '같이 고를 수 있는 앱도 있어요 — 꼭 남아 있어야 하는 앱을 지정해 두시면 돼요.'],
+  when:['기본으로 켜두시는 게 좋아요. 이게 꺼져 있으면 다른 설정이 전부 무력해질 수 있어요.'],
+  note:['🔴 이게 꺼져 있으면 자녀가 <b>설정 → 앱 → 데이터 삭제</b>로 되돌릴 수 있어요. 켜두시는 걸 권해요.'],
+  art:{ kind:'grid', hi:0, st:'lock', ring:true, lc:'지울 수 있어요', rc:'지울 수 없어요', rok:true, alt:'앱 삭제 방지' } },
+
+{ k:'pinlock', t:'🔑 앱 PIN 잠금', sub:'앱 PIN 잠금',
+  one:'고른 앱을 열 때마다 비밀번호를 묻게 해요.',
+  what:['자녀가 그 앱을 열면 <b>비밀번호를 넣어야</b> 열려요. 부모님이 아는 번호만 통해요.',
+        '아예 막는 것과 달라요 — 부모님이 옆에서 열어주실 수 있어요.'],
+  when:['갤러리·사진처럼 「아예 막긴 아깝지만 혼자 보게 두긴 싫은」 앱에요.'],
+  art:{ kind:'full', l:{ emo:'🖼️', txt:'바로 열려요' },
+        r:{ emo:'🔑', txt:'비밀번호를', sub:'넣어주세요', bg:'#EFF7FD', fg:'#17618C' },
+        lc:'켜기 전', rc:'켠 뒤', rok:true, alt:'앱 PIN 잠금' } },
+
+{ k:'ignoredt', t:'🌙 다운타임 허용 앱', sub:'다운타임 허용 앱',
+  one:'취침시간에도 쓸 수 있게 열어둘 앱을 골라요.',
+  what:['취침시간에는 모든 앱이 잠기는데, 여기 넣은 앱만 <b>예외로 열려요.</b>'],
+  when:['밤에도 알람 앱이나 독서 앱은 열어두고 싶을 때요.'],
+  note:['많이 넣으면 취침시간의 뜻이 없어져요. 꼭 필요한 것만 넣어주세요.',
+        '알람 앱은 넣지 않아도 알람이 울려요.'],
+  art:{ kind:'grid', hi:2, st:'on', others:'lock', lc:'취침 — 다 잠겨요', rc:'고른 앱만 열려요', rok:true, alt:'취침 허용 앱' } },
+
+{ k:'sos', t:'🆘 긴급 연락처 (SOS)', sub:'긴급 연락처 (SOS)',
+  one:'자녀가 폰이 잠겨 있어도 걸 수 있는 번호를 넣어둬요.',
+  what:['폰이 잠겨 있어도 잠금 화면에서 <b>바로 전화할 수 있는</b> 번호예요.',
+        '부모님 번호를 넣어두시면 돼요.'],
+  when:['꼭 넣어두세요. 잠겨 있을 때 자녀가 연락할 길이 있어야 해요.'],
+  art:{ kind:'full', l:{ emo:'🔒', txt:'잠겨 있어요' },
+        r:{ emo:'📞', txt:'엄마에게 전화', sub:'잠겨 있어도 걸려요', bg:'#FDEEEC', fg:'#B5401E' },
+        lc:'잠긴 화면', rc:'전화는 돼요', rok:true, alt:'긴급 연락처' } },
+
+{ k:'security', t:'🔐 보안 설정', sub:'보안 설정',
+  one:'앱을 새로 깔지 못하게 막는 등 빠져나갈 길을 닫아요.',
+  what:['Play 스토어를 막아 <b>자녀가 앱을 새로 깔지 못하게</b> 해요.',
+        '그 밖에 설정을 바꾸거나 우회하는 길을 닫는 항목들이 모여 있어요.'],
+  when:['설정을 다 해두셨는데 자녀가 새 앱을 깔아서 빠져나간다면 여기를 보세요.'],
+  note:['Play 스토어를 막으면 <b>부모님도 새 앱을 못 깔아요.</b> 필요할 때 잠깐 풀고 다시 켜주세요.'],
+  art:{ kind:'grid', hi:3, st:'lock', ring:true, lc:'새 앱 설치 가능', rc:'설치 못 해요', rok:true, alt:'보안 설정' } },
+
+{ k:'kakao', t:'💬 카톡 차단', sub:'카톡 차단',
+  one:'카톡은 쓰면서, 카톡 안의 인터넷·영상만 막아요.',
+  what:['카톡으로 <b>대화는 그대로</b> 해요. 그런데 대화방에 올라온 <b>링크를 눌러도 인터넷이 안 열려요.</b>',
+        '카톡 안의 쇼핑·게임·영상 같은 기능도 따로따로 막을 수 있어요.'],
+  when:['카톡은 친구 연락 때문에 열어둬야 하는데, 링크로 유튜브·웹툰에 빠져나가는 게 걱정될 때요.'],
+  note:['이게 시내모바일 공신폰의 가장 중요한 기술이에요 — <b>필요한 앱은 쓰면서, 그 앱으로 인터넷에 빠져나가는 것만 막아요.</b>'],
+  art:{ kind:'list', rows:[{ ok:true, w:50 },{ ok:true, w:58 },{ ok:false, w:44 },{ ok:false, w:52 }],
+        lc:'대화는 되고 링크는 막혀요', alt:'카톡 차단' } },
+
+{ k:'sound', t:'🔔 무음·진동 → 소리로 변경', sub:'소리 변경 · 앱 숨기기',
+  one:'자녀폰이 무음이면 소리 모드로 되돌려요.',
+  what:['자녀폰이 무음·진동으로 되어 있으면 <b>소리 모드로 바꾸고</b> 벨소리도 최대로 올려요.',
+        '바뀌는 동안 소리는 나지 않아요 — 조용히 바뀝니다.'],
+  when:['전화를 걸었는데 자녀가 계속 못 받을 때요.'],
+  note:['자녀폰이 꺼져 있으면 <b>켜질 때</b> 바뀌어요.',
+        '자녀가 다시 무음으로 돌리면 한 번 더 눌러주셔야 해요.'],
+  art:{ kind:'full', l:{ emo:'🔇', txt:'무음이에요', sub:'전화를 못 받아요' },
+        r:{ emo:'🔔', txt:'소리가 켜졌어요', sub:'벨소리 최대', bg:'#EAF7F0', fg:'#2B8A5A' },
+        lc:'누르기 전', rc:'누른 뒤', rok:true, alt:'소리 변경' } },
+
+{ k:'hideicon', t:'🙈 자녀앱 아이콘 숨기기', sub:'소리 변경 · 앱 숨기기',
+  one:'자녀폰 앱 목록에서 시내모바일 앱 아이콘만 안 보이게 해요.',
+  what:['자녀폰에는 <b>「시내모바일」 앱이 하나 깔려 있어요.</b> 시간을 세고 앱을 잠그는, 이 모든 기능을 실제로 하는 앱이에요.',
+        '이 스위치를 켜면 그 <b>아이콘만 자녀 눈에 안 보이게</b> 돼요. 앱이 사라지는 게 아니에요.',
+        '차단·시간 계산·기록 올리기 같은 <b>기능은 전부 그대로</b> 돌아가요.'],
+  when:['자녀가 그 앱을 자꾸 눌러보거나, 지우려고 건드릴 때요.',
+        '「감시받는 느낌」 때문에 자녀가 예민해할 때, 눈에 안 띄게 해두면 갈등이 줄어요.'],
+  note:['⚠️ 홈 화면이 아이콘을 잠시 기억하고 있어 <b>바로 안 사라질 수 있어요.</b> 자녀폰을 껐다 켜면 반영돼요.',
+        '다시 보이게 하려면 이 스위치를 끄면 돼요. 끄면 아이콘이 <b>홈 화면 맨 뒤쪽</b>에 다시 생겨요 — 고장이 아니에요 🙂'],
+  art:{ kind:'grid', hi:0, st:'gone', lc:'아이콘이 보여요', rc:'아이콘이 없어졌어요', rok:true, alt:'앱 아이콘 숨기기 전후' } },
+
+{ k:'hidenotify', t:'🔕 자녀앱 알림 숨기기', sub:'소리 변경 · 앱 숨기기',
+  one:'「차단됐어요」 같은 안내를 자녀 화면에 띄우지 않아요.',
+  what:['평소에는 자녀가 막힌 앱을 누르면 <b>「지금은 쓸 수 없어요」 같은 안내</b>가 떠요.',
+        '이 스위치를 켜면 <b>그 안내를 띄우지 않아요.</b> 막히는 건 똑같지만, 왜 안 되는지 설명이 안 나와요.'],
+  when:['자녀가 그 안내를 보고 짜증을 내거나, 친구들 앞에서 뜨는 게 싫다고 할 때요.'],
+  note:['⚠️ <b>「시스템 서비스 실행 중」 한 줄은 남아요.</b> 안드로이드가 강제하는 표시라 없앨 방법이 없어요.',
+        '🔴 <b>「보호 기능이 멈춰 있습니다」 경고는 숨기지 않아요.</b> 이걸 가리면 자녀폰이 무방비인 걸 아무도 모르게 돼요.',
+        '안내를 숨기면 자녀가 <b>「폰이 고장났다」고 생각할 수 있어요.</b> 미리 이야기해 두시는 게 좋아요.'],
+  art:{ kind:'noti', txt:'지금은 쓸 수 없어요', lc:'안내가 떠요', rc:'안내가 안 떠요', rok:true, alt:'알림 숨기기 전후' } },
+
+{ k:'hist', t:'📊 최근 7일 사용기록', sub:'최근 7일 사용기록',
+  one:'어떤 앱을 얼마나 썼는지 날짜별로 봐요.',
+  what:['날짜를 고르면 그날 <b>어떤 앱을 몇 분</b> 썼는지 아이콘과 함께 보여드려요.',
+        '맨 위 막대는 <b>하루 한도에서 깎인 시간</b>이에요.'],
+  when:['「오늘 왜 벌써 다 썼지?」가 궁금할 때요.'],
+  note:['<b>「앱 없이 켜 둔 시간」</b>은 홈 화면만 보거나 알림창을 내렸을 때처럼, 특정 앱이 아닌 시간이에요. 이 시간도 한도에서 깎여요.',
+        '<b>「한도 안 깎음」</b> 배지가 붙은 앱은 시간이 깎이지 않은 앱이에요 (제외앱이거나 앱별 시간이 따로 걸린 앱).'],
+  art:{ kind:'bar', t1:'월요일 — 1시간 12분', t2:'화요일 — 2시간', lc:'날짜별로', rc:'앱별로 봐요', alt:'사용기록' } },
+
+{ k:'pin', t:'🔢 비밀번호 변경', sub:'비밀번호 변경',
+  one:'이 웹앱에 들어올 때 쓰는 6자리 숫자를 바꿔요.',
+  what:['부모님만 들어올 수 있게 하는 6자리 번호예요.'],
+  when:['자녀가 번호를 알아버린 것 같을 때 바로 바꿔주세요.'],
+  note:['🔴 <b>123456 처럼 짐작하기 쉬운 번호는 쓰지 마세요.</b> 이 번호만 알면 한도·취침·차단을 전부 바꿀 수 있어요.',
+        '자녀 생일도 피해주세요.'],
+  art:{ kind:'full', l:{ emo:'🔢', txt:'1 2 3 4 5 6', sub:'짐작하기 쉬워요', bg:'#FDEEEC', fg:'#B5401E' },
+        r:{ emo:'🔐', txt:'● ● ● ● ● ●', sub:'자녀가 모르는 번호로', bg:'#EAF7F0', fg:'#2B8A5A' },
+        lc:'이런 번호는 위험', rc:'이렇게 바꿔주세요', rok:true, alt:'비밀번호 변경' } }
+];
+
+const F_BY_K   = (() => { const m = {}; FEATURES.forEach(f => m[f.k] = f); return m; })();
+/** 기능 화면 제목 → 그 화면에 딸린 설명들 */
+const F_BY_SUB = (() => {
+  const m = {};
+  FEATURES.forEach(f => { if (f.sub) (m[f.sub] = m[f.sub] || []).push(f); });
+  return m;
+})();
+/** 설명에서 「이 기능 열기」로 이어줄 함수 — 없으면 버튼을 안 만든다 */
+const F_OPEN = {
+  live:'openLive', doumi:'openDoumi', limit:'openLimit', dt:'openDt', academy:'openAcademy',
+  force:'openForceLock', req:'openReq', allow:'openAllow', apps:'openApps', newapp:'openApps',
+  tube:'openTube', uninst:'openUninstall', pinlock:'openPinLock', ignoredt:'openIgnoreDt',
+  sos:'openSos', security:'openSecurity', kakao:'openKakao', sound:'openStealth',
+  hideicon:'openStealth', hidenotify:'openStealth', hist:'openHistory', pin:'openPinChange'
+};
+
+// ── 화면 ───────────────────────────────────────────────────────────
+function gBul(arr){
+  return (arr || []).map(s => `<div class="gbul">${s}</div>`).join('');
+}
+
+/** 📖 기능 설명 — 전체 목록 */
+function openGuide(){
+  const cards = FEATURES.map(f => `
+    <div class="card tap gcard" onclick="openGuide1('${f.k}')">
+      <div class="gthumb">${gaDraw(f.art, false)}</div>
+      <div class="row" style="margin-top:4px">
+        <div class="grow"><div class="ttl">${f.t}</div><div class="val">${f.one}</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>`).join('');
+  openSub('기능 설명', `
+    <div class="note">궁금한 기능을 눌러보세요. <b>그림으로 「켜면 자녀폰이 어떻게 보이는지」</b>까지 보여드려요 🙂</div>
+    ${cards}
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
+
+/** 📖 기능 설명 — 하나 */
+function openGuide1(k, backToList){
+  const f = F_BY_K[k]; if (!f) return;
+  const openFn = F_OPEN[k];
+  const back = backToList === false ? null : (() => openGuide());
+  openSub('기능 설명', `
+    <div class="card">
+      <div class="gbig">${gaDraw(f.art, true)}</div>
+      <div class="ttl" style="font-size:17px;margin-top:6px">${f.t}</div>
+      <div class="val" style="margin-top:4px">${f.one}</div>
+    </div>
+    <div class="sec">이게 뭐예요?</div>
+    <div class="card">${gBul(f.what)}</div>
+    <div class="sec">언제 쓰면 좋아요?</div>
+    <div class="card">${gBul(f.when)}</div>
+    ${f.note ? `<div class="sec">알아두세요</div><div class="card gwarn">${gBul(f.note)}</div>` : ''}
+    ${openFn ? `<button class="btn" onclick="${openFn}()">이 기능 열기</button>` : ''}
+    <button class="btn btn-g" onclick="${back ? 'openGuide()' : 'closeSub()'}">${back ? '설명 목록으로' : '닫기'}</button>`,
+    back);
+}
+
+/** 기능 화면 하나에 딸린 설명만 — 화면 위쪽 「📖 이게 뭐예요?」에서 열린다 */
+function openGuideFor(subTitle){
+  const list = F_BY_SUB[subTitle] || [];
+  if (list.length === 1) return openGuide1(list[0].k, false);
+  openSub('기능 설명', `
+    <div class="note">이 화면에 있는 기능들이에요. 궁금한 것을 눌러보세요 🙂</div>
+    ${list.map(f => `
+      <div class="card tap gcard" onclick="openGuide1('${f.k}',false)">
+        <div class="gthumb">${gaDraw(f.art, false)}</div>
+        <div class="row" style="margin-top:4px">
+          <div class="grow"><div class="ttl">${f.t}</div><div class="val">${f.one}</div></div>
+          <div class="chev">›</div></div>
+      </div>`).join('')}
+    <div class="card tap" onclick="openGuide()">
+      <div class="row"><div class="ic" style="background:#EEF2F7">📖</div>
+      <div class="grow"><div class="ttl">기능 설명 전체 보기</div>
+      <div class="val">${FEATURES.length}가지 기능을 그림과 함께 설명해 드려요</div></div>
+      <div class="chev">›</div></div>
+    </div>
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
+
+/** openSub 이 제목을 보고 자동으로 끼워 넣는 「📖 이게 뭐예요?」 줄
+ *  🔴 제목 글자로 찾는다. 화면 제목을 바꾸면 **조용히 안 뜬다**(틀린 답을 주지는 않는다).
+ *     → 최종점검 프롬프트 PART G 에 「FEATURES.sub 가 openSub 제목과 전부 맞는지」 항목이 있다. */
+function guideStrip(title){
+  if (title === '기능 설명') return '';            // 설명 화면 자신에게는 안 붙인다
+  const list = F_BY_SUB[title];
+  if (!list || !list.length) return '';
+  return `<div class="gask" onclick="openGuideFor('${title.replace(/'/g, "\\'")}')">
+    <span class="gaskI">📖</span>
+    <span class="grow"><b>이게 무슨 기능이에요?</b>
+      <span class="gaskS">그림으로 쉽게 설명해 드려요</span></span>
+    <span class="chev">›</span></div>`;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  🆕 앱 아이콘 + 「처음 쓴 날」 (2026-11-03 신설)
+//  대표점장 : 「자녀폰에 깔린앱 앱아이콘 이미지로 봐야될꺼같음.
+//              몇일전에 깔린앱 표시도 있어야될꺼같음. 1개월이상지난건들만 1개월이상 으로 분류」
+//
+//  🔴 **「설치한 날」은 어디에도 기록돼 있지 않다.** 2026-11-03 전 서버 실측 :
+//     `installed_apps.updated_at` 은 353대 중 **349대(99%)가 앱 전체 한 날짜로 몰려 있다.**
+//     자녀앱 `uploadInstalledApps()` 가 **그 기기 행을 전부 DELETE 하고 다시 INSERT** 하기 때문이다
+//     (`UsageMonitorService.kt:2405~2409`). 그래서 열을 새로 만들어도 같이 지워진다.
+//     자녀앱은 `firstInstallTime` 을 **올리지 않는다**(소스 전체 0건).
+//     → 지금 데이터로 알 수 있는 것은 **「사용기록에 처음 나타난 날」**뿐이다. 그래서 그 이름으로 쓴다.
+//        **「설치일」이라고 부르지 않는다** — 아는 것보다 더 말하면 그게 민원이 된다(CLAUDE.md 3-19).
+//     ▸ 진짜 설치일이 필요하면 자녀앱이 `firstInstallTime` 을 올려야 한다(= OTA). 프로젝트 문서 9장.
+//
+//  🔴 PostgREST 는 `limit` 을 크게 줘도 **1000행만** 돌려준다(2026-11-03 실측 : limit=20000 → 1000행).
+//     사용기록이 1000행을 넘는 기기가 5대 있다(최대 1,467행) → **반드시 나눠 읽는다.**
+//     안 나누면 그 기기들은 최근에 쓴 앱이 통째로 빠져 「쓴 기록 없어요」로 보인다.
+// ══════════════════════════════════════════════════════════════════
+const AM_PAGE = 1000;                     // ⚠️ PostgREST 상한. 올려도 더 안 온다
+const AM_NEW_DAYS = 30;                   // 「최근」의 기준 — 한 달
+
+async function loadAppMeta(force){
+  if (ST.appMeta && ST.appMeta.code === ST.code && !force) return ST.appMeta.ready;
+  const meta = ST.appMeta = { code: ST.code, ready: false, failed: false, icons: {}, firstUse: {} };
+  try{
+    const sb = clientFor(ST.server);
+    const pkgs = [...new Set((ST.apps || []).map(a => a.app_package))];
+
+    // ① 아이콘 — 패키지를 80개씩 나눠 묻는다(URL 길이 제한)
+    for (let i = 0; i < pkgs.length; i += 80){
+      const { data, error } = await sb.from('app_icons')
+        .select('app_package,icon_base64').in('app_package', pkgs.slice(i, i + 80));
+      if (error) throw error;                               // 🔴 error 를 꼭 본다 (3-10)
+      (data || []).forEach(r => { if (r.icon_base64) meta.icons[r.app_package] = r.icon_base64; });
+    }
+
+    // ② 처음 쓴 날 — 날짜 오름차순으로 전부 읽어 앱마다 가장 이른 날을 잡는다
+    for (let from = 0; from < 40 * AM_PAGE; from += AM_PAGE){
+      const { data, error } = await sb.from('app_usage_history')
+        .select('app_package,date').eq('device_code', ST.code)
+        .order('date', { ascending: true }).range(from, from + AM_PAGE - 1);
+      if (error) throw error;
+      (data || []).forEach(r => { if (!meta.firstUse[r.app_package]) meta.firstUse[r.app_package] = r.date; });
+      if (!data || data.length < AM_PAGE) break;            // 마지막 쪽
+    }
+    meta.ready = true;
+  }catch(e){
+    // 🔴 못 불러왔으면 **날짜를 아예 안 보여준다.** 「쓴 기록 없어요」로 둘러대면
+    //    서버 장애가 「아이가 안 썼다」로 읽힌다 (CLAUDE.md 3-10 과 같은 함정).
+    meta.failed = true;
+    console.warn('앱 아이콘·처음 쓴 날 불러오기 실패:', e && e.name, e && e.message);
+  }
+  return meta.ready;
+}
+
+/** 아이콘 <img> — 없으면 회색 네모 (목록이 무너지지 않게) */
+function appIcoHtml(pkg){
+  const M = ST.appMeta;
+  const b = M && M.icons[pkg];
+  return b ? `<img class="aico" src="data:image/png;base64,${esc(b)}" alt="">`
+           : `<div class="aico-x"></div>`;
+}
+/** 그 앱을 처음 쓴 날이 며칠 전인가 — 모르면 null */
+function appFirstDays(pkg){
+  const M = ST.appMeta;
+  if (!M || !M.ready) return null;
+  const d = M.firstUse[pkg];
+  if (!d) return 'none';                                    // 쓴 기록이 없다
+  const t = Date.parse(d + 'T00:00:00');
+  if (isNaN(t)) return null;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  return Math.max(0, Math.round((today.getTime() - t) / 86400000));
+}
+/** 목록에 붙는 작은 배지 */
+function appAgeTag(pkg){
+  const v = appFirstDays(pkg);
+  if (v === null)   return '';                              // 못 불러왔다 → 아무 말도 안 한다
+  if (v === 'none') return '<span class="agel agel-x">쓴 기록 없어요</span>';
+  if (v >= AM_NEW_DAYS) return '<span class="agel">1개월 이상</span>';
+  if (v === 0) return '<span class="agel agel-n">오늘 처음</span>';
+  if (v === 1) return '<span class="agel agel-n">어제부터</span>';
+  return `<span class="agel agel-n">${v}일 전부터</span>`;
+}
+/** 최근 AM_NEW_DAYS 안에 처음 쓴 앱 수 */
+function appNewCount(list){
+  return (list || []).filter(a => { const v = appFirstDays(a.app_package);
+    return typeof v === 'number' && v < AM_NEW_DAYS; }).length;
+}
+
 
 // ══════════ 바텀시트 + 휠 피커 ══════════
 //   부모앱(갤럭시) 의 BottomSheetDialog + NumberPicker 와 같은 조작감을 웹에서 재현한 것.
@@ -2908,6 +3497,7 @@ ${_g.desc}
 
 // ══════════ 앱 관리 (부모앱 4가지 모드 동일) ══════════
 let appQuery='';
+let appNewOnly=false;      // 🆕 2026-11-03 : 「최근 한 달」만 보기
 function openApps(){
   const q=appQuery.toLowerCase();
   // 🆕 2026-10-10 🅓 **안전망 — 숨긴 앱이 목록에서 사라지면 되돌릴 수가 없다.**
@@ -2936,20 +3526,62 @@ function openApps(){
   const set=[], unset=[];
   list.forEach(a=>{ const f=info(a); (f.rank<9?set:unset).push({a,f}); });
   set.sort((x,y)=>x.f.rank-y.f.rank || (x.a.app_name||'').localeCompare(y.a.app_name||'','ko'));
-  const row=({a,f})=>`<div class="item"><div class="grow"><div class="nm">${esc(a.app_name||a.app_package)}</div><div class="sm">${f.tag}</div></div>
+  // 🆕 2026-11-03 : 아이콘 이미지 + 「처음 쓴 날」 (loadAppMeta 가 채운다)
+  const row=({a,f})=>`<div class="item">${appIcoHtml(a.app_package)}
+      <div class="grow"><div class="nm">${esc(a.app_name||a.app_package)}</div>
+      <div class="sm">${f.tag} ${appAgeTag(a.app_package)}</div></div>
       <button class="add" onclick="openAppMode('${esc(a.app_package)}')">설정</button></div>`;
-  const body = list.length
-    ? (set.length? `<div class="sec">✅ 설정된 앱 (${set.length}개)</div><div class="card">${set.map(row).join('')}</div>` : '')
-      + `<div class="sec">설정 안 된 앱 (${unset.length}개)</div>`
-      + (unset.length? `<div class="card">${unset.map(row).join('')}</div>` : `<div class="card"><div class="empty">없습니다</div></div>`)
-    : `<div class="card"><div class="empty">앱이 없습니다<br><span class="sm">자녀폰이 접속하면 목록이 올라옵니다</span></div></div>`;
+
+  const M = ST.appMeta;
+  // 최근 한 달 안에 처음 쓴 앱 — 가장 최근에 생긴 것이 맨 위
+  const newList = (M && M.ready)
+    ? list.filter(a => { const v = appFirstDays(a.app_package);
+                         return typeof v === 'number' && v < AM_NEW_DAYS; })
+          .sort((x, y) => appFirstDays(x.app_package) - appFirstDays(y.app_package))
+    : [];
+  const chips = (M && M.ready) ? `<div class="chips">
+      <div class="chip ${appNewOnly ? '' : 'on'}" onclick="appNewOnly=false;openApps()">전체 ${list.length}개</div>
+      <div class="chip ${appNewOnly ? 'on' : ''}" onclick="appNewOnly=true;openApps()">🆕 최근 한 달 ${newList.length}개</div>
+    </div>` : '';
+
+  // 🔴 「설치일」이라고 적지 않는다 — 자녀폰이 설치 날짜를 올리지 않는다(appmeta 주석 참고).
+  //    못 불러왔을 때는 **날짜를 아예 안 보여준다.** 둘러대면 장애가 「아이가 안 썼다」로 읽힌다(3-10).
+  const metaNote = (M && M.failed)
+    ? `<div class="note warn">앱 아이콘과 「처음 쓴 날」을 불러오지 못했어요.<br>
+        잘못된 날짜를 보여드리지 않으려고 표시를 멈췄어요.
+        <button class="add" style="margin-top:8px" onclick="loadAppMeta(true).then(()=>openApps())">다시 시도</button></div>`
+    : (M && M.ready)
+      ? `<div class="agenote">앱에 붙은 날짜는 <b>그 앱을 처음 쓴 날</b>이에요 — 설치한 날이 아니에요.
+          한 달이 넘은 앱은 모두 「1개월 이상」으로 묶었어요.</div>`
+      : `<div class="agenote">앱 아이콘과 「처음 쓴 날」을 불러오는 중이에요 ⏳</div>`;
+
+  const body = !list.length
+    ? `<div class="card"><div class="empty">앱이 없습니다<br><span class="sm">자녀폰이 접속하면 목록이 올라옵니다</span></div></div>`
+    : appNewOnly
+      ? (newList.length
+          ? `<div class="sec">🆕 최근 한 달 안에 처음 쓴 앱 (${newList.length}개)</div>
+             <div class="card">${newList.map(a => ({ a, f: info(a) })).map(row).join('')}</div>`
+          : `<div class="card"><div class="empty">최근 한 달 안에 새로 쓴 앱이 없어요 🙂</div></div>`)
+      : (set.length ? `<div class="sec">✅ 설정된 앱 (${set.length}개)</div><div class="card">${set.map(row).join('')}</div>` : '')
+        + `<div class="sec">설정 안 된 앱 (${unset.length}개)</div>`
+        + (unset.length ? `<div class="card">${unset.map(row).join('')}</div>` : `<div class="card"><div class="empty">없습니다</div></div>`);
   openSub('앱 차단 · 앱별 시간', `
     <div class="note">자녀폰에 설치된 앱입니다. <b>설정</b>을 눌러 앱마다 다르게 정할 수 있습니다.<br>설정을 걸어둔 앱이 <b>맨 위</b>에 모여 있습니다.</div>
     <div class="card"><input type="text" id="appQ" placeholder="앱 이름 검색" value="${esc(appQuery)}"
       oninput="appQuery=this.value; clearTimeout(window._aq); window._aq=setTimeout(openApps,250)"></div>
+    ${chips}
+    ${metaNote}
     ${body}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
   const q2=document.getElementById('appQ'); if(q2 && appQuery){ q2.focus(); q2.setSelectionRange(q2.value.length,q2.value.length); }
+  // 아직 안 불러왔으면 지금 불러오고, 다 되면 이 화면만 다시 그린다.
+  //   ⚠️ loadAppMeta 가 ST.appMeta 를 **바로** 만들기 때문에 두 번 돌지 않는다(무한 재그리기 방지).
+  if (!ST.appMeta || ST.appMeta.code !== ST.code){
+    loadAppMeta().then(() => {
+      const t = document.getElementById('sTitle');
+      if (t && t.textContent === '앱 차단 · 앱별 시간') openApps();
+    });
+  }
 }
 
 function openAppMode(pkg){
@@ -3081,7 +3713,9 @@ function openAppPicker(title, polKey, desc, extra){
   ST.apps.forEach(a=>(cur.has(a.app_package)?on:off).push(a));
   const row=a=>{
     const sel=cur.has(a.app_package);
-    return `<div class="item"><div class="grow"><div class="nm">${esc(a.app_name||a.app_package)}</div></div>
+    // 🆕 2026-11-03 : 여기도 아이콘을 붙인다 — 이름만 30줄 늘어놓으면 어느 앱인지 못 고른다.
+    //   삭제방지·PIN잠금·취침허용은 **부모가 목록에서 직접 골라야** 하는 화면이라 아이콘이 가장 중요하다.
+    return `<div class="item">${appIcoHtml(a.app_package)}<div class="grow"><div class="nm">${esc(a.app_name||a.app_package)}</div></div>
       <button class="${sel?'x':'add'}" onclick="toggleAppIn('${esc(polKey)}','${esc(a.app_package)}')">${sel?'해제':'추가'}</button></div>`;
   };
   const body = ST.apps.length
@@ -3095,6 +3729,13 @@ function openAppPicker(title, polKey, desc, extra){
     ${extra||''}
     ${body}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+  // 🆕 2026-11-03 : 아이콘을 아직 안 불러왔으면 불러온 뒤 이 화면만 다시 그린다
+  if (!ST.appMeta || ST.appMeta.code !== ST.code){
+    loadAppMeta().then(() => {
+      const t = document.getElementById('sTitle');
+      if (t && t.textContent === title) openAppPicker(title, polKey, desc, extra);
+    });
+  }
 }
 async function toggleAppIn(polKey, pkg){
   loading(true);
@@ -3340,9 +3981,9 @@ function openStealth(){
 
   if (ver < 43) {
     openSub('소리 변경 · 앱 숨기기', `
-      <div class="note warn">이 기능은 <b>자녀폰 앱이 최신(5.3)으로 업데이트된 뒤</b> 사용할 수 있어요.<br>
+      <div class="note warn">이 기능은 <b>자녀폰 앱이 업데이트된 뒤</b> 사용할 수 있어요.<br>
         업데이트는 자녀폰이 인터넷에 연결되면 <b>자동으로</b> 진행됩니다. 잠시 뒤 다시 확인해 주세요.
-        ${ver > 0 ? `<br><span style="color:#9ca3af;font-size:12px">(현재 자녀폰 앱 버전 ${ver} · 최신 43)</span>` : ''}</div>
+        ${ver > 0 ? `<br><span style="color:#9ca3af;font-size:12px">(현재 자녀폰 앱 버전 ${ver} · 이 기능은 43 이상에서 돼요)</span>` : ''}</div>
       <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
     return;
   }
