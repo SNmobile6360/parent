@@ -96,93 +96,6 @@
   .ttl{font-size:15px;font-weight:800;letter-spacing:-.01em}
   .val{font-size:14px;color:var(--muted);margin-top:3px}
   .chev{color:#C4C9D4;font-size:20px;flex:0 0 auto}
-  /* ══════════════════════════════════════════════════════════════
-     🆕 2026-11-05 대개편 — 하단 탭 · 카드 설명 상시 노출 · AI 매니저
-     대표점장 : 「기기조작에 능숙하지 않은 부모가 많다. 설명을 봐도 이해가 안 된다」
-     참고 : 「안심키즈폰」 — **항목마다 제목 바로 밑에 평범한 말로 설명이 항상 보인다.**
-     🔴 설명을 접거나 다른 화면으로 빼지 마라. 2026-11-03 에 📖 줄 뒤로 숨겼더니
-        「눈에 띄지도 않아서 눌러 보지도 않는다」는 말을 들었다. 숨기는 순간 없는 것이다.
-     ══════════════════════════════════════════════════════════════ */
-  .pane.hide{display:none}
-  /* 카드 제목 밑 설명 — 이게 이번 개편의 핵심이다 */
-  #scMain .exp{font-size:13.2px;color:#55606E;line-height:1.52;margin-top:4px;font-weight:500}
-  /* 상태값은 설명 아래로 내리고 「지금 이렇습니다」가 보이게 배지로 */
-  #scMain .val{font-size:12.5px;color:#6B7687;margin-top:6px;font-weight:700}
-  #scMain .card{padding:15px 15px}
-  #scMain .wrap{padding-bottom:calc(var(--safe-b) + 96px)}
-
-  /* ── 하단 탭 ── */
-  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;
-    background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-    border-top:1px solid #E6EAF0;padding-bottom:var(--safe-b);max-width:640px;margin:0 auto}
-  .tabbar b{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-    padding:9px 0 8px;font-size:11.5px;font-weight:800;color:#98A2B3;cursor:pointer;
-    -webkit-tap-highlight-color:transparent}
-  .tabbar b i{font-size:21px;font-style:normal;line-height:1.05}
-  .tabbar b.on{color:var(--blue)}
-  .tabbar b .tdot{position:absolute;transform:translate(13px,-3px);width:8px;height:8px;
-    border-radius:50%;background:#F04438;border:2px solid #fff}
-
-  /* ── ✨ AI 매니저 : 홈 맨 위 큰 카드 + 어디서나 보이는 플로팅 버튼 ── */
-  .aibox{background:linear-gradient(135deg,#EEF4FF 0%,#F6F0FF 55%,#FFF1F6 100%);
-    border:1px solid #DCE5FA;border-radius:18px;padding:15px 15px 13px;margin-bottom:12px;
-    cursor:pointer;box-shadow:0 3px 14px rgba(37,99,235,.09)}
-  .aibox:active{filter:brightness(.98)}
-  .airow{display:flex;align-items:center;gap:12px}
-  .aiic{width:44px;height:44px;border-radius:14px;flex:none;display:grid;place-items:center;
-    font-size:23px;background:linear-gradient(135deg,#2563EB,#7C3AED);
-    box-shadow:0 4px 12px rgba(99,70,230,.3)}
-  .ait{font-size:15.5px;font-weight:900;color:#1E2A44;letter-spacing:-.01em}
-  .ais{font-size:13px;color:#5A6680;margin-top:3px;font-weight:600}
-  .aichips{display:flex;gap:7px;overflow-x:auto;margin-top:12px;padding-bottom:2px;
-    -ms-overflow-style:none;scrollbar-width:none}
-  .aichips::-webkit-scrollbar{display:none}
-  .aichip{flex:none;background:#fff;border:1px solid #D9E2F5;border-radius:999px;
-    padding:8px 13px;font-size:12.8px;font-weight:700;color:#2B4A8F;white-space:nowrap}
-  .aichip:active{background:#EEF4FF}
-  .fab{position:fixed;right:15px;z-index:41;bottom:calc(var(--safe-b) + 74px);
-    border:0;border-radius:999px;padding:12px 17px;cursor:pointer;
-    background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff;
-    font-size:14px;font-weight:800;letter-spacing:-.01em;
-    box-shadow:0 8px 22px rgba(70,80,230,.4);display:flex;align-items:center;gap:7px}
-  .fab:active{filter:brightness(.95)}
-  .fab i{font-style:normal;font-size:17px}
-  /* ── ✨ AI 매니저 화면 (2026-11-05) ── */
-  .aihead{background:linear-gradient(135deg,#EEF4FF,#F7F0FF 60%,#FFF2F7);
-    border:1px solid #E0E7FA;border-radius:18px;padding:17px 17px 15px;margin-bottom:13px}
-  .aihi{font-size:13.5px;font-weight:800;color:#6B7A99}
-  .aihi2{font-size:20px;font-weight:900;color:#1B2A4A;letter-spacing:-.02em;margin-top:3px}
-  .aihsub{font-size:13.5px;color:#55637E;margin-top:8px;line-height:1.6;font-weight:600}
-  .aiplan{background:#fff;border:2px solid #2563EB;border-radius:16px;padding:15px;margin-bottom:12px;
-    box-shadow:0 4px 16px rgba(37,99,235,.14)}
-  .aiplant{font-size:12.5px;font-weight:900;color:#2563EB;letter-spacing:.02em}
-  .aiplanh{font-size:17px;font-weight:900;color:#101828;margin-top:5px;letter-spacing:-.01em}
-  .aiplanb{font-size:14px;color:#3F4A5C;margin-top:7px;line-height:1.62;font-weight:500}
-  .aiplanw{font-size:12.8px;color:#8A6212;background:#FFFBF2;border:1px solid #F6E3BE;
-    border-radius:11px;padding:10px 12px;margin-top:11px;line-height:1.55;font-weight:600}
-  .aires{border-radius:16px;padding:15px;margin-bottom:12px;border:2px solid}
-  .aires.ok{background:#F0FDF6;border-color:#55C08A}
-  .aires.no{background:#FEF3F2;border-color:#F17B6A}
-  .airesh{font-size:16.5px;font-weight:900;letter-spacing:-.01em}
-  .aires.ok .airesh{color:#09794B}
-  .aires.no .airesh{color:#B42318}
-  .airesb{font-size:13.8px;margin-top:7px;line-height:1.62;color:#3F4A5C;font-weight:500}
-  .aisg{background:#fff;border:1px solid #E7EBF0;border-radius:16px;overflow:hidden}
-  .aisgi{display:flex;align-items:center;gap:10px;padding:14px 15px;font-size:14.5px;
-    font-weight:700;color:#2B3647;cursor:pointer;border-bottom:1px solid #F2F4F7}
-  .aisgi:last-child{border-bottom:0}
-  .aisgi:active{background:#F5F8FF}
-  .aisgi span{font-size:18px;flex:none}
-  .aisgi i{margin-left:auto;font-style:normal;color:#C4C9D4;font-size:19px}
-  /* ── 기능 화면 맨 위 : 접지 않고 바로 보이는 설명 (2026-11-05) ── */
-  .ghead{background:#F4F8FF;border:1px solid #D7E4FB;border-radius:16px;
-    padding:14px 15px;margin-bottom:13px}
-  .gheadb{font-size:14.5px;font-weight:800;color:#1F3A6E;line-height:1.55}
-  .gheadb2{font-size:13.4px;color:#46556F;line-height:1.62;margin-top:7px;font-weight:500;
-    padding-top:9px;border-top:1px solid #DCE6F8}
-  .gheadmore{display:flex;align-items:center;gap:5px;margin-top:11px;font-size:13px;
-    font-weight:800;color:#2563EB;cursor:pointer}
-  .gheadmore i{font-style:normal;font-size:16px}
   .ic{
     width:42px;height:42px;border-radius:12px;flex:0 0 auto;
     display:flex;align-items:center;justify-content:center;font-size:21px;background:#EEF2FF;
@@ -612,8 +525,7 @@
 <!-- ══════════ 💬 부모 공지(광고) — 비밀번호 입력 전에 1회 표시 (2026-09-16 추가) ══════════
      · 부모님께 「의견을 카카오톡으로 보내주세요」 안내. 기존 카카오 채널(_xnDXAX/chat) 재사용.
      · 「일주일 동안 보지 않기」 → localStorage sinae_notice_snooze 에 7일 스누즈.
-     · ⭐ 내용(문구/디자인)을 바꾸면 그 광고의 버전상수를 +1 한다 — 광고가 둘이라 상수도 둘이다
-     　 (📍위치 = AD_VER_LOC · 💬카톡의견 = AD_VER_VOICE · 고르는 건 adVersion()).
+     · ⭐ 내용(문구/디자인)을 바꾸면 아래 스크립트의 AD_VERSION 을 +1 한다.
         그러면 지난주에 「보지 않기」한 부모님께도 새 공지가 다시 보인다. -->
 <!-- 🎬 대표 설명서 영상 — 처음 한 번만 자동으로 보여준다 (2026-10-06)
      · 비밀번호를 푼 뒤 메인을 그리기 **직전**에 뜬다.
@@ -638,11 +550,7 @@
 </div>
 
 <div id="scNotice" class="noticeWrap hide">
-  <!-- 🧪 2026-11-05 : 광고가 **둘** 있다. `showNotice()` 가 하나만 보여준다.
-       · ndLoc   = 📍 위치 확인 공지 — **시험 중인 기기(LOC_BETA)를 연결한 부모에게만**
-       · ndVoice = 💬 기존 「카톡 의견」 공지 — 그 외 모든 부모 (지금까지와 똑같이 보인다)
-       🔴 `LOC_BETA` 를 비우면 ndLoc 이 전 고객에게 열린다. 그때 ndVoice 를 지울지 결정하면 된다. -->
-  <div class="ad hide" id="ndVoice">
+  <div class="ad">
     <div class="adHero">
       <img src="ad-voice.jpg?v=20261001" alt="">
       <span class="adTag">시내모바일 소식</span>
@@ -663,29 +571,6 @@
       </a>
       <button class="b b-ghost" onclick="closeNotice(false)">확인하고 시작하기</button>
       <div class="adMini"><a onclick="closeNotice(true)">일주일 동안 보지 않기</a></div>
-    </div>
-  </div>
-  <div class="noticeCard" id="ndLoc">
-    <div class="nBanner">
-      <span class="nTag">시내모바일 소식</span>
-      <div class="nEmoji">📍</div>
-      <h2>자녀 위치 확인 기능이<br>새로 생겼어요</h2>
-    </div>
-    <div class="nBody">
-      <p>시내모바일이 <span class="em">직접 만든 기능</span>이에요.<br>
-         앱을 새로 깔 필요 없이, 지금 쓰시는 자녀폰에서 바로 돼요.</p>
-      <p>지금 어디 있는지 보고, 집·학교에 도착했는지 알 수 있어요.<br>
-         <span class="em">인터넷이 끊겨도 문자로</span> 알려드려요.</p>
-      <p>쓰고 싶으시면 관리 화면의<br>
-         <span class="em">📍 위치 확인 · 세이프존</span> 을 눌러 주세요.</p>
-    </div>
-    <div class="nActs">
-      <button class="btn btn-p" onclick="closeNotice(false)">확인하고 시작하기</button>
-      <button class="nSnooze" onclick="closeNotice(true)">일주일 동안 보지 않기</button>
-      <div style="text-align:center;margin-top:2px">
-        <a href="https://pf.kakao.com/_xnDXAX/chat" target="_blank" rel="noopener noreferrer"
-           style="font-size:13px;font-weight:700;color:#667085;text-decoration:none">의견 보내기 (카카오톡) ›</a>
-      </div>
     </div>
   </div>
 </div>
@@ -772,7 +657,6 @@
     <div class="sub" id="mSub"></div>
   </div>
   <div class="wrap">
-    <div class="pane" id="pane_home">
     <div class="hero" onclick="openHistory()" style="cursor:pointer">
       <div class="lbl">오늘 사용시간</div>
       <div class="big" id="hUse">-</div>
@@ -786,28 +670,6 @@
     <!-- 🙋 2026-10-21 : 자녀가 「더 쓰고 싶다」고 누르면 여기에 뜬다 (평소엔 비어 있다) -->
     <div id="timeReqBox"></div>
 
-    <!-- ✨ AI 매니저 (2026-11-05 대개편) — 대표점장 : 「AI매니저 잘 보이고 잘 쓸 수 있도록 유도」
-         🔴 카드 하나로 끝내지 않는다. ①홈 맨 위 큰 카드 ②어느 탭에서나 보이는 플로팅 버튼 **둘 다**.
-            2026-11-03 엔 작은 카드 하나였고 「눈에 띄지도 않아서 눌러 보지도 않는다」는 말을 들었다.
-         ▸ 칩은 **지금 실제로 답할 수 있는 것**만 건다. 못 하는 걸 칩으로 걸면 눌렀을 때 실망한다. -->
-    <div class="aibox" onclick="openDoumi()">
-      <div class="airow">
-        <div class="aiic">✨</div>
-        <div class="grow">
-          <div class="ait">AI 매니저에게 물어보세요</div>
-          <div class="ais">물어보면 답하고, <b>설정까지 대신 바꿔</b> 드려요</div>
-        </div>
-        <div class="chev">›</div>
-      </div>
-      <div class="aichips">
-        <span class="aichip" onclick="event.stopPropagation();askDoumi('유튜브')">유튜브 지금 돼요?</span>
-        <span class="aichip" onclick="event.stopPropagation();askDoumi('카카오톡')">카카오톡은요?</span>
-        <span class="aichip" onclick="event.stopPropagation();askDoumi('크롬')">크롬은요?</span>
-        <span class="aichip" onclick="event.stopPropagation();askDoumi('하루 2시간으로 해줘')">하루 2시간으로 해줘</span>
-        <span class="aichip" onclick="event.stopPropagation();openDoumi()">더 보기 ›</span>
-      </div>
-    </div>
-
     <div class="sec">지금 상황</div>
     <div class="card tap" onclick="openLive()">
       <div class="row"><div class="ic" style="background:#FEF3F2">🚦</div>
@@ -816,19 +678,12 @@
 
     <!-- 💬 도우미 (2026-11-01 신설) — 「지금 크롬 쓸 수 있나요?」에 계산해서 답한다.
          AI API 를 쓰지 않는다(0원). 판정은 canUseApp() 이 자녀앱과 같은 순서로 한다. -->
-
-    <!-- 📍 위치 확인 (2026-11-05 신설) — 자녀앱 v61 에 이미 들어가 있고, 여기서 켜면 바로 돈다.
-         🔴 켜기 전에는 「새로 생겼어요」로 눌러보게 만든다. 매장에 전화해서 켜 달라고 하지 않도록. -->
-    <div class="sec hide" id="secLoc">어디 있나요</div>
-    <div class="card tap hide" id="cardLoc" onclick="openLoc()">
-      <div class="row"><div class="ic" style="background:#ECFDF3">📍</div>
-        <div class="grow"><div class="ttl">위치 확인 · 세이프존 <span class="betabadge">새 기능</span></div>
-          <div class="val" id="vLoc">-</div></div><div class="chev">›</div></div>
+    <div class="card tap" onclick="openDoumi()">
+      <div class="row"><div class="ic" style="background:#EFF6FF">💬</div>
+        <div class="grow"><div class="ttl">도우미에게 물어보기 <span class="betabadge">테스트 중</span></div>
+          <div class="val">「지금 크롬 쓸 수 있나요?」 — 바로 답해 드려요</div></div><div class="chev">›</div></div>
     </div>
 
-    </div><!-- /pane_home -->
-
-    <div class="pane hide" id="pane_fn">
     <div class="sec">시간 관리</div>
     <div class="card tap" onclick="openLimit()">
       <div class="row">
@@ -916,9 +771,6 @@
         <div class="grow"><div class="ttl">다운타임 허용 앱</div><div class="val" id="vIgnoreDt">-</div></div><div class="chev">›</div></div>
     </div>
 
-    </div><!-- /pane_fn -->
-
-    <div class="pane hide" id="pane_safe">
     <div class="sec">안전 · 보안</div>
     <div class="card tap" onclick="openSos()">
       <div class="row"><div class="ic" style="background:#FEF2F2">🆘</div>
@@ -939,9 +791,6 @@
         <div class="grow"><div class="ttl">소리 변경 · 앱 숨기기</div><div class="val" id="vStealth">-</div></div><div class="chev">›</div></div>
     </div>
 
-    </div><!-- /pane_safe -->
-
-    <div class="pane hide" id="pane_more">
     <div class="sec">기타</div>
     <div class="card tap" onclick="refreshAll(true)">
       <div class="row">
@@ -1031,16 +880,7 @@
       카카오톡으로 매장 문의하기
     </a>
     <div class="kkhint">궁금한 점이나 문제가 있으면 눌러서 물어보세요.<br>시내모바일 매장 상담으로 바로 연결됩니다.</div>
-    </div><!-- /pane_more -->
   </div>
-  <!-- ── 하단 탭 (2026-11-05) : 카드 21개를 한 화면에 쭉 세우니 끝까지 안 내려간다 ── -->
-  <nav class="tabbar">
-    <b data-t="home" class="on" onclick="switchTab('home')"><i>🏠</i>홈</b>
-    <b data-t="fn"   onclick="switchTab('fn')"><i>🧩</i>기능</b>
-    <b data-t="safe" onclick="switchTab('safe')"><i>🛡️</i>안전</b>
-    <b data-t="more" onclick="switchTab('more')"><i>⚙️</i>더보기</b>
-  </nav>
-  <button class="fab" onclick="openDoumi()" aria-label="AI 매니저"><i>✨</i>AI 매니저</button>
 </div>
 
 <!-- ══════════ 바텀시트 (요일별 시간 설정) ══════════ -->
@@ -1265,12 +1105,8 @@ async function pinMatches(h, k){
   // ⚠️ 2026-08-25: operator_pw_hash(운영자 비밀번호) 를 검사 대상에서 뺐다.
   //   부모용 웹앱에는 운영자 탭이 없어 운영자 비밀번호를 쓸 일이 없고,
   //   매장 작업은 자녀앱 운영자 탭 / 시내모바일 전산에서 한다.
-  // 🔴 2026-11-05 : `error` 를 받는다. 안 받으면 **서버가 죽은 것이 「비밀번호 틀림」으로 보이고**
-  //    5번이면 10분 잠금까지 걸린다. 2026-10-23 에 바로 이 증상으로 민원이 왔는데
-  //    그때 고친 곳은 다른 함수들이었고 **정작 PIN 검사는 그대로였다.** (CLAUDE.md 3-10)
-  const { data, error } = await clientFor(k.server).from('policies')
+  const { data } = await clientFor(k.server).from('policies')
     .select('key,value').eq('device_code',k.code).in('key',['pin_hash']);
-  if(error) throw error;          // 「못 물어봤다」와 「틀렸다」를 구분한다 — 실패 횟수를 올리지 않는다
   return (data||[]).some(r=>r.value===h);
 }
 async function verifyPin(){
@@ -1286,10 +1122,6 @@ async function verifyPin(){
     if(ok){
       resetPinFails();                                // 🆕 성공하면 실패 기록 초기화
       sessionStorage.setItem('sinae_auth','1');
-      // 📍 2026-11-05 : 위치 표는 RLS 가 걸려 있어 **부모 토큰**이 있어야 읽힌다.
-      //   그 토큰은 서버가 **PIN 을 확인한 뒤**에만 내준다 → 이번 세션 동안만 해시를 들고 있는다.
-      //   ⚠️ sessionStorage 다(앱을 닫으면 사라진다). localStorage 에 두지 않는다.
-      try{ sessionStorage.setItem(LOC_PINH_KEY, h); }catch(e){}
       if(pinTarget){ const t=pinTarget; pinTarget=null; upsertKid(t); toast(`${t.name} 연결되었습니다`); openChild(t); }
       else afterUnlock();
     }
@@ -1459,7 +1291,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월5일 대개편 위치시험';   // 🧪 전 고객 공개 때 '위치시험' 을 뺀다
+const WEB_LABEL = '11월3일 기능설명';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -1855,26 +1687,6 @@ function paintMain(){
   const $lv = document.getElementById('vLive');
   if($lv) $lv.innerHTML = '<b style="color:'+(_lv.lock?'#B42318':'#027A48')+'">'+_lv.txt+'</b>';
 
-  // 📍 2026-11-05 : 위치 확인 — 꺼져 있으면 「켜 보세요」, 켜져 있으면 **자녀폰이 준비됐나**를 적는다.
-  //   🔴 「켜짐」만 적으면 안 된다 — 권한이 없으면 켜져 있어도 **한 건도 안 올라온다**(3-11 의 모양).
-  { // 🧪 시험 중인 기기가 아니면 **카드를 아예 안 보여준다** (다른 부모에겐 없는 기능이다)
-    const _lb = locBeta(ST.code);
-    const $sl=document.getElementById('secLoc'), $cl=document.getElementById('cardLoc');
-    if($sl) $sl.classList.toggle('hide', !_lb);
-    if($cl) $cl.classList.toggle('hide', !_lb);
-    const $l=document.getElementById('vLoc');
-    if($l && _lb){
-      if(ST.pol?.location_tracking_enabled !== 'true'){
-        $l.innerHTML = '<b style="color:#1D4ED8">새로 생겼어요 — 눌러서 켜 보세요</b>';
-      } else {
-        const s = locPhoneState();
-        $l.innerHTML = !s.perm   ? '<b style="color:#B42318">자녀폰에서 위치 허용이 필요해요</b>'
-                     : !s.svc    ? '<b style="color:#B42318">자녀폰 GPS 가 꺼져 있어요</b>'
-                     : !s.okSent ? '첫 위치를 기다리고 있어요'
-                     : badge(true,'켜짐') + ' 마지막 확인 ' + esc(ago(s.sent));
-      }
-    } }
-
   paintTimeRequest();
 
   const limDays=[1,2,3,4,5,6,7].filter(i=>Number(p['limit_day_'+i]??-1)>=0);
@@ -2209,106 +2021,6 @@ function openSub(title, html, backFn, act){
 function closeSub(){ navBack(); }
 
 // ══════════════════════════════════════════════════════════════════
-//  🆕 2026-11-05 대개편 ① — 하단 탭 + 카드마다 설명 상시 노출
-//  대표점장 : 「설명을 보고 이해가 안 되는 부분이 아주 많다. 기기조작에 능숙하지
-//              않은 부모가 많으니 충분히 고려해 달라」 (참고 : 안심키즈폰)
-//
-//  🔴 이번 개편의 핵심은 **설명을 숨기지 않는 것**이다.
-//     2026-11-03 엔 설명을 「📖 이게 무슨 기능이에요?」 줄 뒤로 넣었는데
-//     「눈에 띄지도 않아서 눌러 보지도 않는다」는 말을 들었다. 숨기면 없는 것이다.
-//  ▸ 문구는 여전히 **`FEATURES` 한 곳에만** 있다. 여기서는 그걸 꺼내 쓸 뿐이다.
-//     그래서 설명을 고칠 때 손댈 곳은 지금도 FEATURES 하나다. (3-13)
-// ══════════════════════════════════════════════════════════════════
-
-/** FEATURES 에 없는 카드의 설명 — 여기 적는 것은 **FEATURES 에 없는 것만** */
-const CARD_EXP = {
-  // 📍 위치는 FEATURES.loc 이 이미 갖고 있어 여기 안 적는다 (두 군데 적으면 언젠가 한쪽만 고쳐진다 · 3-13)
-  // 🔔 push 는 FEATURES 에 있지만 F_OPEN 에 없다(「이 기능 열기」가 알림을 켜 버리면 안 되니까) → 여기서 준다
-  togglePush : '자녀가 요청을 보내면 부모님 폰으로 바로 알려드려요.',
-  openList   : '자녀폰을 더 연결하거나, 다른 자녀로 바꿔요.',
-  refreshAll : '자녀폰이 올린 최신 정보를 다시 불러와요.',
-  doLogout   : '이 목록에서 이 자녀폰을 뺍니다. 자녀폰 설정은 그대로예요.'
-};
-
-/** onclick 함수 이름 → 설명 한 줄 */
-function cardExpText(fn){
-  if (CARD_EXP[fn]) return CARD_EXP[fn];
-  // F_OPEN 은 {키:'함수명'} 이라 뒤집어 찾는다. 같은 함수를 여러 키가 쓰면
-  // **FEATURES 에 먼저 나오는 쪽**이 대표다 (apps→'앱 차단·앱별 시간', sound→'소리 변경').
-  const k = Object.keys(F_OPEN).find(x => F_OPEN[x] === fn);
-  return (k && F_BY_K[k]) ? F_BY_K[k].one : '';
-}
-
-/** 메인 화면 카드마다 제목 밑에 설명을 끼워 넣는다 (한 번만) */
-function injectCardExps(){
-  document.querySelectorAll('#scMain .card.tap[onclick]').forEach(c => {
-    if (c.querySelector('.exp')) return;                       // 이미 넣었다
-    // 🔸 `.val` 에 id 가 없으면 그건 **상태값이 아니라 원래 설명**이다(새로고침·설명서 등).
-    //    id 있는 val 만 paintMain 이 채운다 → id 없는 것은 설명으로 올려 모양을 통일한다.
-    const plain = c.querySelector('.grow > .val:not([id])');
-    if (plain){ plain.className = 'exp'; return; }
-    const fn = (c.getAttribute('onclick') || '').replace(/\(.*$/, '').trim();
-    const t  = cardExpText(fn);
-    if (!t) return;                                            // 설명이 없으면 건드리지 않는다
-    const ttl = c.querySelector('.grow > .ttl');
-    if (!ttl) return;
-    const d = document.createElement('div');
-    d.className = 'exp';
-    d.textContent = t;                                         // textContent — HTML 로 넣지 않는다
-    ttl.insertAdjacentElement('afterend', d);
-  });
-}
-
-// ── 하단 탭 ───────────────────────────────────────────────────────
-//  21개 카드를 한 화면에 쭉 세우니 부모가 끝까지 안 내려간다 → 4개로 나눈다.
-const TABS = [['home','🏠','홈'], ['fn','🧩','기능'], ['safe','🛡️','안전'], ['more','⚙️','더보기']];
-let curTab = 'home';
-
-function switchTab(t){
-  curTab = t;
-  TABS.forEach(([k]) => {
-    const p = document.getElementById('pane_' + k);
-    if (p) p.classList.toggle('hide', k !== t);
-  });
-  document.querySelectorAll('.tabbar b').forEach(b => b.classList.toggle('on', b.dataset.t === t));
-  window.scrollTo(0, 0);
-}
-
-/** 「요청 있음」 빨간 점 — 자녀가 보낸 게 있으면 기능 탭에 찍는다.
- *  ⚠️ 화면 글자를 보고 센다. 못 읽으면 **점을 안 찍을 뿐** 다른 건 망가지지 않는다. */
-function paintTabDots(){
-  let n = 0;
-  ['vReq','vTimeReq'].forEach(id => {
-    const el = document.getElementById(id);
-    const m  = el && /(\d+)\s*건/.exec(el.textContent || '');
-    if (m) n += Number(m[1]) || 0;
-  });
-  const b = document.querySelector('.tabbar b[data-t="fn"]');
-  if (!b) return;
-  let dot = b.querySelector('.tdot');
-  if (n > 0 && !dot){ dot = document.createElement('span'); dot.className = 'tdot'; b.appendChild(dot); }
-  if (n === 0 && dot) dot.remove();
-}
-
-/** 추천 질문 칩 — DOUMI_Q 는 같은 스코프의 top-level 변수라 여기서 바로 넣을 수 있다.
- *  (`window.DOUMI_Q` 로는 안 바뀐다 — CLAUDE.md 3-23b 와 같은 함정) */
-function askDoumi(q){ DOUMI_Q = q || ''; openDoumi(); }
-
-// paintMain 이 끝난 뒤 설명과 탭 점을 갱신한다 — paintMain 안을 건드리지 않는다.
-(function(){
-  const o = paintMain;
-  paintMain = function(){
-    o.apply(this, arguments);
-    try { injectCardExps(); paintTabDots(); }
-    catch(e){ console.warn('설명·탭 갱신 실패:', e && e.name, e && e.message); }
-  };
-})();
-document.addEventListener('DOMContentLoaded', function(){
-  try { injectCardExps(); } catch(e){ console.warn('설명 삽입 실패:', e && e.name, e && e.message); }
-});
-
-
-// ══════════════════════════════════════════════════════════════════
 //  📖 기능 설명 (2026-11-03 신설)
 //  대표점장 : 「자녀앱 아이콘 숨기기, 알림 숨기기 — 이거 뭔 기능인지도 모름 다들.
 //              이미지+설명 같이 해서 전체 기능 전부 보기 쉽게」
@@ -2459,7 +2171,7 @@ const FEATURES = [
   when:['「지금 쓰고 있나?」가 궁금할 때 가장 먼저 열어보는 화면이에요.'],
   art:{ kind:'bar', t1:'38분 / 2시간', t2:'2시간 / 2시간', lc:'아직 남았어요', rc:'다 썼어요 — 잠겨요', alt:'남은 시간과 다 쓴 상태 비교' } },
 
-{ k:'doumi', t:'✨ AI 매니저', sub:'✨ AI 매니저',
+{ k:'doumi', t:'💬 도우미에게 물어보기', sub:'도우미',
   one:'「지금 크롬 쓸 수 있나요?」처럼 궁금한 걸 물으면 바로 답해 드려요.',
   what:['앱 이름을 넣으면 그 앱이 <b>지금</b> 되는지 안 되는지, 왜 그런지 답해 드려요.',
         '자주 묻는 것들은 버튼으로 모아 뒀어요 — 「왜 안 잠겼나요?」, 「앱별 시간이 왜 더 길어요?」 같은 것들이요.'],
@@ -2469,20 +2181,6 @@ const FEATURES = [
   art:{ kind:'full', l:{ emo:'❓', txt:'지금 크롬', sub:'쓸 수 있나요?', bg:'#F4F7FC' },
         r:{ emo:'💬', txt:'23분 남았어요', sub:'크롬에 걸어둔 시간이에요', bg:'#EFF6FF', fg:'#1D4ED8' },
         lc:'물어보면', rc:'바로 답해요', rok:true, alt:'질문과 답' } },
-
-{ k:'loc', t:'📍 위치 확인 · 세이프존', sub:'어디 있나요',
-  one:'자녀가 지금 어디 있는지 보고, 집·학교에 도착했는지 알 수 있어요.',
-  what:['자녀폰이 <b>5분마다</b> 위치를 보내요. 「네이버지도로 열기」를 누르면 지도에서 바로 보여요.',
-        '집·학교처럼 자주 가는 곳을 <b>세이프존</b>으로 등록하면, 좌표 대신 <b>「지금 학교에 있어요」</b>처럼 이름으로 알려드려요.',
-        '🔴 <b>자녀폰 인터넷이 끊겨도</b> 폰이 위치를 쌓아 두고, 연결되면 한꺼번에 올려요. 30분 넘게 끊기면 <b>문자(SMS)로</b> 마지막 위치를 보내 드려요.'],
-  when:['하교 시간에 「왜 아직 안 왔지?」가 궁금할 때요.','학원에 제대로 갔는지 확인하고 싶을 때요.'],
-  note:['처음 켤 때 <b>동의</b>가 필요해요 — 위치정보는 법으로 정해져 있어요.',
-        '자녀폰에도 「부모님이 위치 확인을 켜셨어요」 안내가 <b>한 번 떠요.</b> 몰래 보는 기능이 아니에요.',
-        '⚠️ 실내에서는 위치가 <b>50~100m</b> 틀릴 수 있어요. 세이프존 반경은 <b>150~200m</b> 가 알맞아요.',
-        '이동 기록은 <b>7일</b>만 보관하고 그 뒤엔 자동으로 지워져요.'],
-  art:{ kind:'full', l:{ emo:'🏫', txt:'학교', sub:'08:40 도착', bg:'#ECFDF3', fg:'#1F7A4D' },
-        r:{ emo:'🏠', txt:'집', sub:'16:20 도착', bg:'#EFF6FF', fg:'#1D4ED8' },
-        lc:'학교에 도착하면', rc:'집에 오면', rok:true, alt:'학교·집 도착 기록' } },
 
 { k:'limit', t:'⏱️ 하루 사용시간 한도', sub:'하루 사용시간 한도',
   one:'하루에 폰을 쓸 수 있는 시간을 정해요. 다 쓰면 앱이 잠겨요.',
@@ -2696,7 +2394,7 @@ const F_BY_SUB = (() => {
 })();
 /** 설명에서 「이 기능 열기」로 이어줄 함수 — 없으면 버튼을 안 만든다 */
 const F_OPEN = {
-  live:'openLive', doumi:'openDoumi', loc:'openLoc', limit:'openLimit', dt:'openDt', academy:'openAcademy',
+  live:'openLive', doumi:'openDoumi', limit:'openLimit', dt:'openDt', academy:'openAcademy',
   force:'openForceLock', req:'openReq', allow:'openAllow', apps:'openApps', newapp:'openApps',
   tube:'openTube', uninst:'openUninstall', pinlock:'openPinLock', ignoredt:'openIgnoreDt',
   sos:'openSos', security:'openSecurity', kakao:'openKakao', sound:'openStealth',
@@ -2710,8 +2408,7 @@ function gBul(arr){
 
 /** 📖 기능 설명 — 전체 목록 */
 function openGuide(){
-  // 🧪 위치 확인은 시험 중이라 대상 기기만 목록에 보인다 (쓸 수 없는 기능을 설명하면 더 헷갈린다)
-  const cards = FEATURES.filter(f => f.k !== 'loc' || locBeta(ST.code)).map(f => `
+  const cards = FEATURES.map(f => `
     <div class="card tap gcard" onclick="openGuide1('${f.k}')">
       <div class="gthumb">${gaDraw(f.art, false)}</div>
       <div class="row" style="margin-top:4px">
@@ -2772,19 +2469,14 @@ function openGuideFor(subTitle){
  *  🔴 제목 글자로 찾는다. 화면 제목을 바꾸면 **조용히 안 뜬다**(틀린 답을 주지는 않는다).
  *     → 최종점검 프롬프트 PART G 에 「FEATURES.sub 가 openSub 제목과 전부 맞는지」 항목이 있다. */
 function guideStrip(title){
-  if (title === '기능 설명' || title === '✨ AI 매니저') return '';   // 이 둘엔 안 붙인다
+  if (title === '기능 설명') return '';            // 설명 화면 자신에게는 안 붙인다
   const list = F_BY_SUB[title];
   if (!list || !list.length) return '';
-  const f = list[0];
-  // 🔴 2026-11-05 : 접어 두지 않는다. 대표점장 —
-  //    「눈에 띄지도 않아서 눌러 보지도 않고, 눌러서 봐도 뭐가 뭔지 이해가 안 간다」
-  //    → 가장 중요한 두 줄을 **화면에 바로** 깔고, 그림 설명은 그 아래 링크로 남긴다.
-  return `<div class="ghead">
-    <div class="gheadb">${f.one}</div>
-    ${(f.what && f.what[0]) ? `<div class="gheadb2">${f.what[0]}</div>` : ''}
-    <div class="gheadmore" onclick="openGuideFor('${title.replace(/'/g, "\\'")}')">
-      📖 그림으로 더 자세히 보기<i>›</i></div>
-  </div>`;
+  return `<div class="gask" onclick="openGuideFor('${title.replace(/'/g, "\\'")}')">
+    <span class="gaskI">📖</span>
+    <span class="grow"><b>이게 무슨 기능이에요?</b>
+      <span class="gaskS">그림으로 쉽게 설명해 드려요</span></span>
+    <span class="chev">›</span></div>`;
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -4217,8 +3909,8 @@ function openSecurity(){
     ${sw('play_store_blocked','Play 스토어 차단','자녀가 새 앱을 설치하지 못합니다',
          '지금 Play스토어가 차단중입니다 — 새 앱을 못 깝니다',
          '지금은 막고 있지 않습니다 — 자녀가 앱을 깔 수 있습니다')}
-    <div class="note hide">
-      </div>
+    <div class="note">💬 <b>카톡 관련 차단</b>은 앞 화면의 <b>「카톡 차단」</b>으로 옮겼어요.
+      <button class="btn btn-g" style="margin-top:9px" onclick="closeSub();openKakao()">카톡 차단 열기</button></div>
     <div class="note warn">여기서 바꾸면 자녀폰에 <b>바로 반영</b>됩니다.
       자녀폰이 꺼져 있으면 <b>켜질 때</b> 반영됩니다.</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
@@ -4878,239 +4570,6 @@ const DOUMI_FAQ = [
 
 // ══ 화면 ══
 let DOUMI_Q = '';          // 앱 검색어
-// ══════════════════════════════════════════════════════════════════
-//  ✨ AI 매니저 — 말하면 **설정까지 대신 바꿔 준다** (2026-11-05 대개편 ②)
-//  대표점장 : 「대신해주기까지. 단 오류나면 **오류나서 설정이 잘 안 됐습니다** 라는 알림이 오게.
-//              예) 말씀하신 설정이 잘 되었습니다 ⭕ / 오류가 있어서 설정이 안 되었습니다 ❌」
-//
-//  🔴 지키는 것 세 가지
-//   ① **바꾸기 전에 반드시 확인을 받는다.** 입력만으로 자녀폰 설정이 바뀌면 안 된다.
-//   ② **저장한 뒤 서버에서 되읽어 진짜 들어갔는지 본다.** 「에러 없음」은 「됐음」이 아니다 (3-18b).
-//      upsert 가 성공해도 RLS·제약·오타로 값이 안 들어갈 수 있다 → 되읽어서 **값이 같은지** 센다.
-//   ③ **실패를 성공처럼 말하지 않는다.** 실패하면 빨간 ❌ 와 「확인해 주세요」. (3-10)
-//  🔴 값을 넣으면 **스위치도 같이 켠다** — 하루한도·취침은 스위치가 꺼져 있으면
-//     요일 값을 아예 안 본다(CLAUDE.md ⏰ · 2026-09-15 사고). 그래서 rows 에 항상 같이 넣는다.
-// ══════════════════════════════════════════════════════════════════
-let AI_PLAN = null;      // 확인 대기 중인 계획
-let AI_RESULT = null;    // {ok:boolean, head, body}
-let AI_UNDO = null;      // 되돌리기용 이전 값 rows
-
-/** 입력에서 자녀폰에 깔린 앱을 찾는다 (가장 짧은 이름이 보통 정답) */
-function aiFindApp(t){
-  const low = (t || '').toLowerCase();
-  const hit = (ST.apps || []).filter(a => {
-    const nm = (a.app_name || '').toLowerCase();
-    return nm && nm.length >= 2 && low.includes(nm);
-  }).sort((a, b) => (a.app_name || '').length - (b.app_name || '').length);
-  return hit[0] || null;
-}
-
-/** 「N시간 N분」 / 「N분」 / 「N시간」 → 분. 없으면 null */
-function aiMins(t){
-  const h = /(\d+)\s*시간\s*(\d+)?\s*분?/.exec(t);
-  if (h) return Number(h[1]) * 60 + Number(h[2] || 0);
-  const m = /(\d+)\s*분/.exec(t);
-  if (m) return Number(m[1]);
-  return null;
-}
-/** 「밤 10시부터 아침 7시까지」 → {from:'22:00', to:'07:00'} */
-function aiRange(t){
-  const r = /(\d{1,2})\s*시[^0-9]{0,6}?(\d{1,2})\s*시/.exec(t);
-  if (!r) return null;
-  let a = Number(r[1]), b = Number(r[2]);
-  if (/밤|저녁|오후/.test(t.slice(0, r.index + 4)) && a < 12) a += 12;   // 「밤 10시」 → 22
-  if (a > 23 || b > 23) return null;
-  return { from: String(a).padStart(2, '0') + ':00', to: String(b).padStart(2, '0') + ':00' };
-}
-
-const AI_DAYS = [1, 2, 3, 4, 5, 6, 7];
-
-/** 말 → 계획. 계획은 {t:제목, d:설명, rows:[{key,value}], warn?} */
-function aiParse(text){
-  const t = (text || '').trim();
-  if (!t) return null;
-  const mins  = aiMins(t);
-  const range = aiRange(t);
-  const app   = aiFindApp(t);
-  const 해제  = /(풀어|해제|꺼|끄기|취소|없애)/.test(t);
-  const 차단  = /(막아|차단|못\s*쓰게|금지|잠가|잠궈|잠근)/.test(t);
-
-  // ① 지금 바로 잠그기 / 풀기  (앱 이름이 없을 때만 = 폰 전체)
-  if (!app && /지금|바로|당장/.test(t) && 차단 && !해제){
-    const m = mins || 30;
-    return { t:'지금 바로 폰 잠그기',
-      d:`지금부터 <b>${fmtMin(m)}</b> 동안 자녀폰을 잠급니다. 전화는 계속 받을 수 있어요.`,
-      rows:[{ key:'force_lock_until', value:String(Date.now() + m*60000) }] };
-  }
-  if (!app && 해제 && /잠금|차단|잠가|잠긴/.test(t)){
-    return { t:'잠금 풀기', d:'지금 걸어 둔 <b>즉시 잠금</b>을 풉니다.',
-      rows:[{ key:'force_lock_until', value:'0' }] };
-  }
-
-  // ② 취침시간
-  if (/취침|다운타임|밤|자는|재우/.test(t) && !app){
-    if (해제) return { t:'취침시간 끄기', d:'밤에 잠그는 <b>취침시간</b>을 끕니다.',
-      rows:[{ key:'dt_enabled', value:'false' }] };
-    if (range){
-      const rows = [{ key:'dt_enabled', value:'true' }];
-      AI_DAYS.forEach(i => rows.push({ key:'dt_day_' + i, value: range.from + '|' + range.to }));
-      return { t:'취침시간 정하기',
-        d:`매일 <b>${range.from} ~ ${range.to}</b> 에 자녀폰을 잠급니다. 전화·알람은 그대로예요.`,
-        rows };
-    }
-    return { t:null, ask:'몇 시부터 몇 시까지 잠글까요? <b>「밤 10시부터 아침 7시까지 잠가줘」</b> 처럼 말씀해 주세요.' };
-  }
-
-  // ③ 하루 사용시간 한도 (앱 이름이 없을 때 = 폰 전체)
-  if (!app && /하루|오늘|전체|한도|사용시간/.test(t)){
-    if (해제) return { t:'하루 한도 끄기', d:'하루 사용시간 한도를 <b>끕니다</b>. 시간 제한 없이 쓸 수 있게 돼요.',
-      rows:[{ key:'daily_limit_enabled', value:'false' }] };
-    if (mins != null){
-      const rows = [{ key:'daily_limit_enabled', value:'true' }];
-      AI_DAYS.forEach(i => rows.push({ key:'limit_day_' + i, value:String(mins) }));
-      return { t:'하루 사용시간 한도',
-        d:`매일 <b>${fmtMin(mins)}</b> 만 쓸 수 있게 합니다. 다 쓰면 앱이 잠겨요.`,
-        warn:'앱별 시간을 따로 걸어 둔 앱은 하루 한도를 다 써도 열려요. 둘은 더해집니다.',
-        rows };
-    }
-    return { t:null, ask:'하루에 몇 분으로 할까요? <b>「하루 2시간으로 해줘」</b> 처럼 말씀해 주세요.' };
-  }
-
-  // ④ 앱 하나
-  if (app){
-    const nm = app.app_name || app.app_package;
-    if (차단 && mins == null)
-      return { t:nm + ' 차단하기', d:`<b>${esc(nm)}</b> 을(를) 시간과 상관없이 <b>못 쓰게</b> 합니다.`,
-        rows:[{ key:'rule_' + app.app_package, value:'1||0' }] };
-    if (해제 || (/허용|열어|풀어/.test(t) && mins == null))
-      return { t:nm + ' 제한 풀기', d:`<b>${esc(nm)}</b> 에 걸어 둔 제한을 <b>없앱니다</b>. (하루 한도는 그대로 적용돼요)`,
-        rows:[{ key:'rule_' + app.app_package, value:'0||0' }] };
-    if (mins != null)
-      return { t:nm + ' 하루 ' + fmtMin(mins),
-        d:`<b>${esc(nm)}</b> 을(를) 요일마다 <b>${fmtMin(mins)}</b> 쓸 수 있게 합니다.`,
-        warn:'앱별 시간을 주면 <b>하루 한도를 다 써도 이 앱은 열립니다.</b> 둘은 더해져요.',
-        rows:[{ key:'rule_' + app.app_package, value: buildWeekRule(AI_DAYS.map(() => mins)) }] };
-    return null;                      // 앱 이름만 → 기존 「지금 되나요」 답변이 처리한다
-  }
-  return null;
-}
-
-/** 지금 값을 기억해 둔다 (되돌리기용) */
-function aiSnapshot(rows){
-  return rows.map(r => ({ key:r.key, value: String(ST.pol[r.key] ?? '') }));
-}
-
-/** 실제로 바꾼다 — 저장하고 **되읽어 확인**한 뒤에야 「잘 되었습니다」라고 말한다 */
-async function aiApply(){
-  const plan = AI_PLAN;
-  if (!plan || !plan.rows) return;
-  const undo = aiSnapshot(plan.rows);
-  loading(true);
-  try{
-    await savePol(plan.rows);
-
-    // 🔴 되읽기 — upsert 가 성공해도 값이 안 들어갈 수 있다. 「에러 없음」은 「됐음」이 아니다 (3-18b)
-    const keys = plan.rows.map(r => r.key);
-    const { data, error } = await clientFor(ST.server).from('policies')
-      .select('key,value').eq('device_code', ST.code).in('key', keys);
-    if (error) throw error;                       // error 를 꼭 본다 (3-10)
-    const got = {};
-    (data || []).forEach(r => { got[r.key] = String(r.value); });
-    const bad = plan.rows.filter(r => got[r.key] !== String(r.value));
-    if (bad.length) throw new Error('서버에 ' + bad.length + '개 항목이 저장되지 않았습니다 (' + bad[0].key + ')');
-
-    loading(false);
-    AI_UNDO   = undo;
-    AI_PLAN   = null;
-    AI_RESULT = { ok:true, head:'말씀하신 설정이 잘 되었습니다', body: plan.d };
-    toast('✅ 설정했습니다');
-  }catch(e){
-    loading(false);
-    console.warn('AI 매니저 설정 실패:', e && e.name, e && e.message);
-    AI_PLAN   = null;
-    AI_RESULT = { ok:false, head:'오류가 있어서 설정이 안 되었습니다',
-      body:'<b>확인해 주세요.</b> 자녀폰 설정은 <b>바뀌지 않았습니다.</b><br>'
-         + '잠시 뒤 다시 해 보시고, 계속 안 되면 아래 카카오톡으로 알려 주세요.'
-         + '<br><span class="sm" style="color:#98A2B3">(' + esc(String((e && e.message) || e)) + ')</span>' };
-    toast('❌ 설정하지 못했습니다');
-  }
-  paintDoumi();
-}
-
-/** 방금 바꾼 것을 되돌린다 */
-async function aiUndoRun(){
-  if (!AI_UNDO) return;
-  const rows = AI_UNDO;
-  loading(true);
-  try{
-    await savePol(rows);
-    loading(false);
-    AI_UNDO = null;
-    AI_RESULT = { ok:true, head:'이전 설정으로 되돌렸습니다', body:'바꾸기 전 상태로 돌아갔어요.' };
-  }catch(e){
-    loading(false);
-    console.warn('AI 매니저 되돌리기 실패:', e && e.name, e && e.message);
-    AI_RESULT = { ok:false, head:'되돌리지 못했습니다',
-      body:'<b>확인해 주세요.</b><br><span class="sm">(' + esc(String((e && e.message) || e)) + ')</span>' };
-  }
-  paintDoumi();
-}
-
-function aiCancel(){ AI_PLAN = null; AI_RESULT = null; paintDoumi(); }
-
-/** 확인 카드 · 결과 카드 */
-function aiBoxHtml(){
-  let h = '';
-  if (AI_RESULT){
-    const ok = AI_RESULT.ok;
-    h += `<div class="aires ${ok ? 'ok' : 'no'}">
-      <div class="airesh">${ok ? '⭕' : '❌'} ${esc(AI_RESULT.head)}</div>
-      <div class="airesb">${AI_RESULT.body}</div>
-      ${ok && AI_UNDO ? `<button class="btn btn-g" style="margin-top:11px" onclick="aiUndoRun()">되돌리기</button>` : ''}
-    </div>`;
-  }
-  if (AI_PLAN && AI_PLAN.ask){
-    h += `<div class="note">🤔 ${AI_PLAN.ask}</div>`;
-  } else if (AI_PLAN && AI_PLAN.rows){
-    h += `<div class="aiplan">
-      <div class="aiplant">이렇게 바꿀까요?</div>
-      <div class="aiplanh">${esc(AI_PLAN.t)}</div>
-      <div class="aiplanb">${AI_PLAN.d}</div>
-      ${AI_PLAN.warn ? `<div class="aiplanw">⚠️ ${AI_PLAN.warn}</div>` : ''}
-      <div class="row" style="gap:8px;margin-top:13px">
-        <button class="btn" style="flex:1;margin:0" onclick="aiApply()">네, 바꿔 주세요</button>
-        <button class="btn btn-g" style="flex:0 0 92px;margin:0" onclick="aiCancel()">아니요</button>
-      </div>
-    </div>`;
-  }
-  return h;
-}
-
-/** 입력이 바뀔 때마다 — **계획만 세운다. 절대 바로 실행하지 않는다.** */
-function aiOnInput(v){
-  DOUMI_Q = v;
-  AI_RESULT = null;
-  AI_PLAN = aiParse(v);
-  clearTimeout(window._dq);
-  window._dq = setTimeout(paintDoumi, 280);
-}
-function aiSay(q){ DOUMI_Q = q; AI_RESULT = null; AI_PLAN = aiParse(q); paintDoumi(); }
-
-/** 「이렇게 말해 보세요」 — 실제로 되는 것만 올린다 */
-const AI_SUGGEST = [
-  ['⏱️', '하루 2시간으로 해줘'],
-  ['🌙', '밤 10시부터 아침 7시까지 잠가줘'],
-  ['🔒', '지금 30분만 잠가줘'],
-  ['📺', '유튜브 하루 30분만 줘'],
-  ['🔓', '잠금 풀어줘'],
-  ['❓', '유튜브']
-];
-function aiSuggestHtml(){
-  return `<div class="aisg">` + AI_SUGGEST.map(([e, q]) =>
-    `<div class="aisgi" onclick="aiSay('${q.replace(/'/g, "\\'")}')"><span>${e}</span>${esc(q)}<i>›</i></div>`
-  ).join('') + `</div>`;
-}
-
 let DOUMI_OPEN = -1;       // 펼쳐 둔 질문
 
 async function openDoumi(){
@@ -5120,7 +4579,7 @@ async function openDoumi(){
   const ok = await liveReload();
   loading(false);
   if(!ok){
-    openSub('✨ AI 매니저', `
+    openSub('도우미', `
       <div class="note warn"><b>지금 자녀폰 정보를 불러오지 못했어요.</b><br>
         인터넷 연결을 확인하고 잠시 뒤에 다시 눌러 주세요.<br>
         <b>잘못된 답을 드리지 않으려고 답변을 멈췄어요.</b></div>
@@ -5147,9 +4606,7 @@ function paintDoumi(){
 
   // ── 앱 답변 ──
   let appBox = '';
-  // 🔴 2026-11-05 : **실행 계획이 잡혔으면 앱 검색을 하지 않는다.**
-  //    안 그러면 「하루 2시간으로 해줘」를 앱 이름으로 알아듣고 「그런 앱 없어요」가 같이 뜬다.
-  if(q && !AI_PLAN){
+  if(q){
     const hit = (ST.apps||[]).filter(a =>
       (a.app_name||'').toLowerCase().includes(q) || (a.app_package||'').toLowerCase().includes(q))
       .sort((a,b)=>(a.app_name||'').localeCompare(b.app_name||'','ko')).slice(0,8);
@@ -5182,23 +4639,15 @@ function paintDoumi(){
     </div>`;
   }).join('');
 
-  openSub('✨ AI 매니저', `
-    <div class="aihead">
-      <div class="aihi">안녕하세요 👋</div>
-      <div class="aihi2">${esc(ST.name || '부모')}님, 무엇을 도와드릴까요?</div>
-      <div class="aihsub">자녀폰에 <b>지금</b> 걸려 있는 설정을 보고 답해 드리고,
-        말씀하시면 <b>설정까지 대신 바꿔</b> 드려요.</div>
-    </div>
-    <div class="card"><input type="text" id="doumiQ"
-      placeholder="무엇이든 말씀해 보세요 (예: 유튜브 하루 30분만 줘)"
-      value="${esc(DOUMI_Q)}" oninput="aiOnInput(this.value)"></div>
-    ${aiBoxHtml()}
+  openSub('도우미', `
+    <div class="note warn">🧪 <b>아직 시험 중인 기능이에요.</b><br>
+      드물게 자녀폰과 다르게 답할 수 있어요. 이상하면 <b>맨 아래 카카오톡</b>으로 알려 주세요.</div>
+    <div class="note">자녀폰에 <b>지금</b> 걸려 있는 설정을 보고 답해 드려요.<br>
+      <b>앱 이름을 넣으면</b> 그 앱이 지금 되는지 바로 알려드려요.</div>
+    <div class="card"><input type="text" id="doumiQ" placeholder="앱 이름 (예: 크롬, 유튜브)"
+      value="${esc(DOUMI_Q)}"
+      oninput="DOUMI_Q=this.value; clearTimeout(window._dq); window._dq=setTimeout(paintDoumi,250)"></div>
     ${appBox}
-    <div class="sec">이렇게 말해 보세요</div>
-    ${aiSuggestHtml()}
-    <div class="note warn" style="margin-top:13px">🧪 <b>아직 시험 중인 기능이에요.</b><br>
-      설정을 바꾸기 전에 <b>항상 먼저 확인</b>을 받고, 바꾼 뒤에는 <b>진짜 들어갔는지 확인</b>해서
-      알려드려요. 이상하면 <b>맨 아래 카카오톡</b>으로 알려 주세요.</div>
     <div class="sec">이런 걸 많이 물어보세요</div>
     ${faq}
     ${DOUMI_KAKAO}
@@ -5790,628 +5239,6 @@ function paintHistory(){
 }
 
 // ── 이 자녀 연결 해제 (목록에서 제거) ──
-// ══════════════════════════════════════════════════════════════════════════
-//  📍 위치 확인 · 세이프존  (2026-11-05 신설)
-//
-//  대표점장 설계 6가지를 그대로 따른다 :
-//    ① 부모웹앱에서 전부 켜고·보고·끈다        ② 자녀앱 v61 로 이미 나가 있다(별도 앱 없음)
-//    ③④ 자녀폰 인터넷이 끊겨도 — 폰이 쌓아 두고, 오래 끊기면 **문자로** 알린다
-//    ⑤ 지도는 **네이버지도**로 연다            ⑥ 세이프존(집·학교)
-//
-//  🔴 **읽고 쓰는 길이 다른 화면들과 다르다.** 위치 표는 RLS 가 켜져 있어서
-//     공개 키만으로는 **한 줄도 안 보인다**(2026-10-31 실측 : 공개 키 0행 · 틀린 토큰 0행).
-//     그래서 `clientFor()`(supabase-js)를 쓰지 않고 **직접 fetch** 한다 —
-//     요청마다 `x-device-token` 헤더가 필요한데 supabase-js 는 쿼리별 헤더를 못 넣는다.
-//
-//  🔴 **지도를 화면 안에 그리지 않는다.** 네이버지도를 웹에 **임베드**하려면
-//     네이버클라우드 Maps 키가 필요하고, 무료 한도가 있어도 **카드 등록**이 필요하다
-//     (이 매장 방침 : 월 요금 드는 설계는 넣지 않는다).
-//     대신 **「네이버지도로 열기」** 로 보낸다 — 폰에서는 네이버지도 앱이 바로 뜨고
-//     PC 에서는 웹 지도가 열린다. **키가 필요 없고 0원이다.** 자녀앱도 같은 주소를 쓴다.
-//     ▸ 그래서 「어디인지」는 지도 대신 **세이프존 이름(집·학교)** 으로 말해 준다.
-//       그게 부모가 실제로 알고 싶은 것이고, 좌표를 읽게 하는 것보다 낫다.
-// ══════════════════════════════════════════════════════════════════════════
-// ══════════ 🧪 시험 중인 기기만 보이게 하는 문 (2026-11-05) ══════════
-//
-//  대표점장 : 「내 테스트폰 + 내 메인폰에서 부모웹앱으로 전부 해보고 배포하고 싶은데 가능해?」
-//
-//  부모웹앱은 **공개 주소 하나를 353명이 같이 쓴다.** 그래서 「나만 먼저」가 안 된다 —
-//  올리는 순간 전원에게 간다. 그래서 **기기코드로 문을 달았다.**
-//    · 목록에 있는 기기를 연결한 부모 → 광고·카드·전 기능이 보인다
-//    · 그 밖의 모든 부모        → **아무 변화가 없다** (기존 카톡 의견 광고 그대로, 카드 안 보임)
-//
-//  🔴 **배포 순서** — ①서버 I 에 SQL → ②이 파일 올림(다른 부모 영향 0) → ③테스트폰으로 전부 확인
-//     → ④`LOC_BETA = []` 로 **비우고** 다시 올림 + 나머지 14곳 SQL → 전 고객 공개
-//  🔴 **빈 배열 = 전 고객 공개다.** 실수로 비우지 않게 조심해라. 비울 때는 SQL 15곳이 먼저다.
-const LOC_BETA = ['R4D2-J73V'];      // ← 비우면 전 고객 공개
-function locBeta(code){
-  if(!LOC_BETA.length) return true;                                   // 비었으면 전 고객
-  return LOC_BETA.includes(String(code||'').trim().toUpperCase());
-}
-/** 이 브라우저에 연결된 자녀 중 시험 대상이 하나라도 있나 (광고는 자녀를 고르기 **전에** 뜬다) */
-function locBetaAny(){ try{ return kids().some(k=>locBeta(k.code)); }catch(e){ return false; } }
-
-const LOC_TOK_KEY  = 'sinae_loc_token';   // { 기기코드: 부모토큰 }  — 서버엔 해시만 있다
-const LOC_PINH_KEY = 'sinae_pinh';        // 이번 세션에 통과한 PIN 해시 (sessionStorage)
-const LOC_ZONE_PRESETS = ['집', '학교', '학원', '할머니댁'];
-const LOC_RADII = [100, 150, 200, 300, 500];
-
-let LOC = { day:'', last:null, hist:[], zones:[], events:[], ready:false, note:'' };
-let LOC_NEW = null;     // 세이프존 추가 중인 임시값
-let LOC_AGREE = false;  // 동의 체크
-
-function srvOf(label){ return SERVERS.find(x=>x.label===label) || SERVERS[0]; }
-
-function locTokens(){ try{ return JSON.parse(localStorage.getItem(LOC_TOK_KEY)||'{}')||{}; }catch(e){ return {}; } }
-function locTokenOf(code){ return locTokens()[code] || ''; }
-function setLocTokenOf(code, t){
-  try{ const o=locTokens(); if(t) o[code]=t; else delete o[code];
-       localStorage.setItem(LOC_TOK_KEY, JSON.stringify(o)); }catch(e){}
-}
-function locPinHash(){ try{ return sessionStorage.getItem(LOC_PINH_KEY)||''; }catch(e){ return ''; } }
-
-// ── 서버와 이야기하는 두 가지 길 ───────────────────────────────────────────
-//  🔴 **오류를 반드시 던진다.** 삼키면 「서버가 죽은 것」이 「위치가 없음」으로 보이고,
-//     부모님은 「추적이 안 된다」고 신고한다. (CLAUDE.md 3-10)
-async function locRpc(server, fn, body){
-  const s = srvOf(server);
-  const r = await fetch(s.url + '/rest/v1/rpc/' + fn, {
-    method:'POST',
-    headers:{ apikey:s.key, Authorization:'Bearer '+s.key, 'Content-Type':'application/json' },
-    body: JSON.stringify(body)
-  });
-  const txt = await r.text();
-  if(!r.ok){ const e=new Error(txt||('HTTP '+r.status)); e.status=r.status; throw e; }
-  try{ return JSON.parse(txt); }catch(e){ return txt; }
-}
-
-async function locApi(server, code, path, method, body){
-  const s = srvOf(server);
-  const h = { apikey:s.key, Authorization:'Bearer '+s.key,
-              'x-device-token': locTokenOf(code), 'Content-Type':'application/json' };
-  const r = await fetch(s.url + '/rest/v1/' + path,
-    { method: method||'GET', headers:h, body: body?JSON.stringify(body):undefined });
-  const txt = await r.text();
-  if(!r.ok){ const e=new Error(txt||('HTTP '+r.status)); e.status=r.status; throw e; }
-  try{ return JSON.parse(txt||'[]'); }catch(e){ return []; }
-}
-
-/**
- * 부모 토큰을 챙긴다. 없으면 **PIN 을 확인받아** 서버에서 새로 받아온다.
- * 🔴 평문 토큰은 서버가 **발급할 때 한 번만** 준다 → 받으면 이 브라우저에 저장한다.
- *    서버에는 해시만 남아서, 잃어버리면 다시 받아야 한다(그래서 PIN 해시를 세션에 들고 있다).
- *    ⚠️ PIN 해시를 `sessionStorage` 에 두는 건, 그 값이 이미 공개 키로 읽히는 값이라서다
- *       (9장 `pin_plain` 항목). 앱을 닫으면 사라진다. localStorage 에는 두지 않는다.
- */
-async function locEnsureToken(force){
-  if(!force && locTokenOf(ST.code)) return locTokenOf(ST.code);
-  const h = locPinHash();
-  if(!h){ LOC.note = 'NOPIN'; return ''; }
-  const res = await locRpc(ST.server, 'loc_register_parent_token', { p_device:ST.code, p_pin_hash:h });
-  if(typeof res==='string' && /^[0-9a-f]{64}$/.test(res)){ setLocTokenOf(ST.code, res); LOC.note=''; return res; }
-  LOC.note = String(res||'');     // BAD_PIN · LOCKED · NO_DEVICE · BAD_INPUT
-  return '';
-}
-
-function locOn(){ return ST.pol?.location_tracking_enabled === 'true'; }
-
-// ── 거리 (하버사인) ───────────────────────────────────────────────────────
-//  ⚠️ 자녀앱은 `Location.distanceBetween`(안드로이드 내장)을 쓴다. 값이 몇 m 다를 수 있는데,
-//     **진짜 판정은 폰이 한다.** 여기 계산은 「지금 집에 있어요」를 보여주기 위한 것뿐이다.
-function locDist(a1, o1, a2, o2){
-  const R=6371000, t=Math.PI/180;
-  const d1=(a2-a1)*t, d2=(o2-o1)*t;
-  const x=Math.sin(d1/2)*Math.sin(d1/2) +
-          Math.cos(a1*t)*Math.cos(a2*t)*Math.sin(d2/2)*Math.sin(d2/2);
-  return 2*R*Math.asin(Math.min(1, Math.sqrt(x)));
-}
-/** 그 좌표가 어느 구역 안인가 (제일 가까운 것) */
-function locZoneAt(lat, lng){
-  let best=null, bd=Infinity;
-  (LOC.zones||[]).forEach(z=>{
-    if(z.enabled===false) return;
-    const d=locDist(lat,lng, Number(z.lat), Number(z.lng));
-    if(d<=Number(z.radius_m||150) && d<bd){ bd=d; best=z; }
-  });
-  return best;
-}
-function locMapUrl(lat, lng){
-  return 'https://map.naver.com/p/?lng='+encodeURIComponent(lng)+'&lat='+encodeURIComponent(lat)+'&zoom=17';
-}
-function locHm(iso){ const d=toDate(iso); return d? p2(d.getHours())+':'+p2(d.getMinutes()) : '-'; }
-function locM(m){ return m>=1000 ? (m/1000).toFixed(1)+'km' : Math.round(m)+'m'; }
-/** 구역 그림 — 이름을 보고 고른다. 「학교」에 🏠 집이 붙으면 바로 눈에 걸린다 */
-function locZoneEmo(name){
-  const n = String(name||'');
-  if(/학교|초등|중학|고등/.test(n)) return '🏫';
-  if(/학원|교습|과외/.test(n))      return '📚';
-  if(/집|댁|home/i.test(n))         return '🏠';
-  return '📍';
-}
-
-// ── 불러오기 ──────────────────────────────────────────────────────────────
-async function locLoad(day){
-  LOC.day = day || ymd(new Date());
-  const tok = await locEnsureToken();
-  if(!tok){ LOC.ready=false; return; }
-  const from = LOC.day + 'T00:00:00', to = LOC.day + 'T23:59:59.999';
-  const q = 'device_code=eq.' + encodeURIComponent(ST.code);
-  const [lastR, histR, zoneR, evR] = await Promise.all([
-    locApi(ST.server, ST.code, 'device_locations?'+q+'&select=lat,lng,accuracy_m,battery,captured_at,updated_at'),
-    locApi(ST.server, ST.code, 'location_history?'+q+'&captured_at=gte.'+from+'&captured_at=lte.'+to+
-           '&select=lat,lng,accuracy_m,captured_at&order=captured_at.asc&limit=400'),
-    locApi(ST.server, ST.code, 'safe_zones?'+q+'&select=id,name,lat,lng,radius_m,enabled,notify_enter,notify_exit,created_at&order=created_at.asc'),
-    locApi(ST.server, ST.code, 'zone_events?'+q+'&select=zone_name,event,happened_at&order=happened_at.desc&limit=20')
-  ]);
-  LOC.last   = Array.isArray(lastR)? (lastR[0]||null) : null;
-  LOC.hist   = Array.isArray(histR)? histR : [];
-  LOC.zones  = Array.isArray(zoneR)? zoneR : [];
-  LOC.events = Array.isArray(evR)? evR : [];
-  LOC.ready  = true;
-  // 🔴 법 제16조 — 「누가 언제 봤나」를 남긴다. 실패해도 화면은 계속 보여준다.
-  try{ await locApi(ST.server, ST.code, 'location_access_log', 'POST',
-        [{ device_code:ST.code, action:'VIEW', actor:'parent' }]); }catch(e){}
-}
-
-// ── 자녀폰이 준비됐나 (폰이 올려 주는 4가지 · 2026-10-31 신설) ─────────────
-function locPhoneState(){
-  const p = ST.pol || {};
-  const sent = p.location_last_sent_at || '';
-  return { perm: p.location_perm_ok === 'true',
-           svc:  p.location_service_on === 'true',
-           q:    Number(p.location_queue_size || 0) || 0,
-           sent, okSent: !!sent && sent !== 'never' };
-}
-function locStateNote(){
-  const s = locPhoneState();
-  const rows = [];
-  if(!s.perm) rows.push('📍 <b>자녀폰에서 위치 허용이 필요해요.</b> 자녀폰에 안내 화면이 떠요 — 「위치 허용하기」를 눌러 주세요');
-  if(!s.svc)  rows.push('🛰️ 자녀폰의 <b>위치 서비스(GPS)가 꺼져 있어요.</b> 설정에서 켜 주세요');
-  if(s.q>0)   rows.push('📦 인터넷이 끊겨서 <b>'+s.q+'곳이 폰에 쌓여 있어요.</b> 연결되면 자동으로 올라와요');
-  if(s.perm && s.svc && !s.okSent) rows.push('⏳ 아직 첫 위치를 기다리고 있어요. 바깥에 나가면 더 빨리 잡혀요');
-  return rows.length ? '<div class="note warn">'+rows.join('<br>')+'</div>' : '';
-}
-
-// ── 메인 화면 ─────────────────────────────────────────────────────────────
-async function openLoc(day){
-  // 🔴 카드를 숨기는 것만으로는 부족하다 — 주소창·뒤로가기·설명화면에서도 들어올 수 있다.
-  if(!locBeta(ST.code)){ toast('아직 준비 중인 기능이에요'); show('scMain'); paintMain(); return; }
-  if(!locOn()){ openLocConsent(); return; }
-  loading(true);
-  try{ await locLoad(day); }
-  catch(e){
-    loading(false);
-    const notReady = e.status===404;
-    openSub('어디 있나요', '<div class="note warn">'+
-      (notReady
-        ? '🛠 <b>이 서버에 위치 기능이 아직 안 깔렸어요.</b><br>매장에서 준비 중이에요 — 조금만 기다려 주세요.'
-        : '⚠️ <b>위치를 불러오지 못했어요.</b><br>'+esc(e.message||'')+'<br><br>잠시 뒤 다시 눌러 주세요.')+
-      '</div><button class="btn btn-g" onclick="closeSub()">닫기</button>');
-    return;
-  }
-  loading(false);
-
-  if(!LOC.ready){
-    const n = LOC.note;
-    const msg = n==='LOCKED'   ? '🔒 비밀번호를 여러 번 틀려서 <b>10분간 잠겼어요.</b> 조금 뒤 다시 해 주세요.'
-              : n==='BAD_PIN'  ? '🔑 <b>이 자녀의 비밀번호로 들어와 주세요.</b><br>자녀가 둘 이상이면, 위치를 볼 자녀의 비밀번호로 앱을 다시 열어 주세요.'
-              : n==='NO_DEVICE'? '❓ 이 자녀의 비밀번호가 서버에 없어요. 매장에 문의해 주세요.'
-              : '🔑 <b>비밀번호 확인이 필요해요.</b> 앱을 완전히 닫고 다시 열어 비밀번호를 넣어 주세요.';
-    openSub('어디 있나요', '<div class="note warn">'+msg+'</div>'+
-      '<button class="btn btn-g" onclick="closeSub()">닫기</button>');
-    return;
-  }
-  openSub('어디 있나요', locHtml(), null, { label:'구역 관리', fn: openZones });
-}
-
-function locHtml(){
-  const L = LOC.last;
-  let h = locStateNote();
-
-  // ① 지금 어디에
-  if(L){
-    const z = locZoneAt(Number(L.lat), Number(L.lng));
-    const when = toDate(L.captured_at);
-    const mins = when ? Math.floor((Date.now()-when.getTime())/60000) : -1;
-    h += '<div class="hero" style="cursor:default">'+
-         '<div class="lbl">지금 어디 있나요</div>'+
-         '<div class="big" style="font-size:26px">'+(z? locZoneEmo(z.name)+' '+esc(z.name) : '🚶 구역 밖')+'</div>'+
-         '<div class="meta">'+(when? esc(locHm(L.captured_at))+' 확인' : '시각 모름')+
-            (mins>=0? ' · '+(mins<1?'방금':mins+'분 전') : '')+
-            (L.accuracy_m? ' · 오차 약 '+Math.round(L.accuracy_m)+'m' : '')+'</div>'+
-         '</div>';
-    h += '<a class="btn btn-p" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box" '+
-         'href="'+locMapUrl(L.lat, L.lng)+'" target="_blank" rel="noopener noreferrer">🗺 네이버지도로 열기</a>';
-    if(mins > 20) h += '<div class="note" style="margin-top:12px">⏱ <b>'+mins+'분 전 위치예요.</b> '+
-         '자녀폰이 실내에 있거나 인터넷이 끊기면 조금 늦게 올라와요. 평소엔 <b>5분마다</b> 확인해요.</div>';
-    if(!z && LOC.zones.length){
-      let near=null, nd=Infinity;
-      LOC.zones.forEach(x=>{ const d=locDist(Number(L.lat),Number(L.lng),Number(x.lat),Number(x.lng));
-                             if(d<nd){ nd=d; near=x; } });
-      if(near) h += '<div class="note" style="margin-top:12px">📏 가장 가까운 구역은 <b>'+esc(near.name)+
-                    '</b> 이고 약 '+locM(nd)+' 떨어져 있어요.</div>';
-    }
-  } else {
-    h += '<div class="note warn">🕐 <b>아직 올라온 위치가 없어요.</b><br>'+
-         '자녀폰이 위치를 허용하고 한 번 바깥에 나가면 첫 위치가 잡혀요 (실내에서는 오래 걸릴 수 있어요).</div>';
-  }
-
-  // ② 날짜 고르기 (서버에 7일치가 남아 있다)
-  h += '<div class="sec">동선 보기</div><div class="chips">';
-  for(let i=0;i<7;i++){
-    const d=new Date(); d.setDate(d.getDate()-i);
-    const k=ymd(d), on=(k===LOC.day);
-    h += '<button class="chip'+(on?' on':'')+'" onclick="openLoc(\''+k+'\')">'+
-         (i===0?'오늘':i===1?'어제':(d.getMonth()+1)+'/'+d.getDate())+'</button>';
-  }
-  h += '</div>';
-
-  // ③ 동선 — 구역 이름으로 묶어서 보여준다
-  h += locTrailHtml();
-
-  // ④ 도착·출발 기록
-  if(LOC.events.length){
-    h += '<div class="sec">도착 · 출발 기록</div><div class="card">';
-    h += LOC.events.map(e=>
-      '<div class="row"><div class="ic" style="background:'+(e.event==='ENTER'?'#ECFDF3':'#FEF3F2')+'">'+
-      (e.event==='ENTER'?'➡️':'⬅️')+'</div><div class="grow">'+
-      '<div class="ttl">'+esc(e.zone_name||'구역')+' '+(e.event==='ENTER'?'도착':'출발')+'</div>'+
-      '<div class="val">'+esc(ago(e.happened_at))+'</div></div></div>').join('');
-    h += '</div>';
-  }
-
-  // ⑤ 구역
-  h += '<div class="sec">세이프존</div>';
-  if(!LOC.zones.length){
-    h += '<div class="note">🏫 <b>아직 등록한 곳이 없어요.</b><br>집·학교를 등록하면 '+
-         '「지금 학교에 있어요」처럼 <b>장소 이름으로</b> 알려드려요.</div>';
-  }
-  h += '<div class="card tap" onclick="openZones()"><div class="row">'+
-       '<div class="ic" style="background:#EFF6FF">🏫</div><div class="grow">'+
-       '<div class="ttl">구역 관리</div><div class="val">'+
-       (LOC.zones.length? LOC.zones.length+'곳 등록됨 — '+esc(LOC.zones.map(z=>z.name).join(' · ')) : '집·학교 등록하기')+
-       '</div></div><div class="chev">›</div></div></div>';
-
-  // ⑥ 문자로 받기 (인터넷이 끊겼을 때)
-  h += '<div class="sec">인터넷이 끊겼을 때</div>' + locSmsHtml();
-
-  // ⑦ 끄기
-  h += '<div class="sec">위치 확인 끄기</div>'+
-       '<div class="note">끄면 자녀폰이 <b>위치를 더 이상 보내지 않아요.</b> 지금까지의 기록은 7일 뒤 자동으로 지워져요.</div>'+
-       '<button class="btn btn-d" onclick="locTurnOff()">위치 확인 끄기</button>';
-  return h;
-}
-
-/** 동선 — 좌표를 늘어놓지 않고 **구역 이름으로 묶어서** 보여준다 */
-function locTrailHtml(){
-  const pts = LOC.hist || [];
-  if(!pts.length) return '<div class="note">이 날은 올라온 위치가 없어요.</div>';
-
-  const runs = [];
-  pts.forEach(p=>{
-    const z = locZoneAt(Number(p.lat), Number(p.lng));
-    const key = z? ('z'+z.id) : 'out';
-    const nm  = z? z.name : '구역 밖';
-    const prev = runs[runs.length-1];
-    if(prev && prev.key===key){ prev.to=p.captured_at; prev.n++; prev.p=p; }
-    else runs.push({ key, nm, from:p.captured_at, to:p.captured_at, n:1, p });
-  });
-
-  let h = '<div class="card">';
-  h += runs.map(r=>{
-    const same = locHm(r.from)===locHm(r.to);
-    const time = same? locHm(r.from) : locHm(r.from)+' ~ '+locHm(r.to);
-    const out  = r.key==='out';
-    return '<div class="row">'+
-      '<div class="ic" style="background:'+(out?'#F2F4F7':'#ECFDF3')+'">'+(out?'🚶':locZoneEmo(r.nm))+'</div>'+
-      '<div class="grow"><div class="ttl">'+esc(r.nm)+'</div><div class="val">'+time+'</div></div>'+
-      '<a class="chip" style="text-decoration:none" href="'+locMapUrl(r.p.lat, r.p.lng)+
-      '" target="_blank" rel="noopener noreferrer">지도</a>'+
-      '</div>';
-  }).join('');
-  h += '</div>';
-  h += '<div class="note">위치는 <b>5분마다</b> 확인해요. 구역을 등록하면 「집」·「학교」처럼 이름으로 보여요. '+
-       '이동 기록은 <b>7일</b>까지만 보관하고 그 뒤엔 자동으로 지워져요.</div>';
-  return h;
-}
-
-// ── 문자 알림 (자녀폰 인터넷이 끊겼을 때) ─────────────────────────────────
-//  🔴 자녀앱은 `sms_fallback_enabled` + `parent_phone` **둘 다** 있어야 보낸다
-//     (`LocationSms.kt:172·174`). 하나만 채우면 **아무 일도 안 일어난다** — 3-11 의 모양이다.
-function locSmsHtml(){
-  const p = ST.pol||{};
-  const on = p.sms_fallback_enabled === 'true';
-  const tel = p.parent_phone || '';
-  let h = '<div class="note">자녀폰 <b>인터넷이 30분 넘게 끊기면</b>, 폰이 마지막 위치를 '+
-          '<b>문자(SMS)로</b> 보내 드려요. 데이터·와이파이가 없어도 가요.<br>'+
-          '세이프존을 <b>나갈 때</b>도 문자로 알려드려요.</div>';
-  if(on && !tel.trim()){
-    h += '<div class="note warn">⚠️ <b>켜져 있는데 번호가 비어 있어요.</b> 번호를 넣어야 문자가 가요.</div>';
-  }
-  h += '<div class="card"><div class="row"><div class="ic" style="background:#ECFDF3">✉️</div>'+
-       '<div class="grow"><div class="ttl">문자로 알려받기</div><div class="val">'+
-       (on? (tel? '켜짐 · '+esc(tel) : '켜짐 · 번호 없음') : '꺼짐')+'</div></div>'+
-       '<label class="sw"><input type="checkbox" '+(on?'checked':'')+
-       ' onchange="locToggleSms(this.checked)"><i></i></label></div></div>';
-  h += '<div class="card"><div class="field"><label>부모님 휴대폰 번호 (문자 받을 번호)</label>'+
-       '<input id="locTel" type="tel" inputmode="numeric" placeholder="01012345678" value="'+esc(tel)+'"></div>'+
-       '<button class="btn btn-g" onclick="locSaveTel()">번호 저장</button></div>'+
-       '<div class="note">문자 요금은 <b>자녀폰 요금제</b>에서 나가요. 매장에서 전부 문자 무제한으로 개통해 드리고 있어요. '+
-       '하루 최대 30통까지만 보내도록 막아 뒀어요.</div>';
-  return h;
-}
-
-async function locToggleSms(on){
-  const v = on ? 'true' : 'false';
-  // 🔴 「켜기」인데 번호가 없으면 **아무 일도 안 일어난다** — 스위치만 켜고 끝내지 않는다 (3-11)
-  if(on && !(ST.pol?.parent_phone||'').trim()){
-    toast('먼저 전화번호를 저장해 주세요');
-    openLoc(LOC.day);
-    return;
-  }
-  loading(true);
-  try{ await savePol([{ key:'sms_fallback_enabled', value:v }]); loading(false); openLoc(LOC.day); }
-  catch(e){ loading(false); toast('저장 실패: '+e.message); }
-}
-
-async function locSaveTel(){
-  const el = document.getElementById('locTel');
-  const raw = (el? el.value : '').replace(/[^0-9]/g,'');
-  if(raw && !/^01[0-9]{8,9}$/.test(raw)){ toast('휴대폰 번호를 다시 확인해 주세요'); return; }
-  loading(true);
-  try{
-    await savePol([{ key:'parent_phone', value:raw }]);
-    loading(false);
-    toast(raw? '번호를 저장했어요' : '번호를 지웠어요');
-    openLoc(LOC.day);
-  }catch(e){ loading(false); toast('저장 실패: '+e.message); }
-}
-
-// ── 동의 · 켜기 · 끄기 ────────────────────────────────────────────────────
-//  🔴 위치정보법 — 「동의를 받는다」로 끝이 아니라 **기록까지**가 의무다(제16조·제25조).
-//     대표점장 결정(2026-10-23) : 나이 상관없이 **전원에게** 받는다.
-function openLocConsent(){
-  LOC_AGREE = false;
-  const h =
-   '<div class="note">📍 <b>자녀 위치를 확인하는 기능이에요.</b><br>'+
-   '시내모바일이 직접 만들었어요. <b>앱을 새로 깔 필요 없이</b> 지금 쓰시는 자녀폰에서 바로 돼요.</div>'+
-   '<div class="card"><div class="row"><div class="ic" style="background:#ECFDF3">🗺</div><div class="grow">'+
-   '<div class="ttl">지금 어디 있는지</div><div class="val">5분마다 확인해서 보여드려요 · 네이버지도로 열려요</div></div></div></div>'+
-   '<div class="card"><div class="row"><div class="ic" style="background:#EFF6FF">🏫</div><div class="grow">'+
-   '<div class="ttl">집 · 학교 도착/출발</div><div class="val">장소를 등록하면 「학교 도착」처럼 기록돼요</div></div></div></div>'+
-   '<div class="card"><div class="row"><div class="ic" style="background:#FFFBEB">✉️</div><div class="grow">'+
-   '<div class="ttl">인터넷이 끊겨도</div><div class="val">30분 넘게 끊기면 <b>문자로</b> 알려드려요</div></div></div></div>'+
-
-   '<div class="sec">동의가 필요해요</div>'+
-   '<div class="note">위치정보는 법(위치정보의 보호 및 이용 등에 관한 법률)에 따라 <b>동의를 받고</b> 쓰게 되어 있어요. '+
-   '아래 내용을 확인해 주세요.</div>'+
-   '<div class="card"><div style="font-size:14px;line-height:1.9;color:#475467;font-weight:600">'+
-   '<b>· 무엇을 모으나요</b> — 자녀폰의 위치(위도·경도), 정확도, 시각<br>'+
-   '<b>· 왜 모으나요</b> — 부모님이 자녀의 현재 위치와 안전을 확인하기 위해<br>'+
-   '<b>· 얼마나 보관하나요</b> — 이동 기록은 <b>7일</b>, 도착·출발 기록은 1년 뒤 자동 삭제<br>'+
-   '<b>· 누가 볼 수 있나요</b> — <b>비밀번호를 아는 부모님만</b> 볼 수 있어요. '+
-   '서버에 기기 전용 열쇠가 걸려 있어 다른 사람은 볼 수 없어요<br>'+
-   '<b>· 자녀에게 알리나요</b> — 네. 자녀폰에 「부모님이 위치 확인을 켜셨어요」 안내가 <b>한 번 떠요</b><br>'+
-   '<b>· 언제든 끌 수 있어요</b> — 이 화면에서 끄면 바로 수집을 멈춰요<br>'+
-   '<b>· 열람 기록</b> — 법에 따라 「누가 언제 위치를 봤는지」가 남아요'+
-   '</div></div>'+
-   '<div class="card tap" onclick="locAgreeTick()"><div class="row">'+
-   '<div class="ic" id="locAgIc" style="background:#F2F4F7">⬜</div>'+
-   '<div class="grow"><div class="ttl">위 내용을 확인했고, 위치 수집에 동의해요</div>'+
-   '<div class="val">법정대리인(부모)으로서 동의합니다</div></div></div></div>'+
-   '<button class="btn btn-p" id="locAgBtn" disabled onclick="locTurnOn()">위치 확인 켜기</button>'+
-   '<div class="note" style="margin-top:12px">자녀가 중·고등학생이어도 동의는 <b>부모님이</b> 해 주세요. '+
-   '그리고 자녀에게 <b>꼭 미리 말해 주세요</b> — 몰래 보는 게 아니라 안전을 위한 거라고요. 그게 오래 가요.</div>'+
-   '<button class="btn btn-g" style="margin-top:10px" onclick="closeSub()">나중에 할게요</button>';
-  openSub('위치 확인 켜기', h);
-}
-function locAgreeTick(){
-  LOC_AGREE = !LOC_AGREE;
-  const ic=document.getElementById('locAgIc'), bt=document.getElementById('locAgBtn');
-  if(ic){ ic.textContent = LOC_AGREE? '✅' : '⬜'; ic.style.background = LOC_AGREE? '#ECFDF3' : '#F2F4F7'; }
-  if(bt) bt.disabled = !LOC_AGREE;
-}
-
-async function locTurnOn(){
-  if(!LOC_AGREE){ toast('동의에 체크해 주세요'); return; }
-  loading(true);
-  try{
-    // ⓞ **이 서버에 위치 표가 깔려 있나부터 본다.**
-    //   🔴 안 깔린 서버에서 정책만 켜면 부모는 「켰다」고 믿는데 **아무 일도 안 일어난다**
-    //      (CLAUDE.md 3-11 의 모양 — 스위치는 켜졌는데 받을 곳이 없다).
-    //      15곳에 다 깔리기 전까지는 서버마다 이 상태가 다를 수 있다.
-    //   🔴 **표가 아니라 함수를 찔러 본다.** 서버 I 는 2026-10-31 에 표만 깔린 「반쪽」 상태였다 —
-    //      표만 보면 「준비됨」으로 보이고, 정작 부모 토큰 발급 함수가 없어 그 뒤에서 터진다.
-    //      일부러 틀린 해시를 넣는다 → 깔린 서버는 `BAD_INPUT`(200), 안 깔린 서버는 404. 쓰기는 없다.
-    try{ await locRpc(ST.server, 'loc_register_parent_token', { p_device: ST.code, p_pin_hash: 'probe' }); }
-    catch(e){
-      if(e.status === 404){
-        loading(false);
-        openSub('위치 확인 켜기',
-          '<div class="note warn">🛠 <b>이 서버에는 위치 기능이 아직 안 깔렸어요.</b><br>'+
-          '매장에서 준비하고 있어요 — 조금만 기다려 주세요. 준비되면 바로 쓰실 수 있어요.</div>'+
-          '<button class="btn btn-g" onclick="closeSub()">닫기</button>');
-        return;
-      }
-      // 404 가 아니면(네트워크 등) 그냥 진행한다 — 켜기 자체를 막을 이유는 없다
-    }
-    // ① 먼저 **정책을 켠다** — 서버가 「켠 기기만」 자녀 토큰 등록을 받아주므로 순서가 중요하다
-    await savePol([{ key:'location_tracking_enabled', value:'true' }]);
-    // ② 부모 토큰을 받는다 (PIN 확인 뒤 발급)
-    const tok = await locEnsureToken(true);
-    if(!tok){
-      loading(false);
-      const n=LOC.note;
-      toast(n==='LOCKED' ? '비밀번호를 여러 번 틀려 10분 잠겼어요' :
-            n==='BAD_PIN'? '이 자녀의 비밀번호로 들어와 주세요' : '비밀번호 확인이 필요해요');
-      return;
-    }
-    // ③ 동의를 **기록**한다
-    try{
-      await locApi(ST.server, ST.code, 'location_consents', 'POST', [{
-        device_code: ST.code,
-        items: { version:1, by:'parent_web', scope:['current_location','trail_7d','safe_zone','sms_fallback'],
-                 retain_days:7, notified_child:true },
-        agreed_ua: (navigator.userAgent||'').slice(0,300)
-      }]);
-      await locApi(ST.server, ST.code, 'location_access_log', 'POST',
-        [{ device_code:ST.code, action:'CONSENT', actor:'parent' }]);
-    }catch(e){ console.warn('동의 기록 실패:', e && e.name, e && e.message); }
-    loading(false);
-    LOC_AGREE = false;
-    toast('위치 확인을 켰어요');
-    openLoc();
-  }catch(e){ loading(false); toast('켜기 실패: '+e.message); }
-}
-
-async function locTurnOff(){
-  if(!confirm('위치 확인을 끌까요?\n자녀폰이 더 이상 위치를 보내지 않아요.')) return;
-  loading(true);
-  try{
-    await savePol([{ key:'location_tracking_enabled', value:'false' }]);
-    const h = locPinHash();
-    if(h){ try{ await locRpc(ST.server, 'loc_consent_revoke', { p_device:ST.code, p_pin_hash:h }); }
-           catch(e){ console.warn('동의 철회 기록 실패:', e && e.message); } }
-    loading(false);
-    toast('위치 확인을 껐어요');
-    show('scMain'); paintMain();
-  }catch(e){ loading(false); toast('끄기 실패: '+e.message); }
-}
-
-// ── 세이프존 ──────────────────────────────────────────────────────────────
-function openZones(){
-  let h = '<div class="note">집·학교처럼 <b>자주 가는 곳</b>을 등록해 두면 「지금 학교에 있어요」처럼 '+
-          '<b>장소 이름으로</b> 알려드려요. 도착·출발도 기록돼요.</div>';
-  if(LOC.zones.length){
-    h += '<div class="card">';
-    h += LOC.zones.map(z=>{
-      const on = z.enabled !== false;
-      const rec = (z.notify_enter!==false && z.notify_exit!==false) ? '도착·출발 기록'
-                : (z.notify_enter!==false) ? '도착만 기록'
-                : (z.notify_exit!==false)  ? '출발만 기록' : '기록 안 함';
-      return '<div class="item"><div class="grow">'+
-        '<div class="nm">'+locZoneEmo(z.name)+' '+esc(z.name)+(on?'':' (꺼짐)')+'</div>'+
-        '<div class="val">반경 '+Number(z.radius_m||150)+'m · '+rec+'</div></div>'+
-        '<a class="chip" style="text-decoration:none" href="'+locMapUrl(z.lat,z.lng)+
-        '" target="_blank" rel="noopener noreferrer">지도</a>'+
-        '<button class="x" onclick="zoneDel(\''+z.id+'\')">삭제</button>'+
-        '</div>';
-    }).join('');
-    h += '</div>';
-  } else {
-    h += '<div class="card"><div class="empty">등록된 곳이 없어요</div></div>';
-  }
-  h += '<div class="sec">새로 등록하기</div>'+
-       '<div class="card tap" onclick="openZoneAdd(\'child\')"><div class="row">'+
-       '<div class="ic" style="background:#EFF6FF">📍</div><div class="grow">'+
-       '<div class="ttl">자녀가 지금 있는 곳</div>'+
-       '<div class="val">'+(LOC.last? '자녀폰이 마지막으로 확인한 위치로 등록해요' : '아직 올라온 위치가 없어요')+'</div>'+
-       '</div><div class="chev">›</div></div></div>'+
-       '<div class="card tap" onclick="openZoneAdd(\'me\')"><div class="row">'+
-       '<div class="ic" style="background:#ECFDF3">🧍</div><div class="grow">'+
-       '<div class="ttl">내가 지금 있는 곳</div>'+
-       '<div class="val">집에서 누르면 「집」이 바로 등록돼요</div>'+
-       '</div><div class="chev">›</div></div></div>'+
-       '<div class="note">💡 <b>학교를 등록하려면</b> — 자녀가 학교에 있을 때 「자녀가 지금 있는 곳」으로 등록하거나, '+
-       '등교할 때 같이 가서 「내가 지금 있는 곳」을 눌러 주세요.</div>'+
-       '<button class="btn btn-g" onclick="openLoc(LOC.day)">닫기</button>';
-  openSub('구역 관리', h, ()=>openLoc(LOC.day));
-}
-
-async function openZoneAdd(from){
-  let lat, lng;
-  if(from==='child'){
-    if(!LOC.last){ toast('아직 자녀폰 위치가 올라오지 않았어요'); return; }
-    lat = Number(LOC.last.lat); lng = Number(LOC.last.lng);
-  } else {
-    if(!navigator.geolocation){ toast('이 브라우저는 위치를 알려주지 못해요'); return; }
-    loading(true);
-    try{
-      const pos = await new Promise((ok,no)=>navigator.geolocation.getCurrentPosition(ok,no,
-        { enableHighAccuracy:true, timeout:15000, maximumAge:0 }));
-      lat = pos.coords.latitude; lng = pos.coords.longitude;
-    }catch(e){
-      loading(false);
-      toast(e && e.code===1 ? '브라우저에서 위치를 허용해 주세요' : '내 위치를 찾지 못했어요');
-      return;
-    }
-    loading(false);
-  }
-  LOC_NEW = { name:'집', lat, lng, radius:150, from };
-  zoneAddHtml();
-}
-
-function zoneAddHtml(){
-  const n = LOC_NEW;
-  const h = '<div class="note">'+(n.from==='child'? '자녀폰이 마지막으로 확인한 위치' : '지금 내가 있는 위치')+
-    '를 기준으로 등록해요.<br><a href="'+locMapUrl(n.lat,n.lng)+'" target="_blank" rel="noopener noreferrer">'+
-    '🗺 여기가 맞는지 네이버지도로 확인하기</a></div>'+
-    '<div class="sec">이름</div><div class="chips">'+
-    LOC_ZONE_PRESETS.map(p=>'<button class="chip'+(n.name===p?' on':'')+'" onclick="zoneSetName(\''+p+'\')">'+p+'</button>').join('')+
-    '</div>'+
-    '<div class="card"><div class="field"><label>직접 쓰기</label>'+
-    '<input id="zName" maxlength="12" placeholder="예: 수학학원" value="'+esc(n.name)+'"></div></div>'+
-    '<div class="sec">반경 — 이 안에 있으면 「도착」이에요</div><div class="chips">'+
-    LOC_RADII.map(r=>'<button class="chip'+(n.radius===r?' on':'')+'" onclick="zoneSetRadius('+r+')">'+r+'m</button>').join('')+
-    '</div>'+
-    '<div class="note">🎯 <b>너무 작게 잡지 마세요.</b> 건물 안에서는 위치 오차가 50~100m 까지 생겨요. '+
-    '아파트·학교는 <b>150~200m</b> 가 알맞아요.<br>'+
-    '나갈 때는 반경보다 <b>100m 더</b> 멀어져야 「출발」로 봐요 — 경계에서 들락날락하는 걸 막기 위해서예요.</div>'+
-    '<button class="btn btn-p" onclick="zoneSave()">이 곳을 등록하기</button>'+
-    '<button class="btn btn-g" style="margin-top:10px" onclick="openZones()">취소</button>';
-  openSub('구역 등록', h, ()=>openZones());
-}
-function zoneSetName(v){
-  const el=document.getElementById('zName');
-  LOC_NEW.name=v; if(el) el.value=v;
-  zoneAddHtml();
-}
-function zoneSetRadius(v){
-  // 🔴 입력칸에 쓰던 이름을 **잃지 않게** 먼저 챙긴다 (다시 그리면 사라진다)
-  const el=document.getElementById('zName');
-  if(el && el.value.trim()) LOC_NEW.name = el.value.trim();
-  LOC_NEW.radius=v;
-  zoneAddHtml();
-}
-
-async function zoneSave(){
-  if(!LOC_NEW) return;
-  const el=document.getElementById('zName');
-  const name = ((el? el.value : '') || LOC_NEW.name || '').trim();
-  if(!name){ toast('이름을 넣어 주세요'); return; }
-  if(LOC.zones.some(z=>z.name===name)){ toast('같은 이름이 이미 있어요'); return; }
-  loading(true);
-  try{
-    await locApi(ST.server, ST.code, 'safe_zones', 'POST', [{
-      device_code: ST.code, name, lat: LOC_NEW.lat, lng: LOC_NEW.lng,
-      radius_m: LOC_NEW.radius, enabled: true, notify_enter: true, notify_exit: true
-    }]);
-    pokeChild(ST.code, ST.server);     // 자녀폰이 바로 받아가게 깨운다
-    LOC_NEW = null;
-    await locLoad(LOC.day);
-    loading(false);
-    toast(name+' 등록했어요');
-    openZones();
-  }catch(e){
-    loading(false);
-    toast((e.status===401||e.status===403) ? '권한 확인이 필요해요 — 앱을 다시 열어 주세요' : '등록 실패: '+e.message);
-  }
-}
-
-async function zoneDel(id){
-  const z = LOC.zones.find(x=>String(x.id)===String(id));
-  if(!confirm((z? z.name : '이 구역')+' 을(를) 삭제할까요?')) return;
-  loading(true);
-  try{
-    await locApi(ST.server, ST.code, 'safe_zones?id=eq.'+encodeURIComponent(id), 'DELETE');
-    pokeChild(ST.code, ST.server);
-    await locLoad(LOC.day);
-    loading(false);
-    toast('삭제했어요');
-    openZones();
-  }catch(e){ loading(false); toast('삭제 실패: '+e.message); }
-}
-
 function doLogout(){ removeChildUI(ST.code); }
 
 // ── 시작 ──
@@ -6542,7 +5369,7 @@ function openDocs(){
       </div>
       <div class="dact">
         ${x.v?`<button class="db vd" onclick="playDoc('${esc(x.v)}','${esc(x.t)}')">▶ 영상보기</button>`:``}
-        <a class="db" href="${x.f}" target="_blank" rel="noopener noreferrer">📄 보기</a>
+        <a class="db" href="${x.f}" target="_blank" rel="noopener">📄 보기</a>
         <button class="db sh" onclick="shareDoc('${esc(x.f)}','${esc(x.t)}','${esc(x.v||'')}')">공유하기</button>
       </div>
     </div>`).join('');
@@ -6608,21 +5435,14 @@ async function shareFile(f, title){
 // ══════════ 💬 부모 공지(광고) — 비밀번호 입력 전에 1회 표시 (2026-09-16) ══════════
 //   · 부모님이 앱을 열면(세션 인증 전) 비밀번호 화면 직전에 이 공지를 보고 넘어간다.
 //   · 「일주일 동안 보지 않기」를 누르면 7일간 안 뜬다(localStorage).
-//   ⭐ 공지 내용을 바꾸면 **그 광고의** 버전상수를 +1 → 지난주에 「보지 않기」한 부모님께도 다시 보인다.
-//      🔴 광고가 둘이라 상수도 둘이다(AD_VER_LOC · AD_VER_VOICE). 하나로 합치면,
-//         내용이 안 바뀐 광고까지 350여 명에게 다시 뜬다.
-// 🔴 광고가 둘이라 **버전도 둘**이다. 하나로 두면 위치 공지를 올리는 순간
-//    기존 「카톡 의견」 광고를 「일주일 보지 않기」한 부모 350여 명에게 **그 광고가 다시 뜬다.**
-//    (내용이 안 바뀐 광고를 다시 띄우는 건 그냥 민폐다)
-const AD_VER_VOICE = 1;                       // 💬 카톡 의견 (2026-10-01)
-const AD_VER_LOC   = 2;                       // 📍 위치 확인 (2026-11-05)
-function adVersion(){ return locBetaAny() ? AD_VER_LOC : AD_VER_VOICE; }
+//   ⭐ 공지 내용을 바꾸면 AD_VERSION 을 +1 → 지난주에 「보지 않기」한 부모님께도 새 공지가 다시 보인다.
+const AD_VERSION   = 1;                       // 내용 바꿀 때마다 +1
 const AD_KEY       = 'sinae_notice_snooze';   // {until:ms, ver:n}
 const AD_SNOOZE_MS = 7*24*60*60*1000;         // 7일
 function shouldShowNotice(){
   try{
     const s=JSON.parse(localStorage.getItem(AD_KEY)||'null');
-    if(!s || s.ver!==adVersion()) return true;  // 처음이거나, 새 공지면 무조건 보여준다
+    if(!s || s.ver!==AD_VERSION) return true;   // 처음이거나, 새 공지면 무조건 보여준다
     return Date.now() >= (Number(s.until)||0);   // 스누즈 기간이 지났으면 다시 보여준다
   }catch(e){ return true; }
 }
@@ -6631,16 +5451,11 @@ let noticeShownThisOpen = false;   // 광고 ① 이 이번 로드에서 떴나 
 function showNotice(next){
   noticeShownThisOpen = true;
   noticeNext = next || null;
-  // 🧪 둘 중 하나만 보여준다
-  const _loc = locBetaAny();
-  const $a=document.getElementById('ndLoc'), $b=document.getElementById('ndVoice');
-  if($a) $a.classList.toggle('hide', !_loc);
-  if($b) $b.classList.toggle('hide', _loc);
   document.getElementById('scNotice').classList.remove('hide');
 }
 function closeNotice(snooze){
   if(snooze){
-    try{ localStorage.setItem(AD_KEY, JSON.stringify({ until:Date.now()+AD_SNOOZE_MS, ver:adVersion() })); }catch(e){}
+    try{ localStorage.setItem(AD_KEY, JSON.stringify({ until:Date.now()+AD_SNOOZE_MS, ver:AD_VERSION })); }catch(e){}
   }
   document.getElementById('scNotice').classList.add('hide');
   const n=noticeNext; noticeNext=null; if(n) n();
