@@ -672,6 +672,7 @@
   <div class="note">
     자녀폰 화면에 표시된 <b>8자리 코드</b>를 입력하세요.<br>예) ABCD-1234
   </div>
+  <div class="note hide" id="addLinkNote"></div>
   <div class="field">
     <label>자녀폰 코드</label>
     <input id="inCode" type="text" placeholder="ABCD-1234" autocomplete="off"
@@ -1268,7 +1269,7 @@ async function verifyPin(){
       //   그 토큰은 서버가 **PIN 을 확인한 뒤**에만 내준다 → 이번 세션 동안만 해시를 들고 있는다.
       //   ⚠️ sessionStorage 다(앱을 닫으면 사라진다). localStorage 에 두지 않는다.
       try{ sessionStorage.setItem(LOC_PINH_KEY, h); }catch(e){}
-      if(pinTarget){ const t=pinTarget; pinTarget=null; upsertKid(t); toast(`${t.name} 연결되었습니다`); openChild(t); }
+      if(pinTarget){ const t=pinTarget; pinTarget=null; upsertKid(t); clearAddParam(); toast(`${t.name} 연결되었습니다`); openChild(t); }
       else afterUnlock();
     }
     else{ pinBuf=''; drawPin();
@@ -1751,7 +1752,8 @@ function openInRealBrowser(){
   toast('주소를 복사했어요. 크롬이나 사파리에 붙여넣어 주세요');
 }
 function copyAppLink(){
-  const url = location.origin + location.pathname;
+  const _add = addCodeFromUrl();
+  const url = location.origin + location.pathname + (_add ? ('?add=' + _add) : '');
   const done = function(){ toast('주소를 복사했어요'); };
   try{
     if (navigator.clipboard && navigator.clipboard.writeText){
@@ -6641,8 +6643,62 @@ function closeNotice(snooze){
 }
 
 
+// ══════════ 🔗 링크 하나로 연결 (2026-11-07 대표점장 지시) ══════════
+//  매장이 카톡으로 보내는 주소 :  …/parent/?add=ABCD-1234
+//  부모님은 **누르기만** 하면 코드 칸이 채워지고 연결까지 알아서 간다.
+//
+//  🔴 보안은 그대로다 — doConnect() 는 끝에 startPin() 으로 **그 자녀의 부모 PIN** 을 묻는다.
+//     링크만으로는 아무것도 못 본다. 링크가 없애는 것은 **코드를 받아적는 수고**뿐이다.
+//  🔴 연결이 끝나기 전에는 주소에서 ?add= 를 지우지 않는다.
+//     카톡 안에서 열렸으면 「브라우저로 열기」로 밖에 나가야 하는데, 그때 코드가 같이 가야 한다.
+//     (copyAppLink 도 같은 이유로 ?add= 를 붙여서 복사한다)
+function addCodeFromUrl(){
+  try{ return normCode(new URLSearchParams(location.search).get('add') || ''); }
+  catch(e){ return ''; }
+}
+function clearAddParam(){
+  try{
+    const u = new URL(location.href);
+    if(!u.searchParams.has('add')) return;
+    u.searchParams.delete('add');
+    history.replaceState(null, '', u.pathname + (u.search || '') + u.hash);
+  }catch(e){}
+}
+/** 링크로 들어왔으면 그 흐름을 태우고 true. 아니면 false(평소 흐름). */
+function handleAddLink(){
+  const code = addCodeFromUrl();
+  if(code.length !== 9) return false;
+  if(kids().some(function(k){ return k.code === code; })){
+    clearAddParam();                      // 이미 연결된 집이 링크를 또 누른 경우
+    return false;
+  }
+  show('scConnect');
+  if(kids().length){
+    const b = document.getElementById('btnConnectBack');
+    if(b) b.classList.remove('hide');
+  }
+  const el = document.getElementById('inCode');
+  if(el) el.value = code;
+
+  const note = document.getElementById('addLinkNote');
+  if(note){
+    let info = { inApp:'' };
+    try{ info = openModeInfo(); }catch(e){}
+    note.classList.remove('hide');
+    note.innerHTML = info.inApp
+      ? '⚠️ 지금 <b>' + info.inApp + ' 안의 브라우저</b>로 열려 있어요.<br>'
+        + '연결은 되지만 <b>홈 화면에 추가가 안 돼요.</b><br>'
+        + '<button class="btn btn-g" style="margin-top:8px" onclick="openInRealBrowser()">브라우저로 열기</button>'
+      : '🔗 매장에서 보내 드린 링크로 들어오셨어요.<br>'
+        + '코드는 <b>' + code + '</b> 로 넣어 두었어요.';
+  }
+  setTimeout(doConnect, 350);             // 화면이 그려진 뒤에 연결한다
+  return true;
+}
+
 (function init(){
   migrateOld();
+  if(handleAddLink()) return;          // 🔗 매장이 보낸 링크로 들어온 경우
   if(!kids().length){ show('scConnect'); return; }
   document.getElementById('btnConnectBack').classList.remove('hide');
   if(sessionStorage.getItem('sinae_auth')==='1'){ afterUnlock(); return; }
