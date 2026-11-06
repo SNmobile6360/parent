@@ -585,7 +585,7 @@
   .gask:active{background:#E9F1FE}
   .gaskI{font-size:19px;flex:none}
   .gaskS{display:block;font-size:12px;color:#6E86AE;font-weight:500;margin-top:1px}
-  /* 🆕 앱 목록 — 아이콘 + 처음 쓴 날 */
+  /* 🆕 앱 목록 — 아이콘 + 날짜 배지(설치한 날 / 처음 쓴 날) */
   .aico{width:34px;height:34px;border-radius:9px;flex:none;object-fit:cover}
   .aico-x{width:34px;height:34px;border-radius:9px;flex:none;background:#EAECF0}
   .agel{display:inline-block;background:#F2F4F7;color:#667085;border:1px solid #E4E7EC;
@@ -1437,7 +1437,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월5일 대개편 테스트판';
+const WEB_LABEL = '11월6일 설치일 테스트판';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -2539,13 +2539,13 @@ const FEATURES = [
   art:{ kind:'grid', hi:1, st:'time', lc:'제한 없음', rc:'하루 30분', alt:'앱별 시간 제한' } },
 
 { k:'newapp', t:'🆕 새로 생긴 앱 알아보기', sub:'앱 차단 · 앱별 시간',
-  one:'앱 목록에서 「처음 쓴 날」로 새 앱을 바로 찾아요.',
+  one:'앱 목록에서 「설치한 날」로 새 앱을 바로 찾아요.',
   what:['앱 목록에 <b>앱 아이콘</b>이 같이 나와요. 이름만 보고 무슨 앱인지 짐작하지 않아도 돼요.',
-        '앱마다 <b>「처음 쓴 날」</b>이 붙어요. 최근에 생긴 앱은 위쪽 <b>🆕 버튼</b>으로 따로 모아 볼 수 있어요.',
+        '앱마다 <b>「N일 전 설치」</b>가 붙어요. 최근에 생긴 앱은 위쪽 <b>🆕 버튼</b>으로 따로 모아 볼 수 있어요.',
         '한 달이 넘은 앱은 전부 <b>「1개월 이상」</b>으로 묶어서 보여드려요. 오래된 앱은 날짜를 세는 게 의미가 없으니까요.'],
   when:['「우리 아이가 뭘 새로 깔았지?」가 궁금할 때요.'],
-  note:['🔴 <b>「설치한 날」이 아니라 「처음 쓴 날」이에요.</b> 자녀폰은 앱을 <b>설치한 날짜를 기록하지 않아요.</b> 그래서 그 앱이 사용기록에 <b>처음 나타난 날</b>을 보여드립니다. 보통은 깔고 바로 쓰기 때문에 거의 같아요.',
-        '깔아만 두고 <b>한 번도 안 쓴 앱</b>은 「쓴 기록 없어요」로 나와요. 날짜를 지어내지 않습니다.'],
+  note:['🔴 <b>「N일 전 설치」와 「N일 전부터」는 다른 뜻이에요.</b> <b>「설치」</b>는 그 앱을 <b>깐 날</b>이고, <b>「부터」</b>는 깐 날을 모를 때 <b>처음 쓴 날</b>로 대신 보여드리는 거예요. 자녀폰 앱이 최신으로 올라가면 전부 「설치」로 바뀌어요.',
+        '깔아만 두고 <b>한 번도 안 쓴 앱</b>은 「쓴 기록 없어요」가 같이 붙어요. 날짜를 지어내지 않습니다.'],
   art:{ kind:'grid', hi:4, st:'on', others:'grey', lc:'그냥 목록', rc:'새 앱이 눈에 띄어요', rok:true, alt:'새로 생긴 앱 표시' } },
 
 { k:'tube', t:'📺 시내YouTube — 볼 수 있는 영상', sub:'시내YouTube',
@@ -2764,14 +2764,16 @@ function guideStrip(title){
 //  대표점장 : 「자녀폰에 깔린앱 앱아이콘 이미지로 봐야될꺼같음.
 //              몇일전에 깔린앱 표시도 있어야될꺼같음. 1개월이상지난건들만 1개월이상 으로 분류」
 //
-//  🔴 **「설치한 날」은 어디에도 기록돼 있지 않다.** 2026-11-03 전 서버 실측 :
-//     `installed_apps.updated_at` 은 353대 중 **349대(99%)가 앱 전체 한 날짜로 몰려 있다.**
-//     자녀앱 `uploadInstalledApps()` 가 **그 기기 행을 전부 DELETE 하고 다시 INSERT** 하기 때문이다
-//     (`UsageMonitorService.kt:2405~2409`). 그래서 열을 새로 만들어도 같이 지워진다.
-//     자녀앱은 `firstInstallTime` 을 **올리지 않는다**(소스 전체 0건).
-//     → 지금 데이터로 알 수 있는 것은 **「사용기록에 처음 나타난 날」**뿐이다. 그래서 그 이름으로 쓴다.
-//        **「설치일」이라고 부르지 않는다** — 아는 것보다 더 말하면 그게 민원이 된다(CLAUDE.md 3-19).
-//     ▸ 진짜 설치일이 필요하면 자녀앱이 `firstInstallTime` 을 올려야 한다(= OTA). 프로젝트 문서 9장.
+//  ✅ 2026-11-06 — **진짜 설치일이 생겼다.** 자녀앱 **v62** 가 안드로이드의 `firstInstallTime` 을
+//     `installed_apps.first_install_at` 으로 올린다(`SupabaseManager.kt:95`).
+//     **값을 폰이 들고 있으니** `uploadInstalledApps()` 가 행을 지우고 다시 넣어도 같이 올라온다
+//     — 그게 아래 옛 문제의 답이다(CLAUDE.md 3-27).
+//  🔴 그래도 **두 가지가 섞인다** — v62 를 받은 폰은 `first_install_at` 이 있고, 아직 못 받은 폰은 없다.
+//     → 있으면 **「설치한 날」**, 없으면 예전처럼 **「처음 쓴 날」**로 쓴다.
+//        **이름을 섞지 않는다** — 아는 것보다 더 말하면 그게 민원이 된다(CLAUDE.md 3-19).
+//  (옛 기록) `installed_apps.updated_at` 은 2026-11-03 실측에서 353대 중 **349대(99%)가 앱 전체
+//     한 날짜로 몰려** 있었다 — 자녀앱이 그 기기 행을 전부 DELETE 하고 다시 INSERT 하기 때문이다
+//     (`UsageMonitorService.kt:2405~2409`). **그 열은 지금도 쓰면 안 된다.**
 //
 //  🔴 PostgREST 는 `limit` 을 크게 줘도 **1000행만** 돌려준다(2026-11-03 실측 : limit=20000 → 1000행).
 //     사용기록이 1000행을 넘는 기기가 5대 있다(최대 1,467행) → **반드시 나눠 읽는다.**
@@ -2782,7 +2784,7 @@ const AM_NEW_DAYS = 30;                   // 「최근」의 기준 — 한 달
 
 async function loadAppMeta(force){
   if (ST.appMeta && ST.appMeta.code === ST.code && !force) return ST.appMeta.ready;
-  const meta = ST.appMeta = { code: ST.code, ready: false, failed: false, icons: {}, firstUse: {} };
+  const meta = ST.appMeta = { code: ST.code, ready: false, failed: false, icons: {}, firstUse: {}, installAt: {} };
   try{
     const sb = clientFor(ST.server);
     const pkgs = [...new Set((ST.apps || []).map(a => a.app_package))];
@@ -2793,6 +2795,22 @@ async function loadAppMeta(force){
         .select('app_package,icon_base64').in('app_package', pkgs.slice(i, i + 80));
       if (error) throw error;                               // 🔴 error 를 꼭 본다 (3-10)
       (data || []).forEach(r => { if (r.icon_base64) meta.icons[r.app_package] = r.icon_base64; });
+    }
+
+    // ①-b 🆕 진짜 설치일 — 자녀앱 v62+ 만 올린다. 없으면 그 폰은 아직 v62 를 못 받은 것이다.
+    //   ⚠️ 열이 없는 서버면 PostgREST 가 42703 을 낸다 → 아래 catch 로 떨어져 **아이콘까지 안 뜬다.**
+    //      그래서 이 쿼리만 따로 try 로 감싼다. 설치일을 못 읽어도 「처음 쓴 날」로는 돌아야 한다.
+    try{
+      for (let from = 0; from < 10 * AM_PAGE; from += AM_PAGE){
+        const { data, error } = await sb.from('installed_apps')
+          .select('app_package,first_install_at').eq('device_code', ST.code)
+          .range(from, from + AM_PAGE - 1);
+        if (error) throw error;                              // 🔴 error 를 꼭 본다 (3-10)
+        (data || []).forEach(r => { if (r.first_install_at) meta.installAt[r.app_package] = r.first_install_at; });
+        if (!data || data.length < AM_PAGE) break;
+      }
+    }catch(e){
+      console.warn('설치일 불러오기 실패 (「처음 쓴 날」로 갑니다):', e && e.name, e && e.message);
     }
 
     // ② 처음 쓴 날 — 날짜 오름차순으로 전부 읽어 앱마다 가장 이른 날을 잡는다
@@ -2821,26 +2839,44 @@ function appIcoHtml(pkg){
   return b ? `<img class="aico" src="data:image/png;base64,${esc(b)}" alt="">`
            : `<div class="aico-x"></div>`;
 }
-/** 그 앱을 처음 쓴 날이 며칠 전인가 — 모르면 null */
+/** 그 앱의 날짜가 어디서 온 것인가 — 'install'(v62+ 진짜 설치일) · 'use'(처음 쓴 날) · null
+ *  🔴 배지 문구를 이걸로 고른다. 두 가지를 「설치일」 하나로 뭉치지 않는다(3-19). */
+function appDateSrc(pkg){
+  const M = ST.appMeta;
+  if (!M || !M.ready) return null;
+  if (M.installAt[pkg]) return 'install';
+  if (M.firstUse[pkg])  return 'use';
+  return null;
+}
+/** 그 앱이 며칠 전인가 — 설치일이 있으면 그것, 없으면 「처음 쓴 날」. 모르면 null */
 function appFirstDays(pkg){
   const M = ST.appMeta;
   if (!M || !M.ready) return null;
-  const d = M.firstUse[pkg];
-  if (!d) return 'none';                                    // 쓴 기록이 없다
-  const t = Date.parse(d + 'T00:00:00');
+  const inst = M.installAt[pkg];
+  const use  = M.firstUse[pkg];
+  if (!inst && !use) return 'none';                         // 설치일도 없고 쓴 기록도 없다
+  // 설치일은 시각(UTC)이라 그 날의 **로컬 자정**으로 맞춘다 — 안 맞추면 하루가 밀린다(3-29)
+  const t = Date.parse(inst ? inst : use + 'T00:00:00');
   if (isNaN(t)) return null;
+  const d0 = new Date(t); d0.setHours(0, 0, 0, 0);
   const today = new Date(); today.setHours(0, 0, 0, 0);
-  return Math.max(0, Math.round((today.getTime() - t) / 86400000));
+  return Math.max(0, Math.round((today.getTime() - d0.getTime()) / 86400000));
 }
 /** 목록에 붙는 작은 배지 */
 function appAgeTag(pkg){
   const v = appFirstDays(pkg);
   if (v === null)   return '';                              // 못 불러왔다 → 아무 말도 안 한다
   if (v === 'none') return '<span class="agel agel-x">쓴 기록 없어요</span>';
-  if (v >= AM_NEW_DAYS) return '<span class="agel">1개월 이상</span>';
-  if (v === 0) return '<span class="agel agel-n">오늘 처음</span>';
-  if (v === 1) return '<span class="agel agel-n">어제부터</span>';
-  return `<span class="agel agel-n">${v}일 전부터</span>`;
+  const M    = ST.appMeta;
+  const inst = appDateSrc(pkg) === 'install';
+  // 🔴 설치일을 알아도 **「한 번도 안 썼다」는 따로 말해 준다** — 그게 부모가 보고 싶은 것이다
+  const unused = (inst && !M.firstUse[pkg]) ? ' <span class="agel agel-x">쓴 기록 없어요</span>' : '';
+  let main;
+  if (v >= AM_NEW_DAYS) main = '<span class="agel">1개월 이상</span>';
+  else if (v === 0)     main = `<span class="agel agel-n">${inst ? '오늘 설치' : '오늘 처음'}</span>`;
+  else if (v === 1)     main = `<span class="agel agel-n">${inst ? '어제 설치' : '어제부터'}</span>`;
+  else                  main = `<span class="agel agel-n">${v}일 전${inst ? ' 설치' : '부터'}</span>`;
+  return main + unused;
 }
 /** 최근 AM_NEW_DAYS 안에 처음 쓴 앱 수 */
 function appNewCount(list){
@@ -3806,7 +3842,7 @@ function openApps(){
   const set=[], unset=[];
   list.forEach(a=>{ const f=info(a); (f.rank<9?set:unset).push({a,f}); });
   set.sort((x,y)=>x.f.rank-y.f.rank || (x.a.app_name||'').localeCompare(y.a.app_name||'','ko'));
-  // 🆕 2026-11-03 : 아이콘 이미지 + 「처음 쓴 날」 (loadAppMeta 가 채운다)
+  // 🆕 2026-11-03 : 아이콘 이미지 + 날짜 배지 (loadAppMeta 가 채운다 · v62+ 는 설치한 날)
   const row=({a,f})=>`<div class="item">${appIcoHtml(a.app_package)}
       <div class="grow"><div class="nm">${esc(a.app_name||a.app_package)}</div>
       <div class="sm">${f.tag} ${appAgeTag(a.app_package)}</div></div>
@@ -3824,16 +3860,26 @@ function openApps(){
       <div class="chip ${appNewOnly ? 'on' : ''}" onclick="appNewOnly=true;openApps()">🆕 최근 한 달 ${newList.length}개</div>
     </div>` : '';
 
-  // 🔴 「설치일」이라고 적지 않는다 — 자녀폰이 설치 날짜를 올리지 않는다(appmeta 주석 참고).
+  // 🔴 **아는 것만 말한다**(3-19) — 설치일을 올리는 폰(자녀앱 v62+)과 아직 안 올리는 폰이 섞인다.
+  //    그래서 안내 문구를 **실제로 뭐가 들어왔는지 세서** 고른다. 「설치일」로 뭉치지 않는다.
   //    못 불러왔을 때는 **날짜를 아예 안 보여준다.** 둘러대면 장애가 「아이가 안 썼다」로 읽힌다(3-10).
+  const instN = (M && M.ready) ? list.filter(a => appDateSrc(a.app_package) === 'install').length : 0;
+  const dateN = (M && M.ready) ? list.filter(a => appDateSrc(a.app_package)).length : 0;
   const metaNote = (M && M.failed)
-    ? `<div class="note warn">앱 아이콘과 「처음 쓴 날」을 불러오지 못했어요.<br>
+    ? `<div class="note warn">앱 아이콘과 날짜를 불러오지 못했어요.<br>
         잘못된 날짜를 보여드리지 않으려고 표시를 멈췄어요.
         <button class="add" style="margin-top:8px" onclick="loadAppMeta(true).then(()=>openApps())">다시 시도</button></div>`
     : (M && M.ready)
-      ? `<div class="agenote">앱에 붙은 날짜는 <b>그 앱을 처음 쓴 날</b>이에요 — 설치한 날이 아니에요.
-          한 달이 넘은 앱은 모두 「1개월 이상」으로 묶었어요.</div>`
-      : `<div class="agenote">앱 아이콘과 「처음 쓴 날」을 불러오는 중이에요 ⏳</div>`;
+      ? (instN === 0
+          ? `<div class="agenote">앱에 붙은 날짜는 <b>그 앱을 처음 쓴 날</b>이에요 — 설치한 날이 아니에요.
+              한 달이 넘은 앱은 모두 「1개월 이상」으로 묶었어요.</div>`
+          : instN >= dateN
+            ? `<div class="agenote">앱에 붙은 날짜는 <b>그 앱을 설치한 날</b>이에요.
+                한 달이 넘은 앱은 모두 「1개월 이상」으로 묶었어요.</div>`
+            : `<div class="agenote">「<b>N일 전 설치</b>」는 <b>설치한 날</b>이고, 「<b>N일 전부터</b>」는
+                <b>처음 쓴 날</b>이에요. 자녀폰 앱이 최신이 되면 전부 설치한 날로 바뀌어요.
+                한 달이 넘은 앱은 모두 「1개월 이상」으로 묶었어요.</div>`)
+      : `<div class="agenote">앱 아이콘과 날짜를 불러오는 중이에요 ⏳</div>`;
 
   const body = !list.length
     ? `<div class="card"><div class="empty">앱이 없습니다<br><span class="sm">자녀폰이 접속하면 목록이 올라옵니다</span></div></div>`
