@@ -1769,18 +1769,28 @@ function fallbackCopy(text, done){
   }catch(e){ toast('복사가 안 돼요. 주소창을 길게 눌러 복사해 주세요'); }
 }
 // 🆕 2026-10-15 : 설치 안내 한 장으로 통합 (예전 showIosTip + showInAppTip)
-//   · 홈화면 앱으로 열었으면 안 띄운다 — 이미 잘 쓰고 계신 분께 잔소리하지 않는다.
-//   · 앱 안의 브라우저(카톡 등)면 제목을 경고로 바꾸고 「브라우저로 열기」를 붙인다.
+// 🆕 2026-11-07 대표점장 지시 : **꼭 필요한 사람에게만** 띄운다.
+//   띄우는 경우
+//     · 카톡·인스타 등 **앱 안의 브라우저** — 홈화면 추가가 안 되고 대화방을 나가면 세션이 끊긴다
+//     · **아이폰인데 홈화면앱이 아님** — 애플 정책상 사파리 탭에서는 🔔 알림을 아예 못 켠다
+//   안 띄우는 경우
+//     · **갤럭시 브라우저·바로가기** ← 2026-11-07 에 여기를 뺐다.
+//       갤럭시는 바로가기여도 알림이 온다(togglePush 가 아이폰만 막는다 · 아래 isIosDev 게이트).
+//       기능이 멀쩡한 분께 띠를 계속 띄우는 건 잔소리였다 — 대표점장이 직접 보고 지적했다.
+//     · 홈화면앱 — 예전과 같다
+//   🔴 고칠 때 : 「안 띄우기」를 넓히기 전에 **그 사람이 그래서 못 하게 되는 게 뭔지** 세라.
+//      아이폰을 같이 빼면 사파리 탭 부모는 **알림을 못 받는 줄도 모르게** 된다 (CLAUDE.md 3-21bb).
 function showInstallTip(){
   const el = document.getElementById('installTip');
   if (!el) return;
   const info = openModeInfo();
   const standalone = isStandalone();
-  el.classList.toggle('hide', standalone);
-  if (standalone) return;
+  const needTip = !standalone && (!!info.inApp || isIosDev());
+  el.classList.toggle('hide', !needTip);
+  if (!needTip) return;
   document.getElementById('installHead').innerHTML = info.inApp
     ? '⚠️ 지금 <b>' + info.inApp + ' 안의 브라우저</b>로 열려 있어요'
-    : '💡 홈 화면에 추가해서 쓰세요';
+    : '💡 홈 화면에 추가해야 🔔 알림을 받을 수 있어요';
   document.getElementById('installBtns').innerHTML =
     (info.inApp ? '<button class="btn btn-g" style="flex:1;min-width:140px" onclick="openInRealBrowser()">브라우저로 열기</button>' : '') +
     '<button class="btn btn-g" style="flex:1;min-width:140px" onclick="copyAppLink()">주소 복사</button>';
