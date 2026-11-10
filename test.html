@@ -639,7 +639,7 @@
   .xwhen{margin-top:9px;font-size:12.8px;color:#6B5BD2;font-weight:700;line-height:1.55}
 
   /* ── 🗺 지도 ── */
-  .lmapw{position:relative;margin:-14px -14px 0;height:56vh;min-height:300px;max-height:470px;
+  .lmapw{isolation:isolate;z-index:0;position:relative;margin:-14px -14px 0;height:56vh;min-height:300px;max-height:470px;
     background:#E8EDF2;overflow:hidden}
   .lmapw.sm{height:34vh;min-height:220px;max-height:300px;margin-bottom:0}
   #lmap{position:absolute;inset:0;z-index:1}
@@ -661,10 +661,10 @@
   .lmMeta{font-size:13px;color:#667085;margin-top:5px;font-weight:600}
   .lmNear{margin-top:10px;font-size:13px;color:#344054;background:#F6F8FA;border-radius:12px;padding:9px 11px;line-height:1.55}
   .lmNear.warn{background:#FFF8EB;color:#93370D}
-  .lmBtns{display:flex;gap:8px;margin-top:13px}
+  .lmBtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
   .lmBtn{flex:1;border:1.5px solid #E4E7EC;background:#fff;color:#344054;border-radius:13px;
     padding:13px 8px;font-size:14.5px;font-weight:800;cursor:pointer;white-space:nowrap}
-  .lmBtn.g{flex:1.6;background:var(--ng);border-color:var(--ng);color:#fff}
+  .lmBtn.g{flex:1.6 1 170px;background:var(--ng);border-color:var(--ng);color:#fff}
   .lmBtn:active{transform:scale(.98)}
   .lmHint{font-size:12.5px;color:#7A8597;line-height:1.6;margin-top:10px}
   .mkKid{position:relative;width:50px;height:50px;margin:0 auto;border-radius:50% 50% 50% 4px;transform:rotate(-45deg);
@@ -696,8 +696,8 @@
   .tlGo{font-size:12px;color:#98A2B3;font-weight:700}
 
   /* 홈 — 위치 미리보기 */
-  .hloc{position:relative;height:170px;border-radius:16px;overflow:hidden;margin:12px 0 2px;background:#E8EDF2}
-  .hloc #hlmap{position:absolute;inset:0}
+  .hloc{isolation:isolate;z-index:0;position:relative;height:170px;border-radius:16px;overflow:hidden;margin:12px 0 2px;background:#E8EDF2}
+  .hloc #hlmap{position:absolute;inset:0;z-index:1}
   .hloc .hlc{position:absolute;left:10px;top:10px;z-index:900;background:#fff;border-radius:12px;
     padding:7px 11px;font-size:13px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.14)}
 
@@ -2157,12 +2157,16 @@ function addBoxHtml(all){
 //  ⚠️ 위치를 켠 자녀 + 이 브라우저에 위치 열쇠(토큰)가 이미 있을 때만 그린다.
 //     열쇠가 없으면 PIN 을 다시 묻게 되므로 홈에서는 **조용히 건너뛴다**(카드를 누르면 그때 받는다).
 //  ⚠️ 60초에 한 번만 읽는다 — paintMain 은 자주 불린다.
-let HLMAP = null, HL_AT = 0, HL_CODE = '';
+let HLMAP = null, HL_AT = 0, HL_CODE = '', HL_VAL = '';
 async function homeLocPreview(){
   const box = document.getElementById('hloc');
   if (!box) return;
   if (!locOn() || !locTokenOf(ST.code)){ box.classList.add('hide'); return; }
-  if (HL_CODE === ST.code && Date.now() - HL_AT < 60000 && HLMAP) return;
+  if (HL_CODE === ST.code && Date.now() - HL_AT < 60000 && HLMAP){
+    const $l = document.getElementById('vLoc'), ps = locPhoneState();
+    if ($l && HL_VAL && ps.perm && ps.svc) $l.innerHTML = HL_VAL;
+    return;
+  }
   HL_AT = Date.now(); HL_CODE = ST.code;
   let P = null, zones = [];
   try{
@@ -2175,6 +2179,8 @@ async function homeLocPreview(){
     zones = Array.isArray(b) ? b : [];
   }catch(e){ box.classList.add('hide'); return; }
   if (!P){ box.classList.add('hide'); return; }
+  try{ locApi(ST.server, ST.code, 'location_access_log', 'POST',
+        [{ device_code:ST.code, action:'VIEW', actor:'parent' }]).catch(() => {}); }catch(e){}
   let L;
   try{ L = await loadLeaflet(); }catch(e){ box.classList.add('hide'); return; }
   box.classList.remove('hide');
@@ -2199,7 +2205,7 @@ async function homeLocPreview(){
   LOC.zones = keep;
   // 🔴 카드 둘째 줄의 「마지막 확인」도 **실제 위치 시각**으로 고친다 — 정책값 location_last_sent_at 은
   //    폰이 정책을 올릴 때만 바뀌어서 지도는 8분 전인데 카드는 「10시간 전」이라고 했다(2026-11-10 실측).
-  { const $l = document.getElementById('vLoc'); if ($l) $l.innerHTML = badge(true, '켜짐') + ' 마지막 확인 ' + esc(ago(P.captured_at)); }
+  { const $l = document.getElementById('vLoc'), ps = locPhoneState(); HL_VAL = badge(true, '켜짐') + ' 마지막 확인 ' + esc(ago(P.captured_at)); if ($l && ps.perm && ps.svc) $l.innerHTML = HL_VAL; }
   const lbl = document.getElementById('hlc');
   if (lbl) lbl.innerHTML = (z ? locZoneEmo(z.name) + ' ' + esc(z.name) + '에 있어요' : '🚶 등록한 장소 밖') +
     ' <span style="color:#98A2B3;font-weight:700">· ' + esc(ago(P.captured_at)) + '</span>';
@@ -2535,6 +2541,7 @@ function switchTab(t){
   });
   document.querySelectorAll('.tabbar b').forEach(b => b.classList.toggle('on', b.dataset.t === t));
   window.scrollTo(0, 0);
+  if (t === 'home' && HLMAP) setTimeout(() => { try{ HLMAP.invalidateSize(); }catch(e){} }, 60);
 }
 
 /** 「요청 있음」 빨간 점 — 자녀가 보낸 게 있으면 기능 탭에 찍는다.
@@ -2982,7 +2989,7 @@ const ICO_ALIAS = { newapp:'apps', hideicon:'sound', hidenotify:'sound' };
 function icoSrc(k){ k = ICO_ALIAS[k] || k; return ICO.includes(k) ? 'img/i-' + k + '.webp?v=' + ICO_V : ''; }
 function icoImg(k, cls){
   const s = icoSrc(k);
-  return s ? '<img class="' + (cls == null ? 'ic3d' : cls) + '" src="' + s + '" alt="" loading="lazy" decoding="async">' : '';
+  return s ? '<img class="' + (cls == null ? 'ic3d' : cls) + '" src="' + s + '" alt="" loading="lazy" decoding="async" onerror="this.style.visibility=\'hidden\'">' : '';
 }
 /** 메인 카드의 onclick 함수 이름 → 그림 키 */
 const ICO_BY_FN = (() => {
@@ -5633,6 +5640,9 @@ function dayBandHtml(){
       (hasAc ? '<span style="--c:#FFD3A6">학원시간 (잠김)</span>' : '') + '</div>' +
     '<div style="margin-top:9px;font-size:12.8px;color:#667085;line-height:1.6">' +
       (hasDt || hasAc ? '색칠된 시간에는 자녀폰이 저절로 잠기고, 끝나면 저절로 풀려요.' : '오늘은 정해진 잠금 시간이 없어요.') +
+      ((liveSummary().lock && !liveDowntime() && !liveAcademy())
+        ? '<br><b style="color:#B42318">다만 지금은 ' + (forceLockLeft().on ? '부모님이 <u>즉시 차단</u>으로 잠가 두셔서' : '오늘 <u>하루 사용시간</u> 때문에') + ' 잠겨 있어요.</b>'
+        : '') +
       acNote + '</div>' +
     '</div>';
 }
@@ -6446,8 +6456,8 @@ const ML_JS_SRI  = 'sha384-GfxBM9x46BaAFxtCq39Fxir8fNZ4VDnwgfi6Kzi5/F1tAFsm0amuu
 const ML_CSS_SRI = 'sha384-Nq6PQ+9vJPvw7U/VfDELyrWoGQMsy0gi6QShhaSrGzkpF5KkM40csg2leky+YMTd';
 const MLL_JS_SRI = 'sha384-tXYNKOHx4T02jMP7YYCtBxPIv1B5gaA5mcVPBzqMp6d7VzWzxJgI2aWF/nJLrQdS';
 const MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
-const MAP_ATTR = '<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> ' +
-                 '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+const MAP_ATTR = '<a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer">OpenFreeMap</a> ' +
+                 '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>';
 const OSM_TILE = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const NAVER_GREEN = '#03C75A';
 const MAP_HOME = [37.5665, 126.978];       // 위치가 하나도 없을 때 (서울시청)
@@ -6503,7 +6513,7 @@ async function mapAddBase(L, map){
       return 'vector';
     }catch(e){ console.warn('벡터지도 스타일 실패 → 그림 지도로', e && e.message); }
   }
-  L.tileLayer(OSM_TILE, { maxZoom:19, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>' }).addTo(map);
+  L.tileLayer(OSM_TILE, { maxZoom:19, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>' }).addTo(map);
   return 'raster';
 }
 function lmapKill(){ if (LMAP){ try{ LMAP.remove(); }catch(e){} } LMAP = null; LMAP_L = {}; }
@@ -6749,7 +6759,7 @@ function locRuns(){
   runs.forEach(r => {
     const pv = out[out.length - 1];
     if (pv && !r.stay && !pv.stay){ pv.to = r.to; pv.lat = r.lat; pv.lng = r.lng; pv.min = Math.round(((toDate(pv.to)||0) - (toDate(pv.from)||0)) / 60000); }
-    else if (pv && r.stay && pv.stay && pv.z && r.z && pv.z.id === r.z.id){ pv.to = r.to; pv.min += r.min; }
+    else if (pv && r.stay && pv.stay && pv.z && r.z && pv.z.id === r.z.id){ pv.to = r.to; pv.min = Math.round(((toDate(pv.to)||0) - (toDate(pv.from)||0)) / 60000); }
     else out.push(r);
   });
   return out;
@@ -6757,7 +6767,7 @@ function locRuns(){
 function locTrailHtml(){
   if (!(LOC.hist || []).length) return '<div class="note">이 날은 올라온 위치가 없어요.</div>';
   const runs = locRuns();
-  let k = 0;
+  if (!runs.length) return '<div class="note">이 날은 위치가 흐리게만 잡혀서(오차 300m 넘음) 동선을 그릴 수 없어요.</div>';
   let h = '<div class="card tl">';
   h += runs.slice().reverse().map((r, i) => {
     const same = locHm(r.from) === locHm(r.to);
@@ -6980,10 +6990,12 @@ function openZones(){
 /** 장소 등록 — 지도를 움직여 가운데 핀을 맞춘다. 시작점 : 자녀 위치 → 없으면 서울 */
 async function openZoneAdd(from){
   let lat, lng;
+  if (from === 'child' && !LOC.last) from = 'me';          // 🔴 점검 지적 : 서울시청이 그대로 저장될 뻔했다
   if (from === 'child' && LOC.last){ lat = Number(LOC.last.lat); lng = Number(LOC.last.lng); }
   else if (from === 'me'){
-    const c = await zoneMyPos(); if (!c) return;
-    lat = c[0]; lng = c[1];
+    const c = await zoneMyPos();
+    if (c){ lat = c[0]; lng = c[1]; }
+    else { lat = MAP_HOME[0]; lng = MAP_HOME[1]; from = 'none'; }
   } else { lat = MAP_HOME[0]; lng = MAP_HOME[1]; }
   LOC_NEW = { name:'집', lat, lng, radius:150, from };
   zoneAddHtml();
@@ -7019,6 +7031,7 @@ function zoneAddHtml(){
     '</div>' +
     '<div class="lmCard">' +
       '<div class="lmPlace" style="font-size:16.5px">📍 핀이 꽂힌 곳을 등록해요</div>' +
+      (n.from === 'none' ? '<div class="lmNear warn">⚠️ 아직 위치를 몰라서 <b>서울 시내</b>에서 시작했어요. 지도를 움직여 등록할 곳에 핀을 맞춰 주세요.</div>' : '') +
       '<div class="lmMeta">🧒 = 자녀가 마지막으로 있던 곳으로 · 🧍 = 지금 내가 있는 곳으로 옮겨요</div>' +
     '</div>' +
     '<div class="sec">이름</div><div class="chips" id="zNames">' +
@@ -7158,7 +7171,7 @@ function openReqOne(key, title){
     </div>
     <div class="note">${m.d}</div>
     <div class="rqBtns">
-      <button class="btn btn-g" onclick="reqBack()">아니요</button>
+      <button class="btn btn-g" onclick="navBack()">아니요</button>
       <button class="btn btn-p" id="rqYes" onclick="doReq('${esc(key)}')">네, 신청할게요</button>
     </div>`,
     ()=>reqBack());
@@ -7190,7 +7203,7 @@ function paintReqDone(key, m){
         <button class="rqCopyB" onclick="reqCopy('${esc(m.msg||'')}',this)">복사</button></div>
     </div>
     <button class="btn btn-d" style="margin-top:12px" onclick="undoReq('${esc(key)}')">신청 취소</button>
-    <button class="btn btn-g" style="margin-top:8px" onclick="reqBack()">확인</button>`,
+    <button class="btn btn-g" style="margin-top:8px" onclick="navBack()">확인</button>`,
     ()=>reqBack());
 }
 
@@ -7199,7 +7212,7 @@ async function undoReq(key){
   try{
     await savePol([{ key, value:'false' }]);
     toast('신청을 취소했어요');
-    reqBack();
+    navBack();     // 🔴 뒤로가기 기록과 화면이 어긋나지 않게 — 돌아갈 곳은 popstate 가 reqBack 으로 정한다
   }catch(e){ toast('취소 실패: '+e.message); }
 }
 
