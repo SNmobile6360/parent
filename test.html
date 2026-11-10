@@ -602,6 +602,174 @@
   /* 🧪 2026-11-03 : 도우미는 아직 시험 중이라는 표시 (대표점장 지시) */
   .betabadge{display:inline-block;background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;
     font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;margin-left:5px;vertical-align:2px}
+
+  /* ══════════════════════════════════════════════════════════════
+     🎨 2026-11-10 테스트판 2차 개편 — 대표점장 「손님 입장에서 헤매고 헷갈린다」
+     ① 위치 : 지도를 앱 안에 (네이버지도 느낌 — 초록 물방울 핀 · 하얀 둥근 버튼 · 아래 장소 카드)
+     ② 설명 : 「이게 무슨 기능이에요?」를 따로 두지 않고 **화면마다 그림+설명 상자(.xbox)** 를 깐다
+     ③ 아이콘 : 이모지 대신 힉스필드로 만든 3D 그림(img/i-*.webp) — 한 벌로 통일
+     ══════════════════════════════════════════════════════════════ */
+  :root{ --ng:#03C75A; --ng2:#02A94F; }
+  body{background:#F3F5F9}
+  .top{background:#fff;color:#101828;box-shadow:0 1px 0 #E9EDF3}
+  .top .back{background:#F2F4F7;color:#344054}
+  .top .sub{color:#667085;opacity:1}
+  .topAct{background:#EEF4FF;color:#1D4ED8}
+  .hero{background:linear-gradient(135deg,#4F7CFF 0%,#6C5CE7 100%);border-radius:22px;
+    box-shadow:0 8px 22px rgba(79,124,255,.25)}
+  .card{border-radius:18px;border-color:#EAEEF4;box-shadow:0 2px 8px rgba(16,24,40,.04)}
+  .sec{font-size:14px !important;color:#475467 !important;font-weight:800 !important}
+
+  /* 3D 아이콘 */
+  .ic.has3d{background:transparent !important;width:52px;height:52px;border-radius:0}
+  .ic3d{width:52px;height:52px;object-fit:contain;display:block;filter:drop-shadow(0 3px 5px rgba(16,24,40,.10))}
+
+  /* 설명 상자 — 화면 맨 위 「그림 + 쉬운 말」 */
+  .xbox{display:flex;gap:13px;align-items:flex-start;background:linear-gradient(135deg,#F5F8FF,#FBF7FF);
+    border:1px solid #E3E9F7;border-radius:18px;padding:15px 15px 14px;margin-bottom:14px}
+  .xbox .xi{flex:none;width:76px;height:76px}
+  .xbox .xi img{width:76px;height:76px;object-fit:contain;filter:drop-shadow(0 4px 7px rgba(16,24,40,.12))}
+  .xbox .xt{flex:1;min-width:0}
+  .xh{font-size:16px;font-weight:800;color:#1E2A44;line-height:1.45;letter-spacing:-.01em}
+  .xd{font-size:13.6px;color:#4A5568;line-height:1.65;margin-top:5px}
+  .xsteps{margin-top:9px;display:flex;flex-direction:column;gap:5px}
+  .xsteps div{font-size:13.2px;color:#344054;line-height:1.5;padding-left:24px;position:relative}
+  .xsteps div b.n{position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:50%;
+    background:#4F7CFF;color:#fff;font-size:11px;display:grid;place-items:center;font-weight:800}
+  .xwhen{margin-top:9px;font-size:12.8px;color:#6B5BD2;font-weight:700;line-height:1.55}
+
+  /* ── 🗺 지도 ── */
+  .lmapw{position:relative;margin:-14px -14px 0;height:56vh;min-height:300px;max-height:470px;
+    background:#E8EDF2;overflow:hidden}
+  .lmapw.sm{height:34vh;min-height:220px;max-height:300px;margin-bottom:0}
+  #lmap{position:absolute;inset:0;z-index:1}
+  .lmErr{position:absolute;inset:0;display:grid;place-items:center;text-align:center;
+    color:#475467;font-size:14px;line-height:1.7;padding:20px}
+  .lmChip{position:absolute;left:12px;top:12px;z-index:5;background:#fff;border-radius:999px;
+    padding:9px 14px;font-size:13.5px;font-weight:800;color:#1D2939;box-shadow:0 2px 10px rgba(0,0,0,.14);
+    max-width:calc(100% - 80px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lmFabs{position:absolute;right:12px;top:12px;z-index:5;display:flex;flex-direction:column;gap:9px}
+  .lmFab{width:44px;height:44px;border-radius:50%;border:0;background:#fff;color:#1D2939;font-size:20px;
+    box-shadow:0 2px 10px rgba(0,0,0,.16);cursor:pointer;display:grid;place-items:center}
+  .lmFab:active{transform:scale(.95)}
+  .lmCard{position:relative;z-index:6;margin:-26px -2px 12px;background:#fff;border-radius:22px;
+    padding:18px 16px 15px;box-shadow:0 -2px 18px rgba(16,24,40,.10)}
+  .lmCard:before{content:'';position:absolute;left:50%;top:7px;width:38px;height:4px;margin-left:-19px;
+    border-radius:4px;background:#E4E7EC}
+  .lmPlace{font-size:19px;font-weight:800;color:#101828;letter-spacing:-.02em;line-height:1.4}
+  .lmPlace b{color:var(--ng2)}
+  .lmMeta{font-size:13px;color:#667085;margin-top:5px;font-weight:600}
+  .lmNear{margin-top:10px;font-size:13px;color:#344054;background:#F6F8FA;border-radius:12px;padding:9px 11px;line-height:1.55}
+  .lmNear.warn{background:#FFF8EB;color:#93370D}
+  .lmBtns{display:flex;gap:8px;margin-top:13px}
+  .lmBtn{flex:1;border:1.5px solid #E4E7EC;background:#fff;color:#344054;border-radius:13px;
+    padding:13px 8px;font-size:14.5px;font-weight:800;cursor:pointer;white-space:nowrap}
+  .lmBtn.g{flex:1.6;background:var(--ng);border-color:var(--ng);color:#fff}
+  .lmBtn:active{transform:scale(.98)}
+  .lmHint{font-size:12.5px;color:#7A8597;line-height:1.6;margin-top:10px}
+  .mkKid{position:relative;width:50px;height:50px;margin:0 auto;border-radius:50% 50% 50% 4px;transform:rotate(-45deg);
+    background:var(--ng);border:3px solid #fff;box-shadow:0 4px 12px rgba(3,199,90,.45);display:grid;place-items:center}
+  .mkKid span{transform:rotate(45deg);font-size:24px;line-height:1}
+  .mkKid.stale{background:#98A2B3;box-shadow:0 4px 12px rgba(16,24,40,.25)}
+  .mkKid:after{content:'';position:absolute;inset:-3px;border-radius:inherit;border:3px solid var(--ng);
+    animation:kidPulse 1.8s ease-out infinite;opacity:0}
+  .mkKid.stale:after{display:none}
+  @keyframes kidPulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.7);opacity:0}}
+  .mkZone{display:inline-block;transform:translate(-50%,-50%);background:#fff;border:1.5px solid var(--ng);
+    color:#067647;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:800;white-space:nowrap;
+    box-shadow:0 2px 6px rgba(0,0,0,.12)}
+  .pickPin{position:absolute;left:50%;top:50%;z-index:5;transform:translate(-50%,-100%);pointer-events:none;
+    font-size:40px;line-height:1;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3))}
+  .leaflet-container{font-family:inherit}
+  .leaflet-control-attribution{font-size:9.5px !important;background:rgba(255,255,255,.7) !important}
+
+  /* 동선 타임라인 */
+  .tl{padding:6px 14px}
+  .tlI{display:grid;grid-template-columns:92px 18px 1fr auto;align-items:center;gap:6px;padding:11px 0;
+    cursor:pointer;position:relative}
+  .tlI+.tlI{border-top:1px solid #F2F4F7}
+  .tlT{font-size:12.8px;color:#667085;font-weight:700;font-variant-numeric:tabular-nums}
+  .tlD{width:12px;height:12px;border-radius:50%;background:var(--ng);box-shadow:0 0 0 3px #DDF7E9}
+  .tlD.out{background:#98A2B3;box-shadow:0 0 0 3px #EEF0F3}
+  .tlI.now .tlD{background:#F97316;box-shadow:0 0 0 3px #FFE7D6}
+  .tlP{font-size:14.5px;font-weight:800;color:#1D2939;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tlGo{font-size:12px;color:#98A2B3;font-weight:700}
+
+  /* 홈 — 위치 미리보기 */
+  .hloc{position:relative;height:170px;border-radius:16px;overflow:hidden;margin:12px 0 2px;background:#E8EDF2}
+  .hloc #hlmap{position:absolute;inset:0}
+  .hloc .hlc{position:absolute;left:10px;top:10px;z-index:900;background:#fff;border-radius:12px;
+    padding:7px 11px;font-size:13px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.14)}
+
+  /* 📲 설치 신청 배너 */
+  .addbox{background:linear-gradient(135deg,#FFF6E9 0%,#FFF0F3 100%);border:1px solid #FBE1C8;
+    border-radius:20px;padding:16px 15px 14px;margin-bottom:12px}
+  .addhd{display:flex;gap:12px;align-items:center}
+  .addhd img{width:70px;height:70px;object-fit:contain;flex:none;filter:drop-shadow(0 4px 7px rgba(16,24,40,.12))}
+  .addt{font-size:16.5px;font-weight:900;color:#7A2E0E;letter-spacing:-.02em}
+  .adds{font-size:13px;color:#8A5A3C;margin-top:3px;line-height:1.5}
+  .additem{display:flex;gap:11px;align-items:center;background:#fff;border-radius:14px;padding:12px;margin-top:9px;
+    border:1px solid #F7E3D0}
+  .additem .axI{width:44px;height:44px;flex:none}
+  .additem .axI img{width:44px;height:44px;object-fit:contain}
+  .additem .axT{font-size:14.5px;font-weight:800;color:#1D2939}
+  .additem .axD{font-size:12.6px;color:#667085;margin-top:2px;line-height:1.45}
+  .addbtn{flex:none;border:0;border-radius:11px;background:#F97316;color:#fff;font-size:13px;font-weight:800;
+    padding:9px 12px;cursor:pointer;white-space:nowrap}
+  .addbtn.done{background:#ECFDF3;color:#067647;border:1px solid #ABEFC6}
+  .addfoot{font-size:12.3px;color:#8A5A3C;margin-top:10px;line-height:1.55}
+
+  /* 🌐 크롬 — 누가 무엇을 바꾸나 */
+  .who{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+  .whoC{background:#fff;border:1px solid #EAEEF4;border-radius:16px;padding:13px 12px;text-align:center}
+  .whoC .wi{font-size:30px;line-height:1}
+  .whoC .wt{font-size:13px;font-weight:800;color:#475467;margin-top:6px}
+  .whoC .wd{font-size:14.5px;font-weight:900;color:#101828;margin-top:4px;line-height:1.4}
+  .whoC .ws{margin-top:8px}
+  .whoC.store{background:#FFF8EB;border-color:#FDE3B5}
+  .whoC.me{background:#EEF6FF;border-color:#CFE3FF}
+  .flow3{display:flex;align-items:stretch;gap:6px;margin:4px 0 12px}
+  .flow3 > div{flex:1;background:#fff;border:1px solid #EAEEF4;border-radius:14px;padding:10px 7px;text-align:center;
+    font-size:12.3px;color:#344054;line-height:1.45;font-weight:600}
+  .flow3 > div b{display:block;font-size:22px;margin-bottom:4px}
+  .flow3 > i{align-self:center;font-style:normal;color:#98A2B3;font-weight:800}
+  .bignote{border-radius:16px;padding:15px;margin-bottom:12px;line-height:1.65;font-size:14px}
+  .bignote.off{background:#FEF3F2;border:1.5px solid #FECDCA;color:#7A271A}
+  .bignote.on{background:#ECFDF3;border:1.5px solid #ABEFC6;color:#05603A}
+  .bignote .bt{font-size:16px;font-weight:900;margin-bottom:5px}
+
+  /* 🚦 실시간 — 그림 + 하루 띠 */
+  .lvx{display:flex;gap:14px;align-items:center;border-radius:22px;padding:18px 16px;margin-bottom:12px}
+  .lvx.free{background:linear-gradient(135deg,#E9FBF1,#F3FFF8);border:1.5px solid #ABEFC6}
+  .lvx.lock{background:linear-gradient(135deg,#FFF1F0,#FFF8F6);border:1.5px solid #FECDCA}
+  .lvx img{width:86px;height:86px;object-fit:contain;flex:none;filter:drop-shadow(0 4px 8px rgba(16,24,40,.14))}
+  .lvx .t{font-size:19px;font-weight:900;letter-spacing:-.02em;line-height:1.35}
+  .lvx.free .t{color:#05603A} .lvx.lock .t{color:#B42318}
+  .lvx .d{font-size:13.6px;color:#344054;line-height:1.6;margin-top:5px}
+  .lvx .n{font-size:12.3px;color:#667085;margin-top:7px}
+  .dayband{position:relative;height:34px;border-radius:10px;background:#E9F7EF;overflow:hidden;margin-top:6px}
+  .dayband i{position:absolute;top:0;bottom:0;display:block}
+  .dayband i.dt{background:#C9B8F5} .dayband i.ac{background:#FFD3A6}
+  .dayband .nowl{position:absolute;top:-2px;bottom:-2px;width:3px;background:#101828;border-radius:2px}
+  .dayband .nowt{position:absolute;top:8px;transform:translateX(-50%);font-size:11px;font-weight:900;color:#fff;
+    background:#101828;border-radius:6px;padding:1px 5px}
+  .dayax{display:flex;justify-content:space-between;font-size:11px;color:#98A2B3;font-weight:700;margin-top:4px}
+  .daylg{display:flex;gap:12px;flex-wrap:wrap;font-size:12.3px;color:#475467;font-weight:700;margin-top:9px}
+  .daylg span:before{content:'';display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--c)}
+  .lrow{display:flex;gap:11px;align-items:center;padding:11px 0}
+  .lrow+.lrow{border-top:1px solid #F2F4F7}
+  .lrow img{width:40px;height:40px;object-fit:contain;flex:none}
+  .lrow .lt{font-size:14.5px;font-weight:800;color:#1D2939}
+  .lrow .ld{font-size:12.8px;color:#667085;margin-top:2px;line-height:1.5}
+  .lmPlace b.o{color:#344054}
+  .tlM{font-size:12px;color:#98A2B3;font-weight:700;margin-left:3px}
+  .tlReg{border:1.3px solid #ABEFC6;background:#ECFDF3;color:#067647;border-radius:9px;padding:5px 8px;
+    font-size:11.8px;font-weight:800;cursor:pointer;white-space:nowrap}
+  .achips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .achip{display:inline-flex;align-items:center;gap:6px;background:#F6F8FA;border:1px solid #EEF1F5;border-radius:11px;
+    padding:4px 10px 4px 4px;font-size:13px;font-weight:700;color:#344054}
+  .achip .aico,.achipT .aico{width:24px;height:24px;border-radius:7px;flex:none}
+  .achip .aico-x,.achipT .aico-x{width:24px;height:24px;border-radius:7px;background:#E4E7EC;flex:none}
 </style>
 </head>
 <body>
@@ -765,6 +933,29 @@
     <!-- 🙋 2026-10-21 : 자녀가 「더 쓰고 싶다」고 누르면 여기에 뜬다 (평소엔 비어 있다) -->
     <div id="timeReqBox"></div>
 
+    <div class="sec">지금 상황</div>
+    <div class="card tap" onclick="openLive()">
+      <div class="row"><div class="ic" style="background:#FEF3F2">🚦</div>
+        <div class="grow"><div class="ttl">자녀 실시간 제한 상황</div><div class="val" id="vLive">-</div></div><div class="chev">›</div></div>
+    </div>
+
+    <!-- 💬 도우미 (2026-11-01 신설) — 「지금 크롬 쓸 수 있나요?」에 계산해서 답한다.
+         AI API 를 쓰지 않는다(0원). 판정은 canUseApp() 이 자녀앱과 같은 순서로 한다. -->
+
+    <!-- 📍 위치 확인 (2026-11-05 신설) — 자녀앱 v61 에 이미 들어가 있고, 여기서 켜면 바로 돈다.
+         🔴 켜기 전에는 「새로 생겼어요」로 눌러보게 만든다. 매장에 전화해서 켜 달라고 하지 않도록. -->
+    <div class="sec">어디 있나요</div>
+    <div class="card tap" onclick="openLoc()">
+      <div class="row"><div class="ic" style="background:#ECFDF3">📍</div>
+        <div class="grow"><div class="ttl">위치 확인 · 세이프존 <span class="betabadge">새 기능</span></div>
+          <div class="val" id="vLoc">-</div></div><div class="chev">›</div></div>
+      <!-- 🗺 2026-11-10 : 홈에서 바로 보이는 작은 지도 (homeLocPreview) -->
+      <div class="hloc hide" id="hloc"><div id="hlmap"></div><div class="hlc" id="hlc"></div></div>
+    </div>
+
+    <!-- 📲 2026-11-10 : 설치 신청을 홈에 꺼내 둔다 (paintHomeExtras 가 채운다) -->
+    <div id="addBoxHome"></div>
+
     <!-- ✨ AI 매니저 (2026-11-05 대개편) — 대표점장 : 「AI매니저 잘 보이고 잘 쓸 수 있도록 유도」
          🔴 카드 하나로 끝내지 않는다. ①홈 맨 위 큰 카드 ②어느 탭에서나 보이는 플로팅 버튼 **둘 다**.
             2026-11-03 엔 작은 카드 하나였고 「눈에 띄지도 않아서 눌러 보지도 않는다」는 말을 들었다.
@@ -785,24 +976,6 @@
         <span class="aichip" onclick="event.stopPropagation();askDoumi('하루 2시간으로 해줘')">하루 2시간으로 해줘</span>
         <span class="aichip" onclick="event.stopPropagation();openDoumi()">더 보기 ›</span>
       </div>
-    </div>
-
-    <div class="sec">지금 상황</div>
-    <div class="card tap" onclick="openLive()">
-      <div class="row"><div class="ic" style="background:#FEF3F2">🚦</div>
-        <div class="grow"><div class="ttl">자녀 실시간 제한 상황</div><div class="val" id="vLive">-</div></div><div class="chev">›</div></div>
-    </div>
-
-    <!-- 💬 도우미 (2026-11-01 신설) — 「지금 크롬 쓸 수 있나요?」에 계산해서 답한다.
-         AI API 를 쓰지 않는다(0원). 판정은 canUseApp() 이 자녀앱과 같은 순서로 한다. -->
-
-    <!-- 📍 위치 확인 (2026-11-05 신설) — 자녀앱 v61 에 이미 들어가 있고, 여기서 켜면 바로 돈다.
-         🔴 켜기 전에는 「새로 생겼어요」로 눌러보게 만든다. 매장에 전화해서 켜 달라고 하지 않도록. -->
-    <div class="sec">어디 있나요</div>
-    <div class="card tap" onclick="openLoc()">
-      <div class="row"><div class="ic" style="background:#ECFDF3">📍</div>
-        <div class="grow"><div class="ttl">위치 확인 · 세이프존 <span class="betabadge">새 기능</span></div>
-          <div class="val" id="vLoc">-</div></div><div class="chev">›</div></div>
     </div>
 
     </div><!-- /pane_home -->
@@ -921,6 +1094,7 @@
     </div><!-- /pane_safe -->
 
     <div class="pane hide" id="pane_more">
+    <div id="addBoxMore"></div>
     <div class="sec">기타</div>
     <div class="card tap" onclick="refreshAll(true)">
       <div class="row">
@@ -949,15 +1123,8 @@
     </div>
 
     <div class="sec">설명서</div>
-    <!-- 📖 2026-11-03 : 「이거 뭔 기능이에요?」 — 그림+설명. FEATURES 한 곳에서 나온다 -->
-    <div class="card tap" onclick="openGuide()">
-      <div class="row">
-        <div class="ic" style="background:#F4F8FF">📖</div>
-        <div class="grow"><div class="ttl">기능 설명 — 이게 무슨 기능이에요?</div>
-          <div class="val">기능마다 <b>그림으로</b> 쉽게 알려드려요</div></div>
-        <div class="chev">›</div>
-      </div>
-    </div>
+    <!-- 📖 2026-11-10 : 「기능 설명 — 이게 무슨 기능이에요?」 카드는 뺐다(대표점장).
+         설명은 이제 **각 화면 맨 위 그림+설명 상자**에 바로 있다(guideStrip). -->
     <div class="card tap" onclick="openDocs()">
       <div class="row">
         <div class="ic" style="background:#EEF2F7">📘</div>
@@ -1438,7 +1605,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월6일 설치일 테스트판';
+const WEB_LABEL = '11월10일 2차개편 테스트판';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -1938,7 +2105,114 @@ function paintMain(){
       ? `<b style="color:#F97316">허락 요청 ${nq}건</b> · 볼 수 있는 영상 ${(TUBE.videos||[]).length}개`
       : `볼 수 있는 영상 ${(TUBE.videos||[]).length}개`;
   }
+  paintHomeExtras();     // 🆕 2026-11-10 : 📲 더 넣기 상자 + 🗺 작은 지도
 }
+
+// ══════════════════════════════════════════════════════════════════════════
+//  📲 「공신폰에 더 넣을 수 있어요」 — 설치 신청을 **홈에 꺼내 둔다** (2026-11-10)
+//
+//  대표점장 : 「사용설명서 → 설치신청 부분들도 많이 신청하라고 설계해서 만들었는데
+//              설치신청 많이 안 오는 거 보면 **눈에 안 띄는 듯**」
+//  🔴 그동안 신청 버튼은 **더보기 → 사용설명서 모음 → 설명서 줄 오른쪽 작은 버튼** 3단계 안에 있었다.
+//  ▸ 이제 **홈 탭**(+ 더보기 맨 위)에 그림과 함께 둔다. 신청 흐름(확인 → 완료 → 취소)은 그대로 쓴다.
+//  ▸ **이미 쓰고 있는 것은 빼고** 보여준다(크롬 켜짐 · 유튜브/디엠 깔림). 다 쓰고 있으면 상자를 숨긴다 —
+//    쓰고 있는 걸 또 권하면 「이미 있는데요?」 문의가 생긴다.
+//  ⚠️ 「무료」라고 적지 않는다 — 상품마다 다를 수 있다(표시광고법). 「매장에서 확인하고 연락드려요」까지만.
+// ══════════════════════════════════════════════════════════════════════════
+const DM_PKG = 'com.example.dmonly_v2';
+const ADD_ITEMS = [
+  { key:'chrome_requested', ico:'allow', t:'공신폰 크롬',
+    d:'허락한 사이트만 열리는 인터넷이에요. 숙제·인강에 필요할 때',
+    using:() => ST.pol?.chrome_enabled === 'true' },
+  { key:'tube_install_requested', ico:'tube', t:'시내YouTube',
+    d:'부모님이 고른 영상만 볼 수 있는 유튜브예요',
+    using:() => tubeInstalled() || ST.pol?.tube_install_allowed === 'true' },
+  { key:'dm_install_requested', ico:'dm', t:'시내디엠',
+    d:'인스타는 막고 DM(메시지)만 쓸 수 있는 앱이에요',
+    using:() => (ST.apps || []).some(a => a.app_package === DM_PKG) }
+];
+//  ▸ 홈 : 아직 안 쓰는 것만 · 하나도 없으면 상자를 숨긴다
+//  ▸ 더보기 : **전부** 보여주되 쓰는 것은 「✓ 사용 중」 — 어떤 걸 더 넣을 수 있는지 한 번에 보이게
+function addBoxHtml(all){
+  const items = all ? ADD_ITEMS : ADD_ITEMS.filter(x => !x.using());
+  if (!items.length) return '';
+  return '<div class="addbox"><div class="addhd">' + icoImg('add', '') +
+    '<div><div class="addt">공신폰에 더 넣을 수 있어요</div>' +
+    '<div class="adds">매장에 다시 오지 않아도 돼요.<br>여기서 신청하면 <b>매장이 원격으로</b> 넣어 드려요.</div></div></div>' +
+    items.map(x => {
+      if (x.using()) return '<div class="additem"><div class="axI">' + icoImg(x.ico, '') + '</div>' +
+        '<div style="flex:1;min-width:0"><div class="axT">' + x.t + '</div><div class="axD">' + x.d + '</div></div>' +
+        '<span class="addbtn done" style="cursor:default">✓ 사용 중</span></div>';
+      const done = reqDone(x.key);
+      return '<div class="additem"><div class="axI">' + icoImg(x.ico, '') + '</div>' +
+        '<div style="flex:1;min-width:0"><div class="axT">' + x.t + '</div><div class="axD">' + x.d + '</div></div>' +
+        '<button class="addbtn' + (done ? ' done' : '') + '" onclick="openReqOne(\'' + x.key + '\',\'' + x.t + '\')">' +
+        (done ? '✓ 신청함' : '신청하기') + '</button></div>';
+    }).join('') +
+    '<div class="addfoot">신청하면 매장에서 확인하고 연락드려요. 잘못 눌렀으면 다시 눌러 취소할 수 있어요.<br>' +
+    '<a onclick="openDocs()" style="color:#C2410C;font-weight:800;cursor:pointer">어떤 건지 영상으로 먼저 보기 ›</a></div></div>';
+}
+
+// ── 🗺 홈 화면 위치 미리보기 — 「위치 확인」 카드 안에 작은 지도 (누르면 큰 지도) ──
+//  ⚠️ 위치를 켠 자녀 + 이 브라우저에 위치 열쇠(토큰)가 이미 있을 때만 그린다.
+//     열쇠가 없으면 PIN 을 다시 묻게 되므로 홈에서는 **조용히 건너뛴다**(카드를 누르면 그때 받는다).
+//  ⚠️ 60초에 한 번만 읽는다 — paintMain 은 자주 불린다.
+let HLMAP = null, HL_AT = 0, HL_CODE = '';
+async function homeLocPreview(){
+  const box = document.getElementById('hloc');
+  if (!box) return;
+  if (!locOn() || !locTokenOf(ST.code)){ box.classList.add('hide'); return; }
+  if (HL_CODE === ST.code && Date.now() - HL_AT < 60000 && HLMAP) return;
+  HL_AT = Date.now(); HL_CODE = ST.code;
+  let P = null, zones = [];
+  try{
+    const q = 'device_code=eq.' + encodeURIComponent(ST.code);
+    const [a, b] = await Promise.all([
+      locApi(ST.server, ST.code, 'device_locations?' + q + '&select=lat,lng,accuracy_m,captured_at'),
+      locApi(ST.server, ST.code, 'safe_zones?' + q + '&select=id,name,lat,lng,radius_m,enabled')
+    ]);
+    P = Array.isArray(a) ? (a[0] || null) : null;
+    zones = Array.isArray(b) ? b : [];
+  }catch(e){ box.classList.add('hide'); return; }
+  if (!P){ box.classList.add('hide'); return; }
+  let L;
+  try{ L = await loadLeaflet(); }catch(e){ box.classList.add('hide'); return; }
+  box.classList.remove('hide');
+  const c = [Number(P.lat), Number(P.lng)];
+  if (HLMAP){ try{ HLMAP.remove(); }catch(e){} HLMAP = null; }
+  const el = document.getElementById('hlmap');
+  HLMAP = L.map(el, { zoomControl:false, attributionControl:true, dragging:false, touchZoom:false,
+                      scrollWheelZoom:false, doubleClickZoom:false, boxZoom:false, keyboard:false, tap:false });
+  const hm = HLMAP;
+  hm.attributionControl.setPrefix(false);
+  hm.setView(c, 15);
+  await mapAddBase(L, hm);
+  if (HLMAP !== hm) return;
+  zones.forEach(z => { if (z.enabled === false) return;
+    L.circle([Number(z.lat), Number(z.lng)], { radius:Number(z.radius_m||150), color:NAVER_GREEN, weight:2,
+      dashArray:'5 5', fillColor:NAVER_GREEN, fillOpacity:.08 }).addTo(HLMAP); });
+  const t = toDate(P.captured_at);
+  L.marker(c, { icon:kidPinIcon(L, !t || Date.now() - t.getTime() > 30*60000) }).addTo(HLMAP);
+  // 구역 이름 — LOC.zones 를 잠깐 빌려 locZoneAt 을 그대로 쓴다(판정을 두 벌로 만들지 않는다 · 3-13)
+  const keep = LOC.zones; LOC.zones = zones;
+  const z = locZoneAt(c[0], c[1]);
+  LOC.zones = keep;
+  // 🔴 카드 둘째 줄의 「마지막 확인」도 **실제 위치 시각**으로 고친다 — 정책값 location_last_sent_at 은
+  //    폰이 정책을 올릴 때만 바뀌어서 지도는 8분 전인데 카드는 「10시간 전」이라고 했다(2026-11-10 실측).
+  { const $l = document.getElementById('vLoc'); if ($l) $l.innerHTML = badge(true, '켜짐') + ' 마지막 확인 ' + esc(ago(P.captured_at)); }
+  const lbl = document.getElementById('hlc');
+  if (lbl) lbl.innerHTML = (z ? locZoneEmo(z.name) + ' ' + esc(z.name) + '에 있어요' : '🚶 등록한 장소 밖') +
+    ' <span style="color:#98A2B3;font-weight:700">· ' + esc(ago(P.captured_at)) + '</span>';
+}
+
+/** paintMain 끝에서 부른다 — 홈의 「더 넣기」 상자 + 위치 미리보기 */
+function paintHomeExtras(){
+  const a = document.getElementById('addBoxHome'), b = document.getElementById('addBoxMore');
+  if (a) a.innerHTML = addBoxHtml(false);
+  if (b) b.innerHTML = addBoxHtml(true);
+  homeLocPreview();
+}
+
 
 // ══════════════════════════════════════════════════════════════════════════
 //  📺 시내YouTube (2026-09-22 신설)
@@ -2227,6 +2501,10 @@ function cardExpText(fn){
 /** 메인 화면 카드마다 제목 밑에 설명을 끼워 넣는다 (한 번만) */
 function injectCardExps(){
   document.querySelectorAll('#scMain .card.tap[onclick]').forEach(c => {
+    // 🎨 2026-11-10 : 이모지 아이콘을 3D 그림으로 (그림 파일이 없으면 이모지 그대로)
+    { const ic = c.querySelector('.ic'), fn0 = (c.getAttribute('onclick') || '').replace(/\(.*$/, '').trim();
+      const k = ICO_BY_FN[fn0];
+      if (ic && k && icoSrc(k) && !ic.classList.contains('has3d')){ ic.innerHTML = icoImg(k); ic.classList.add('has3d'); ic.style.background = ''; } }
     if (c.querySelector('.exp')) return;                       // 이미 넣었다
     // 🔸 `.val` 에 id 가 없으면 그건 **상태값이 아니라 원래 설명**이다(새로고침·설명서 등).
     //    id 있는 val 만 paintMain 이 채운다 → id 없는 것은 설명으로 올려 모양을 통일한다.
@@ -2688,6 +2966,31 @@ const F_OPEN = {
   hideicon:'openStealth', hidenotify:'openStealth', hist:'openHistory', pin:'openPinChange'
 };
 
+// ══════════════════════════════════════════════════════════════════
+//  🎨 2026-11-10 — 3D 그림 아이콘 + 화면마다 「그림+설명 상자」
+//  대표점장 : 「기능설명 — 이게 무슨 기능이에요? 이런 거 빼고, 설명란 하나하나 자체에
+//              이해되기 쉽게 이미지+설명」 · 「디자인 허술한 건 힉스필드 팍팍 써서」
+//  ▸ 그림은 힉스필드(GPT Image 2.6)로 한 벌을 만들어 `img/i-<키>.webp` 로 둔다(160px · 투명배경).
+//    키는 FEATURES 의 k 와 같다 — 설명 문구도 그림도 **FEATURES 키 하나로** 찾는다(3-13).
+//  ▸ 그림 파일이 없으면 '' 를 돌려준다 → 이모지 아이콘이 그대로 남는다(깨진 그림이 안 보이게).
+// ══════════════════════════════════════════════════════════════════
+const ICO = ['live','loc','limit','dt','academy','force','req','push','allow','apps','uninst','pinlock',
+             'ignoredt','sos','security','kakao','sound','refresh','pin','kids','logout','docs','doumi',
+             'tube','hist','add','dm','lockhero','freehero','store','parent'];
+const ICO_V = '20261110';
+const ICO_ALIAS = { newapp:'apps', hideicon:'sound', hidenotify:'sound' };
+function icoSrc(k){ k = ICO_ALIAS[k] || k; return ICO.includes(k) ? 'img/i-' + k + '.webp?v=' + ICO_V : ''; }
+function icoImg(k, cls){
+  const s = icoSrc(k);
+  return s ? '<img class="' + (cls == null ? 'ic3d' : cls) + '" src="' + s + '" alt="" loading="lazy" decoding="async">' : '';
+}
+/** 메인 카드의 onclick 함수 이름 → 그림 키 */
+const ICO_BY_FN = (() => {
+  const m = { togglePush:'push', refreshAll:'refresh', openList:'kids', doLogout:'logout', openDocs:'docs' };
+  Object.keys(F_OPEN).forEach(k => { const fn = F_OPEN[k]; if (!m[fn]) m[fn] = k; });
+  return m;
+})();
+
 // ── 화면 ───────────────────────────────────────────────────────────
 function gBul(arr){
   return (arr || []).map(s => `<div class="gbul">${s}</div>`).join('');
@@ -2756,20 +3059,26 @@ function openGuideFor(subTitle){
  *  🔴 제목 글자로 찾는다. 화면 제목을 바꾸면 **조용히 안 뜬다**(틀린 답을 주지는 않는다).
  *     → 최종점검 프롬프트 PART G 에 「FEATURES.sub 가 openSub 제목과 전부 맞는지」 항목이 있다. */
 function guideStrip(title){
-  if (title === '기능 설명' || title === '✨ AI 매니저') return '';   // 이 둘엔 안 붙인다
+  // 🎨 2026-11-10 : 「📖 그림으로 더 자세히 보기」 링크를 없앴다 — 대표점장 「이게 무슨 기능이에요? 이런 거 빼고」.
+  //   그 대신 **그림 + 쉬운 말 + 이럴 때 써요** 를 화면 맨 위에 바로 깐다. 누를 것이 없다.
+  //   ▸ 지도·실시간·허용사이트 화면은 **자기 화면에 맞춘 그림 설명**을 따로 그린다 → 여기서는 건너뛴다.
+  if (GUIDE_SKIP.includes(title)) return '';
   const list = F_BY_SUB[title];
   if (!list || !list.length) return '';
   const f = list[0];
-  // 🔴 2026-11-05 : 접어 두지 않는다. 대표점장 —
-  //    「눈에 띄지도 않아서 눌러 보지도 않고, 눌러서 봐도 뭐가 뭔지 이해가 안 간다」
-  //    → 가장 중요한 두 줄을 **화면에 바로** 깔고, 그림 설명은 그 아래 링크로 남긴다.
-  return `<div class="ghead">
-    <div class="gheadb">${f.one}</div>
-    ${(f.what && f.what[0]) ? `<div class="gheadb2">${f.what[0]}</div>` : ''}
-    <div class="gheadmore" onclick="openGuideFor('${title.replace(/'/g, "\\'")}')">
-      📖 그림으로 더 자세히 보기<i>›</i></div>
-  </div>`;
+  const what = (f.what || []).slice(0, 1).join(' ');
+  const steps = list.length > 1
+    ? '<div class="xsteps">' + list.map((x, i) => '<div><b class="n">' + (i + 1) + '</b><b>' +
+        String(x.t).replace(/^[^가-힣A-Za-z0-9]+/, '') + '</b> — ' + x.one + '</div>').join('') + '</div>'
+    : '';
+  const when = (list.length === 1 && f.when && f.when[0]) ? '<div class="xwhen">💡 이럴 때 써요 · ' + f.when[0] + '</div>' : '';
+  return '<div class="xbox"><div class="xi">' + icoImg(f.k, '') + '</div><div class="xt">' +
+    '<div class="xh">' + (list.length > 1 ? '이 화면에서는 <b>' + list.length + '가지</b>를 할 수 있어요' : f.one) + '</div>' +
+    (what && list.length === 1 ? '<div class="xd">' + what + '</div>' : '') +
+    steps + when + '</div></div>';
 }
+const GUIDE_SKIP = ['기능 설명', '✨ AI 매니저', '어디 있나요', '장소 관리', '장소 등록',
+                    '자녀 실시간 제한 상황', '허용 사이트 관리'];
 
 // ══════════════════════════════════════════════════════════════════
 //  🆕 앱 아이콘 + 「처음 쓴 날」 (2026-11-03 신설)
@@ -3746,19 +4055,23 @@ const PRESET_GROUPS = [
 function presetGroupOf(d){ return PRESET_GROUPS.find(g => g.list.includes(d)) || null; }
 
 function openAllow(){
+  // 🎨 2026-11-10 대표점장 : 「크롬을 우리 매장에서만 ON/OFF 할 수 있는지 손님이 아~주 자세히 읽어봐야
+  //   이해하심. 대부분 몰라서 연락옴」
+  //   🔴 그 말이 화면 **맨 아래 노란 쪽지 한 줄**에 있었다. 사이트를 넣었는데 안 열린다는 문의의 뿌리다 —
+  //      크롬이 꺼져 있으면 여기 넣어도 아무 일도 안 일어난다(3-11 의 모양 : 값은 있는데 스위치가 꺼짐).
+  //   ▸ 그래서 맨 위에 ①「누가 무엇을 바꾸나」 그림 두 칸 ②지금 크롬이 켜졌나/꺼졌나를 **크게**
+  //     ③꺼져 있으면 그 자리에서 「크롬 켜기 신청」 버튼 — 매장 전화 대신.
   const allow = J(ST.pol.chrome_allowed_domains,[]);
+  const chromeOn = ST.pol.chrome_enabled === 'true';
   const row = d => `<div class="item"><div class="grow"><div class="nm">${esc(d)}</div></div>
       <button class="x" onclick="delAllow('${esc(d)}')">삭제</button></div>`;
 
-  // 매장 기본 묶음에 속한 것과 부모님이 직접 넣은 것을 가른다
   const mine = allow.filter(d => !presetGroupOf(d));
   const folders = PRESET_GROUPS.map(g => ({ g, items: allow.filter(d => g.list.includes(d)) }))
                                .filter(x => x.items.length);
-
   const mineBox = mine.length
     ? `<div class="card">${mine.map(row).join('')}</div>`
-    : `<div class="card"><div class="empty">아직 직접 추가하신 사이트가 없어요</div></div>`;
-
+    : `<div class="card"><div class="empty">아직 직접 넣으신 사이트가 없어요</div></div>`;
   const folderBox = folders.map(({g, items}) => `
     <details style="background:#fff;border:1px solid #E7EAF0;border-radius:14px;margin-bottom:10px;overflow:hidden">
       <summary style="list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:10px">
@@ -3772,23 +4085,52 @@ function openAllow(){
       <div style="padding:0 16px 6px">${items.map(row).join('')}</div>
     </details>`).join('');
 
-  openSub('허용 사이트 관리', `
-    <div class="note">여기 있는 사이트만 자녀폰 크롬에서 열려요.<br>주소는 <b>www 없이</b> 넣어주시면 돼요. 예) ebs.co.kr</div>
-    <div class="card"><div class="field"><label>사이트 주소 추가</label>
-      <input id="newDom" type="text" placeholder="ebs.co.kr" autocapitalize="none" spellcheck="false"></div>
-      <button class="btn btn-p" onclick="addAllow()">추가하기</button></div>
+  const reqd = reqDone('chrome_requested');
+  const state = chromeOn
+    ? `<div class="bignote on"><div class="bt">✅ 지금 자녀폰 크롬이 켜져 있어요</div>
+         아래 목록에 있는 사이트만 열려요. 새로 넣으면 자녀폰에 곧 적용돼요.</div>`
+    : `<div class="bignote off"><div class="bt">⛔ 지금 자녀폰 크롬이 꺼져 있어요</div>
+         그래서 사이트를 넣어도 <b>아직은 열리지 않아요.</b><br>
+         크롬 켜기는 <b>매장에서만</b> 할 수 있어요. 아래 버튼을 누르면 매장이 확인하고 켜 드려요.
+         <button class="btn ${reqd ? 'btn-g' : 'btn-p'}" style="margin-top:12px" onclick="openReqOne('chrome_requested','공신폰 크롬')">
+           ${reqd ? '✓ 크롬 켜기 신청했어요 (누르면 취소할 수 있어요)' : '🌐 크롬 켜기 신청하기'}</button></div>`;
 
-    <div class="sec">직접 추가하신 사이트 (${mine.length}개)</div>
+  openSub('허용 사이트 관리', `
+    <div class="xbox"><div class="xi">${icoImg('allow','')}</div><div class="xt">
+      <div class="xh">자녀폰 인터넷(크롬)은 <b>여기 적힌 사이트만</b> 열려요</div>
+      <div class="xd">나머지 인터넷은 전부 막혀 있어요. 학교·숙제·인강 사이트를 넣어 주시면 그 사이트만 열려요.</div>
+    </div></div>
+
+    <div class="sec">누가 무엇을 바꿀 수 있나요?</div>
+    <div class="who">
+      <div class="whoC store"><div class="wi">${icoImg('store','') ? icoImg('store','').replace('<img ','<img style="width:54px;height:54px" ') : '🏪'}</div>
+        <div class="wt">매장에서만</div><div class="wd">크롬 켜기 · 끄기</div>
+        <div class="ws">${chromeOn ? '<span class="badge b-on">지금 켜짐</span>' : '<span class="badge b-off">지금 꺼짐</span>'}</div></div>
+      <div class="whoC me"><div class="wi">${icoImg('parent','') ? icoImg('parent','').replace('<img ','<img style="width:54px;height:54px" ') : '👨‍👩‍👧'}</div>
+        <div class="wt">부모님이 여기서</div><div class="wd">열릴 사이트<br>넣기 · 빼기</div>
+        <div class="ws"><span class="badge b-on">${allow.length}개 허용 중</span></div></div>
+    </div>
+    ${state}
+
+    <div class="flow3">
+      <div><b>🔒</b>인터넷은<br>전부 막혀요</div><i>›</i>
+      <div><b>📝</b>여기에<br>사이트 넣기</div><i>›</i>
+      <div><b>✅</b>그 사이트만<br>열려요</div>
+    </div>
+
+    <div class="card"><div class="field"><label>사이트 주소 넣기 — www 없이 적어 주세요 (예: ebs.co.kr)</label>
+      <input id="newDom" type="text" placeholder="ebs.co.kr" autocapitalize="none" spellcheck="false"></div>
+      <button class="btn btn-p" onclick="addAllow()">넣기</button></div>
+
+    <div class="sec">부모님이 넣으신 사이트 (${mine.length}개)</div>
     ${mineBox}
 
-    ${folders.length ? `<div class="sec">매장에서 넣어드린 사이트</div>
+    ${folders.length ? `<div class="sec">매장에서 미리 넣어 드린 사이트</div>
       <div class="note" style="background:#F0FDF4;border-color:#BBF7D0;color:#15803D">
-        아래는 <b>처음 설정할 때 매장에서 넣어드린 주소</b>예요. 부모님이 넣으신 게 아니에요 🙂<br>
-        학습앱 로그인이나 안전검색에 쓰이니 <b>그대로 두시는 걸 권해 드려요.</b>
+        처음 셋팅할 때 <b>매장에서 넣어 드린 주소</b>예요 🙂 학습앱 로그인·안전검색에 쓰이니 <b>그대로 두시는 걸 권해 드려요.</b>
       </div>${folderBox}` : ''}
 
-    <div class="note warn"><b>크롬(안전검색)을 쓰고 싶으시면 매장에 문의해 주세요.</b><br>
-      크롬을 켜고 끄는 건 <b>매장 전용 기능</b>이라 여기서는 바꿀 수 없어요.</div>
+    <div class="note">💡 <b>자녀가 「이 사이트 열어 주세요」 하고 요청하면</b> 「자녀의 사이트 접속 요청」에 떠요. 거기서 허락하면 여기에 저절로 들어가요.</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 function cleanDomain(v){ return (v||'').trim().toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/.*$/,'').replace(/[^a-z0-9.\-]/g,''); }
@@ -4546,7 +4888,9 @@ function liveSummary(){
 
 async function openLive(){
   loading(true);
-  await liveReload();          // 앱별 「오늘 쓴 시간」까지 읽어야 남은 시간이 나온다
+  await liveReload();
+  // 🆕 2026-11-10 : 앱 이름 옆에 아이콘. 🔴 앱 목록이 비어 있을 때 한 번 읽힌 빈 결과가 남아 있으면 다시 읽는다
+  try{ const M = ST.appMeta; await loadAppMeta(!!(M && M.code === ST.code && !Object.keys(M.icons||{}).length && (ST.apps||[]).length)); }catch(e){}          // 앱별 「오늘 쓴 시간」까지 읽어야 남은 시간이 나온다
   loading(false);
   paintLive();
   clearInterval(LIVE_TIMER);
@@ -5242,6 +5586,60 @@ function doumiToggle(i){ DOUMI_OPEN = (DOUMI_OPEN===i ? -1 : i); paintDoumi(); }
 
 // ⚠️ 시간 길이는 fmtMin, 하루한도 값(-1 무제한 / 0 사용불가)은 minLabel.
 //    2026-08-31 실제 버그: 사용시간 0분을 minLabel 로 찍어 「사용 불가 사용」이라고 나왔다.
+// ══════════ 🚦 2026-11-10 : 실시간 제한 — 「오늘 하루 한눈에」 띠 ══════════
+//  대표점장 : 「자녀 실시간 제한상황 → 조금 더 디테일하게 깔끔하고 이해되기 쉽게 이미지+설명」
+//  ▸ 0시~24시 띠 하나에 **취침(보라) · 학원(주황) · 지금(검은 막대)** 을 그린다.
+//    「언제 잠기고 언제 풀리나」를 글로 읽지 않고 **눈으로** 본다.
+//  🔴 판정은 그리지 않는다 — 「지금 잠겼나」는 위 큰 카드(liveSummary)가 한다. 띠는 **설정값 그림**일 뿐이다.
+//     (오늘 쉬는 날·잠시 풀어주기 중이면 학원 띠에 「오늘은 쉼」을 적는다)
+//  ⚠️ 자정을 넘기는 값(예 22:00|07:00)은 자녀앱과 같게 읽는다 —
+//     **오늘 요일 값은 오늘 밤 부분만**, 오늘 새벽 부분은 **어제 요일 값**에서 온다(liveDowntime 과 같은 규칙).
+function _bandParse(raw){
+  if (!raw || raw === '미설정' || String(raw).indexOf('|') < 0) return null;
+  const a = String(raw).split('|'); return { s:_hm2m(a[0]), e:_hm2m(a[1]) };
+}
+function _bandToday(raw){ const r = _bandParse(raw); if (!r || r.s === r.e) return [];
+  return r.s < r.e ? [[r.s, r.e]] : [[r.s, 1440]]; }
+function _bandYest(raw){ const r = _bandParse(raw); return (r && r.s > r.e) ? [[0, r.e]] : []; }
+function dayBandHtml(){
+  const p = ST.pol || {}, td = _dayIdx(), yd = (td === 1 ? 7 : td - 1);
+  const segs = [];
+  if (p.dt_enabled === 'true'){
+    _bandToday(p['dt_day_' + td]).forEach(x => segs.push(['dt', x]));
+    _bandYest(p['dt_day_' + yd]).forEach(x => segs.push(['dt', x]));
+  }
+  let acNote = '';
+  if (p.dt2_enabled === 'true'){
+    const skip = (p.dt2_skip_today || '').trim() === _acToday();
+    const rel  = _acUnlockLeft().on;
+    if (skip) acNote = ' · 📅 오늘은 학원 쉬는 날로 해 두셨어요';
+    else if (rel) acNote = ' · ⏳ 학원시간 잠시 풀어주는 중';
+    if (!skip){
+      _bandToday(p['dt2_day_' + td]).forEach(x => segs.push(['ac', x]));
+      _bandYest(p['dt2_day_' + yd]).forEach(x => segs.push(['ac', x]));
+    }
+  }
+  const now = _nowMin(), pct = m => (m / 1440 * 100).toFixed(2) + '%';
+  const hasDt = segs.some(s => s[0] === 'dt'), hasAc = segs.some(s => s[0] === 'ac');
+  return '<div class="sec">오늘 하루 한눈에</div><div class="card">' +
+    '<div class="dayband">' +
+      segs.map(s => '<i class="' + s[0] + '" style="left:' + pct(s[1][0]) + ';width:' + pct(s[1][1] - s[1][0]) + '"></i>').join('') +
+      '<div class="nowl" style="left:' + pct(now) + '"></div>' +
+      '<span class="nowt" style="left:' + pct(Math.min(1380, Math.max(60, now))) + '">지금 ' + p2(Math.floor(now/60)) + ':' + p2(now%60) + '</span>' +
+    '</div>' +
+    '<div class="dayax"><span>0시</span><span>6시</span><span>12시</span><span>18시</span><span>24시</span></div>' +
+    '<div class="daylg"><span style="--c:#E9F7EF">쓸 수 있는 시간</span>' +
+      (hasDt ? '<span style="--c:#C9B8F5">취침시간 (잠김)</span>' : '') +
+      (hasAc ? '<span style="--c:#FFD3A6">학원시간 (잠김)</span>' : '') + '</div>' +
+    '<div style="margin-top:9px;font-size:12.8px;color:#667085;line-height:1.6">' +
+      (hasDt || hasAc ? '색칠된 시간에는 자녀폰이 저절로 잠기고, 끝나면 저절로 풀려요.' : '오늘은 정해진 잠금 시간이 없어요.') +
+      acNote + '</div>' +
+    '</div>';
+}
+
+/** 「그 밖의 잠금」 줄마다 붙는 그림 (이름 → 그림 키) */
+const LIVE_RICO = { '크롬(안전검색)':'allow', 'Play 스토어 차단':'security', '카톡 오픈채팅 차단':'kakao',
+  '카톡 링크 열기 차단':'kakao', '카톡 세부차단':'kakao', '앱 삭제 방지':'uninst', '앱 PIN 잠금':'pinlock' };
 function paintLive(){
   const p=ST.pol, appNm = k => (ST.apps.find(a=>a.app_package===k)||{}).app_name || k;
   const sum = liveSummary(), dt = liveDowntime(), nx = liveNextDowntime();
@@ -5328,16 +5726,21 @@ function paintLive(){
       + '</div>'
     : '';
 
-  // ── ① 큰 상태 카드 ──
-  let why='', when='';
-  if(dt){ why='지금은 <b>약속한 취침시간</b>입니다'; when='<b>'+dt.e+'</b> 이 되면 저절로 풀립니다'; }
-  else if(lim===0){ why='오늘은 <b>사용 불가</b>로 정해 두셨습니다'; when='<b>내일 0시</b>에 저절로 풀립니다'; }
-  else if(lim>0 && lim-used<=0){ why='오늘 쓸 수 있는 <b>시간을 다 썼습니다</b>'; when='<b>내일 0시</b>에 저절로 풀립니다 · 지금 풀어주시려면 🎁 오늘만 보너스'; }
-  const hero = '<div class="lv '+(sum.lock?'lock':'free')+'">'
-    + '<div class="lv-t">'+(sum.lock?'🔴 지금 자녀폰이 잠겨 있습니다':'🟢 지금 자녀폰을 쓸 수 있습니다')+'</div>'
-    + (why ? '<div class="lv-d">'+why+'<br>'+when+'</div>'
-           : '<div class="lv-d">'+(lim>0?'오늘 남은 시간 <b>'+fmtMin(lim-used)+'</b>':'오늘은 하루한도를 걸어두지 않으셨습니다')+'</div>')
-    + '<div class="lv-n">잠겨 있어도 <b>긴급전화</b>는 언제나 됩니다</div></div>';
+  // ── ① 큰 상태 카드 — 🎨 2026-11-10 : 그림 + 「왜」 + 「언제 풀리나」 ──
+  //   🔴 예전 카드는 **즉시차단·학원시간으로 잠겼을 때 「왜」를 안 적었다** — 잠김인데 「오늘 남은 시간 N분」이
+  //      같이 떠서 「잠겼다는 거야 안 잠겼다는 거야」가 됐다. 판정 순서는 liveSummary 와 똑같이 둔다(3-25b).
+  const _fl = forceLockLeft(), _ac = liveAcademy();
+  let why='', when='', heroIco='freehero';
+  if(_fl.on){ why='부모님이 <b>폰 즉시 차단</b>으로 잠그셨어요'; when=_fl.txt ? '<b>'+esc(_fl.txt)+'</b>' : '풀려면 「폰 즉시 차단」에서 풀어 주세요'; heroIco='force'; }
+  else if(dt){ why='지금은 약속한 <b>취침시간</b>이에요'; when='<b>'+dt.e+'</b> 이 되면 저절로 풀려요'; heroIco='dt'; }
+  else if(_ac){ why='지금은 <b>학원 시간</b>이에요'; when='<b>'+_ac.e+'</b> 이 되면 저절로 풀려요'; heroIco='academy'; }
+  else if(lim===0){ why='오늘은 <b>사용 불가</b>로 정해 두셨어요'; when='<b>내일 0시</b>에 저절로 풀려요'; heroIco='lockhero'; }
+  else if(lim>0 && lim-used<=0){ why='오늘 쓸 수 있는 <b>시간을 다 썼어요</b>'; when='<b>내일 0시</b>에 저절로 풀려요 · 지금 풀어 주시려면 「하루 사용시간 한도」에서 🎁 오늘만 보너스'; heroIco='lockhero'; }
+  const hero = '<div class="lvx '+(sum.lock?'lock':'free')+'">' + icoImg(heroIco, '')
+    + '<div style="min-width:0"><div class="t">'+(sum.lock?'지금 자녀폰이<br>잠겨 있어요':'지금 자녀폰을<br>쓸 수 있어요')+'</div>'
+    + (why ? '<div class="d">'+why+'<br>'+when+'</div>'
+           : '<div class="d">'+(lim>0?'오늘 남은 시간 <b>'+fmtMin(lim-used)+'</b>':'오늘은 하루 사용시간 한도를 걸어 두지 않으셨어요')+'</div>')
+    + '<div class="n">📞 잠겨 있어도 <b>긴급전화</b>는 언제나 돼요</div></div></div>';
 
   // ── ② 오늘 사용시간 막대 ──
   let bar;
@@ -5346,12 +5749,12 @@ function paintLive(){
     const grad = pct>=100 ? 'linear-gradient(90deg,#F97316,#B42318)' : 'linear-gradient(90deg,#2563EB,#1B3A8F)';
     bar = '<div class="sec">오늘 사용시간</div><div class="card">'
       + '<div style="display:flex;align-items:baseline;gap:8px">'
-      + '<div style="flex:1;font-size:15px;font-weight:800">오늘 '+fmtMin(used)+' 썼습니다</div>'
+      + '<div style="flex:1;font-size:15px;font-weight:800">오늘 '+fmtMin(used)+' 썼어요</div>'
       + '<div style="font-size:14px;color:var(--muted);font-weight:700">하루 한도 '+minLabel(lim)+'</div></div>'
       + '<div class="abar" style="height:12px;margin-top:9px"><i style="width:'+pct+'%;background:'+grad+'"></i></div>'
       + '<div style="margin-top:8px;font-size:14px;font-weight:800;color:'+(pct>=100?'#B42318':'#1B3A8F')+'">'
-      + (lim-used>0 ? '앞으로 '+fmtMin(lim-used)+' 더 쓸 수 있습니다' : '오늘 쓸 시간을 다 썼습니다')+'</div>'
-      + (bonus>0 ? '<div style="margin-top:7px;font-size:13.5px;color:#B54708;font-weight:700">🎁 오늘만 보너스 '+fmtMin(bonus)+'가 더해진 한도입니다</div>' : '')
+      + (lim-used>0 ? '앞으로 '+fmtMin(lim-used)+' 더 쓸 수 있어요' : '오늘 쓸 시간을 다 썼어요')+'</div>'
+      + (bonus>0 ? '<div style="margin-top:7px;font-size:13.5px;color:#B54708;font-weight:700">🎁 오늘만 보너스 '+fmtMin(bonus)+'가 더해진 한도예요</div>' : '')
       + screenLine + limitSumLine
       + '</div>';
   }else{
@@ -5360,28 +5763,28 @@ function paintLive(){
     //     부모가 「폰을 얼마나 썼나」를 알고 싶은 자리에 작은 숫자를 띄우면 「측정이 안 된다」가 된다.
     //     7일 막대와도 같은 기준이 된다.
     bar = '<div class="sec">오늘 사용시간</div><div class="card">'
-      + '<div style="font-size:15px;font-weight:800">오늘 '+fmtMin(screenMin)+' 썼습니다</div>'
+      + '<div style="font-size:15px;font-weight:800">오늘 '+fmtMin(screenMin)+' 썼어요</div>'
       + '<div style="margin-top:6px;font-size:13.5px;color:var(--muted);font-weight:600">'
-      + (lim===0?'오늘은 <b>사용 불가</b>로 설정돼 있습니다':'오늘은 하루한도가 <b>없습니다</b> (제한 없이 쓸 수 있음)')+'</div></div>';
+      + (lim===0?'오늘은 <b>사용 불가</b>로 설정돼 있어요':'오늘은 하루한도가 <b>없어요</b> (제한 없이 쓸 수 있음)')+'</div></div>';
   }
 
   // ── ③ 취침시간 ──
   let dtBox;
   if(p.dt_enabled!=='true'){
-    dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div><div class="val">꺼져 있습니다 — 밤에도 제한이 없습니다</div></div>';
+    dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div><div class="val">꺼져 있어요 — 밤에도 제한이 없어요</div></div>';
   }else if(dt){
     dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div>'
-      + '<div class="stat on">🔴 지금 취침시간입니다 ('+dt.s+' ~ '+dt.e+')</div>'
-      + '<div class="val" style="margin-top:7px">'+dt.e+' 이 되면 저절로 풀립니다</div></div>';
+      + '<div class="stat on">🔴 지금 취침시간이에요 ('+dt.s+' ~ '+dt.e+')</div>'
+      + '<div class="val" style="margin-top:7px">'+dt.e+' 이 되면 저절로 풀려요</div></div>';
   }else if(nx){
     dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div>'
-      + '<div class="stat off">⚪ 아직 아닙니다 — 오늘 '+nx.s+' 에 시작합니다</div>'
-      + '<div class="val" style="margin-top:7px">'+fmtMin(nx.inMin)+' 뒤에 잠깁니다</div></div>';
+      + '<div class="stat off">⚪ 아직 아니에요 — 오늘 '+nx.s+' 에 시작해요</div>'
+      + '<div class="val" style="margin-top:7px">'+fmtMin(nx.inMin)+' 뒤에 잠겨요</div></div>';
   }else{
     const v=p['dt_day_'+_dayIdx()]||'미설정';
     dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div>'
-      + '<div class="stat off">⚪ 지금은 취침시간이 아닙니다</div>'
-      + '<div class="val" style="margin-top:7px">'+(v==='미설정'?'오늘 요일은 설정돼 있지 않습니다':'오늘 '+v.replace('|',' ~ '))+'</div></div>';
+      + '<div class="stat off">⚪ 지금은 취침시간이 아니에요</div>'
+      + '<div class="val" style="margin-top:7px">'+(v==='미설정'?'오늘 요일은 설정돼 있지 않아요':'오늘 '+v.replace('|',' ~ '))+'</div></div>';
   }
 
   // ── ④ 앱별 제한 (지금 걸려 있는 것만) ──
@@ -5389,10 +5792,10 @@ function paintLive(){
   //     (설계안 E 가 ② 막대 카드에서 먼저 써야 한다). 여기서 다시 계산하지 마라 — CLAUDE.md 3-13.
   let appBox = '<div class="sec">지금 걸려 있는 앱 제한</div><div class="card">';
   if(!blocked.length && !timed.length && !free.length){
-    appBox += '<div class="empty">앱별로 걸어둔 제한이 없습니다</div>';
+    appBox += '<div class="empty">앱별로 걸어둔 제한이 없어요</div>';
   }else{
     if(blocked.length) appBox += '<div style="padding:10px 0"><div class="stat on">🔴 완전 차단 '+blocked.length+'개</div>'
-      + '<div class="val" style="margin-top:7px">'+blocked.map(x=>esc(appNm(x))).join(' · ')+'</div></div>';
+      + '<div class="achips">'+blocked.map(x=>'<span class="achip">'+appIcoHtml(x)+esc(appNm(x))+'</span>').join('')+'</div></div>';
     if(timed.length) appBox += '<div style="padding:10px 0;border-top:'+(blocked.length?'1px solid #F2F4F7':'0')+'">'
       + '<div class="stat on" style="background:#FFF7ED;color:#B54708;border-color:#FED7AA">⏱️ 오늘 시간제한 '+timed.length+'개</div>'
       + timed.map(t=>{
@@ -5402,9 +5805,9 @@ function paintLive(){
           const done = left<=0;
           return '<div style="margin-top:11px">'
             + '<div style="display:flex;gap:8px;align-items:baseline;font-size:14px">'
-            + '<div style="flex:1;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(appNm(t.pkg))+'</div>'
+            + '<div style="flex:1;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:7px" class="achipT">'+appIcoHtml(t.pkg)+esc(appNm(t.pkg))+'</div>'
             + '<div style="font-weight:800;white-space:nowrap;color:'+(done?'#B42318':'var(--navy)')+'">'
-            + (done ? '다 썼습니다' : fmtMin(left)+' 남음') + (t.bonus?' 🎁':'') + '</div></div>'
+            + (done ? '다 썼어요' : fmtMin(left)+' 남음') + (t.bonus?' 🎁':'') + '</div></div>'
             + '<div class="abar" style="margin-top:6px"><i style="width:'+pct+'%;background:'
             + (done?'linear-gradient(90deg,#F97316,#B42318)':'linear-gradient(90deg,#2563EB,#1B3A8F)')+'"></i></div>'
             + '<div style="margin-top:5px;font-size:12.5px;color:var(--muted);font-weight:600">'
@@ -5413,7 +5816,7 @@ function paintLive(){
       + '</div>';
     if(free.length) appBox += '<div style="padding:10px 0;border-top:'+((blocked.length||timed.length)?'1px solid #F2F4F7':'0')+'">'
       + '<div class="stat off">⚪ 하루한도에서 빠지는 앱 '+free.length+'개</div>'
-      + '<div class="val" style="margin-top:7px">'+free.map(x=>esc(appNm(x))).join(' · ')+'</div></div>';
+      + '<div class="achips">'+free.map(x=>'<span class="achip">'+appIcoHtml(x)+esc(appNm(x))+'</span>').join('')+'</div></div>';
   }
   appBox += '</div>';
 
@@ -5421,36 +5824,37 @@ function paintLive(){
   const nAllow = J(p.chrome_allowed_domains,[]).length;
   const nUn = J(p.uninstall_blocked_apps,[]).length, nPin = J(p.pin_locked_apps,[]).length;
   const rows = [
-    ['크롬(안전검색)', p.chrome_enabled==='true', '켜짐 — 허용한 '+nAllow+'개 사이트만 열립니다', '꺼짐 — 인터넷을 쓸 수 없습니다'],
-    ['Play 스토어 차단', p.play_store_blocked==='true', '차단중 — 새 앱을 못 깝니다', '막고 있지 않습니다'],
-    ['카톡 오픈채팅 차단', p.open_chat_blocked==='true', '차단중 — 오픈채팅방에 못 들어갑니다', '막고 있지 않습니다'],
-    ['카톡 링크 열기 차단', p.kakao_inapp_browser_blocked==='true', '차단중 — 링크를 눌러도 안 열립니다', '막고 있지 않습니다'],
+    ['크롬(안전검색)', p.chrome_enabled==='true', '켜짐 — 허용한 '+nAllow+'개 사이트만 열려요', '꺼짐 — 인터넷을 쓸 수 없어요'],
+    ['Play 스토어 차단', p.play_store_blocked==='true', '차단중 — 새 앱을 못 깔아요', '막고 있지 않아요'],
+    ['카톡 오픈채팅 차단', p.open_chat_blocked==='true', '차단중 — 오픈채팅방에 못 들어가요', '막고 있지 않아요'],
+    ['카톡 링크 열기 차단', p.kakao_inapp_browser_blocked==='true', '차단중 — 링크를 눌러도 안 열려요', '막고 있지 않아요'],
     // 💬 2026-10-15 카톡 세부차단 5가지 (자녀앱 v54+)
     ['카톡 세부차단',
       ['kakao_openchat_create_blocked','kakao_openprofile_blocked','kakao_multiprofile_blocked',
        'kakao_shortform_blocked','kakao_now_tab_blocked'].some(k=>p[k]==='true'),
       ['kakao_openchat_create_blocked','kakao_openprofile_blocked','kakao_multiprofile_blocked',
        'kakao_shortform_blocked','kakao_now_tab_blocked'].filter(k=>p[k]==='true').length + '가지 막는 중',
-      '만들기·오픈프로필·멀티프로필·숏폼·커뮤니티 전부 꺼져 있습니다'],
-    ['앱 삭제 방지', p.uninstall_blocked==='true', nUn+'개 앱을 못 지웁니다', '꺼져 있습니다'],
-    ['앱 PIN 잠금', nPin>0, nPin+'개 앱에 비밀번호가 걸려 있습니다', '걸어둔 앱이 없습니다']
+      '만들기·오픈프로필·멀티프로필·숏폼·커뮤니티 전부 꺼져 있어요'],
+    ['앱 삭제 방지', p.uninstall_blocked==='true', nUn+'개 앱을 못 지워요', '꺼져 있어요'],
+    ['앱 PIN 잠금', nPin>0, nPin+'개 앱에 비밀번호가 걸려 있어요', '걸어둔 앱이 없어요']
   ].map((r,i)=>'<div class="row" style="padding:11px 0'+(i?';border-top:1px solid #F2F4F7':'')+'">'
+      + (icoSrc(LIVE_RICO[r[0]]) ? '<img src="'+icoSrc(LIVE_RICO[r[0]])+'" alt="" style="width:38px;height:38px;object-fit:contain;flex:none">' : '')
       + '<div class="grow"><div class="ttl" style="font-size:14.5px">'+r[0]+'</div>'
       + '<div class="val">'+(r[1]?r[2]:r[3])+'</div></div>'
       + '<span class="badge '+(r[1]?'b-on':'b-off')+'">'+(r[1]?'켜짐':'꺼짐')+'</span></div>').join('');
 
   // ── ⑥ 자료 시점 ──
-  //   ⚠️ 「N시간 전에 마지막으로 알려온 내용입니다」는 쓰지 않는다.
+  //   ⚠️ 「N시간 전에 마지막으로 알려온 내용이에요」는 쓰지 않는다.
   //     부모가 "그럼 지금 화면이 틀렸다는 건가" 하고 혼란스러워한다(2026-08-31 대표점장 지적).
   //     지금 연결돼 있는지 아닌지만 짧게 알린다.
   const ltd = toDate(ST.dev?.last_seen_at);
   const online = isOnline(ST.usage, ST.dev);
   const foot = '<div class="note '+(online?'':'warn')+'" style="margin-top:12px">'
-    + (online ? '자녀폰이 <b>지금 연결돼 있습니다.</b>'
-              : '자녀폰이 <b>지금 꺼져 있거나 인터넷이 끊겨 있습니다.</b><br>다시 켜지면 저절로 맞춰집니다.')
-    + '<br>이 화면은 <b>30초마다</b> 저절로 새로고침됩니다.</div>';
+    + (online ? '자녀폰이 <b>지금 연결돼 있어요.</b>'
+              : '자녀폰이 <b>지금 꺼져 있거나 인터넷이 끊겨 있어요.</b><br>다시 켜지면 저절로 맞춰져요.')
+    + '<br>이 화면은 <b>30초마다</b> 저절로 새로고침돼요.</div>';
 
-  openSub('자녀 실시간 제한 상황', hero + bar
+  openSub('자녀 실시간 제한 상황', hero + dayBandHtml() + bar
     + '<div class="sec">취침시간 (다운타임)</div>' + dtBox
     + appBox
     + '<div class="sec">인터넷 · 그 밖의 잠금</div><div class="card" style="padding-top:2px">'+rows+'</div>'
@@ -5944,12 +6348,15 @@ async function locLoad(day){
   LOC.day = day || ymd(new Date());
   const tok = await locEnsureToken();
   if(!tok){ LOC.ready=false; return; }
-  const from = LOC.day + 'T00:00:00', to = LOC.day + 'T23:59:59.999';
+  // 🔴 2026-11-10 : 시간대 없이 보내면 서버가 UTC 로 읽어 **하루가 9시간 밀린다**(CLAUDE.md 3-29).
+  //   테스트판 동선이 실제로 「09:07 부터」 시작하고 있었다 — 3-29 에 고쳤다고 적혀 있었지만 이 줄은 그대로였다(3-28e).
+  const from = new Date(LOC.day + 'T00:00:00').toISOString(),
+        to   = new Date(LOC.day + 'T23:59:59.999').toISOString();
   const q = 'device_code=eq.' + encodeURIComponent(ST.code);
   const [lastR, histR, zoneR, evR] = await Promise.all([
     locApi(ST.server, ST.code, 'device_locations?'+q+'&select=lat,lng,accuracy_m,battery,captured_at,updated_at'),
     locApi(ST.server, ST.code, 'location_history?'+q+'&captured_at=gte.'+from+'&captured_at=lte.'+to+
-           '&select=lat,lng,accuracy_m,captured_at&order=captured_at.asc&limit=400'),
+           '&select=lat,lng,accuracy_m,captured_at&order=captured_at.asc&limit=1000'),
     locApi(ST.server, ST.code, 'safe_zones?'+q+'&select=id,name,lat,lng,radius_m,enabled,notify_enter,notify_exit,created_at&order=created_at.asc'),
     locApi(ST.server, ST.code, 'zone_events?'+q+'&select=zone_name,event,happened_at&order=happened_at.desc&limit=20')
   ]);
@@ -6009,118 +6416,373 @@ async function openLoc(day){
       '<button class="btn btn-g" onclick="closeSub()">닫기</button>');
     return;
   }
-  openSub('어디 있나요', locHtml(), null, { label:'구역 관리', fn: openZones });
+  openSub('어디 있나요', locHtml(), null, { label:'장소 관리', fn: openZones });
+  locDrawMap('now');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  🗺 지도 화면 (2026-11-10 · 대표점장 「네이버지도 "디자인" 기반으로 만들라고 했지」)
+//
+//  🔴 2026-11-05 엔 지도를 안 그리고 「네이버지도로 열기」 링크만 줬다 →
+//     「위치보기 누르면 엉뚱한 네이버지도 앱만 열리고 위치도 안 보인다」(11-10).
+//     그 주소(`map.naver.com/p/?lng=&lat=`)는 지도 **가운데만** 맞출 뿐 **핀을 안 꽂는다.**
+//  ▸ 그래서 지도를 **앱 안에** 그린다 — Leaflet + **OpenFreeMap**(OpenStreetMap 자료) 지도. **키·카드등록·요금 0원.**
+//    네이버 Maps API 는 무료 한도가 있어도 카드 등록이 필요하다(CLAUDE.md 3-28f).
+//    → 대신 **화면을 네이버지도처럼** 꾸민다 : 초록 물방울 핀 · 하얀 둥근 버튼 · 아래 장소 카드 · 초록 길찾기 버튼.
+//    지명은 **한글만** 보이게 스타일을 고쳐 쓴다(원래는 「Asiseonsuchon Apt 아시아선수촌」처럼 영어가 같이 붙는다).
+//  ▸ 네이버지도는 **「길찾기」 보조 버튼**으로만 쓴다 — 앱이면 `nmap://route/walk`(도착지에 핀이 꽂힌다).
+//  🔴 2026-11-10 시험에서 잡은 것 — 처음엔 CARTO 무료 지도를 썼는데 **응답은 200 인데 그림에 「API KEY REQUIRED」
+//     워터마크**가 박혀 왔다. 상태코드만 봤으면 「지도 잘 뜬다」로 넘어갔다 → **그려서 눈으로 봐야 한다(3-20).**
+//  ▸ OpenFreeMap 은 벡터 지도라 WebGL 이 필요하다. 없으면(아주 옛 폰) **OpenStreetMap 그림 지도**로 저절로 내려간다.
+//  ⚠️ 지도 서버는 「지도 조각 번호」만 받는다(대략 그 동네). 기기코드·이름은 안 보낸다.
+//  ⚠️ SRI 해시는 2026-11-10 jsdelivr 에서 받은 파일로 직접 계산했다. **버전을 올리면 해시도 바꿔야** 한다 —
+//     안 바꾸면 그 파일이 통째로 안 뜬다(에러는 콘솔에만 남는다).
+// ══════════════════════════════════════════════════════════════════════════
+const LF_VER = '1.9.4';
+const LF_JS_SRI  = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
+const LF_CSS_SRI = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
+const ML_VER = '5.6.0', MLL_VER = '0.1.4';
+const ML_JS_SRI  = 'sha384-GfxBM9x46BaAFxtCq39Fxir8fNZ4VDnwgfi6Kzi5/F1tAFsm0amuuV8kd+Pxzuf/';
+const ML_CSS_SRI = 'sha384-Nq6PQ+9vJPvw7U/VfDELyrWoGQMsy0gi6QShhaSrGzkpF5KkM40csg2leky+YMTd';
+const MLL_JS_SRI = 'sha384-tXYNKOHx4T02jMP7YYCtBxPIv1B5gaA5mcVPBzqMp6d7VzWzxJgI2aWF/nJLrQdS';
+const MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
+const MAP_ATTR = '<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> ' +
+                 '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+const OSM_TILE = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const NAVER_GREEN = '#03C75A';
+const MAP_HOME = [37.5665, 126.978];       // 위치가 하나도 없을 때 (서울시청)
+let LMAP = null, LMAP_L = {}, _lfP = null, _mlP = null, _styleP = null;
+
+const CDN = 'https://cdn.jsdelivr.net/npm/';
+function _ldJs(src, sri){ return new Promise((ok, no) => { const s = document.createElement('script');
+  s.src = src; s.integrity = sri; s.crossOrigin = 'anonymous'; s.onload = ok; s.onerror = () => no(new Error(src));
+  document.head.appendChild(s); }); }
+function _ldCss(href, sri){ const c = document.createElement('link'); c.rel = 'stylesheet'; c.href = href;
+  c.integrity = sri; c.crossOrigin = 'anonymous'; document.head.appendChild(c); }
+
+/** Leaflet(필수) → MapLibre+연결 플러그인(있으면 좋음). 뒤의 것이 실패해도 지도는 뜬다(그림 지도로) */
+function loadLeaflet(){
+  if (_lfP) return _lfP;
+  _lfP = (async () => {
+    if (!(window.L && window.L.map)){
+      _ldCss(CDN + 'leaflet@' + LF_VER + '/dist/leaflet.css', LF_CSS_SRI);
+      await _ldJs(CDN + 'leaflet@' + LF_VER + '/dist/leaflet.js', LF_JS_SRI);
+    }
+    if (mapHasGL() && !_mlP){
+      _mlP = (async () => {
+        _ldCss(CDN + 'maplibre-gl@' + ML_VER + '/dist/maplibre-gl.css', ML_CSS_SRI);
+        await _ldJs(CDN + 'maplibre-gl@' + ML_VER + '/dist/maplibre-gl.js', ML_JS_SRI);
+        await _ldJs(CDN + '@maplibre/maplibre-gl-leaflet@' + MLL_VER + '/leaflet-maplibre-gl.js', MLL_JS_SRI);
+      })().catch(e => { console.warn('벡터지도 못 불러옴 → 그림 지도로', e && e.message); });
+      await _mlP;
+    }
+    return window.L;
+  })().catch(e => { _lfP = null; throw new Error('지도를 불러오지 못했어요'); });
+  return _lfP;
+}
+function mapHasGL(){ try{ const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); }catch(e){ return false; } }
+/** 지명 한글만 — 「Asiseonsuchon Apt 아시아선수촌」 → 「아시아선수촌」 */
+function mapStyle(){
+  if (_styleP) return _styleP;
+  _styleP = fetch(MAP_STYLE_URL).then(r => { if (!r.ok) throw new Error('style ' + r.status); return r.json(); }).then(j => {
+    (j.layers || []).forEach(l => {
+      const tf = l.layout && l.layout['text-field'];
+      if (tf && /name/.test(JSON.stringify(tf)))
+        l.layout['text-field'] = ['coalesce', ['get', 'name:ko'], ['get', 'name:nonlatin'], ['get', 'name']];
+    });
+    return j;
+  }).catch(e => { _styleP = null; throw e; });
+  return _styleP;
+}
+/** 바탕 지도를 깐다 — 벡터(OpenFreeMap) → 안 되면 그림(OpenStreetMap) */
+async function mapAddBase(L, map){
+  if (L.maplibreGL && window.maplibregl){
+    try{
+      const st = await mapStyle();
+      L.maplibreGL({ style:st, attribution:MAP_ATTR }).addTo(map);
+      return 'vector';
+    }catch(e){ console.warn('벡터지도 스타일 실패 → 그림 지도로', e && e.message); }
+  }
+  L.tileLayer(OSM_TILE, { maxZoom:19, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>' }).addTo(map);
+  return 'raster';
+}
+function lmapKill(){ if (LMAP){ try{ LMAP.remove(); }catch(e){} } LMAP = null; LMAP_L = {}; }
+
+/** 아이 핀 — 네이버지도의 초록 물방울 핀. 30분 넘게 묵은 위치는 회색으로 */
+function kidPinIcon(L, stale){
+  return L.divIcon({ className:'', iconSize:[50,60], iconAnchor:[25,56],
+    html:'<div class="mkKid'+(stale?' stale':'')+'"><span>🧒</span></div>' });
+}
+function zoneLabelIcon(L, z){
+  return L.divIcon({ className:'', iconSize:[0,0], iconAnchor:[0,0],
+    html:'<div class="mkZone">'+locZoneEmo(z.name)+' '+esc(z.name)+'</div>' });
+}
+
+/**
+ * 지도를 그린다.
+ *  mode 'now'   : 그날 동선 + 마지막 위치(오늘이면 지금 위치)
+ *  mode 'zones' : 등록한 장소들
+ *  mode 'pick'  : 장소 등록 — 지도를 움직이면 가운데가 그 장소가 된다
+ */
+async function locDrawMap(mode){
+  mode = mode || 'now';
+  const el = document.getElementById('lmap');
+  if (!el) return;
+  let L;
+  try{ L = await loadLeaflet(); }
+  catch(e){
+    el.innerHTML = '<div class="lmErr">🗺 지도를 불러오지 못했어요.<br>인터넷 연결을 확인하고 ↻ 를 눌러 주세요.</div>';
+    return;
+  }
+  if (document.getElementById('lmap') !== el) return;   // 그 사이 다른 화면으로 갔다
+  lmapKill();
+  const map = L.map(el, { zoomControl:false });
+  LMAP = map;
+  map.attributionControl.setPrefix(false);
+  map.setView(MAP_HOME, 11);           // 🔴 바탕 지도를 깔기 전에 위치가 있어야 한다(없으면 플러그인이 죽는다)
+  await mapAddBase(L, map);
+  if (LMAP !== map) return;            // 그 사이 다시 그렸다
+
+  const bounds = [];
+  (LOC.zones || []).forEach(z => {
+    if (z.enabled === false) return;
+    const c = [Number(z.lat), Number(z.lng)];
+    L.circle(c, { radius:Number(z.radius_m||150), color:NAVER_GREEN, weight:2, dashArray:'6 6',
+                  fillColor:NAVER_GREEN, fillOpacity:.08, interactive:false }).addTo(map);
+    L.marker(c, { icon:zoneLabelIcon(L, z), interactive:false }).addTo(map);
+    if (mode === 'zones') bounds.push(c);
+  });
+
+  if (mode === 'pick'){
+    const n = LOC_NEW;
+    map.setView([n.lat, n.lng], 17);
+    LMAP_L.circ = L.circle([n.lat, n.lng], { radius:n.radius, color:'#2563EB', weight:2,
+                  fillColor:'#2563EB', fillOpacity:.12, interactive:false }).addTo(map);
+    map.on('move',    () => LMAP_L.circ.setLatLng(map.getCenter()));
+    map.on('moveend', () => { const c = map.getCenter(); LOC_NEW.lat = c.lat; LOC_NEW.lng = c.lng; });
+    return;
+  }
+
+  if (mode === 'now'){
+    const today = LOC.day === ymd(new Date());
+    const pts = (LOC.hist || []).filter(p => !(Number(p.accuracy_m) > 300))
+                                 .map(p => [Number(p.lat), Number(p.lng)]);
+    if (pts.length > 1){
+      L.polyline(pts, { color:NAVER_GREEN, weight:5, opacity:.5, lineJoin:'round', interactive:false }).addTo(map);
+      L.circleMarker(pts[0], { radius:6, color:'#fff', weight:2, fillColor:'#98A2B3', fillOpacity:1, interactive:false }).addTo(map);
+      pts.forEach(p => bounds.push(p));
+    }
+    const P = today ? LOC.last : ((LOC.hist || []).slice(-1)[0] || null);
+    if (P){
+      const c = [Number(P.lat), Number(P.lng)];
+      if (Number(P.accuracy_m) > 0)
+        L.circle(c, { radius:Math.min(Number(P.accuracy_m), 500), stroke:false,
+                      fillColor:NAVER_GREEN, fillOpacity:.14, interactive:false }).addTo(map);
+      const t = toDate(P.captured_at);
+      const old = !today || !t || (Date.now() - t.getTime()) > 30*60000;
+      L.marker(c, { icon:kidPinIcon(L, old), zIndexOffset:1000, interactive:false }).addTo(map);
+      LMAP_L.kid = c;
+    }
+    if (today && P) map.setView(LMAP_L.kid, 16);
+    else if (bounds.length) map.fitBounds(bounds, { padding:[40,40], maxZoom:16 });
+    else map.setView(MAP_HOME, 11);
+    return;
+  }
+
+  if (LOC.last) bounds.push([Number(LOC.last.lat), Number(LOC.last.lng)]);
+  if (bounds.length) map.fitBounds(bounds, { padding:[50,50], maxZoom:16 });
+  else map.setView(MAP_HOME, 11);
+}
+function locMapToKid(){ if (LMAP && LMAP_L.kid) LMAP.setView(LMAP_L.kid, 17, { animate:true }); }
+/** 동선 줄을 누르면 지도를 그 자리로 옮기고 주황 점을 찍는다 */
+function locMapTo(lat, lng){
+  if (!LMAP || !window.L) return;
+  LMAP.setView([lat, lng], 17, { animate:true });
+  if (LMAP_L.tmp) LMAP.removeLayer(LMAP_L.tmp);
+  LMAP_L.tmp = window.L.circleMarker([lat, lng], { radius:9, color:'#fff', weight:3,
+                fillColor:'#F97316', fillOpacity:1, interactive:false }).addTo(LMAP);
+  const w = document.getElementById('lmapw');
+  if (w) w.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/**
+ * 🧭 네이버지도 길찾기 — 「지금 내 자리 → 아이 위치」.
+ *  🔴 옛 링크는 지도 가운데만 맞추고 **핀이 없었다**. 길찾기(route)는 도착지에 핀이 꽂힌다.
+ *  ▸ 안드로이드 : intent:// + 앱 없으면 웹 지도 (홈페이지 「차량이용법」과 같은 방식)
+ *  ▸ 아이폰    : nmap:// → 2.2초 안에 안 넘어가면 웹 지도
+ *  ⚠️ 이름 칸에는 아이 이름을 안 넣는다 — 네이버 앱 기록에 남는다. 「자녀 위치」로 고정.
+ */
+function locOpenNaver(lat, lng){
+  const web = locMapUrl(lat, lng);
+  const q = 'dlat=' + lat + '&dlng=' + lng + '&dname=' + encodeURIComponent('자녀 위치') +
+            '&appname=' + encodeURIComponent('https://snmobile6360.github.io/parent');
+  const ua = navigator.userAgent || '';
+  if (/Android/i.test(ua)){
+    location.href = 'intent://route/walk?' + q + '#Intent;scheme=nmap;action=android.intent.action.VIEW;' +
+      'category=android.intent.category.BROWSABLE;package=com.nhn.android.nmap;' +
+      'S.browser_fallback_url=' + encodeURIComponent(web) + ';end';
+    return;
+  }
+  if (/iPhone|iPad|iPod/i.test(ua)){
+    const t0 = Date.now();
+    location.href = 'nmap://route/walk?' + q;
+    setTimeout(() => { if (!document.hidden && Date.now() - t0 < 3000) location.href = web; }, 2200);
+    return;
+  }
+  window.open(web, '_blank', 'noopener');
 }
 
 function locHtml(){
-  const L = LOC.last;
-  let h = locStateNote();
+  const today = LOC.day === ymd(new Date());
+  const P = today ? LOC.last : ((LOC.hist || []).slice(-1)[0] || null);
+  const nm = ST.dev?.child_name || '자녀';
+  const dd = new Date(LOC.day + 'T12:00:00');
+  const dayTxt = today ? '지금 위치' : (dd.getMonth()+1) + '월 ' + dd.getDate() + '일 동선';
 
-  // ① 지금 어디에
-  if(L){
-    const z = locZoneAt(Number(L.lat), Number(L.lng));
-    const when = toDate(L.captured_at);
-    const mins = when ? Math.floor((Date.now()-when.getTime())/60000) : -1;
-    h += '<div class="hero" style="cursor:default">'+
-         '<div class="lbl">지금 어디 있나요</div>'+
-         '<div class="big" style="font-size:26px">'+(z? locZoneEmo(z.name)+' '+esc(z.name) : '🚶 구역 밖')+'</div>'+
-         '<div class="meta">'+(when? esc(locHm(L.captured_at))+' 확인' : '시각 모름')+
-            (mins>=0? ' · '+(mins<1?'방금':mins+'분 전') : '')+
-            (L.accuracy_m? ' · 오차 약 '+Math.round(L.accuracy_m)+'m' : '')+'</div>'+
-         '</div>';
-    h += '<a class="btn btn-p" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box" '+
-         'href="'+locMapUrl(L.lat, L.lng)+'" target="_blank" rel="noopener noreferrer">🗺 네이버지도로 열기</a>';
-    if(mins > 20) h += '<div class="note" style="margin-top:12px">⏱ <b>'+mins+'분 전 위치예요.</b> '+
-         '자녀폰이 실내에 있거나 인터넷이 끊기면 조금 늦게 올라와요. 평소엔 <b>5분마다</b> 확인해요.</div>';
-    if(!z && LOC.zones.length){
-      let near=null, nd=Infinity;
-      LOC.zones.forEach(x=>{ const d=locDist(Number(L.lat),Number(L.lng),Number(x.lat),Number(x.lng));
-                             if(d<nd){ nd=d; near=x; } });
-      if(near) h += '<div class="note" style="margin-top:12px">📏 가장 가까운 구역은 <b>'+esc(near.name)+
-                    '</b> 이고 약 '+locM(nd)+' 떨어져 있어요.</div>';
+  let h = '<div class="lmapw" id="lmapw"><div id="lmap"></div>' +
+    '<div class="lmChip">🧒 ' + esc(nm) + ' · ' + dayTxt + '</div>' +
+    '<div class="lmFabs">' +
+      (P ? '<button class="lmFab" onclick="locMapToKid()" aria-label="아이 위치로">◎</button>' : '') +
+      '<button class="lmFab" onclick="openLoc(LOC.day)" aria-label="새로고침">↻</button></div>' +
+    '</div>';
+
+  // ① 아래 장소 카드 — 네이버지도의 「장소 카드」 모양
+  h += '<div class="lmCard">';
+  if (P){
+    const z = locZoneAt(Number(P.lat), Number(P.lng));
+    const when = toDate(P.captured_at);
+    const mins = when ? Math.floor((Date.now() - when.getTime()) / 60000) : -1;
+    const where = z ? locZoneEmo(z.name) + ' <b>' + esc(z.name) + '</b>'
+                    : '🚶 <b class="o">등록한 장소 밖</b>';
+    h += '<div class="lmPlace">' + where + (today ? '에 있어요' : ' — 이 날 마지막 위치') + '</div>';
+    const meta = [];
+    if (when) meta.push(locHm(P.captured_at) + ' 확인');
+    if (today && mins >= 0) meta.push(mins < 1 ? '방금' : (mins < 60 ? mins + '분 전' : ago(P.captured_at)));
+    if (Number(P.accuracy_m) > 0) meta.push('오차 약 ' + Math.round(P.accuracy_m) + 'm');
+    if (today && Number(P.battery) > 0) meta.push('🔋 ' + Math.round(P.battery) + '%');
+    h += '<div class="lmMeta">' + meta.join(' · ') + '</div>';
+    if (!z && LOC.zones.length){
+      let near = null, nd = Infinity;
+      LOC.zones.forEach(x => { const d = locDist(Number(P.lat), Number(P.lng), Number(x.lat), Number(x.lng));
+                               if (d < nd){ nd = d; near = x; } });
+      if (near) h += '<div class="lmNear">📏 ' + locZoneEmo(near.name) + ' ' + esc(near.name) + '에서 약 <b>' + locM(nd) + '</b> 떨어져 있어요</div>';
     }
+    if (today && mins > 20) h += '<div class="lmNear warn">⏱ <b>' + (mins < 60 ? mins + '분' : ago(P.captured_at).replace(/ 전$/, '')) + ' 전</b> 위치예요. 실내에 있거나 인터넷이 끊기면 조금 늦게 올라와요.</div>';
+    h += '<div class="lmBtns">' +
+      '<button class="lmBtn g" onclick="locOpenNaver(' + Number(P.lat) + ',' + Number(P.lng) + ')">🧭 네이버지도로 길찾기</button>' +
+      '<button class="lmBtn" onclick="openLoc(LOC.day)">↻ 새로고침</button></div>';
+    h += '<div class="lmHint">길찾기를 누르면 네이버지도 앱이 열리고 <b>지금 내 자리에서 아이 있는 곳까지</b> 길을 알려줘요.</div>';
   } else {
-    h += '<div class="note warn">🕐 <b>아직 올라온 위치가 없어요.</b><br>'+
-         '자녀폰이 위치를 허용하고 한 번 바깥에 나가면 첫 위치가 잡혀요 (실내에서는 오래 걸릴 수 있어요).</div>';
-  }
-
-  // ② 날짜 고르기 (서버에 7일치가 남아 있다)
-  h += '<div class="sec">동선 보기</div><div class="chips">';
-  for(let i=0;i<7;i++){
-    const d=new Date(); d.setDate(d.getDate()-i);
-    const k=ymd(d), on=(k===LOC.day);
-    h += '<button class="chip'+(on?' on':'')+'" onclick="openLoc(\''+k+'\')">'+
-         (i===0?'오늘':i===1?'어제':(d.getMonth()+1)+'/'+d.getDate())+'</button>';
+    h += '<div class="lmPlace">🕐 ' + (today ? '아직 올라온 위치가 없어요' : '이 날은 올라온 위치가 없어요') + '</div>' +
+         '<div class="lmMeta">' + (today ? '자녀폰이 위치를 허용하고 바깥에 한 번 나가면 첫 위치가 잡혀요.' : '다른 날짜를 눌러 보세요.') + '</div>';
   }
   h += '</div>';
 
-  // ③ 동선 — 구역 이름으로 묶어서 보여준다
+  h += locStateNote();
+
+  // ② 날짜 — 서버에 7일치가 남아 있다
+  h += '<div class="sec">날짜별 동선</div><div class="chips">';
+  for (let i = 0; i < 7; i++){
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const k = ymd(d), on = (k === LOC.day);
+    h += '<button class="chip' + (on ? ' on' : '') + '" onclick="openLoc(\'' + k + '\')">' +
+         (i === 0 ? '오늘' : i === 1 ? '어제' : (d.getMonth()+1) + '/' + d.getDate()) + '</button>';
+  }
+  h += '</div>';
   h += locTrailHtml();
 
-  // ④ 도착·출발 기록
-  if(LOC.events.length){
+  if (LOC.events.length){
     h += '<div class="sec">도착 · 출발 기록</div><div class="card">';
-    h += LOC.events.map(e=>
-      '<div class="row"><div class="ic" style="background:'+(e.event==='ENTER'?'#ECFDF3':'#FEF3F2')+'">'+
-      (e.event==='ENTER'?'➡️':'⬅️')+'</div><div class="grow">'+
-      '<div class="ttl">'+esc(e.zone_name||'구역')+' '+(e.event==='ENTER'?'도착':'출발')+'</div>'+
-      '<div class="val">'+esc(ago(e.happened_at))+'</div></div></div>').join('');
+    h += LOC.events.map(e =>
+      '<div class="row" style="padding:6px 0"><div class="ic" style="background:' + (e.event === 'ENTER' ? '#ECFDF3' : '#FEF3F2') + '">' +
+      (e.event === 'ENTER' ? '🏁' : '👋') + '</div><div class="grow">' +
+      '<div class="ttl">' + esc(e.zone_name || '장소') + (e.event === 'ENTER' ? '에 도착했어요' : '에서 나왔어요') + '</div>' +
+      '<div class="val">' + esc(ago(e.happened_at)) + '</div></div></div>').join('');
     h += '</div>';
   }
 
-  // ⑤ 구역
-  h += '<div class="sec">세이프존</div>';
-  if(!LOC.zones.length){
-    h += '<div class="note">🏫 <b>아직 등록한 곳이 없어요.</b><br>집·학교를 등록하면 '+
-         '「지금 학교에 있어요」처럼 <b>장소 이름으로</b> 알려드려요.</div>';
-  }
-  h += '<div class="card tap" onclick="openZones()"><div class="row">'+
-       '<div class="ic" style="background:#EFF6FF">🏫</div><div class="grow">'+
-       '<div class="ttl">구역 관리</div><div class="val">'+
-       (LOC.zones.length? LOC.zones.length+'곳 등록됨 — '+esc(LOC.zones.map(z=>z.name).join(' · ')) : '집·학교 등록하기')+
-       '</div></div><div class="chev">›</div></div></div>';
+  // ③ 장소(세이프존)
+  h += '<div class="sec">자주 가는 장소</div>';
+  h += '<div class="card tap" onclick="openZones()"><div class="row">' +
+       '<div class="ic">' + icoImg('loc') + '</div><div class="grow">' +
+       '<div class="ttl">' + (LOC.zones.length ? '등록한 장소 ' + LOC.zones.length + '곳' : '집·학교를 등록해 보세요') + '</div>' +
+       '<div class="exp" style="margin-top:3px">' + (LOC.zones.length
+          ? esc(LOC.zones.map(z => z.name).join(' · ')) + ' — 지도에서 동그라미로 보여요'
+          : '등록하면 「지금 학교에 있어요」처럼 <b>장소 이름</b>으로 알려드리고, 도착·출발도 기록돼요') + '</div>' +
+       '</div><div class="chev">›</div></div></div>';
 
-  // ⑥ 문자로 받기 (인터넷이 끊겼을 때)
   h += '<div class="sec">인터넷이 끊겼을 때</div>' + locSmsHtml();
 
-  // ⑦ 끄기
-  h += '<div class="sec">위치 확인 끄기</div>'+
-       '<div class="note">끄면 자녀폰이 <b>위치를 더 이상 보내지 않아요.</b> 지금까지의 기록은 7일 뒤 자동으로 지워져요.</div>'+
+  h += '<div class="sec">위치 확인 끄기</div>' +
+       '<div class="note">끄면 자녀폰이 <b>위치를 더 이상 보내지 않아요.</b> 지금까지의 기록은 7일 뒤 자동으로 지워져요.</div>' +
        '<button class="btn btn-d" onclick="locTurnOff()">위치 확인 끄기</button>';
   return h;
 }
 
-/** 동선 — 좌표를 늘어놓지 않고 **구역 이름으로 묶어서** 보여준다 */
-function locTrailHtml(){
-  const pts = LOC.hist || [];
-  if(!pts.length) return '<div class="note">이 날은 올라온 위치가 없어요.</div>';
-
-  const runs = [];
-  pts.forEach(p=>{
-    const z = locZoneAt(Number(p.lat), Number(p.lng));
-    const key = z? ('z'+z.id) : 'out';
-    const nm  = z? z.name : '구역 밖';
-    const prev = runs[runs.length-1];
-    if(prev && prev.key===key){ prev.to=p.captured_at; prev.n++; prev.p=p; }
-    else runs.push({ key, nm, from:p.captured_at, to:p.captured_at, n:1, p });
+/**
+ * 동선 — 좌표를 늘어놓지 않고 **「머문 곳」과 「이동 중」으로 묶어서**, 최근 것이 위로.
+ *  🔴 2026-11-10 : 예전엔 「등록한 구역 / 구역 밖」 두 가지로만 묶어서, 장소를 하나도 등록 안 한 집은
+ *     하루 동선이 「00:00 ~ 13:54 구역 밖」 **한 줄**로 끝났다. 쓸모가 없었다.
+ *  ▸ 200m 안에 모여 있는 점들은 한 곳으로 묶고, 10분 넘게 머물렀으면 「머문 곳」이라 부른다.
+ *    등록한 장소 안이면 그 이름(🏠 집)으로, 아니면 「📍 머문 곳」 + **「장소로 등록」** 버튼.
+ *  ⚠️ 이 묶음은 **보여주기용**이다. 도착·출발 판정은 폰이 반경으로 한다(zone_events).
+ */
+const TRAIL_NEAR_M = 200, TRAIL_STAY_MIN = 10;
+function locRuns(){
+  const runs = []; let cur = null;
+  (LOC.hist || []).forEach(p => {
+    if (Number(p.accuracy_m) > 300) return;              // 너무 흐린 점은 묶음을 깨지 않게 뺀다
+    const lat = Number(p.lat), lng = Number(p.lng);
+    if (cur && locDist(cur.lat, cur.lng, lat, lng) <= TRAIL_NEAR_M){
+      cur.to = p.captured_at; cur.n++; cur.sa += lat; cur.so += lng; cur.lat = cur.sa / cur.n; cur.lng = cur.so / cur.n;
+    } else {
+      cur = { from:p.captured_at, to:p.captured_at, n:1, sa:lat, so:lng, lat, lng };
+      runs.push(cur);
+    }
   });
-
-  let h = '<div class="card">';
-  h += runs.map(r=>{
-    const same = locHm(r.from)===locHm(r.to);
-    const time = same? locHm(r.from) : locHm(r.from)+' ~ '+locHm(r.to);
-    const out  = r.key==='out';
-    return '<div class="row">'+
-      '<div class="ic" style="background:'+(out?'#F2F4F7':'#ECFDF3')+'">'+(out?'🚶':locZoneEmo(r.nm))+'</div>'+
-      '<div class="grow"><div class="ttl">'+esc(r.nm)+'</div><div class="val">'+time+'</div></div>'+
-      '<a class="chip" style="text-decoration:none" href="'+locMapUrl(r.p.lat, r.p.lng)+
-      '" target="_blank" rel="noopener noreferrer">지도</a>'+
-      '</div>';
+  runs.forEach(r => {
+    r.z = locZoneAt(r.lat, r.lng);
+    r.min = Math.round(((toDate(r.to) || 0) - (toDate(r.from) || 0)) / 60000);
+    r.stay = !!r.z || r.min >= TRAIL_STAY_MIN;
+  });
+  const out = [];
+  runs.forEach(r => {
+    const pv = out[out.length - 1];
+    if (pv && !r.stay && !pv.stay){ pv.to = r.to; pv.lat = r.lat; pv.lng = r.lng; pv.min = Math.round(((toDate(pv.to)||0) - (toDate(pv.from)||0)) / 60000); }
+    else if (pv && r.stay && pv.stay && pv.z && r.z && pv.z.id === r.z.id){ pv.to = r.to; pv.min += r.min; }
+    else out.push(r);
+  });
+  return out;
+}
+function locTrailHtml(){
+  if (!(LOC.hist || []).length) return '<div class="note">이 날은 올라온 위치가 없어요.</div>';
+  const runs = locRuns();
+  let k = 0;
+  let h = '<div class="card tl">';
+  h += runs.slice().reverse().map((r, i) => {
+    const same = locHm(r.from) === locHm(r.to);
+    const time = same ? locHm(r.from) : locHm(r.from) + ' ~ ' + locHm(r.to);
+    const dur  = r.min >= 1 ? ' <span class="tlM">' + fmtMin(r.min) + '</span>' : '';
+    let nm, cls = '';
+    if (r.z){ nm = locZoneEmo(r.z.name) + ' ' + esc(r.z.name); }
+    else if (r.stay){ nm = '📍 머문 곳'; }
+    else { nm = '🚶 이동 중'; cls = ' out'; }
+    const reg = (!r.z && r.stay)
+      ? '<button class="tlReg" onclick="event.stopPropagation();openZoneAddAt(' + r.lat.toFixed(6) + ',' + r.lng.toFixed(6) + ')">장소로 등록</button>'
+      : '<div class="tlGo">지도 ›</div>';
+    return '<div class="tlI' + (i === 0 ? ' now' : '') + '" onclick="locMapTo(' + r.lat.toFixed(6) + ',' + r.lng.toFixed(6) + ')">' +
+      '<div class="tlT">' + time + '</div>' +
+      '<div class="tlD' + cls + '"></div>' +
+      '<div class="tlP">' + nm + dur + '</div>' + reg + '</div>';
   }).join('');
   h += '</div>';
-  h += '<div class="note">위치는 <b>5분마다</b> 확인해요. 구역을 등록하면 「집」·「학교」처럼 이름으로 보여요. '+
-       '이동 기록은 <b>7일</b>까지만 보관하고 그 뒤엔 자동으로 지워져요.</div>';
+  h += '<div class="lmHint" style="margin:-4px 4px 4px">줄을 누르면 지도가 그 자리로 움직여요. 10분 넘게 머문 곳은 <b>「장소로 등록」</b>을 눌러 「집」·「학원」처럼 이름을 붙일 수 있어요. 이동 기록은 <b>7일</b> 뒤 자동으로 지워져요.</div>';
   return h;
+}
+/** 동선의 「머문 곳」에서 바로 장소 등록 */
+function openZoneAddAt(lat, lng){
+  LOC_NEW = { name:'집', lat:Number(lat), lng:Number(lng), radius:150, from:'trail' };
+  zoneAddHtml();
 }
 
 // ── 문자 알림 (자녀폰 인터넷이 끊겼을 때) ─────────────────────────────────
@@ -6288,98 +6950,101 @@ async function locTurnOff(){
 
 // ── 세이프존 ──────────────────────────────────────────────────────────────
 function openZones(){
-  let h = '<div class="note">집·학교처럼 <b>자주 가는 곳</b>을 등록해 두면 「지금 학교에 있어요」처럼 '+
-          '<b>장소 이름으로</b> 알려드려요. 도착·출발도 기록돼요.</div>';
-  if(LOC.zones.length){
+  let h = '<div class="lmapw sm" id="lmapw"><div id="lmap"></div>' +
+          '<div class="lmChip">📍 등록한 장소</div></div>';
+  h += '<div class="xbox" style="margin-top:12px"><div class="xi">' + icoImg('loc') + '</div><div class="xt">' +
+       '<div class="xh">자주 가는 곳을 등록해 두세요</div>' +
+       '<div class="xd">집·학교·학원을 등록하면 「지금 <b>학교</b>에 있어요」처럼 <b>장소 이름</b>으로 알려드려요. ' +
+       '도착·출발 시각도 기록돼요.</div></div></div>';
+  if (LOC.zones.length){
     h += '<div class="card">';
-    h += LOC.zones.map(z=>{
+    h += LOC.zones.map(z => {
       const on = z.enabled !== false;
       const rec = (z.notify_enter!==false && z.notify_exit!==false) ? '도착·출발 기록'
                 : (z.notify_enter!==false) ? '도착만 기록'
                 : (z.notify_exit!==false)  ? '출발만 기록' : '기록 안 함';
-      return '<div class="item"><div class="grow">'+
-        '<div class="nm">'+locZoneEmo(z.name)+' '+esc(z.name)+(on?'':' (꺼짐)')+'</div>'+
-        '<div class="val">반경 '+Number(z.radius_m||150)+'m · '+rec+'</div></div>'+
-        '<a class="chip" style="text-decoration:none" href="'+locMapUrl(z.lat,z.lng)+
-        '" target="_blank" rel="noopener noreferrer">지도</a>'+
-        '<button class="x" onclick="zoneDel(\''+z.id+'\')">삭제</button>'+
+      return '<div class="item"><div class="grow">' +
+        '<div class="nm">' + locZoneEmo(z.name) + ' ' + esc(z.name) + (on ? '' : ' (꺼짐)') + '</div>' +
+        '<div class="val">반경 ' + Number(z.radius_m||150) + 'm · ' + rec + '</div></div>' +
+        '<button class="x" onclick="zoneDel(\'' + z.id + '\')">삭제</button>' +
         '</div>';
     }).join('');
     h += '</div>';
-  } else {
-    h += '<div class="card"><div class="empty">등록된 곳이 없어요</div></div>';
   }
-  h += '<div class="sec">새로 등록하기</div>'+
-       '<div class="card tap" onclick="openZoneAdd(\'child\')"><div class="row">'+
-       '<div class="ic" style="background:#EFF6FF">📍</div><div class="grow">'+
-       '<div class="ttl">자녀가 지금 있는 곳</div>'+
-       '<div class="val">'+(LOC.last? '자녀폰이 마지막으로 확인한 위치로 등록해요' : '아직 올라온 위치가 없어요')+'</div>'+
-       '</div><div class="chev">›</div></div></div>'+
-       '<div class="card tap" onclick="openZoneAdd(\'me\')"><div class="row">'+
-       '<div class="ic" style="background:#ECFDF3">🧍</div><div class="grow">'+
-       '<div class="ttl">내가 지금 있는 곳</div>'+
-       '<div class="val">집에서 누르면 「집」이 바로 등록돼요</div>'+
-       '</div><div class="chev">›</div></div></div>'+
-       '<div class="note">💡 <b>학교를 등록하려면</b> — 자녀가 학교에 있을 때 「자녀가 지금 있는 곳」으로 등록하거나, '+
-       '등교할 때 같이 가서 「내가 지금 있는 곳」을 눌러 주세요.</div>'+
-       '<button class="btn btn-g" onclick="openLoc(LOC.day)">닫기</button>';
-  openSub('구역 관리', h, ()=>openLoc(LOC.day));
+  h += '<button class="btn btn-p" onclick="openZoneAdd(\'child\')">＋ 새 장소 등록하기</button>' +
+       '<button class="btn btn-g" style="margin-top:10px" onclick="openLoc(LOC.day)">위치 화면으로</button>';
+  openSub('장소 관리', h, () => openLoc(LOC.day));
+  locDrawMap('zones');
 }
 
+/** 장소 등록 — 지도를 움직여 가운데 핀을 맞춘다. 시작점 : 자녀 위치 → 없으면 서울 */
 async function openZoneAdd(from){
   let lat, lng;
-  if(from==='child'){
-    if(!LOC.last){ toast('아직 자녀폰 위치가 올라오지 않았어요'); return; }
-    lat = Number(LOC.last.lat); lng = Number(LOC.last.lng);
-  } else {
-    if(!navigator.geolocation){ toast('이 브라우저는 위치를 알려주지 못해요'); return; }
-    loading(true);
-    try{
-      const pos = await new Promise((ok,no)=>navigator.geolocation.getCurrentPosition(ok,no,
-        { enableHighAccuracy:true, timeout:15000, maximumAge:0 }));
-      lat = pos.coords.latitude; lng = pos.coords.longitude;
-    }catch(e){
-      loading(false);
-      toast(e && e.code===1 ? '브라우저에서 위치를 허용해 주세요' : '내 위치를 찾지 못했어요');
-      return;
-    }
-    loading(false);
-  }
+  if (from === 'child' && LOC.last){ lat = Number(LOC.last.lat); lng = Number(LOC.last.lng); }
+  else if (from === 'me'){
+    const c = await zoneMyPos(); if (!c) return;
+    lat = c[0]; lng = c[1];
+  } else { lat = MAP_HOME[0]; lng = MAP_HOME[1]; }
   LOC_NEW = { name:'집', lat, lng, radius:150, from };
   zoneAddHtml();
+}
+async function zoneMyPos(){
+  if (!navigator.geolocation){ toast('이 브라우저는 내 위치를 알려주지 못해요'); return null; }
+  loading(true);
+  try{
+    const pos = await new Promise((ok, no) => navigator.geolocation.getCurrentPosition(ok, no,
+      { enableHighAccuracy:true, timeout:15000, maximumAge:0 }));
+    return [pos.coords.latitude, pos.coords.longitude];
+  }catch(e){
+    toast(e && e.code === 1 ? '브라우저에서 위치를 허용해 주세요' : '내 위치를 찾지 못했어요');
+    return null;
+  }finally{ loading(false); }
+}
+/** 지도 가운데를 옮긴다 (다시 그리지 않는다 — 다시 그리면 쓰던 이름이 날아간다) */
+async function zonePickTo(which){
+  let c = null;
+  if (which === 'child'){ if (!LOC.last){ toast('아직 자녀폰 위치가 없어요'); return; } c = [Number(LOC.last.lat), Number(LOC.last.lng)]; }
+  else c = await zoneMyPos();
+  if (c && LMAP) LMAP.setView(c, 17, { animate:true });
 }
 
 function zoneAddHtml(){
   const n = LOC_NEW;
-  const h = '<div class="note">'+(n.from==='child'? '자녀폰이 마지막으로 확인한 위치' : '지금 내가 있는 위치')+
-    '를 기준으로 등록해요.<br><a href="'+locMapUrl(n.lat,n.lng)+'" target="_blank" rel="noopener noreferrer">'+
-    '🗺 여기가 맞는지 네이버지도로 확인하기</a></div>'+
-    '<div class="sec">이름</div><div class="chips">'+
-    LOC_ZONE_PRESETS.map(p=>'<button class="chip'+(n.name===p?' on':'')+'" onclick="zoneSetName(\''+p+'\')">'+p+'</button>').join('')+
-    '</div>'+
-    '<div class="card"><div class="field"><label>직접 쓰기</label>'+
-    '<input id="zName" maxlength="12" placeholder="예: 수학학원" value="'+esc(n.name)+'"></div></div>'+
-    '<div class="sec">반경 — 이 안에 있으면 「도착」이에요</div><div class="chips">'+
-    LOC_RADII.map(r=>'<button class="chip'+(n.radius===r?' on':'')+'" onclick="zoneSetRadius('+r+')">'+r+'m</button>').join('')+
-    '</div>'+
-    '<div class="note">🎯 <b>너무 작게 잡지 마세요.</b> 건물 안에서는 위치 오차가 50~100m 까지 생겨요. '+
-    '아파트·학교는 <b>150~200m</b> 가 알맞아요.<br>'+
-    '나갈 때는 반경보다 <b>100m 더</b> 멀어져야 「출발」로 봐요 — 경계에서 들락날락하는 걸 막기 위해서예요.</div>'+
-    '<button class="btn btn-p" onclick="zoneSave()">이 곳을 등록하기</button>'+
+  const h =
+    '<div class="lmapw" id="lmapw"><div id="lmap"></div>' +
+      '<div class="pickPin"><span>📍</span></div>' +
+      '<div class="lmChip">지도를 움직여 핀을 맞춰 주세요</div>' +
+      '<div class="lmFabs"><button class="lmFab" onclick="zonePickTo(\'child\')" aria-label="자녀 위치로">🧒</button>' +
+      '<button class="lmFab" onclick="zonePickTo(\'me\')" aria-label="내 위치로">🧍</button></div>' +
+    '</div>' +
+    '<div class="lmCard">' +
+      '<div class="lmPlace" style="font-size:16.5px">📍 핀이 꽂힌 곳을 등록해요</div>' +
+      '<div class="lmMeta">🧒 = 자녀가 마지막으로 있던 곳으로 · 🧍 = 지금 내가 있는 곳으로 옮겨요</div>' +
+    '</div>' +
+    '<div class="sec">이름</div><div class="chips" id="zNames">' +
+    LOC_ZONE_PRESETS.map(p => '<button class="chip' + (n.name === p ? ' on' : '') + '" data-v="' + p + '" onclick="zoneSetName(\'' + p + '\')">' + locZoneEmo(p) + ' ' + p + '</button>').join('') +
+    '</div>' +
+    '<div class="card"><div class="field"><label>직접 쓰기</label>' +
+    '<input id="zName" maxlength="12" placeholder="예: 수학학원" value="' + esc(n.name) + '"></div></div>' +
+    '<div class="sec">크기 — 파란 동그라미 안에 들어오면 「도착」이에요</div><div class="chips" id="zRadii">' +
+    LOC_RADII.map(r => '<button class="chip' + (n.radius === r ? ' on' : '') + '" data-v="' + r + '" onclick="zoneSetRadius(' + r + ')">' + r + 'm</button>').join('') +
+    '</div>' +
+    '<div class="note">🎯 아파트·학교는 <b>150~200m</b> 가 알맞아요. 건물 안에서는 위치가 50~100m 쯤 틀릴 수 있어서, ' +
+    '너무 작게 잡으면 들락날락하는 것처럼 보여요.</div>' +
+    '<button class="btn btn-p" onclick="zoneSave()">이 곳을 등록하기</button>' +
     '<button class="btn btn-g" style="margin-top:10px" onclick="openZones()">취소</button>';
-  openSub('구역 등록', h, ()=>openZones());
+  openSub('장소 등록', h, () => openZones());
+  locDrawMap('pick');
 }
 function zoneSetName(v){
-  const el=document.getElementById('zName');
-  LOC_NEW.name=v; if(el) el.value=v;
-  zoneAddHtml();
+  LOC_NEW.name = v;
+  const el = document.getElementById('zName'); if (el) el.value = v;
+  document.querySelectorAll('#zNames .chip').forEach(b => b.classList.toggle('on', b.dataset.v === v));
 }
 function zoneSetRadius(v){
-  // 🔴 입력칸에 쓰던 이름을 **잃지 않게** 먼저 챙긴다 (다시 그리면 사라진다)
-  const el=document.getElementById('zName');
-  if(el && el.value.trim()) LOC_NEW.name = el.value.trim();
-  LOC_NEW.radius=v;
-  zoneAddHtml();
+  LOC_NEW.radius = v;
+  if (LMAP_L.circ) LMAP_L.circ.setRadius(v);
+  document.querySelectorAll('#zRadii .chip').forEach(b => b.classList.toggle('on', Number(b.dataset.v) === v));
 }
 
 async function zoneSave(){
@@ -6473,7 +7138,17 @@ const REQ_META = {
 function reqDone(k){ return ST?.pol?.[k] === 'true'; }
 
 /** ① 설명서 옆 [🛠 설치신청] → 바로 신청하지 않고 **묻는다** (이미 신청했으면 ③ 취소 화면) */
+/** 🆕 2026-11-10 : 신청 화면에서 돌아갈 곳 — 홈·허용사이트·설명서 어디서든 신청하게 됐다 */
+let REQ_FROM = '';
+function reqBack(){
+  if (REQ_FROM === '허용 사이트 관리') return openAllow();
+  if (REQ_FROM === '사용설명서 모음') return openDocs();
+  show('scMain'); paintMain();
+}
 function openReqOne(key, title){
+  { const sub = document.getElementById('scSub');
+    const t = sub && !sub.classList.contains('hide') ? document.getElementById('sTitle').textContent : '';
+    if (!/ 신청$/.test(t)) REQ_FROM = t; }
   const m = REQ_META[key] || { t:title, msg:title+' 요청', d:'' };
   if(reqDone(key)) return paintReqDone(key, m);
   openSub(m.t + ' 신청', `
@@ -6483,10 +7158,10 @@ function openReqOne(key, title){
     </div>
     <div class="note">${m.d}</div>
     <div class="rqBtns">
-      <button class="btn btn-g" onclick="openDocs()">아니요</button>
+      <button class="btn btn-g" onclick="reqBack()">아니요</button>
       <button class="btn btn-p" id="rqYes" onclick="doReq('${esc(key)}')">네, 신청할게요</button>
     </div>`,
-    ()=>openDocs());
+    ()=>reqBack());
 }
 
 /** ① 「네, 신청할게요」 → 저장하고 ② 완료 화면 */
@@ -6515,8 +7190,8 @@ function paintReqDone(key, m){
         <button class="rqCopyB" onclick="reqCopy('${esc(m.msg||'')}',this)">복사</button></div>
     </div>
     <button class="btn btn-d" style="margin-top:12px" onclick="undoReq('${esc(key)}')">신청 취소</button>
-    <button class="btn btn-g" style="margin-top:8px" onclick="openDocs()">설명서 목록으로</button>`,
-    ()=>openDocs());
+    <button class="btn btn-g" style="margin-top:8px" onclick="reqBack()">확인</button>`,
+    ()=>reqBack());
 }
 
 /** ③ 「신청 취소」 — 잘못 눌러도 부모가 직접 지운다 */
@@ -6524,7 +7199,7 @@ async function undoReq(key){
   try{
     await savePol([{ key, value:'false' }]);
     toast('신청을 취소했어요');
-    openDocs();
+    reqBack();
   }catch(e){ toast('취소 실패: '+e.message); }
 }
 
