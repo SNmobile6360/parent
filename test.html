@@ -801,6 +801,24 @@
     padding:4px 10px 4px 4px;font-size:13px;font-weight:700;color:#344054}
   .achip .aico,.achipT .aico{width:24px;height:24px;border-radius:7px;flex:none}
   .achip .aico-x,.achipT .aico-x{width:24px;height:24px;border-radius:7px;background:#E4E7EC;flex:none}
+  /* 📵 문자 예시 · 🏫 세이프존 알림 예시 · 🔎 주소 찾기 (2026-11-10 2차) */
+  .smsb{background:#F2F4F7;border-radius:18px 18px 18px 6px;padding:11px 14px;margin:0 30px 9px 0;font-size:13.6px;
+    line-height:1.6;color:#1D2939;box-shadow:0 1px 2px rgba(16,24,40,.06);word-break:break-all}
+  .smsf{font-size:11.5px;color:#98A2B3;font-weight:700;margin-bottom:4px}
+  .smsl{color:#2563EB;text-decoration:underline}
+  .zbub{margin-top:8px;background:#fff;border:1px solid #E4E7EC;border-radius:14px;padding:9px 12px;font-size:13px;
+    box-shadow:0 2px 8px rgba(16,24,40,.08)}
+  .zbub.in b{color:#067647} .zbub.out b{color:#B54708}
+  .zqrow{display:flex;gap:8px}
+  .zqrow input{flex:1;min-width:0}
+  .zqbtn{flex:none;border:0;border-radius:12px;background:#4F7CFF;color:#fff;font-size:14.5px;font-weight:800;padding:0 16px;cursor:pointer}
+  .zres{padding:11px 4px;border-top:1px solid #F2F4F7;cursor:pointer}
+  .zres:active{background:#F9FAFB}
+  .zres-h{font-size:14.5px;font-weight:800;color:#1D2939}
+  .zres-t{font-size:12.5px;color:#667085;margin-top:2px}
+  .zres-m{font-size:12.6px;color:#667085;line-height:1.6;padding:9px 2px 2px}
+  .sw.dis{opacity:.45;pointer-events:none}
+  #scSub .exp{font-size:13.2px;color:#55606E;line-height:1.55;font-weight:500}
 </style>
 </head>
 <body>
@@ -3167,7 +3185,7 @@ const F_OPEN = {
 // ══════════════════════════════════════════════════════════════════
 const ICO = ['live','loc','limit','dt','academy','force','req','push','allow','apps','uninst','pinlock',
              'ignoredt','sos','security','kakao','sound','refresh','pin','kids','logout','docs','doumi',
-             'tube','hist','add','dm','lockhero','freehero','store','parent'];
+             'tube','hist','add','dm','lockhero','freehero','store','parent','power','sms'];
 const ICO_V = '20261110';
 const ICO_ALIAS = { newapp:'apps', hideicon:'sound', hidenotify:'sound' };
 function icoSrc(k){ k = ICO_ALIAS[k] || k; return ICO.includes(k) ? 'img/i-' + k + '.webp?v=' + ICO_V : ''; }
@@ -3268,7 +3286,7 @@ function guideStrip(title){
     (what && list.length === 1 ? '<div class="xd">' + what + '</div>' : '') +
     steps + when + '</div></div>';
 }
-const GUIDE_SKIP = ['기능 설명', '✨ AI 매니저', '어디 있나요', '장소 관리', '장소 등록',
+const GUIDE_SKIP = ['기능 설명', '✨ AI 매니저', '어디 있나요', '장소 관리', '자주 가는 장소 (세이프존)', '장소 등록',
                     '자녀 실시간 제한 상황', '허용 사이트 관리'];
 
 // ══════════════════════════════════════════════════════════════════
@@ -6610,7 +6628,7 @@ async function openLoc(day){
       '<button class="btn btn-g" onclick="closeSub()">닫기</button>');
     return;
   }
-  openSub('어디 있나요', locHtml(), null, { label:'장소 관리', fn: openZones });
+  openSub('어디 있나요', locHtml(), null, { label:'🏫 세이프존', fn: openZones });
   locDrawMap('now');
 }
 
@@ -6896,16 +6914,19 @@ function locHtml(){
   }
 
   // ③ 장소(세이프존)
-  h += '<div class="sec">자주 가는 장소</div>';
+  h += '<div class="sec">🏫 자주 가는 장소 (세이프존)</div>';
   h += '<div class="card tap" onclick="openZones()"><div class="row">' +
-       '<div class="ic">' + icoImg('loc') + '</div><div class="grow">' +
-       '<div class="ttl">' + (LOC.zones.length ? '등록한 장소 ' + LOC.zones.length + '곳' : '집·학교를 등록해 보세요') + '</div>' +
+       '<div class="ic has3d">' + icoImg('loc') + '</div><div class="grow">' +
+       '<div class="ttl">' + (LOC.zones.length ? '등록한 장소 ' + LOC.zones.length + '곳 · 더 등록하기' : '집·학교·학원을 등록해 보세요') + '</div>' +
        '<div class="exp" style="margin-top:3px">' + (LOC.zones.length
-          ? esc(LOC.zones.map(z => z.name).join(' · ')) + ' — 지도에서 동그라미로 보여요'
-          : '등록하면 「지금 학교에 있어요」처럼 <b>장소 이름</b>으로 알려드리고, 도착·출발도 기록돼요') + '</div>' +
+          ? esc(LOC.zones.map(z => z.name).join(' · ')) + ' — 지도에 동그라미로 보이고, 도착·출발이 기록돼요'
+          : '주소로 찾아 등록하면 「지금 <b>학교</b>에 있어요」처럼 장소 이름으로 알려드리고, 도착·출발이 기록돼요. 여러 곳 등록할 수 있어요') + '</div>' +
        '</div><div class="chev">›</div></div></div>';
 
-  h += '<div class="sec">인터넷이 끊겼을 때</div>' + locSmsHtml();
+  // 🔌 전원 끄기 막기 (2026-11-10 대표점장 요청 — 자녀앱 새 버전이 필요하다)
+  h += '<div class="sec">🔌 전원 끄기 막기</div>' + locPowerHtml();
+
+  h += '<div class="sec">📵 아이 폰 인터넷이 끊겼을 때 — 문자로 받기</div>' + locSmsHtml();
 
   h += '<div class="sec">위치 확인 끄기</div>' +
        '<div class="note">끄면 자녀폰이 <b>위치를 더 이상 보내지 않아요.</b> 지금까지의 기록은 7일 뒤 자동으로 지워져요.</div>' +
@@ -6982,26 +7003,84 @@ function openZoneAddAt(lat, lng){
 // ── 문자 알림 (자녀폰 인터넷이 끊겼을 때) ─────────────────────────────────
 //  🔴 자녀앱은 `sms_fallback_enabled` + `parent_phone` **둘 다** 있어야 보낸다
 //     (`LocationSms.kt:172·174`). 하나만 채우면 **아무 일도 안 일어난다** — 3-11 의 모양이다.
+// ══════════ 🔌 전원 끄기 막기 (2026-11-10 대표점장 : 「전원 끄면 위치추적도 안 되고 답이 없으니 ON/OFF 로」) ══════════
+//  자녀앱 v60 이 이미 **전원 메뉴가 뜬 순간**을 알아챈다(`BrowserBlockService` — 창 클래스명에 `globalactions`).
+//  지금은 경고 토스트만 띄운다 → 정책 `power_off_blocked=true` 면 **그 메뉴를 바로 닫게** 하면 된다.
+//  🔴 **자녀앱이 이 키를 읽는 버전이 나오기 전엔 켜게 하지 않는다** — 켜도 아무 일이 안 일어나면
+//     「값은 있는데 동작 안 함」 사고다(3-11 · 3-28d). 그래서 폰 버전이 POWER_OFF_MIN_VER 이상일 때만 스위치가 살아난다.
+//  ⛔ 2026-11-10 : 그 자녀앱 버전은 **아직 없다** — 대표점장이 버전 숫자를 정하면 그 숫자로 바꾼다.
+//  ⚠️ 정직하게 적을 것 — **못 막는 것**이 있다 : 배터리 방전 · 「음량↓+측면 버튼 7초」 강제 재시작.
+//     다시 켜지면 자녀앱이 저절로 다시 돈다(BOOT_COMPLETED). 긴급전화는 전화 앱에서 그대로 걸 수 있다.
+const POWER_OFF_MIN_VER = 9999;
+function locPowerHtml(){
+  const p = ST.pol || {};
+  const ver = Number(p.app_version_code || 0);
+  const ready = ver >= POWER_OFF_MIN_VER;
+  const on = p.power_off_blocked === 'true';
+  let h = '<div class="xbox"><div class="xi">' + icoImg('power', '') + '</div><div class="xt">' +
+    '<div class="xh">아이가 폰 <b>전원을 못 끄게</b> 막아요</div>' +
+    '<div class="xd">전원이 꺼지면 <b>위치도, 시간 제한도 전부 멈춰요.</b> 켜 두면 전원 버튼을 길게 눌러 「전원 끄기」 메뉴가 떠도 <b>바로 닫혀요.</b></div>' +
+    '<div class="xwhen">⚠️ 이것만은 못 막아요 — 배터리가 다 닳을 때 · 버튼 두 개를 7초 넘게 꾹 누르는 「강제 재시작」. ' +
+    '그래도 다시 켜지면 공신폰 앱이 저절로 다시 돌아가요. 긴급전화는 전화 앱에서 그대로 걸 수 있어요.</div>' +
+    '</div></div>';
+  h += '<div class="card"><div class="row"><div class="grow"><div class="ttl">전원 끄기 막기</div><div class="val">' +
+       (!ready ? '자녀앱 업데이트 뒤에 켤 수 있어요' : (on ? '켜짐 — 아이가 전원을 끌 수 없어요' : '꺼짐 — 아이가 전원을 끌 수 있어요')) +
+       '</div></div><label class="sw' + (ready ? '' : ' dis') + '"><input type="checkbox" ' + (on ? 'checked ' : '') + (ready ? '' : 'disabled ') +
+       'onchange="locTogglePower(this.checked)"><i></i></label></div></div>';
+  if (!ready) h += '<div class="note">🛠 <b>다음 자녀앱 업데이트에 들어가요.</b> 지금 아이 폰은 이 기능을 아직 몰라요. 업데이트가 끝나면 이 스위치를 켤 수 있어요.</div>';
+  return h;
+}
+async function locTogglePower(on){
+  if (Number(ST.pol?.app_version_code || 0) < POWER_OFF_MIN_VER){ toast('자녀앱 업데이트 뒤에 켤 수 있어요'); openLoc(LOC.day); return; }
+  loading(true);
+  try{ await savePol([{ key:'power_off_blocked', value: on ? 'true' : 'false' }]); loading(false); toast(on ? '전원 끄기를 막았어요' : '전원 끄기 막기를 풀었어요'); openLoc(LOC.day); }
+  catch(e){ loading(false); toast('저장 실패: ' + e.message); }
+}
+
+// ── 📵 아이 폰 인터넷이 끊겼을 때 — 문자로 받기 ──────────────────────────
+//  🎨 2026-11-10 대표점장 : 「이쪽 사실 잘 이해가 안 돼. 아~주 자세히 읽어봐야 이해가 되는 것 같아」
+//   🔴 예전 글은 「무슨 일이 → 언제 → 어떤 문자가」를 한 문단에 몰아 적었다.
+//   ▸ 그래서 ①3칸 그림(끊김 → 30분 → 문자) ②**실제로 오는 문자 모양** ③할 일 2단계(번호 → 켜기) 로 나눈다.
+//   ⚠️ 문자 문구는 자녀앱 `LocationSms.buildOfflineText`·`buildZoneText` 와 **같은 모양**으로 보여준다.
+//      자녀앱 문구를 바꾸면 여기 예시도 같이 바꿔라(3-13).
+//  🔴 자녀앱은 `sms_fallback_enabled` + `parent_phone` **둘 다** 있어야 보낸다(`LocationSms.kt`).
+//     하나만 채우면 **아무 일도 안 일어난다** — 3-11 의 모양이다.
 function locSmsHtml(){
   const p = ST.pol||{};
   const on = p.sms_fallback_enabled === 'true';
-  const tel = p.parent_phone || '';
-  let h = '<div class="note">자녀폰 <b>인터넷이 30분 넘게 끊기면</b>, 폰이 마지막 위치를 '+
-          '<b>문자(SMS)로</b> 보내 드려요. 데이터·와이파이가 없어도 가요.<br>'+
-          '세이프존을 <b>나갈 때</b>도 문자로 알려드려요.</div>';
-  if(on && !tel.trim()){
-    h += '<div class="note warn">⚠️ <b>켜져 있는데 번호가 비어 있어요.</b> 번호를 넣어야 문자가 가요.</div>';
+  const tel = (p.parent_phone || '').trim();
+  // 🔴 실제 문자는 **이름이 아니라 기기코드**를 쓴다 — 인터넷이 없을 때 보내서 이름을 못 읽는다(`LocationSms.who`).
+  const nm = '자녀 휴대폰(' + esc(ST.code || '') + ')';
+  let h = '<div class="xbox"><div class="xi">' + icoImg('sms', '') + '</div><div class="xt">' +
+    '<div class="xh">인터넷이 끊겨도 <b>문자로</b> 아이 위치를 받아요</div>' +
+    '<div class="xd">지하·데이터 소진·비행기 모드로 아이 폰 인터넷이 끊기면 이 화면의 지도가 멈춰요. ' +
+    '그럴 때 <b>아이 폰이 부모님께 문자를 직접</b> 보내요. 문자는 인터넷이 아니라 <b>전화망</b>으로 가서 받을 수 있어요.</div>' +
+    '</div></div>';
+  h += '<div class="flow3">' +
+    '<div><b>📵</b>아이 폰<br>인터넷이 끊겨요</div><i>›</i>' +
+    '<div><b>⏱</b>30분이<br>지나면</div><i>›</i>' +
+    '<div><b>✉️</b>부모님께<br>문자 1통</div></div>';
+  h += '<div class="sec">이런 문자가 와요</div>' +
+    '<div class="smsb"><div class="smsf">보낸 사람 · 아이 폰 번호</div>' +
+    '[시내모바일] ' + nm + '이 32분째 인터넷에 연결되지 않고 있어요.<br>마지막 위치 (15:05)<br>' +
+    '<span class="smsl">https://map.naver.com/p/?lng=…</span></div>' +
+    '<div class="smsb"><div class="smsf">등록한 장소에서 나갈 때 — 인터넷이 끊겨 있으면</div>' +
+    '[시내모바일] ' + nm + '이 \'학원\'에서 나갔어요.<br>18:12<br><span class="smsl">https://map.naver.com/p/?lng=…</span></div>' +
+    '<div class="lmHint" style="margin:2px 4px 12px">링크를 누르면 네이버지도에 아이 위치가 떠요. 한 번 끊길 때 <b>한 통만</b> 보내고, ' +
+    '인터넷이 다시 연결됐다가 또 끊기면 그때 다시 보내요. 하루 최대 30통까지예요.</div>';
+
+  h += '<div class="sec">켜는 법 — 두 단계</div>';
+  if(on && !tel){
+    h += '<div class="note warn">⚠️ <b>켜져 있는데 번호가 비어 있어요.</b> 아래 ①에 번호를 넣어야 문자가 가요.</div>';
   }
-  h += '<div class="card"><div class="row"><div class="ic" style="background:#ECFDF3">✉️</div>'+
-       '<div class="grow"><div class="ttl">문자로 알려받기</div><div class="val">'+
-       (on? (tel? '켜짐 · '+esc(tel) : '켜짐 · 번호 없음') : '꺼짐')+'</div></div>'+
-       '<label class="sw"><input type="checkbox" '+(on?'checked':'')+
-       ' onchange="locToggleSms(this.checked)"><i></i></label></div></div>';
-  h += '<div class="card"><div class="field"><label>부모님 휴대폰 번호 (문자 받을 번호)</label>'+
-       '<input id="locTel" type="tel" inputmode="numeric" placeholder="01012345678" value="'+esc(tel)+'"></div>'+
-       '<button class="btn btn-g" onclick="locSaveTel()">번호 저장</button></div>'+
-       '<div class="note">문자 요금은 <b>자녀폰 요금제</b>에서 나가요. 매장에서 전부 문자 무제한으로 개통해 드리고 있어요. '+
-       '하루 최대 30통까지만 보내도록 막아 뒀어요.</div>';
+  h += '<div class="card"><div class="field"><label>① 문자 받을 부모님 휴대폰 번호</label>' +
+       '<input id="locTel" type="tel" inputmode="numeric" placeholder="01012345678" value="' + esc(tel) + '"></div>' +
+       '<button class="btn btn-g" onclick="locSaveTel()">' + (tel ? '번호 바꾸기' : '번호 저장') + '</button></div>';
+  h += '<div class="card"><div class="row"><div class="grow"><div class="ttl">② 문자로 받기 켜기</div><div class="val">' +
+       (on ? (tel ? '켜짐 · ' + esc(tel) + ' 로 보내요' : '켜짐 · 번호 없음') : (tel ? '꺼짐 — 켜면 ' + esc(tel) + ' 로 보내요' : '꺼짐 — 먼저 ①에 번호를 넣어 주세요')) +
+       '</div></div><label class="sw"><input type="checkbox" ' + (on ? 'checked' : '') +
+       ' onchange="locToggleSms(this.checked)"><i></i></label></div></div>' +
+       '<div class="note">💬 문자 요금은 <b>아이 폰 요금제</b>에서 나가요. 매장에서 전부 문자 무제한으로 개통해 드리고 있어요.</div>';
   return h;
 }
 
@@ -7143,35 +7222,57 @@ async function locTurnOff(){
 }
 
 // ── 세이프존 ──────────────────────────────────────────────────────────────
+// ══════════ 🏫 자주 가는 장소 (세이프존) ══════════
+//  🎨 2026-11-10 대표점장 :
+//   「자주가는장소 (세이프존) 이런 식이면 좋겠고 · 주소도 직접 입력할 수 있으면 · 학교 근처에 도착했어요! 같은 알림 ·
+//    100m~500m 는 손님이 정하지 말고 오류 안 나는 선에서 우리가 고정(200m) · 여러 개 등록」
+//  ▸ 크기는 **200m 로 고정**(ZONE_RADIUS_M). 건물 안 위치 오차(50~100m)를 넘고, 나갈 때는 자녀앱이
+//    **반경+100m(=300m)** 를 벗어나야 「출발」로 본다(SafeZoneWatcher.EXIT_MARGIN_M) → 경계에서 들락날락 안 한다.
+//    ⚠️ 이미 등록된 장소(예전 100~500m)는 **그대로 둔다** — 새로 등록하는 것만 200m.
+//  ▸ 여러 곳 등록은 원래 된다(개수 제한 없음). 화면에서 그걸 **말해 준다.**
+//  🔴 「도착했어요!」 **폰 알림은 서버 트리거가 깔려야** 간다 — ZONE_PUSH_READY 가 false 면 「기록만」이라고 정직하게 적는다.
+//     (2026-11-10 확인 : 자녀앱은 인터넷이 있으면 zone_events 에 **기록만** 하고, 그걸 읽어 알림 보내는 쪽이 아직 없다.
+//      인터넷이 끊겼을 때 「나갈 때」만 문자가 간다 — LocationSms.onZoneExit)
+const ZONE_RADIUS_M = 200;
+const ZONE_PUSH_READY = false;      // ⛔ 서버 15곳에 「도착·출발 알림」 트리거를 깔면 true 로
+function zoneExplainHtml(){
+  return '<div class="xbox"><div class="xi">' + icoImg('loc', '') + '</div><div class="xt">' +
+    '<div class="xh">집·학교·학원처럼 <b>자주 가는 곳</b>을 등록해 두세요</div>' +
+    '<div class="xsteps">' +
+      '<div><b class="n">1</b>지도에 <b>동그라미</b>로 보여요</div>' +
+      '<div><b class="n">2</b>「지금 <b>학교</b>에 있어요」처럼 <b>장소 이름</b>으로 알려드려요</div>' +
+      '<div><b class="n">3</b>도착·출발 <b>시각이 기록</b>돼요' + (ZONE_PUSH_READY ? ' — 부모님 폰으로 <b>알림</b>도 와요' : '') + '</div>' +
+    '</div>' +
+    (ZONE_PUSH_READY
+      ? '<div class="zbub in">🔔 시내모바일 · <b>학교 근처에 도착했어요!</b></div><div class="zbub out">🔔 시내모바일 · <b>학교 근처를 벗어났어요</b></div>'
+      : '<div class="xwhen">🔔 「학교 근처에 도착했어요!」 폰 알림은 <b>준비 중</b>이에요. 지금은 이 화면에서 도착·출발 기록을 볼 수 있어요.</div>') +
+    '<div class="xd" style="margin-top:8px">여러 곳을 등록할 수 있어요. 크기는 <b>반경 200m</b>로 정해져 있어요 — 건물 안에서 위치가 조금 틀려도 헷갈리지 않는 크기예요.</div>' +
+    '</div></div>';
+}
+
 function openZones(){
   let h = '<div class="lmapw sm" id="lmapw"><div id="lmap"></div>' +
-          '<div class="lmChip">📍 등록한 장소</div></div>';
-  h += '<div class="xbox" style="margin-top:12px"><div class="xi">' + icoImg('loc') + '</div><div class="xt">' +
-       '<div class="xh">자주 가는 곳을 등록해 두세요</div>' +
-       '<div class="xd">집·학교·학원을 등록하면 「지금 <b>학교</b>에 있어요」처럼 <b>장소 이름</b>으로 알려드려요. ' +
-       '도착·출발 시각도 기록돼요.</div></div></div>';
+          '<div class="lmChip">📍 자주 가는 장소 ' + (LOC.zones.length ? LOC.zones.length + '곳' : '') + '</div></div>';
+  h += '<div style="height:12px"></div>' + zoneExplainHtml();
   if (LOC.zones.length){
-    h += '<div class="card">';
+    h += '<div class="sec">등록한 장소 ' + LOC.zones.length + '곳</div><div class="card">';
     h += LOC.zones.map(z => {
       const on = z.enabled !== false;
-      const rec = (z.notify_enter!==false && z.notify_exit!==false) ? '도착·출발 기록'
-                : (z.notify_enter!==false) ? '도착만 기록'
-                : (z.notify_exit!==false)  ? '출발만 기록' : '기록 안 함';
       return '<div class="item"><div class="grow">' +
         '<div class="nm">' + locZoneEmo(z.name) + ' ' + esc(z.name) + (on ? '' : ' (꺼짐)') + '</div>' +
-        '<div class="val">반경 ' + Number(z.radius_m||150) + 'm · ' + rec + '</div></div>' +
+        '<div class="val">반경 ' + Number(z.radius_m||ZONE_RADIUS_M) + 'm · 도착·출발 기록</div></div>' +
         '<button class="x" onclick="zoneDel(\'' + z.id + '\')">삭제</button>' +
         '</div>';
     }).join('');
     h += '</div>';
   }
-  h += '<button class="btn btn-p" onclick="openZoneAdd(\'child\')">＋ 새 장소 등록하기</button>' +
+  h += '<button class="btn btn-p" onclick="openZoneAdd(\'child\')">＋ ' + (LOC.zones.length ? '장소 하나 더 등록하기' : '첫 장소 등록하기') + '</button>' +
        '<button class="btn btn-g" style="margin-top:10px" onclick="openLoc(LOC.day)">위치 화면으로</button>';
-  openSub('장소 관리', h, () => openLoc(LOC.day));
+  openSub('자주 가는 장소 (세이프존)', h, () => openLoc(LOC.day));
   locDrawMap('zones');
 }
 
-/** 장소 등록 — 지도를 움직여 가운데 핀을 맞춘다. 시작점 : 자녀 위치 → 없으면 서울 */
+/** 장소 등록 — 주소로 찾거나, 지도를 움직여 가운데 핀을 맞춘다. 시작점 : 자녀 위치 → 내 위치 → 서울 */
 async function openZoneAdd(from){
   let lat, lng;
   if (from === 'child' && !LOC.last) from = 'me';          // 🔴 점검 지적 : 서울시청이 그대로 저장될 뻔했다
@@ -7180,8 +7281,8 @@ async function openZoneAdd(from){
     const c = await zoneMyPos();
     if (c){ lat = c[0]; lng = c[1]; }
     else { lat = MAP_HOME[0]; lng = MAP_HOME[1]; from = 'none'; }
-  } else { lat = MAP_HOME[0]; lng = MAP_HOME[1]; }
-  LOC_NEW = { name:'집', lat, lng, radius:150, from };
+  } else { lat = MAP_HOME[0]; lng = MAP_HOME[1]; from = 'none'; }
+  LOC_NEW = { name:'집', lat, lng, radius:ZONE_RADIUS_M, from };
   zoneAddHtml();
 }
 async function zoneMyPos(){
@@ -7204,30 +7305,75 @@ async function zonePickTo(which){
   if (c && LMAP) LMAP.setView(c, 17, { animate:true });
 }
 
+// ── 🔎 주소·장소 이름으로 찾기 (2026-11-10) ─────────────────────────────
+//  OpenStreetMap 무료 검색(Nominatim · 키 없음). 🔴 **결과를 저절로 고르지 않는다** — 목록에서 부모가 고르고,
+//  지도가 그리로 움직여 **눈으로 확인한 뒤** 등록한다.
+//  ▸ 2026-11-10 실측 : 「올림픽로 145」「대치동 은마아파트」「잠실 리센츠」는 찾는다.
+//    「잠실초등학교」 같은 학교 이름·지번(「대치동 316」)은 **못 찾거나 엉뚱한 곳**이 나온다 → 화면에 그렇게 적는다.
+//  ⚠️ 이용 규칙 : 1초에 1번 · 자동완성 금지 → **「찾기」 버튼을 누를 때만** 묻는다.
+//  ⚠️ 부모가 적은 글자(주소)가 OpenStreetMap 으로 간다. 기기코드·아이 이름은 안 보낸다.
+let ZQ_AT = 0;
+async function zoneSearch(){
+  const el = document.getElementById('zQ'), box = document.getElementById('zRes');
+  const q = ((el && el.value) || '').trim();
+  if (q.length < 2){ toast('주소나 장소 이름을 2글자 이상 적어 주세요'); return; }
+  if (Date.now() - ZQ_AT < 1200){ toast('잠시 뒤에 다시 눌러 주세요'); return; }
+  ZQ_AT = Date.now();
+  if (box) box.innerHTML = '<div class="zres-m">찾는 중…</div>';
+  try{
+    const u = 'https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=kr&accept-language=ko&limit=5&q=' + encodeURIComponent(q);
+    const r = await fetch(u, { headers:{ 'Accept':'application/json' } });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    if (!Array.isArray(j) || !j.length){
+      box.innerHTML = '<div class="zres-m">못 찾았어요 😥 <b>도로명 주소</b>(예: 올림픽로 145)나 <b>아파트 이름</b>으로 다시 찾아보시거나, ' +
+                      '아래 지도를 손가락으로 움직여 핀을 맞춰 주세요.</div>';
+      return;
+    }
+    box.innerHTML = j.map((x, i) => {
+      const parts = String(x.display_name || '').split(',').map(t => t.trim()).filter(t => t && t !== '대한민국' && !/^[0-9]{5}$/.test(t));
+      const head = parts[0] || '';
+      const tail = parts.slice(1).reverse().slice(0, 4).join(' ');
+      return '<div class="zres" onclick="zoneSearchPick(' + Number(x.lat).toFixed(6) + ',' + Number(x.lon).toFixed(6) + ')">' +
+        '<div class="zres-h">📍 ' + esc(head) + '</div><div class="zres-t">' + esc(tail) + '</div></div>';
+    }).join('') + '<div class="zres-m">맞는 곳을 누르면 지도가 그리로 움직여요. 핀이 맞는지 꼭 확인해 주세요.</div>';
+  }catch(e){
+    if (box) box.innerHTML = '<div class="zres-m">⚠️ 지금은 주소 검색이 안 돼요(' + esc(e.message || '') + '). 지도를 움직여 핀을 맞춰 주세요.</div>';
+  }
+}
+function zoneSearchPick(lat, lng){
+  if (LMAP) LMAP.setView([lat, lng], 17, { animate:true });
+  LOC_NEW.lat = lat; LOC_NEW.lng = lng; LOC_NEW.from = 'search';
+  const box = document.getElementById('zRes'); if (box) box.innerHTML = '<div class="zres-m">✅ 지도를 옮겼어요. 핀이 맞으면 아래에서 이름을 고르고 등록해 주세요.</div>';
+  const w = document.getElementById('lmapw'); if (w) w.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
 function zoneAddHtml(){
   const n = LOC_NEW;
+  n.radius = ZONE_RADIUS_M;
   const h =
-    '<div class="lmapw" id="lmapw"><div id="lmap"></div>' +
+    '<div class="card zsearch"><div class="field"><label>🔎 주소나 장소 이름으로 찾기</label>' +
+      '<div class="zqrow"><input id="zQ" type="search" placeholder="예: 올림픽로 145 · 은마아파트" ' +
+      'onkeydown="if(event.key===\'Enter\'){event.preventDefault();zoneSearch()}"><button class="zqbtn" onclick="zoneSearch()">찾기</button></div></div>' +
+      '<div id="zRes"><div class="zres-m"><b>도로명 주소·아파트 이름</b>이 잘 찾아져요. 학교 이름은 안 나올 때가 있어요 — 그럴 땐 지도를 직접 움직여 주세요.</div></div>' +
+    '</div>' +
+    '<div class="lmapw" id="lmapw" style="margin:6px 0 0;border-radius:18px"><div id="lmap"></div>' +
       '<div class="pickPin"><span>📍</span></div>' +
-      '<div class="lmChip">지도를 움직여 핀을 맞춰 주세요</div>' +
+      '<div class="lmChip">지도를 움직여 핀을 맞춰요</div>' +
       '<div class="lmFabs"><button class="lmFab" onclick="zonePickTo(\'child\')" aria-label="자녀 위치로">🧒</button>' +
       '<button class="lmFab" onclick="zonePickTo(\'me\')" aria-label="내 위치로">🧍</button></div>' +
     '</div>' +
     '<div class="lmCard">' +
       '<div class="lmPlace" style="font-size:16.5px">📍 핀이 꽂힌 곳을 등록해요</div>' +
-      (n.from === 'none' ? '<div class="lmNear warn">⚠️ 아직 위치를 몰라서 <b>서울 시내</b>에서 시작했어요. 지도를 움직여 등록할 곳에 핀을 맞춰 주세요.</div>' : '') +
-      '<div class="lmMeta">🧒 = 자녀가 마지막으로 있던 곳으로 · 🧍 = 지금 내가 있는 곳으로 옮겨요</div>' +
+      '<div class="lmMeta">파란 동그라미(반경 200m) 안에 들어오면 「도착」, 300m 넘게 벗어나면 「출발」이에요</div>' +
+      (n.from === 'none' ? '<div class="lmNear warn">⚠️ 아직 위치를 몰라서 <b>서울 시내</b>에서 시작했어요. 위에서 주소를 찾거나 지도를 움직여 핀을 맞춰 주세요.</div>' : '') +
+      '<div class="lmHint">🧒 = 아이가 마지막으로 있던 곳으로 · 🧍 = 지금 내가 있는 곳으로 옮겨요</div>' +
     '</div>' +
     '<div class="sec">이름</div><div class="chips" id="zNames">' +
     LOC_ZONE_PRESETS.map(p => '<button class="chip' + (n.name === p ? ' on' : '') + '" data-v="' + p + '" onclick="zoneSetName(\'' + p + '\')">' + locZoneEmo(p) + ' ' + p + '</button>').join('') +
     '</div>' +
     '<div class="card"><div class="field"><label>직접 쓰기</label>' +
     '<input id="zName" maxlength="12" placeholder="예: 수학학원" value="' + esc(n.name) + '"></div></div>' +
-    '<div class="sec">크기 — 파란 동그라미 안에 들어오면 「도착」이에요</div><div class="chips" id="zRadii">' +
-    LOC_RADII.map(r => '<button class="chip' + (n.radius === r ? ' on' : '') + '" data-v="' + r + '" onclick="zoneSetRadius(' + r + ')">' + r + 'm</button>').join('') +
-    '</div>' +
-    '<div class="note">🎯 아파트·학교는 <b>150~200m</b> 가 알맞아요. 건물 안에서는 위치가 50~100m 쯤 틀릴 수 있어서, ' +
-    '너무 작게 잡으면 들락날락하는 것처럼 보여요.</div>' +
     '<button class="btn btn-p" onclick="zoneSave()">이 곳을 등록하기</button>' +
     '<button class="btn btn-g" style="margin-top:10px" onclick="openZones()">취소</button>';
   openSub('장소 등록', h, () => openZones());
@@ -7237,11 +7383,6 @@ function zoneSetName(v){
   LOC_NEW.name = v;
   const el = document.getElementById('zName'); if (el) el.value = v;
   document.querySelectorAll('#zNames .chip').forEach(b => b.classList.toggle('on', b.dataset.v === v));
-}
-function zoneSetRadius(v){
-  LOC_NEW.radius = v;
-  if (LMAP_L.circ) LMAP_L.circ.setRadius(v);
-  document.querySelectorAll('#zRadii .chip').forEach(b => b.classList.toggle('on', Number(b.dataset.v) === v));
 }
 
 async function zoneSave(){
