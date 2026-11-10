@@ -304,6 +304,37 @@
   /* 🎁 오늘만 보너스 — 노란 버튼 + 선택 상자 */
   .btn-y{background:#F9AB00;color:#1A1A1A}
   .btn.btn-y{width:auto;padding:12px 20px;font-size:15px;flex:0 0 auto}
+
+  /* 📲 2026-11-10 : 카톡으로 들어온 분께 「홈 화면에 설치」 (대표점장 지시) — JS 는 showInstPop() */
+  .instPop{position:fixed;inset:0;z-index:9500;display:flex;align-items:flex-end;
+           background:rgba(16,24,40,.5);animation:fade .18s}
+  .instPop .ip{background:#fff;width:100%;max-width:520px;margin:0 auto;border-radius:24px 24px 0 0;
+           padding:12px 20px calc(var(--safe-b) + 18px);animation:up .22s cubic-bezier(.2,.8,.3,1);
+           max-height:92dvh;overflow-y:auto}
+  .instPop .ipGrip{width:42px;height:4px;border-radius:99px;background:#D0D5DD;margin:0 auto 10px}
+  .instPop .ipIco{font-size:44px;text-align:center;line-height:1.2;margin:4px 0 6px}
+  .instPop h3{font-size:20px;font-weight:800;text-align:center;letter-spacing:-.01em;margin-bottom:8px;line-height:1.4}
+  .instPop .ipTxt{font-size:15px;line-height:1.75;color:#344054;text-align:center;margin-bottom:14px}
+  .instPop .ipGood{background:#F0F7FF;border:1px solid #CFE3FB;border-radius:14px;padding:12px 15px;
+           font-size:14.5px;line-height:1.85;color:#1E3A5F;margin-bottom:16px}
+  .instPop .ipSmall{font-size:13px;color:#667085;text-align:center;line-height:1.7;margin-top:10px}
+  .instGo{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:0;border-radius:15px;
+          padding:17px 14px;font-size:17px;font-weight:800;font-family:inherit;cursor:pointer;color:#fff;
+          background:linear-gradient(135deg,#2563EB,#1B3A8F);box-shadow:0 6px 16px rgba(37,99,235,.28)}
+  .instGo.ios{background:linear-gradient(135deg,#0A84FF,#0062CC);box-shadow:0 6px 16px rgba(10,132,255,.28)}
+  .instGo:active{transform:scale(.99)}
+  .instLater{display:block;width:100%;border:0;background:none;margin-top:8px;padding:12px;
+             font-size:14.5px;font-weight:700;color:#667085;font-family:inherit;cursor:pointer}
+  .instSteps{counter-reset:ist;margin:2px 0 14px;padding:0;list-style:none}
+  .instSteps li{position:relative;padding:11px 12px 11px 46px;background:#F8FAFC;border:1px solid #E4E7EC;
+                border-radius:13px;margin-bottom:8px;font-size:15px;line-height:1.6;color:#101828}
+  .instSteps li::before{counter-increment:ist;content:counter(ist);position:absolute;left:12px;top:50%;
+                transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:#2563EB;color:#fff;
+                font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .instSteps small{display:block;font-size:12.5px;color:#667085;font-weight:600}
+  .instPill{position:fixed;left:14px;bottom:calc(var(--safe-b) + 76px);z-index:45;display:flex;align-items:center;gap:6px;
+            border:0;border-radius:999px;padding:12px 17px;font-size:14.5px;font-weight:800;font-family:inherit;cursor:pointer;
+            color:#fff;background:linear-gradient(135deg,#2563EB,#1B3A8F);box-shadow:0 6px 18px rgba(16,24,40,.25)}
   /* 💬 매장 카톡 문의 — 카카오 브랜드색(#FEE500). a 태그라 .btn 위에 flex 로 덮어쓴다 */
   .btn-kakao{
     background:#FEE500; color:#191600; text-decoration:none;
@@ -776,6 +807,12 @@
 
 <div id="load" class="hide"><div class="spin"></div></div>
 <div id="toast"></div>
+
+<!-- 📲 2026-11-10 : 카톡으로 들어온 분께 「홈 화면에 설치」 (대표점장 지시)
+     · 갤럭시 → 크롬으로 열어 설치 / 아이폰 → 사파리로 열어 홈 화면에 추가
+     · 내용은 JS(showInstPop)가 채운다. 홈 화면 앱·PC 에서는 안 뜬다. -->
+<div id="instPop" class="instPop hide" onclick="if(event.target===this) instLater()"><div class="ip" id="instPopBody"></div></div>
+<button id="instPill" class="instPill hide" onclick="showInstPop()">📲 홈 화면에 설치</button>
 
 <!-- ══════════ 💬 부모 공지(광고) — 비밀번호 입력 전에 1회 표시 (2026-09-16 추가) ══════════
      · 부모님께 「의견을 카카오톡으로 보내주세요」 안내. 기존 카카오 채널(_xnDXAX/chat) 재사용.
@@ -1907,17 +1944,9 @@ if ('serviceWorker' in navigator){
 // 🆕 2026-10-15 : 「앱 안의 브라우저」 안내 — 카톡은 전용 스킴으로 바로 밖으로 내보낼 수 있다.
 //   kakaotalk://web/openExternal?url=… 는 카카오 개발자포럼에서 쓰이는 방식이다.
 //   다른 앱은 공통 스킴이 없어서 「주소 복사」로 안내한다.
-function openInRealBrowser(){
-  const info = openModeInfo();
-  const here = location.href;
-  if (info.inApp === '카톡'){
-    location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(here);
-    return;
-  }
-  // 카톡이 아니면 스킴이 없다 — 주소를 복사해 드리고 안내한다
-  copyAppLink();
-  toast('주소를 복사했어요. 크롬이나 사파리에 붙여넣어 주세요');
-}
+//   🆕 2026-11-10 : 갤럭시는 **크롬을 콕 집어** 연다(기본 브라우저가 삼성인터넷이어도) → goInstallBrowser()
+function openInRealBrowser(){ goInstallBrowser(); }
+function realBrowserName(){ return isIosDev() ? '사파리' : '크롬'; }
 function copyAppLink(){
   const _add = addCodeFromUrl();
   const url = location.origin + location.pathname + (_add ? ('?add=' + _add) : '');
@@ -1961,10 +1990,165 @@ function showInstallTip(){
     ? '⚠️ 지금 <b>' + info.inApp + ' 안의 브라우저</b>로 열려 있어요'
     : '💡 홈 화면에 추가해야 🔔 알림을 받을 수 있어요';
   document.getElementById('installBtns').innerHTML =
-    (info.inApp ? '<button class="btn btn-g" style="flex:1;min-width:140px" onclick="openInRealBrowser()">브라우저로 열기</button>' : '') +
+    (info.inApp ? '<button class="btn btn-g" style="flex:1;min-width:140px" onclick="openInRealBrowser()">' + (isIosDev() ? '사파리로' : '크롬으로') + ' 열기</button>' : '') +
     '<button class="btn btn-g" style="flex:1;min-width:140px" onclick="copyAppLink()">주소 복사</button>';
 }
 function showIosTip(){ showInstallTip(); }   // 예전 이름으로 부르는 곳이 있어 남겨 둔다
+
+// ══════════ 📲 2026-11-10 : 카톡으로 들어온 분께 「홈 화면에 설치」 (대표점장 지시) ══════════
+//  「카톡으로 접속하는 사람은 홈화면에 바로가기 설치하기 버튼 띄워줘.
+//    갤럭시 → 크롬 / 아이폰 → 사파리」
+//   ① 카톡(앱 안의 브라우저)에서 열림 → 팝업 한 번 + 왼쪽 아래 「📲 홈 화면에 설치」 버튼(계속 떠 있다)
+//        갤럭시 : intent:// 로 **크롬을 콕 집어** 연다 — 기본 브라우저가 삼성인터넷이어도 크롬
+//        아이폰 : kakaotalk://web/openExternal 로 밖으로 → 기본 브라우저(대개 사파리)
+//   ② 보내는 주소 끝에 inst=1 을 붙인다 → 크롬·사파리에서 열리면 **설치 안내를 바로** 띄운다
+//        갤럭시 크롬  : 「지금 설치하기」 → 크롬 설치 창(beforeinstallprompt). 창을 못 받으면 ⋮ 메뉴 안내
+//        아이폰 사파리 : 애플은 버튼으로 설치를 못 하게 막아 뒀다 → 공유 버튼 순서를 번호로 보여준다
+//   🔴 ?add= (매장이 보낸 연결 링크)는 주소에 그대로 남아 따라간다 — 코드를 다시 안 받아적게.
+//   🔴 홈 화면 앱·PC 에서는 안 뜬다. 갤럭시 일반 크롬도 inst=1 이 없으면 안 뜬다(11-07 「잔소리 금지」 그대로).
+//   ⛔ 카톡 안에서 intent:// 가 크롬을 실제로 여는지 · 크롬 설치 창이 뜨는지는 실기기 미확인(2026-11-10).
+//      그래서 1.5초 뒤에도 화면이 그대로면 카톡 「다른 브라우저로 열기」 스킴으로 한 번 더 시도한다.
+let instEvt = null;                 // 크롬이 주는 설치 창 (beforeinstallprompt)
+let instMode = '';                  // 'inapp' | 'out' — 지금 팝업이 어느 쪽을 보여주는지
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault(); instEvt = e;
+  const p = document.getElementById('instPop');
+  if (p && !p.classList.contains('hide') && instMode === 'out') showInstPop();   // 창이 늦게 오면 버튼을 다시 그린다
+});
+window.addEventListener('appinstalled', function(){
+  instEvt = null; closeInstPop(); toast('홈 화면에 설치됐어요 📲 이제 아이콘으로 열어 주세요');
+});
+
+function isAndroidDev(){ return /android/i.test(navigator.userAgent || ''); }
+function instUrl(){
+  try{ const u = new URL(location.href); u.searchParams.set('inst', '1'); u.hash = ''; return u.toString(); }
+  catch(e){ return location.href; }
+}
+function clearInstParam(){
+  try{
+    const u = new URL(location.href);
+    if (!u.searchParams.has('inst')) return;
+    u.searchParams.delete('inst');
+    history.replaceState(null, '', u.pathname + (u.search || '') + u.hash);
+  }catch(e){}
+}
+/** 카톡 밖으로 — 갤럭시는 크롬, 아이폰은 사파리(기본 브라우저) */
+function goInstallBrowser(){
+  const info = openModeInfo();
+  const url = instUrl();
+  if (isAndroidDev()){
+    const noScheme = url.replace(/^https?:[/][/]/i, '');
+    location.href = 'intent://' + noScheme + '#Intent;scheme=https;package=com.android.chrome;end';
+    if (info.inApp === '카톡'){
+      setTimeout(function(){         // 크롬이 떴으면 카톡이 뒤로 가서 hidden 이 된다
+        if (document.visibilityState === 'visible')
+          location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(url);
+      }, 1500);
+    }
+    return;
+  }
+  if (info.inApp === '카톡'){
+    location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(url);
+    return;
+  }
+  // 카톡이 아닌 앱(인스타 등) 아이폰 — 밖으로 내보내는 스킴이 없다 → 주소 복사
+  copyAppLink();
+  toast('주소를 복사했어요. ' + realBrowserName() + '에 붙여넣어 주세요');
+}
+function closeInstPop(){ const p = document.getElementById('instPop'); if (p) p.classList.add('hide'); }
+function instLater(){
+  try{ sessionStorage.setItem('sinae_inst_later', '1'); }catch(e){}
+  closeInstPop();
+}
+async function instDoPrompt(){
+  if (!instEvt){ showInstPop(); return; }
+  const ev = instEvt; instEvt = null;
+  try{
+    ev.prompt();
+    const r = await ev.userChoice;
+    if (r && r.outcome === 'accepted') closeInstPop();
+    else showInstPop();
+  }catch(e){ showInstPop(); }
+}
+const INST_GOOD =
+  '<div class="ipGood">홈 화면 아이콘으로 열면<br>' +
+  '✅ <b>비밀번호</b>를 매번 안 넣어도 돼요<br>' +
+  '✅ <b>🔔 접속 요청 알림</b>을 받을 수 있어요<br>' +
+  '✅ 카톡 대화방을 찾아 들어올 필요가 없어요</div>';
+function showInstPop(){
+  const pop = document.getElementById('instPop'), box = document.getElementById('instPopBody');
+  if (!pop || !box) return;
+  const info = openModeInfo();
+  const ios = isIosDev();
+  let h = '<div class="ipGrip"></div>';
+  if (info.inApp){
+    instMode = 'inapp';
+    const canJump = !ios || info.inApp === '카톡';
+    h += '<div class="ipIco">📲</div>' +
+      '<h3>' + (ios ? '사파리에서 홈 화면에<br>추가해 주세요' : '크롬으로 홈 화면에<br>설치해 주세요') + '</h3>' +
+      '<div class="ipTxt">지금은 <b>' + info.inApp + ' 안</b>에서 열려 있어서<br>홈 화면에 추가가 안 돼요.</div>' +
+      INST_GOOD +
+      (canJump
+        ? '<button class="instGo' + (ios ? ' ios' : '') + '" onclick="goInstallBrowser()">' +
+            (ios ? '🧭 사파리로 열어서 홈 화면에 추가' : '🌐 크롬으로 열어서 홈 화면에 설치') + '</button>' +
+          '<div class="ipSmall">' + (ios ? '사파리가' : '크롬이') + ' 열리면 설치 방법을 바로 알려 드릴게요</div>'
+        : '<button class="instGo ios" onclick="goInstallBrowser()">📋 주소 복사하기</button>' +
+          '<div class="ipSmall">사파리를 열고 주소창에 붙여넣어 주세요</div>') +
+      '<button class="instLater" onclick="instLater()">다음에 할게요</button>';
+  } else if (ios){
+    instMode = 'out';
+    h += '<div class="ipIco">🏠</div>' +
+      '<h3>이제 홈 화면에 추가만<br>하시면 돼요</h3>' +
+      '<div class="ipTxt">아이폰은 버튼으로 바로 설치가 안 돼서<br>아래 순서대로 눌러 주세요 😊</div>' +
+      '<ol class="instSteps">' +
+        '<li>화면 아래 <b>공유 버튼 ⬆️</b> 을 눌러요<small>안 보이면 아래쪽 <b>⋯</b> 버튼 → 공유</small></li>' +
+        '<li>목록을 내려서 <b>「홈 화면에 추가」</b> 를 눌러요</li>' +
+        '<li>오른쪽 위 <b>「추가」</b> 를 누르면 끝!</li>' +
+      '</ol>' +
+      '<div class="ipSmall" style="margin:0 0 6px">그다음부터는 홈 화면의 <b>「자녀 공신폰 관리」</b> 아이콘으로 열어 주세요</div>' +
+      '<button class="instLater" onclick="closeInstPop()">확인했어요</button>';
+  } else {
+    instMode = 'out';
+    const samsung = /samsungbrowser/i.test(navigator.userAgent || '');
+    h += '<div class="ipIco">🏠</div>' +
+      '<h3>홈 화면에 설치할게요</h3>' +
+      INST_GOOD +
+      (instEvt
+        ? '<button class="instGo" onclick="instDoPrompt()">📲 지금 설치하기</button>' +
+          '<div class="ipSmall">뜨는 창에서 <b>「설치」</b> 를 눌러 주세요</div>'
+        : '<ol class="instSteps">' +
+            (samsung
+              ? '<li>아래쪽 <b>≡</b> 메뉴를 눌러요</li>' +
+                '<li><b>「현재 페이지 추가」</b> → <b>「홈 화면」</b></li>'
+              : '<li>오른쪽 위 <b>⋮</b> 를 눌러요</li>' +
+                '<li><b>「홈 화면에 추가」</b> 또는 <b>「설치 및 바로가기 만들기」</b></li>' +
+                '<li><b>「설치」</b> (또는 「바로가기 만들기」) 를 누르면 끝!</li>') +
+          '</ol>') +
+      '<button class="instLater" onclick="closeInstPop()">' + (instEvt ? '다음에 할게요' : '확인했어요') + '</button>';
+  }
+  box.innerHTML = h;
+  pop.classList.remove('hide');
+}
+/** 처음 열 때 한 번 — init() 맨 앞에서 부른다 */
+function initInstall(){
+  try{
+    if (isStandalone()) return;
+    if (!isIosDev() && !isAndroidDev()) return;          // PC 는 안 띄운다
+    const info = openModeInfo();
+    if (info.inApp){
+      const pill = document.getElementById('instPill');
+      if (pill) pill.classList.remove('hide');
+      let later = '';
+      try{ later = sessionStorage.getItem('sinae_inst_later') || ''; }catch(e){}
+      if (later !== '1') showInstPop();
+      return;
+    }
+    if (new URLSearchParams(location.search).get('inst') === '1'){
+      clearInstParam();                                    // 새로고침해도 또 안 뜨게
+      setTimeout(showInstPop, 600);                        // 크롬 설치 창(beforeinstallprompt)을 조금 기다린다
+    }
+  }catch(e){}
+}
 
 async function refreshAll(manual){
   loading(true);
@@ -7376,7 +7560,7 @@ function handleAddLink(){
     note.innerHTML = info.inApp
       ? '⚠️ 지금 <b>' + info.inApp + ' 안의 브라우저</b>로 열려 있어요.<br>'
         + '연결은 되지만 <b>홈 화면에 추가가 안 돼요.</b><br>'
-        + '<button class="btn btn-g" style="margin-top:8px" onclick="openInRealBrowser()">브라우저로 열기</button>'
+        + '<button class="btn btn-g" style="margin-top:8px" onclick="openInRealBrowser()">' + (isIosDev() ? '사파리로' : '크롬으로') + ' 열기</button>'
       : '🔗 매장에서 보내 드린 링크로 들어오셨어요.<br>'
         + '코드는 <b>' + code + '</b> 로 넣어 두었어요.';
   }
@@ -7386,7 +7570,8 @@ function handleAddLink(){
 
 (function init(){
   migrateOld();
-  if(handleAddLink()) return;          // 🔗 매장이 보낸 링크로 들어온 경우
+  initInstall();                       // 📲 2026-11-10 카톡이면 「홈 화면에 설치」 팝업 + 버튼
+  if(handleAddLink()) return;         // 🔗 매장이 보낸 링크로 들어온 경우
   if(!kids().length){ show('scConnect'); return; }
   document.getElementById('btnConnectBack').classList.remove('hide');
   if(sessionStorage.getItem('sinae_auth')==='1'){ afterUnlock(); return; }
