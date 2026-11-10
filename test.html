@@ -819,6 +819,79 @@
   .zres-m{font-size:12.6px;color:#667085;line-height:1.6;padding:9px 2px 2px}
   .sw.dis{opacity:.45;pointer-events:none}
   #scSub .exp{font-size:13.2px;color:#55606E;line-height:1.55;font-weight:500}
+
+  /* ══════════ 🎨 2026-11-10 (3차) — 「문자로 받기」 느낌을 모든 화면에 ══════════
+     대표점장 : 「아이폰 인터넷이 끊겼을 때 — 문자로 받기, 아주 쉽게 잘 이해됨. 다른 기능 설명도 전부 이렇게」
+     ▸ 틀은 하나다 : 그림 상자(xbox) → 3칸 그림(flow3) → 실제 모습(xex) → 하는 법 N단계(xhow) → 알아두세요(xwarn) */
+  .xex{background:#fff;border:1px solid #EAEEF4;border-radius:16px;padding:12px 10px 8px;margin-bottom:12px}
+  .xhow{background:#fff;border:1px solid #EAEEF4;border-radius:16px;padding:12px 13px;margin-bottom:12px;display:flex;flex-direction:column;gap:9px}
+  .xhow > div{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#344054;line-height:1.55}
+  .xhow b.n{flex:none;width:23px;height:23px;border-radius:50%;background:#4F7CFF;color:#fff;font-size:12.5px;font-weight:800;
+            display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .xhow a.xl{color:#4F46E5;font-weight:800;cursor:pointer;white-space:nowrap}
+  .xwarn{background:#FFFBF2;border:1px solid #F6E3BE;border-radius:14px;padding:11px 13px;margin-bottom:12px}
+  .xwarn > div{font-size:13.2px;color:#6B4A22;line-height:1.6;padding-left:16px;position:relative}
+  .xwarn > div + div{margin-top:6px}
+  .xwarn > div:before{content:'•';position:absolute;left:3px;color:#D29A3A;font-weight:900}
+  details.xmore{background:#F9FAFB;border:1px solid #EAECF0;border-radius:14px;padding:0 13px;margin-bottom:12px}
+  details.xmore > summary{list-style:none;cursor:pointer;padding:12px 0;font-size:13.5px;font-weight:800;color:#475467}
+  details.xmore > summary::-webkit-details-marker{display:none}
+  details.xmore > summary:after{content:' ›';color:#98A2B3}
+  details.xmore[open] > summary:after{content:' ⌄'}
+  details.xmore > div{padding:0 0 12px;font-size:13.2px;color:#475467;line-height:1.75}
+  .xmini{background:linear-gradient(135deg,#F5F8FF,#FBF7FF);border:1px solid #E6E9FB;border-radius:18px;padding:13px 12px 2px;margin:16px 0 10px}
+  .xmini .xmh{display:flex;gap:10px;align-items:center;font-size:15.5px;font-weight:800;color:#1E2A44;line-height:1.4}
+  .xmini .xmh img{width:50px;height:50px;object-fit:contain;flex:none;filter:drop-shadow(0 3px 5px rgba(16,24,40,.12))}
+  .xmini .xd{margin:6px 0 10px}
+  .xmini .flow3 > div{font-size:11.8px}
+  /* 💬 카톡 대화 모양 예시 */
+  .chatw{background:#BACEE0;border-radius:16px;padding:12px 11px;margin-bottom:6px}
+  .chatw .cb{background:#fff;border-radius:4px 15px 15px 15px;padding:9px 12px;font-size:13.4px;color:#1D2939;max-width:80%;line-height:1.5}
+  .chatw .cb u{color:#2563EB}
+  .chatw .cn{font-size:11.5px;color:#475467;margin:0 0 4px 2px;font-weight:700}
+  .chatw .cr{margin-top:9px;background:#fff;border:2px dashed #F04438;border-radius:13px;padding:9px 11px;font-size:13px;color:#B42318;font-weight:800;text-align:center}
+  .xcap{font-size:12.5px;color:#667085;text-align:center;margin:0 0 12px;line-height:1.55}
+  /* 🚦 실시간 — 「아이 폰은 이럴 때만 잠겨요」 4칸 */
+  .why4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+  .why4 > div{background:#fff;border:1px solid #EAEEF4;border-radius:14px;padding:9px 3px 8px;text-align:center;font-size:11.8px;
+              color:#344054;font-weight:700;line-height:1.35}
+  .why4 > div b{display:block;font-size:21px;margin-bottom:3px}
+  .why4 > div span{display:inline-block;margin-top:5px;font-size:10.8px;color:#667085;background:#F2F4F7;border-radius:8px;padding:2px 6px;font-weight:800}
+  .why4 > div.off{opacity:.5}
+  .why4 > div.act{background:#FFF1F0;border:2px solid #F04438;color:#B42318}
+  .why4 > div.act span{background:#F04438;color:#fff}
+  /* 「하루 한도 + 앱별 = 최대」 식 */
+  .eqw{margin-top:12px;padding:12px 11px;border-radius:14px;background:#FFFAF2;border:1px solid #FCE7C8}
+  .eqt{font-size:13.4px;font-weight:800;color:#B54708;margin-bottom:9px}
+  .eqr{display:flex;align-items:center;gap:5px}
+  .eqr span{flex:1;background:#fff;border:1px solid #F3E3C8;border-radius:11px;padding:7px 4px;text-align:center;font-size:11.5px;color:#667085;line-height:1.45;font-weight:700}
+  .eqr span b{font-size:14px;color:#1D2939}
+  .eqr span.tot{background:#FEF0C7;border-color:#FEC84B}
+  .eqr span.tot b{color:#B54708}
+  .eqr i{font-style:normal;font-weight:900;color:#B54708}
+  .eqs{font-size:12.3px;color:#8A5A1B;margin-top:8px;line-height:1.6}
+  /* 🏠 홈 — 오늘 사용시간 설명 한 줄 */
+  .hero .hexp{font-size:12.4px;opacity:.92;margin:2px 0 4px;line-height:1.5}
+  /* ✨ AI 매니저 — 어느 화면에서나 + 안심 약속 */
+  .fab.low{bottom:calc(var(--safe-b) + 18px)}
+  .fab .fs{display:block;font-size:10.5px;font-weight:700;opacity:.85;margin-top:1px}
+  #scSub .wrap{padding-bottom:calc(var(--safe-b) + 86px)}
+  .aiprom{background:#fff;border:1px solid #E6E9FB;border-radius:16px;padding:11px 13px;margin-bottom:12px}
+  .aiprom > div{display:flex;gap:9px;align-items:flex-start;font-size:13.6px;color:#344054;line-height:1.55;padding:5px 0}
+  .aiprom > div + div{border-top:1px dashed #E4E7EC}
+  .aiprom > div > i{font-style:normal;font-size:18px;flex:none;width:24px;text-align:center}
+  .aich{margin-bottom:12px}
+  .aich .me{margin:0 0 9px auto;max-width:78%;background:#4F7CFF;color:#fff;border-radius:16px 16px 5px 16px;padding:9px 13px;font-size:13.6px;font-weight:700;width:fit-content}
+  .aich .ai{max-width:86%;background:#fff;border:1px solid #E6E9FB;border-radius:16px 16px 16px 5px;padding:10px 13px;font-size:13.4px;color:#344054;line-height:1.55;margin-bottom:9px}
+  .aich .ai .k{display:inline-block;margin:7px 5px 0 0;padding:5px 10px;border-radius:10px;font-size:12.3px;font-weight:800;background:#4F7CFF;color:#fff}
+  .aich .ai .k.g{background:#F2F4F7;color:#475467}
+  /* 🏪 자체개발 기술 표시 */
+  .inhouse{display:inline-block;background:#fff;border:1px solid #FBD5B0;color:#C2410C;font-size:11.5px;font-weight:800;border-radius:9px;padding:3px 8px;margin-top:6px}
+  .hero{position:relative}
+  .hero .hico{position:absolute;right:12px;top:12px;width:66px;height:66px;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,.18))}
+  .hero .lbl,.hero .big{padding-right:70px}
+  .aiprom > div.aiph{display:flex;align-items:center;gap:9px;padding:0 0 6px;font-size:14.5px;color:#1E2A44;border-top:0}
+  .aiprom > div.aiph img{width:46px;height:46px;object-fit:contain}
 </style>
 </head>
 <body>
@@ -976,9 +1049,12 @@
   <div class="wrap">
     <div class="pane" id="pane_home">
     <div class="hero" onclick="openHistory()" style="cursor:pointer">
-      <div class="lbl">오늘 사용시간</div>
+      <img class="hico" src="img/i-today.webp?v=20261110" alt="" onerror="this.remove()">
+      <div class="lbl">오늘 아이가 폰을 쓴 시간</div>
       <div class="big" id="hUse">-</div>
-      <div class="hero-cta">📊 앱별 사용시간 보기<span class="arw">›</span></div>
+      <!-- 🎨 2026-11-10 (3차) : 「이 숫자가 뭔지」와 「누르면 뭐가 나오는지」를 글로 적는다 -->
+      <div class="hexp">화면을 켜 둔 시간을 모두 더했어요 · 매일 밤 12시에 0분부터 다시 세요</div>
+      <div class="hero-cta">📊 앱별로 몇 분 썼는지 보기<span class="arw">›</span></div>
       <div class="meta">
         <span class="dot" id="hDot" style="background:#98A2B3"></span>
         <span id="hStat">-</span> · <span id="hCode">-</span>
@@ -1126,6 +1202,12 @@
     </div><!-- /pane_fn -->
 
     <div class="pane hide" id="pane_safe">
+    <!-- 📍 2026-11-10 (3차) : 위치는 「안전」이다 — 홈에만 두면 안전 탭에서 못 찾는다 -->
+    <div class="sec">어디 있나요</div>
+    <div class="card tap" onclick="openLoc()">
+      <div class="row"><div class="ic" style="background:#ECFDF3">📍</div>
+        <div class="grow"><div class="ttl">위치 확인 · 세이프존</div><div class="val">지금 어디 있는지 · 도착·출발 기록 · 전원 끄기 막기 · 문자로 받기</div></div><div class="chev">›</div></div>
+    </div>
     <div class="sec">안전 · 보안</div>
     <div class="card tap" onclick="openSos()">
       <div class="row"><div class="ic" style="background:#FEF2F2">🆘</div>
@@ -1195,10 +1277,8 @@
            같은 말이 두 군데 나와서 길고 헷갈렸다(2026-10-15 대표점장 지적). -->
     <div id="installTip" class="note warn hide" style="margin-top:16px">
       <div id="installHead" style="font-weight:800;font-size:15px;margin-bottom:8px"></div>
-      <div style="line-height:1.75">
-        홈 화면에 추가하면 <b>비밀번호를 매번 넣지 않아도 되고</b>,
-        <b>🔔 접속 요청 알림</b>도 받을 수 있어요.
-      </div>
+      <div class="flow3" style="margin:4px 0 6px"><div><b>📲</b>홈 화면에<br>추가하면</div><i>›</i>
+        <div><b>🔢</b>비밀번호를<br>매번 안 넣어요</div><i>›</i><div><b>🔔</b>요청 알림도<br>받아요</div></div>
       <div style="margin-top:11px;padding:12px 13px;background:#fff;border:1px solid #F3E3C8;border-radius:11px;line-height:1.85;color:#5C4414;font-weight:500">
         <b>▶ 갤럭시</b> — 「삼성인터넷」 또는 「크롬」만 가능<br>
         &nbsp;&nbsp;우측 상단 <b>⋮</b> → <b>설치 및 바로가기 만들기</b> → <b>바로가기 만들기</b>
@@ -1241,8 +1321,10 @@
     <b data-t="safe" onclick="switchTab('safe')"><i>🛡️</i>안전</b>
     <b data-t="more" onclick="switchTab('more')"><i>⚙️</i>더보기</b>
   </nav>
-  <button class="fab" onclick="openDoumi()" aria-label="AI 매니저"><i>✨</i>AI 매니저</button>
 </div>
+<!-- ✨ 2026-11-10 (3차) : AI 매니저 버튼을 scMain 밖으로 뺐다 — 대표점장 「모든 화면에 항상 떠서 잘 쓰게」.
+     scMain 안에 있으면 기능 화면(scSub)을 여는 순간 같이 숨는다. 보이고 숨기는 것은 show() 가 정한다. -->
+<button class="fab hide" id="aiFab" onclick="openDoumi()" aria-label="AI 매니저에게 물어보기"><i>✨</i><span>AI 매니저<span class="fs">말로 물어보세요</span></span></button>
 
 <!-- ══════════ 바텀시트 (요일별 시간 설정) ══════════ -->
 <div id="sheet" class="sheet hide" onclick="if(event.target===this) closeSheet()">
@@ -1336,7 +1418,12 @@ function migrateOld(){
 }
 
 // ── UI 유틸 ──
-function show(id){ ['scConnect','scPin','scList','scMain','scSub'].forEach(x=>document.getElementById(x).classList.toggle('hide', x!==id)); window.scrollTo(0,0); }
+function show(id){ ['scConnect','scPin','scList','scMain','scSub'].forEach(x=>document.getElementById(x).classList.toggle('hide', x!==id)); window.scrollTo(0,0);
+  // ✨ AI 매니저 버튼 — 관리 화면(홈·기능·안전·더보기)과 **모든 기능 화면**에서 보인다. AI 매니저 화면 자신에서만 숨긴다.
+  const fb = document.getElementById('aiFab');
+  if (fb){ const t = (document.getElementById('sTitle') || {}).textContent || '';
+    fb.classList.toggle('hide', !(id === 'scMain' || id === 'scSub') || (id === 'scSub' && t === '✨ AI 매니저'));
+    fb.classList.toggle('low', id === 'scSub'); } }
 function loading(on){ document.getElementById('load').classList.toggle('hide', !on); }
 let toastT;
 function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),2200); }
@@ -2324,13 +2411,13 @@ function paintMain(){
 const DM_PKG = 'com.example.dmonly_v2';
 const ADD_ITEMS = [
   { key:'chrome_requested', ico:'allow', t:'공신폰 크롬',
-    d:'허락한 사이트만 열리는 인터넷이에요. 숙제·인강에 필요할 때',
+    d:'<b>허락한 사이트만</b> 열리는 인터넷이에요. 목록에 없는 사이트는 안 열려요. 숙제·인강에 필요할 때',
     using:() => ST.pol?.chrome_enabled === 'true' },
   { key:'tube_install_requested', ico:'tube', t:'시내YouTube',
-    d:'부모님이 고른 영상만 볼 수 있는 유튜브예요',
+    d:'부모님이 <b>고른 영상만</b> 나오는 유튜브예요. 쇼츠·추천·댓글·검색이 없어요',
     using:() => tubeInstalled() || ST.pol?.tube_install_allowed === 'true' },
   { key:'dm_install_requested', ico:'dm', t:'시내디엠',
-    d:'인스타는 막고 DM(메시지)만 쓸 수 있는 앱이에요',
+    d:'인스타그램에서 <b>DM(메시지)만</b> 쓸 수 있어요. 릴스·피드·탐색·스토리는 안 열려요',
     using:() => (ST.apps || []).some(a => a.app_package === DM_PKG) }
 ];
 //  ▸ 홈 : 아직 안 쓰는 것만 · 하나도 없으면 상자를 숨긴다
@@ -2338,9 +2425,13 @@ const ADD_ITEMS = [
 function addBoxHtml(all){
   const items = all ? ADD_ITEMS : ADD_ITEMS.filter(x => !x.using());
   if (!items.length) return '';
-  return '<div class="addbox"><div class="addhd">' + icoImg('add', '') +
+  //  🏪 2026-11-10 (3차) 대표점장 : 「만들어 둔 건 아주 좋음. 시내모바일 자체개발 기술 내용만 들어가면 좋을 듯」
+  //    ⚠️ 「다른 공신폰엔 없는」 같은 비교 문구는 쓰지 않는다(표시광고법 실증책임) — 「직접 개발했다」까지만.
+  return '<div class="addbox"><div class="addhd">' + icoImg('inhouse', '') +
     '<div><div class="addt">공신폰에 더 넣을 수 있어요</div>' +
-    '<div class="adds">매장에 다시 오지 않아도 돼요.<br>여기서 신청하면 <b>매장이 원격으로</b> 넣어 드려요.</div></div></div>' +
+    '<div class="adds">셋 다 <b>시내모바일이 직접 개발한 기술</b>이에요.<br>매장에 다시 오지 않아도 <b>원격으로</b> 넣어 드려요.</div></div></div>' +
+    '<div class="flow3" style="margin:12px 0 2px"><div><b>📲</b>여기서<br>신청하면</div><i>›</i>' +
+    '<div><b>🏪</b>매장이 확인하고<br>연락드려요</div><i>›</i><div><b>📡</b>원격으로<br>넣어 드려요</div></div>' +
     items.map(x => {
       if (x.using()) return '<div class="additem"><div class="axI">' + icoImg(x.ico, '') + '</div>' +
         '<div style="flex:1;min-width:0"><div class="axT">' + x.t + '</div><div class="axD">' + x.d + '</div></div>' +
@@ -2469,8 +2560,6 @@ function openTube(){
     : `<div class="empty">아직 허락한 영상이 없습니다</div>`;
 
   openSub('시내YouTube', `
-    <div class="note">자녀는 <b>여기 있는 영상만</b> 시내YouTube 에서 볼 수 있습니다.<br>
-      자녀가 유튜브에서 <b>공유 → 시내YouTube</b> 를 누르면 아래에 요청이 올라옵니다.</div>
     <div class="sec">자녀의 허락 요청 (${reqs.length}건)</div>
     <div class="card">${reqBody}</div>
     <div class="sec">영상 직접 추가</div>
@@ -2925,7 +3014,7 @@ function gaDraw(art, big){
 //  sub  : 이 설명이 붙을 기능 화면의 제목 — openSub 제목과 **글자까지 같아야** 한다
 const FEATURES = [
 { k:'live', t:'🚦 자녀 실시간 제한 상황', sub:'자녀 실시간 제한 상황',
-  one:'지금 이 순간 자녀폰이 잠겨 있는지, 얼마나 남았는지 봐요.',
+  one:'지금 잠겼는지, 왜 잠겼는지, 언제 풀리는지 한눈에 봐요.',
   what:['자녀폰이 <b>지금</b> 어떤 상태인지 한 화면에 모아 보여드려요. 오늘 쓴 시간, 남은 시간, 잠겨 있는지 아닌지요.',
         '자녀폰이 인터넷에 연결될 때마다 올려보내는 기록을 읽어옵니다. 그래서 <b>자녀폰이 꺼져 있으면 마지막으로 올라온 값</b>이 보여요.'],
   when:['「지금 쓰고 있나?」가 궁금할 때 가장 먼저 열어보는 화면이에요.'],
@@ -3082,16 +3171,18 @@ const FEATURES = [
   art:{ kind:'grid', hi:2, st:'on', others:'lock', lc:'취침 — 다 잠겨요', rc:'고른 앱만 열려요', rok:true, alt:'취침 허용 앱' } },
 
 { k:'sos', t:'🆘 긴급 연락처 (SOS)', sub:'긴급 연락처 (SOS)',
-  one:'자녀가 폰이 잠겨 있어도 걸 수 있는 번호를 넣어둬요.',
-  what:['폰이 잠겨 있어도 잠금 화면에서 <b>바로 전화할 수 있는</b> 번호예요.',
-        '부모님 번호를 넣어두시면 돼요.'],
-  when:['꼭 넣어두세요. 잠겨 있을 때 자녀가 연락할 길이 있어야 해요.'],
-  art:{ kind:'full', l:{ emo:'🔒', txt:'잠겨 있어요' },
-        r:{ emo:'📞', txt:'엄마에게 전화', sub:'잠겨 있어도 걸려요', bg:'#FDEEEC', fg:'#B5401E' },
-        lc:'잠긴 화면', rc:'전화는 돼요', rok:true, alt:'긴급 연락처' } },
+  // 🔴 2026-11-10 (3차) 정정 : 예전 글은 「잠겨 있어도 바로 전화할 수 있는 번호」였다 — **틀렸다.**
+  //   실제 화면(openSos)·자녀앱은 「등록 번호로 3번 안 받으면 4번째에 자동으로 받고 스피커」다.
+  //   잠금화면 「📞 긴급전화」는 이것과 **상관없이** 늘 된다.
+  one:'아이가 전화를 3번 안 받으면, 4번째엔 아이 폰이 저절로 받아요.',
+  what:['여기 넣은 번호로 걸었는데 아이가 <b>3번</b> 안 받으면, <b>4번째</b>엔 아이 폰이 <b>저절로 받고 스피커가 켜져요.</b>'],
+  when:['아이가 전화를 계속 안 받아 걱정될 때요.'],
+  art:{ kind:'full', l:{ emo:'📵', txt:'부재중 3번', sub:'계속 안 받아요' },
+        r:{ emo:'🔊', txt:'저절로 받았어요', sub:'스피커가 켜져요', bg:'#EAF7F0', fg:'#2B8A5A' },
+        lc:'3번 안 받으면', rc:'4번째 전화', rok:true, alt:'긴급 연락처 자동 받기' } },
 
 { k:'security', t:'🔐 보안 설정', sub:'보안 설정',
-  one:'앱을 새로 깔지 못하게 막는 등 빠져나갈 길을 닫아요.',
+  one:'아이가 Play 스토어로 새 앱을 깔지 못하게 막아요.',
   what:['Play 스토어를 막아 <b>자녀가 앱을 새로 깔지 못하게</b> 해요.',
         '그 밖에 설정을 바꾸거나 우회하는 길을 닫는 항목들이 모여 있어요.'],
   when:['설정을 다 해두셨는데 자녀가 새 앱을 깔아서 빠져나간다면 여기를 보세요.'],
@@ -3176,6 +3267,189 @@ const F_OPEN = {
 };
 
 // ══════════════════════════════════════════════════════════════════
+//  🎨 2026-11-10 (3차) — 「문자로 받기」 틀을 **모든 기능 화면**에 (대표점장 지시)
+//  대표점장 : 「아이폰 인터넷이 끊겼을 때 — 문자로 받기 수정한 거 아주아주 좋아. 아주 쉽게 잘 이해됨.
+//              다른 기능들에 있는 설명들도 전부 이렇게」
+//  ▸ 그 화면이 잘 읽힌 이유 = **한 문단에 몰아 쓰지 않고 순서대로 쪼갰다** :
+//      ① 그림 + 한 줄(xbox)  ② 무슨 일이 일어나나 3칸(flow3)  ③ **실제로 보이는 모습**(xex · 문자 모양)
+//      ④ 하는 법 N단계(xhow)  ⑤ 알아두세요 짧게(xwarn)
+//  ▸ 문구는 **XP 한 곳에만** 둔다. 화면(open*)은 guideStrip 으로 꺼내 쓸 뿐이다(3-13).
+//  🔴 설명은 **실제 동작과 같아야** 한다 — 옛 FEATURES.sos 는 「잠겨 있어도 바로 전화」라고 했는데
+//     실제 화면·자녀앱은 「3번 안 받으면 4번째에 자동으로 받음」이었다(2026-11-10 발견 · 같이 고침).
+//  🔴 다운타임의 「전화·문자는 그대로 돼요」도 반쪽이었다 — **받기는 되지만 걸기·문자 앱 열기는 막힌다**
+//     (`ignore_dt_apps` 에 없으면 전화 앱도 잠긴다 · CLAUDE.md 3-30). 그래서 「받기」와 「걸기」를 나눠 적었다.
+// ══════════════════════════════════════════════════════════════════
+const KN = ['', '한', '두', '세', '네', '다섯'];
+const XP = {
+  limit:{ h:'하루에 폰을 <b>몇 시간</b> 쓸지 정해요',
+    d:'정한 시간을 다 쓰면 앱이 잠겨요. 매일 <b>밤 12시</b>에 다시 0분부터 시작해요.',
+    f:[['📱','화면을 켜 두면<br>시간이 줄어요'],['⏱','정한 시간을<br>다 쓰면'],['🔒','앱이 잠겨요<br>(전화 받기는 돼요)']],
+    ex:'art', exT:'아이 폰에서는 이렇게 돼요',
+    how:['아래 <b>「하루 한도 사용」</b> 스위치를 켜요',
+         '요일을 눌러 시간을 정해요 — 예) 평일 1시간 · 주말 2시간'],
+    w:['<b>화면이 켜져 있으면 무엇을 하든</b> 세요 — 홈 화면·전화·설정까지요. 화면을 끄면 멈춰요.',
+       '<b>앱별 시간을 따로 준 앱</b>은 하루 한도를 다 써도 열려요. 하루 1시간 + 유튜브 30분이면 <b>최대 1시간 30분</b>이에요.',
+       '오래 통화하는 날엔 통화만으로 한도가 찰 수 있어요. 계속 쓰게 할 앱은 <a class="xl" onclick="openApps()">앱 관리 ›</a> 에서 <b>♾️ 시간 무제한</b>으로 바꿔 주세요.'] },
+
+  dt:{ h:'밤 <b>몇 시부터 몇 시까지</b>는 폰을 쉬게 해요',
+    d:'정한 시간이 되면 아이 폰이 <b>저절로 잠기고</b>, 끝나면 <b>저절로 풀려요.</b> 남은 하루 시간이 있어도 잠겨요.',
+    f:[['🌙','22:00<br>취침 시작'],['😴','앱이 거의<br>다 잠겨요'],['☀️','07:00<br>저절로 풀려요']],
+    ex:'art', exT:'아이 폰에서는 이렇게 돼요',
+    how:['아래 <b>「다운타임 사용」</b> 스위치를 켜요',
+         '요일을 눌러 시간을 정해요 — 22:00 ~ 07:00 처럼 <b>밤 12시를 넘겨도</b> 돼요',
+         '밤에도 쓸 앱이 있으면 골라 두세요 <a class="xl" onclick="openIgnoreDt()">허용 앱 고르기 ›</a>'],
+    w:['<b>전화 받기</b>는 그대로 돼요. 아이가 <b>전화를 걸거나 문자를 보게</b> 하려면 ③에서 전화·메시지 앱을 넣어 주세요.',
+       '스위치를 안 켜면 시간을 넣어도 <b>아무 일도 안 일어나요.</b>'] },
+
+  academy:{ h:'<b>학원·독서실 시간</b>에만 폰을 잠가요',
+    d:'취침시간과 똑같이 움직이는 <b>낮 시간용 잠금</b>이에요. 학원을 쉬는 날엔 「오늘만 풀어주기」로 건너뛰면 돼요.',
+    f:[['🚶','17:00<br>학원 시작'],['📚','앱이<br>잠겨요'],['🏠','20:00<br>저절로 풀려요']],
+    ex:'art', exT:'아이 폰에서는 이렇게 돼요',
+    how:['아래 <b>「학원 시간 사용」</b> 스위치를 켜요',
+         '학원 가는 요일을 눌러 시간을 정해요 — 예) 화·목 17:00 ~ 20:00'],
+    w:['허용 앱 · 강력 모드 · 전화문자 끄기는 <b>취침시간 설정을 그대로 따라가요.</b>',
+       '전화 받기는 학원 시간에도 돼요.'] },
+
+  force:{ h:'지금 <b>바로</b> 아이 폰을 잠가요',
+    d:'밥 먹을 때 · 숙제할 때처럼 <b>지금 당장</b> 필요할 때 쓰세요. 하루 한도·취침시간은 그대로 두고 <b>이것만 따로</b> 걸고 풀어요.',
+    f:[['👆','잠글 시간을<br>골라 누르면'],['🔒','아이 폰이<br>바로 잠겨요'],['⏰','시간이 되면<br>저절로 풀려요']],
+    ex:'art', exT:'아이 폰에서는 이렇게 돼요',
+    how:['아래에서 <b>30분 · 1시간 · 2시간</b> 중에 골라요 — 계속 잠그려면 <b>「풀 때까지 계속」</b>',
+         '일찍 풀어 주려면 <b>「🔓 지금 풀기」</b>를 눌러요'],
+    w:['아이 폰이 꺼져 있으면 <b>켜지는 순간</b> 잠겨요.',
+       '잠겨 있어도 <b>긴급전화와 알람</b>은 돼요.'] },
+
+  req:{ h:'아이가 <b>「이 사이트 열어 주세요」</b> 하고 보낸 부탁이 여기 와요',
+    d:'아이 폰에서 막힌 사이트를 열면 <b>「부모님께 요청하기」</b> 버튼이 떠요. 아이가 누르면 이 화면에 올라와요.',
+    f:[['🙋','아이가<br>요청을 보내요'],['📩','이 화면에<br>올라와요'],['✅','「허용」하면<br>바로 열려요']],
+    ex:'art', exT:'이렇게 주고받아요',
+    how:['요청 옆 <b>「허용」</b> 또는 <b>「거절」</b>을 눌러요',
+         '부탁이 오면 바로 알고 싶으세요? 「기능」 탭의 <b>🔔 접속 요청 알림 받기</b>를 켜 두세요'],
+    w:['허용한 사이트는 <b>공신폰 크롬</b>에서 열려요. 크롬을 켜고 끄는 건 <b>매장에서만</b> 할 수 있어요.'] },
+
+  apps:{ h:'앱마다 <b>따로</b> 정해요 — 막거나 · 시간을 주거나 · 무제한',
+    d:'앱 이름 오른쪽 <b>「설정」</b>을 누르면 셋 중에 고를 수 있어요. 정해 둔 앱은 <b>맨 위</b>에 모여요.',
+    f:[['⛔','아예 차단<br>(아이콘 숨김도)'],['⏱','요일마다<br>몇 분만'],['♾️','시간 무제한<br>(한도 안 깎음)']],
+    ex:'art', exT:'예) 유튜브만 하루 30분',
+    how:['위 검색칸에 <b>앱 이름</b>을 넣어 찾아요',
+         '<b>「설정」</b>을 눌러 막기 · 시간 · 무제한 중에 골라요'],
+    w:['<b>요일별 시간을 준 앱</b>은 하루 한도를 다 써도 열려요. 더 조이려면 그 앱 시간을 줄여 주세요.',
+       '🆕 <b>「최근 한 달」</b> 버튼을 누르면 아이가 <b>새로 깐 앱</b>만 모아 봐요.'] },
+
+  tube:{ h:'부모님이 <b>고른 영상만</b> 볼 수 있는 유튜브예요',
+    d:'시내모바일이 <b>직접 만든</b> 영상 앱이에요. 여기 넣은 영상만 아이 폰에 보여요.',
+    f:[['📤','아이가 유튜브에서<br>공유 → 시내YouTube'],['📩','이 화면에<br>요청이 와요'],['✅','허락하면<br>그 영상만 보여요']],
+    how:['아이 요청을 보고 <b>허락</b>하거나 거절해요',
+         '보여 주고 싶은 영상은 아래에 <b>유튜브 주소</b>를 넣어 직접 추가해요'],
+    w:['퍼가기가 막힌 영상은 허락해도 재생되지 않아요. 넣을 때 미리 걸러 드려요.'] },
+
+  uninst:{ h:'아이가 <b>중요한 앱을 지우지 못하게</b> 막아요',
+    d:'공신폰 앱이 지워지면 다른 설정이 전부 소용없어져요. <b>켜 두시는 걸 권해요.</b>',
+    f:[['🗑️','아이가 앱을<br>지우려고 하면'],['🛡️','삭제가<br>막혀 있어요'],['✅','앱이 그대로<br>남아요']],
+    ex:'art', exT:'아이 폰에서는 이렇게 돼요',
+    how:['아래 <b>「앱 삭제 방지 사용」</b> 스위치를 켜요',
+         '지키고 싶은 앱을 목록에서 <b>「추가」</b>해요'],
+    w:['스위치가 꺼져 있으면 목록에 넣어도 <b>지울 수 있어요.</b>'] },
+
+  pinlock:{ h:'고른 앱을 열 때마다 <b>부모님 비밀번호</b>를 물어요',
+    d:'아예 막는 게 아니라 <b>부모님이 옆에서 비밀번호를 넣어 주면</b> 열려요. 한 번 열면 <b>5분 동안</b>은 다시 안 물어요.',
+    f:[['👆','아이가 그 앱을<br>누르면'],['🔑','비밀번호를<br>물어요'],['🖼️','부모님이 넣으면<br>열려요']],
+    ex:'art', exT:'아이 폰에서는 이렇게 돼요',
+    how:['아래 목록에서 잠글 앱을 <b>「추가」</b>해요 — 예) 갤러리 · 사진'],
+    w:['비밀번호는 이 웹앱에 들어올 때 쓰는 <b>부모님 6자리 번호</b>예요.'] },
+
+  ignoredt:{ h:'취침시간에도 <b>이 앱만은</b> 쓸 수 있게 열어 둬요',
+    d:'취침시간엔 앱이 거의 다 잠겨요. <b>여기 넣은 앱만</b> 예외로 열려요.',
+    f:[['🌙','취침시간이<br>되면'],['🔒','다른 앱은<br>잠겨요'],['📖','고른 앱만<br>열려요']],
+    ex:'art', exT:'아이 폰에서는 이렇게 돼요',
+    how:['아래 목록에서 열어 둘 앱을 <b>「추가」</b>해요 — 취침시간 중에 넣어도 <b>15초 안에</b> 열려요'],
+    w:['아이가 밤에 <b>전화를 걸어야</b> 한다면 <b>전화 앱</b>을 넣어 주세요. 전화 <b>받기</b>는 넣지 않아도 돼요.',
+       '많이 넣으면 취침시간이 소용없어져요. 꼭 필요한 것만 넣어 주세요.'] },
+
+  sos:{ h:'아이가 전화를 안 받을 때 — <b>자동으로 받게</b> 해요',
+    d:'여기 넣은 번호로 걸었는데 아이가 <b>3번</b> 안 받으면, <b>4번째</b>엔 아이 폰이 <b>저절로 받고 스피커가 켜져요.</b>',
+    f:[['📞','넣은 번호로 걸었는데<br>3번 안 받으면'],['☎️','4번째로<br>걸면'],['🔊','저절로 받고<br>스피커가 켜져요']],
+    ex:'art', exT:'이렇게 돼요',
+    how:['아래에 <b>부모님 번호</b>를 넣고 「추가하기」를 눌러요 — 숫자만, 예) 01012345678'],
+    w:['번호를 하나도 안 넣으면 이 기능은 <b>꺼져 있어요.</b>',
+       '중간에 아이가 한 번이라도 받으면 횟수는 <b>0으로</b> 돌아가요.',
+       '잠금 화면의 <b>「📞 긴급전화」</b>와는 달라요 — 그건 잠겨 있어도 아이가 <b>아무 번호나</b> 걸 수 있는 버튼이에요.'] },
+
+  security:{ h:'아이가 <b>새 앱을 깔지 못하게</b> 막아요',
+    d:'Play 스토어를 막아 두면 아이가 몰래 게임 · SNS 앱을 깔 수 없어요.',
+    f:[['🛒','Play 스토어를<br>찾아도'],['🙈','아이콘이<br>안 보여요'],['✅','새 앱을<br>못 깔아요']],
+    ex:'art', exT:'아이 폰에서는 이렇게 돼요',
+    how:['아래 <b>「Play 스토어 차단」</b> 스위치를 켜요 — 켜면 막고, 끄면 풀려요'],
+    w:['막아 두면 <b>부모님도 새 앱을 못 깔아요.</b> 필요할 때 잠깐 끄고 다시 켜 주세요.',
+       '아이 폰이 꺼져 있으면 <b>켜질 때</b> 바뀌어요.'] },
+
+  kakao:{ h:'카톡은 <b>그대로</b> 쓰고, 카톡 속 <b>인터넷·영상만</b> 막아요',
+    d:'시내모바일이 <b>직접 만든 기술</b>이에요. 친구와 대화 · 단톡방은 그대로 되고, 링크로 인터넷이나 유튜브에 빠져나가는 길만 막아요.',
+    f:[['💬','친구와 대화는<br>그대로'],['🔗','대화방 링크를<br>누르면'],['🚫','인터넷이<br>안 열려요']],
+    ex:() => '<div class="chatw"><div class="cn">친구</div><div class="cb">이거 봐 ㅋㅋ<br><u>https://youtu.be/…</u></div>' +
+             '<div class="cr">👆 눌러도 인터넷이 열리지 않아요</div></div>' +
+             '<div class="xcap">「링크로 인터넷 열기 차단」을 켜 두면 이렇게 돼요</div>',
+    exT:'예) 친구가 링크를 보내면',
+    how:['막고 싶은 항목의 스위치를 <b>켜요</b> — 켜면 막고, 끄면 풀려요',
+         '항목 아래 <b>색깔 글씨</b>가 지금 상태예요'],
+    w:['바꾸면 아이 폰에 <b>바로</b> 들어가요. 꺼져 있으면 <b>켜질 때</b> 들어가요.'] },
+
+  hist:{ h:'날짜마다 <b>어떤 앱을 몇 분</b> 썼는지 봐요',
+    d:'막대 하나가 하루예요. 막대를 누르면 그날 쓴 앱이 <b>많이 쓴 순서</b>대로 나와요.',
+    f:[['📊','막대 =<br>그날 화면 켠 시간'],['👆','막대를<br>누르면'],['📋','그날 앱별<br>사용시간']],
+    w:['<b>파란 줄</b> = 하루 한도를 깎은 앱 · <b>회색 「한도 안 깎음」</b> = 시간 무제한 · 한도 제외 앱',
+       '<b>🏠 앱 없이 켜 둔 시간</b> = 홈 화면 · 알림창을 보거나 화면을 켜 둔 채 둔 시간이에요.'] },
+
+  pin:{ h:'부모님만 아는 <b>6자리 비밀번호</b>를 바꿔요',
+    d:'이 번호만 알면 한도 · 취침 · 차단을 <b>전부 바꿀 수 있어요.</b> 아이가 알아챈 것 같으면 바로 바꿔 주세요.',
+    f:[['🔢','123456 · 생일은<br>위험해요'],['🔐','아이가 모르는<br>번호로'],['✅','바꾸면<br>바로 적용']],
+    ex:'art', exT:'이렇게 바꿔 주세요',
+    how:['새 번호 6자리를 <b>두 번</b> 넣고 저장해요'],
+    w:['이 번호는 <b>이 웹앱 · 자녀폰 앱 잠금</b>에 같이 쓰여요.'] },
+
+  // ── 「소리 변경 · 앱 숨기기」 화면은 세 가지가 한 화면이라 **작은 상자(mini)** 로 각 카드 위에 붙인다 ──
+  sound:{ h:'아이 폰이 <b>무음</b>이라 전화를 못 받을 때',
+    f:[['🔇','아이 폰이<br>무음 · 진동'],['👆','「소리로 바꾸기」<br>누르면'],['🔔','소리 모드 +<br>벨소리 최대']],
+    w:['바뀌는 동안 소리는 안 나요 — <b>조용히</b> 바뀌어요. 아이가 다시 무음으로 돌리면 한 번 더 눌러 주세요.'] },
+  hideicon:{ ico:'hideicon', h:'공신폰 앱 <b>아이콘만</b> 안 보이게 해요',
+    d:'아이 폰에는 시간을 세고 앱을 잠그는 <b>공신폰 앱</b>이 하나 있어요. 아이콘만 숨기고 <b>기능은 전부 그대로</b> 돌아가요.',
+    f:[['📱','앱 목록에<br>공신폰 앱'],['🙈','스위치를<br>켜면'],['✨','아이콘만<br>사라져요']],
+    w:['바로 안 사라지면 아이 폰을 한 번 껐다 켜 주세요. 끄면 아이콘이 <b>홈 화면 맨 뒤쪽</b>에 다시 생겨요.'] },
+  hidenotify:{ ico:'hidenotify', h:'「지금은 못 써요」 <b>안내를 안 띄워요</b>',
+    f:[['⛔','막힌 앱을<br>누르면'],['💬','보통은<br>안내가 떠요'],['🔕','켜면 안내 없이<br>그냥 막혀요']],
+    w:['「시스템 서비스 실행 중」 한 줄은 안드로이드가 강제로 남겨요.',
+       '「보호 기능이 멈춰 있습니다」 경고는 <b>숨기지 않아요</b> — 그래야 고장 난 걸 알 수 있어요.',
+       '안내가 없으면 아이가 「폰이 고장 났다」고 생각할 수 있어요. 미리 말해 두시면 좋아요.'] }
+};
+
+/** 설명 상자 하나를 그린다. o.mini = 작은 상자(한 화면에 여러 개일 때) · o.noEx = 실제 모습 빼기 */
+function xpHtml(k, o){
+  o = o || {};
+  const x = XP[k]; if (!x) return '';
+  const f = F_BY_K[k] || {};
+  let h = '';
+  if (o.mini){
+    h += '<div class="xmini"><div class="xmh">' + icoImg(x.ico || k, '') + '<div>' + x.h + '</div></div>' +
+         (x.d ? '<div class="xd">' + x.d + '</div>' : '<div style="height:10px"></div>');
+  } else {
+    h += '<div class="xbox"><div class="xi">' + icoImg(x.ico || k, '') + '</div><div class="xt">' +
+         '<div class="xh">' + x.h + '</div>' + (x.d ? '<div class="xd">' + x.d + '</div>' : '') + '</div></div>';
+  }
+  if (x.f) h += '<div class="flow3">' + x.f.map(c => '<div><b>' + c[0] + '</b>' + c[1] + '</div>').join('<i>›</i>') + '</div>';
+  if (x.ex && !o.noEx && !o.mini){
+    const exh = typeof x.ex === 'function' ? x.ex()
+              : (x.ex === 'art' && f.art ? '<div class="xex">' + gaDraw(f.art, true) + '</div>' : '');
+    if (exh) h += '<div class="sec">' + (x.exT || '아이 폰에서는 이렇게 돼요') + '</div>' + exh;
+  }
+  if (x.how && x.how.length && !o.mini){
+    h += '<div class="sec">' + (x.how.length === 1 ? '하는 법' : '하는 법 — ' + KN[x.how.length] + ' 단계') + '</div>' +
+         '<div class="xhow">' + x.how.map((s, i) => '<div><b class="n">' + (i + 1) + '</b><span>' + s + '</span></div>').join('') + '</div>';
+  }
+  if (x.w && x.w.length) h += '<div class="xwarn">' + x.w.map(s => '<div>' + s + '</div>').join('') + '</div>';
+  if (o.mini) h += '</div>';
+  return h;
+}
+// ══════════════════════════════════════════════════════════════════
 //  🎨 2026-11-10 — 3D 그림 아이콘 + 화면마다 「그림+설명 상자」
 //  대표점장 : 「기능설명 — 이게 무슨 기능이에요? 이런 거 빼고, 설명란 하나하나 자체에
 //              이해되기 쉽게 이미지+설명」 · 「디자인 허술한 건 힉스필드 팍팍 써서」
@@ -3185,9 +3459,10 @@ const F_OPEN = {
 // ══════════════════════════════════════════════════════════════════
 const ICO = ['live','loc','limit','dt','academy','force','req','push','allow','apps','uninst','pinlock',
              'ignoredt','sos','security','kakao','sound','refresh','pin','kids','logout','docs','doumi',
-             'tube','hist','add','dm','lockhero','freehero','store','parent','power','sms'];
+             'tube','hist','add','dm','lockhero','freehero','store','parent','power','sms',
+             'aisafe','inhouse','hideicon','hidenotify','newapp','today'];   // 🆕 2026-11-10 (3차) 6장
 const ICO_V = '20261110';
-const ICO_ALIAS = { newapp:'apps', hideicon:'sound', hidenotify:'sound' };
+const ICO_ALIAS = {};   // 2026-11-10 (3차) : newapp·hideicon·hidenotify 는 이제 제 그림이 있다
 function icoSrc(k){ k = ICO_ALIAS[k] || k; return ICO.includes(k) ? 'img/i-' + k + '.webp?v=' + ICO_V : ''; }
 function icoImg(k, cls){
   const s = icoSrc(k);
@@ -3274,6 +3549,8 @@ function guideStrip(title){
   if (GUIDE_SKIP.includes(title)) return '';
   const list = F_BY_SUB[title];
   if (!list || !list.length) return '';
+  // 🎨 2026-11-10 (3차) : XP 에 쓴 설명이 있으면 「문자로 받기」 틀로 그린다
+  if (XP[list[0].k]) return xpHtml(list[0].k);
   const f = list[0];
   const what = (f.what || []).slice(0, 1).join(' ');
   const steps = list.length > 1
@@ -3287,7 +3564,7 @@ function guideStrip(title){
     steps + when + '</div></div>';
 }
 const GUIDE_SKIP = ['기능 설명', '✨ AI 매니저', '어디 있나요', '장소 관리', '자주 가는 장소 (세이프존)', '장소 등록',
-                    '자녀 실시간 제한 상황', '허용 사이트 관리'];
+                    '자녀 실시간 제한 상황', '허용 사이트 관리', '소리 변경 · 앱 숨기기'];
 
 // ══════════════════════════════════════════════════════════════════
 //  🆕 앱 아이콘 + 「처음 쓴 날」 (2026-11-03 신설)
@@ -3646,8 +3923,6 @@ function openForceLock(){
   const old = ver > 0 && ver < FORCE_LOCK_MIN_VER;
   const btn = (m, label) => `<button class="btn" style="flex:1;min-width:30%" onclick="applyForceLock(${m})"${old?' disabled':''}>${label}</button>`;
   openSub('폰 즉시 차단', `
-    <div class="note">지금 바로 <b>자녀폰을 잠급니다.</b> 긴급전화와 알람은 그대로 쓸 수 있어요.<br>
-      <b>정해둔 하루 한도나 취침시간은 그대로 둡니다</b> — 이것만 따로 걸고 푸는 거예요.</div>
     ${old ? `<div class="note warn">⛔ 이 자녀폰은 앱이 <b>v${ver}</b> 이라 아직 쓸 수 없어요.
       <b>v${FORCE_LOCK_MIN_VER} 이상</b>으로 업데이트되면 바로 됩니다. (폰을 켜 두시면 저절로 올라가요)</div>` : ''}
     ${st.on ? `<div class="note" style="border-color:#FDA29B;background:#FFFBFA">
@@ -3722,31 +3997,13 @@ function openLimit(){
       <div class="dv ${v<0?'off':''}">${minLabel(v)}</div><div class="chev">›</div></div>`;
   }
   openSub('하루 사용시간 한도', `
-    <div style="margin:0 0 12px;padding:14px 15px;border:1px solid #DCE4EE;border-radius:14px;background:#F7F9FC">
-      <div style="font-weight:800;font-size:15.5px;color:#1B3A8F">📏 시간은 이렇게 세요</div>
-      <div style="font-size:13.5px;color:#475467;margin-top:9px;line-height:1.9">
-        · <b>화면이 켜져 있으면 뭘 하든 세요.</b> 홈 화면·전화·문자·설정까지요.<br>
-        · 화면을 끄면 <b>멈춰요.</b><br>
-        &nbsp;&nbsp;<span style="color:#B54708">단, <b>음악·영상 소리가 계속 나면</b> 그 앱은 계속 세요.</span><br>
-        · 빼고 싶은 앱은 <b>「앱 관리 → ♾️ 시간 무제한」</b><br>
-        · 매일 <b>자정에 0분</b>으로 다시 시작해요.
-      </div>
-      <div style="margin-top:10px;padding:10px 12px;background:#fff;border:1px solid #E3E8EF;border-radius:10px;font-size:13px;color:#475467;line-height:1.7">
-        한도를 다 써도 <b>통화 중이면 전화가 끊기지 않아요.</b> 끊고 나오실 때 잠겨요.
-      </div>
-      <div style="margin-top:8px;font-size:12.5px;color:#98A2B3;line-height:1.7">
-        숫자는 <b>5분마다</b> 올라와요. 조금 늦게 보여도 고장이 아니에요.
-      </div>
-    </div>
-    <div class="note">요일을 눌러 하루에 쓸 수 있는 시간을 정해요.<br><b>무제한</b> = 제한 없음, <b>사용 불가</b> = 그날은 쓸 수 없어요</div>
-    <div style="margin:14px 0;padding:14px 15px;border:1px solid #FCD9A8;border-left:5px solid #F59E0B;border-radius:14px;background:#FFFBF2">
-      <div style="font-weight:800;font-size:15.5px;color:#92400E">🔔 전화·문자도 시간이 깎여요</div>
-      <div style="font-size:13.5px;color:#7C4A11;margin-top:8px;line-height:1.7">
-        통화를 오래 하는 날엔 그것만으로 한도가 찰 수 있어요.<br>
-        계속 쓰게 할 앱은 <b>「앱 관리」에서 ♾️ 시간 무제한</b>으로 켜 주세요.
-      </div>
-      <button class="btn btn-g" style="margin-top:10px" onclick="openApps()">앱 관리로 가서 고르기</button>
-    </div>
+    <details class="xmore"><summary>🔎 시간은 정확히 이렇게 세요</summary><div>
+      · <b>화면이 켜져 있으면 뭘 하든</b> 세요. 홈 화면·전화·문자·설정까지요.<br>
+      · 화면을 끄면 <b>멈춰요.</b> 단, <b>음악·영상 소리가 계속 나면</b> 그 앱은 계속 세요.<br>
+      · 한도를 다 써도 <b>통화 중이면 전화가 끊기지 않아요.</b> 끊고 나오실 때 잠겨요.<br>
+      · 숫자는 <b>5분마다</b> 올라와요. 조금 늦게 보여도 고장이 아니에요.<br>
+      · 요일 칸의 <b>무제한</b> = 제한 없음 · <b>사용 불가</b> = 그날은 쓸 수 없어요.
+    </div></details>
     <div class="card"><div class="row"><div class="grow"><div class="ttl">하루 한도 사용</div>
       <div class="val">꺼두면 요일 설정과 상관없이 제한하지 않습니다</div></div>
       <label class="sw"><input type="checkbox" ${p.daily_limit_enabled==='true'?'checked':''}
@@ -3938,8 +4195,6 @@ function openAcademy(){
   const un=_acUnlockLeft();
 
   openSub('학원 시간', `
-    <div class="note">학원·독서실 시간에 쓰는 <b>두 번째 잠금</b>이에요. 취침시간과 똑같이 동작해요.<br>
-      허용 앱·강력 모드·전화문자 끄기는 <b>취침시간 설정을 그대로 따라가요.</b></div>
     ${old ? `<div class="card"><div class="note" style="margin:0;color:#B42318">
       자녀폰 앱이 <b>v${ver}</b> 이라 아직 학원 시간이 동작하지 않아요.
       <b>v${ACADEMY_MIN_VER} 이상</b>으로 업데이트되면 바로 됩니다. (폰을 켜 두시면 저절로 올라가요)</div></div>` : ''}
@@ -4097,15 +4352,6 @@ function openDt(){
       <div class="dv ${has?'':'off'}">${dtLabel(raw)}</div><div class="chev">›</div></div>`;
   }
   openSub('다운타임 (취침시간)', `
-    <div class="note">요일을 눌러 잠글 시간을 정해요.<br>예) 22:00 ~ 07:00 처럼 <b>자정을 넘겨도</b> 돼요.</div>
-    <div style="margin:14px 0;padding:14px 15px;border:1px solid #FCD9A8;border-left:5px solid #F59E0B;border-radius:14px;background:#FFFBF2">
-      <div style="font-weight:800;font-size:15.5px;color:#92400E">🔔 취침시간엔 앱이 거의 다 잠겨요</div>
-      <div style="font-size:13.5px;color:#7C4A11;margin-top:8px;line-height:1.7">
-        그때도 쓰게 할 앱은 <b>「다운타임 허용 앱」</b>에서 골라 주세요.<br>
-        <b>전화·문자는 그대로 돼요</b> — 막으시려면 아래 「전화·문자 끄기」를 켜 주세요.
-      </div>
-      <button class="btn btn-g" style="margin-top:10px" onclick="openIgnoreDt()">다운타임 허용 앱 고르기</button>
-    </div>
     <div class="card"><div class="row"><div class="grow"><div class="ttl">다운타임 사용</div>
       <div class="val">꺼두면 요일 설정과 상관없이 잠기지 않습니다</div></div>
       <label class="sw"><input type="checkbox" ${p.dt_enabled==='true'?'checked':''}
@@ -4179,9 +4425,6 @@ function openReq(){
       <button class="x" onclick="rejectReq('${esc(r.domain)}')">거절</button></div>`).join('')
     : `<div class="empty">새로운 요청이 없습니다</div>`;
   openSub('자녀의 접속 요청', `
-    <div class="note">자녀가 <b>공부에 필요하다며 요청한 사이트</b>입니다.<br>허용하면 자녀폰에서 바로 열립니다.</div>
-    <div class="note warn"><b>크롬(안전검색)을 쓰고 싶으시면 매장에 문의해 주세요.</b><br>
-      크롬을 켜고 끄는 것은 <b>매장 전용 기능</b>이라 여기서는 바꿀 수 없습니다.</div>
     <div class="card">${body}</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
@@ -4455,7 +4698,6 @@ function openApps(){
         + `<div class="sec">설정 안 된 앱 (${unset.length}개)</div>`
         + (unset.length ? `<div class="card">${unset.map(row).join('')}</div>` : `<div class="card"><div class="empty">없습니다</div></div>`);
   openSub('앱 차단 · 앱별 시간', `
-    <div class="note">자녀폰에 설치된 앱입니다. <b>설정</b>을 눌러 앱마다 다르게 정할 수 있습니다.<br>설정을 걸어둔 앱이 <b>맨 위</b>에 모여 있습니다.</div>
     <div class="card"><input type="text" id="appQ" placeholder="앱 이름 검색" value="${esc(appQuery)}"
       oninput="appQuery=this.value; clearTimeout(window._aq); window._aq=setTimeout(openApps,250)"></div>
     ${chips}
@@ -4614,7 +4856,7 @@ function openAppPicker(title, polKey, desc, extra){
       + (off.length? `<div class="card">${off.map(row).join('')}</div>` : `<div class="card"><div class="empty">없습니다</div></div>`)
     : `<div class="card"><div class="empty">앱 목록이 없습니다</div></div>`;
   openSub(title, `
-    <div class="note">${desc}</div>
+    ${desc ? '<div class="note">' + desc + '</div>' : ''}
     ${extra||''}
     ${body}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
@@ -4641,7 +4883,7 @@ async function toggleAppIn(polKey, pkg){
 function openUninstall(){
   const on=ST.pol.uninstall_blocked==='true';
   openAppPicker('앱 삭제 방지','uninstall_blocked_apps',
-    '선택한 앱을 자녀가 <b>지우지 못하게</b> 합니다.',
+    '',   // 설명은 맨 위 그림 상자(XP.uninst)가 한다 — 2026-11-10 (3차)
     `<div class="card"><div class="row"><div class="grow"><div class="ttl">앱 삭제 방지 사용</div>
       <div class="val">꺼두면 아래 목록과 상관없이 삭제할 수 있습니다</div></div>
       <label class="sw"><input type="checkbox" ${on?'checked':''}
@@ -4649,13 +4891,11 @@ function openUninstall(){
 }
 function openPinLock(){
   openAppPicker('앱 PIN 잠금','pin_locked_apps',
-    '선택한 앱은 열 때마다 <b>부모님 비밀번호</b>를 넣어야 열립니다.<br>한 번 풀면 5분 동안은 다시 묻지 않습니다.');
+    '');   // 설명은 XP.pinlock
 }
 function openIgnoreDt(){
   openAppPicker('다운타임 허용 앱','ignore_dt_apps',
-    '다운타임(취침시간)에도 <b>이 앱만은 쓸 수 있게</b> 합니다.<br>예) 알람 앱, 학습 앱',
-    `<div class="how"><b class="t">🌙 취침시간 중에 추가해도 됩니다</b>
-      <div>자녀폰 취침 화면에 <b>15초 안에</b> 나타납니다.</div></div>`);
+    '', '');   // 설명은 XP.ignoredt (15초 안내 포함)
 }
 async function toggleFlag(key, val, after){
   loading(true);
@@ -4736,19 +4976,6 @@ function openSos(){
       <button class="x" onclick="delSos('${esc(n)}')">삭제</button></div>`).join('')
     : `<div class="empty">등록된 번호가 없습니다</div>`;
   openSub('긴급 연락처 (SOS)', `
-    <div class="note"><b>부모님이 급할 때, 자녀폰이 전화를 자동으로 받게 하는 기능</b>입니다.<br>
-      번호를 하나도 넣지 않으면 이 기능은 <b>꺼진 상태</b>입니다.</div>
-    <div class="how"><b class="t">이렇게 작동합니다</b><div>
-      ① 아래에 등록한 번호로 자녀에게 <b>전화를 겁니다</b><br>
-      ② 자녀가 안 받으면 <b>부재중 1번</b>으로 셉니다<br>
-      ③ <b>3번</b> 안 받은 뒤 <b>4번째로 걸면</b> —<br>
-      　 자녀폰이 <b>자동으로 받고 스피커폰이 켜집니다</b><br>
-      ④ 중간에 자녀가 받으면 <b>횟수는 0으로 돌아갑니다</b>
-    </div></div>
-    <div class="note warn"><b>잠금화면의 「📞 긴급전화」와는 다릅니다.</b><br>
-      그건 사용시간을 다 썼거나 취침시간이어도 자녀가 <b>아무 번호나</b> 걸 수 있는 버튼입니다.
-      여기 등록과 상관없이 항상 됩니다.</div>
-    <div class="note">숫자만 넣어주세요. 예) 01012345678</div>
     <div class="card"><div class="field"><label>번호 추가</label>
       <input id="newSos" type="tel" inputmode="numeric" placeholder="01012345678"></div>
       <button class="btn btn-p" onclick="addSos()">추가하기</button></div>
@@ -4793,15 +5020,9 @@ function openSecurity(){
         onchange="toggleFlag('${key}',this.checked,openSecurity)"><i></i></label></div></div>`;
   };
   openSub('보안 설정', `
-    <div class="note">스위치를 <b>켜면 막고</b>, <b>끄면 풀립니다.</b><br>
-      각 항목 아래 <b>색깔 글씨가 지금 상태</b>입니다.</div>
     ${sw('play_store_blocked','Play 스토어 차단','자녀가 새 앱을 설치하지 못합니다',
          '지금 Play스토어가 차단중입니다 — 새 앱을 못 깝니다',
          '지금은 막고 있지 않습니다 — 자녀가 앱을 깔 수 있습니다')}
-    <div class="note hide">
-      </div>
-    <div class="note warn">여기서 바꾸면 자녀폰에 <b>바로 반영</b>됩니다.
-      자녀폰이 꺼져 있으면 <b>켜질 때</b> 반영됩니다.</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 
@@ -4856,12 +5077,8 @@ function openKakao(){
         업데이트는 자녀폰이 인터넷에 연결되면 <b>저절로</b> 진행돼요. 잠시 뒤 다시 확인해 주세요.
         ${ver > 0 ? `<br><span style="color:#9ca3af;font-size:12px">(지금 자녀폰 앱 ${ver} · 필요한 버전 54)</span>` : ''}</div>`;
   openSub('카톡 차단', `
-    <div class="note">스위치를 <b>켜면 막고</b>, <b>끄면 풀려요.</b><br>
-      항목 아래 <b>색깔 글씨가 지금 상태</b>예요.</div>
     ${basic}
     ${adv}
-    <div class="note warn">여기서 바꾸면 자녀폰에 <b>바로 반영</b>돼요.
-      자녀폰이 꺼져 있으면 <b>켜질 때</b> 반영돼요.</div>
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 function openStealth(){
@@ -4889,29 +5106,23 @@ function openStealth(){
         onchange="toggleFlag('${key}',this.checked,openStealth)"><i></i></label></div></div>`;
   };
 
+  // 🎨 2026-11-10 (3차) : 한 화면에 세 가지라 **각 카드 바로 위에** 작은 설명 상자(xpHtml mini)를 붙인다
   openSub('소리 변경 · 앱 숨기기', `
-    <div class="card">
-      <div class="row"><div class="grow">
-        <div class="ttl">🔔 무음·진동 → 소리로 변경</div>
-        <div class="val">자녀폰이 무음·진동으로 되어 있으면 <b>소리 모드로 바꾸고</b> 벨소리 볼륨도 최대로 올립니다.<br><b>소리는 나지 않고 조용히 바뀝니다.</b></div>
-      </div></div>
-      <button class="btn" onclick="soundOn()">소리로 바꾸기</button>
-    </div>
-    <div class="note">자녀폰이 꺼져 있거나 인터넷이 안 되면 <b>켜질 때</b> 바뀝니다. 자녀가 다시 무음으로 돌리면 한 번 더 눌러주세요.</div>
-
-    ${sw('app_icon_hidden','🙈 자녀앱 아이콘 숨기기',
-         '자녀 눈에만 안 보이게 합니다. 차단·시간계산 등 모든 기능은 그대로 작동합니다.',
-         '지금 숨김중입니다 — 자녀폰 앱 목록에 안 보입니다',
-         '지금은 보입니다 — 자녀폰 앱 목록에 아이콘이 있습니다')}
-    ${sw('app_notify_hidden','🔕 자녀앱 알림 숨기기',
-         '차단 안내·취침 시작 같은 자녀에게 보이는 안내를 띄우지 않습니다.',
-         '지금 숨김중입니다 — 자녀에게 안내가 안 보입니다',
-         '지금은 보입니다 — 차단될 때 자녀에게 안내가 뜹니다')}
-
-    <div class="note warn">⚠️ <b>아이콘을 숨겨도 앱은 그대로 돌아갑니다.</b> 다시 보이게 하려면 위 스위치를 끄세요.<br>
-      · 홈 화면이 아이콘을 잠시 기억하고 있어 <b>바로 안 사라질 수 있습니다</b>(자녀폰을 껐다 켜면 반영).<br>
-      · 알림을 숨겨도 <b>「시스템 서비스 실행 중」 한 줄은 남습니다.</b> 안드로이드가 강제하는 표시라 없앨 방법이 없습니다.<br>
-      · <b>「보호 기능이 멈춰 있습니다」 경고는 숨기지 않습니다.</b> 이걸 가리면 자녀폰이 무방비인 걸 아무도 모르게 됩니다.</div>
+    <div class="xbox"><div class="xi">${icoImg('sound','')}</div><div class="xt">
+      <div class="xh">이 화면에서는 <b>3가지</b>를 할 수 있어요</div>
+      <div class="xd">① 무음인 아이 폰을 소리로 · ② 공신폰 앱 아이콘 숨기기 · ③ 차단 안내 숨기기</div></div></div>
+    ${xpHtml('sound', { mini:true })}
+    <div class="card"><button class="btn btn-p" style="margin:0" onclick="soundOn()">🔔 소리로 바꾸기</button></div>
+    ${xpHtml('hideicon', { mini:true })}
+    ${sw('app_icon_hidden','🙈 공신폰 앱 아이콘 숨기기',
+         '켜면 아이 폰 앱 목록에서 아이콘만 안 보여요',
+         '지금 숨김 중이에요 — 아이 폰 앱 목록에 안 보여요',
+         '지금은 보여요 — 아이 폰 앱 목록에 아이콘이 있어요')}
+    ${xpHtml('hidenotify', { mini:true })}
+    ${sw('app_notify_hidden','🔕 차단 안내 숨기기',
+         '켜면 「지금은 못 써요」 · 취침 시작 같은 안내를 안 띄워요',
+         '지금 숨김 중이에요 — 아이에게 안내가 안 보여요',
+         '지금은 보여요 — 막힐 때 아이에게 안내가 떠요')}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 
@@ -4936,7 +5147,6 @@ async function soundOn(){
 // ══════════ 비밀번호 변경 ══════════
 function openPinChange(){
   openSub('비밀번호 변경', `
-    <div class="note">이 비밀번호는 <b>부모님 확인용</b>입니다.<br>이 웹앱, 부모앱, 자녀폰 앱 잠금에 모두 쓰입니다.</div>
     <div class="card">
       <div class="field"><label>새 비밀번호 (숫자 6자리)</label>
         <input id="pw1" type="password" inputmode="numeric" maxlength="6" placeholder="● ● ● ● ● ●"></div>
@@ -5641,6 +5851,35 @@ async function aiUndoRun(){
 
 function aiCancel(){ AI_PLAN = null; AI_RESULT = null; paintDoumi(); }
 
+// ✨ 2026-11-10 (3차) — 「잘못될까 봐 무서워서 못 쓰겠다」를 없앤다 (대표점장 : 「손님 입장에서 AI매니저 들어가서 쓰려고 하면
+//   기능 잘못될까 봐 두려움. 설명란이 제대로 안 돼 있어서 그런 듯」)
+//   ▸ 약속 네 가지는 **코드가 실제로 그렇게 동작하는 것만** 적었다 :
+//     ① 「네」 전엔 안 바뀐다 = aiOnInput 은 계획만 세운다(AI_PLAN) · 실행은 aiApply 하나뿐
+//     ② 되돌리기 = AI_UNDO(바꾸기 전 값) → aiUndoRun
+//     ③ 저장 뒤 되읽어 확인 = aiApply 가 policies 를 다시 읽어 비교한다
+//     ④ 모르면 매장 = DOUMI_KAKAO
+//   🔴 위 동작을 바꾸면 이 문구도 같이 고쳐라 — 약속이 거짓이 되면 이 기능 전체를 못 믿게 된다.
+function aiIntroHtml(){
+  return '<div class="flow3"><div><b>💬</b>말로<br>부탁하면</div><i>›</i>' +
+    '<div><b>🤔</b>「이렇게 바꿀까요?」<br>먼저 물어봐요</div><i>›</i>' +
+    '<div><b>👍</b>「네」를 눌러야<br>바뀌어요</div></div>' +
+    '<div class="aiprom">' +
+      '<div class="aiph">' + icoImg('aisafe', '') + '<b>안심하고 쓰세요</b></div>' +
+      '<div><i>🙆</i><span><b>「네」를 누르기 전엔 아무것도 안 바뀌어요.</b> 그냥 물어보기만 해도 괜찮아요.</span></div>' +
+      '<div><i>↩️</i><span>바꾼 뒤에도 <b>「되돌리기」</b> 한 번이면 원래대로 돌아가요.</span></div>' +
+      '<div><i>✅</i><span>바꾼 뒤엔 <b>제대로 저장됐는지 다시 확인</b>하고 알려 드려요.</span></div>' +
+      '<div><i>🏪</i><span>모르는 건 지어내지 않고 <b>매장으로</b> 이어 드려요.</span></div>' +
+    '</div>';
+}
+function aiExampleHtml(){
+  return '<div class="sec">이렇게 대화해요 (예시)</div><div class="aich">' +
+    '<div class="me">유튜브 하루 30분만 줘</div>' +
+    '<div class="ai"><b>이렇게 바꿀까요?</b><br>유튜브를 매일 30분까지 쓸 수 있게 할게요.<br>' +
+      '<span class="k">네, 바꿔 주세요</span><span class="k g">아니요</span></div>' +
+    '<div class="ai">⭕ <b>말씀하신 설정이 잘 되었습니다</b><br><span class="k g">되돌리기</span></div>' +
+    '</div><div class="xcap">그림이에요 — 눌러도 아무 일도 안 일어나요 🙂</div>';
+}
+
 /** 확인 카드 · 결과 카드 */
 function aiBoxHtml(){
   let h = '';
@@ -5772,6 +6011,7 @@ function paintDoumi(){
       <div class="aihsub">자녀폰에 <b>지금</b> 걸려 있는 설정을 보고 답해 드리고,
         말씀하시면 <b>설정까지 대신 바꿔</b> 드려요.</div>
     </div>
+    ${aiIntroHtml()}
     <div class="card"><input type="text" id="doumiQ"
       placeholder="무엇이든 말씀해 보세요 (예: 유튜브 하루 30분만 줘)"
       value="${esc(DOUMI_Q)}" oninput="aiOnInput(this.value)"></div>
@@ -5779,9 +6019,8 @@ function paintDoumi(){
     ${appBox}
     <div class="sec">이렇게 말해 보세요</div>
     ${aiSuggestHtml()}
-    <div class="note warn" style="margin-top:13px">🧪 <b>아직 시험 중인 기능이에요.</b><br>
-      설정을 바꾸기 전에 <b>항상 먼저 확인</b>을 받고, 바꾼 뒤에는 <b>진짜 들어갔는지 확인</b>해서
-      알려드려요. 이상하면 <b>맨 아래 카카오톡</b>으로 알려 주세요.</div>
+    ${DOUMI_Q.trim() ? '' : aiExampleHtml()}
+    <div class="note" style="margin-top:4px">🧪 <b>아직 시험 중인 기능이에요.</b> 답이 이상하면 <b>맨 아래 카카오톡</b>으로 알려 주세요.</div>
     <div class="sec">이런 걸 많이 물어보세요</div>
     ${faq}
     ${DOUMI_KAKAO}
@@ -5852,6 +6091,28 @@ function dayBandHtml(){
 /** 「그 밖의 잠금」 줄마다 붙는 그림 (이름 → 그림 키) */
 const LIVE_RICO = { '크롬(안전검색)':'allow', 'Play 스토어 차단':'security', '카톡 오픈채팅 차단':'kakao',
   '카톡 링크 열기 차단':'kakao', '카톡 세부차단':'kakao', '앱 삭제 방지':'uninst', '앱 PIN 잠금':'pinlock' };
+// 🚦 2026-11-10 (3차) — 「아이 폰은 이럴 때만 잠겨요」 4칸 (대표점장 : 「실시간 제한 상황 더 잘 이해되게」)
+//   ▸ 잠기는 이유는 **딱 네 가지**다 — 하루 시간 · 취침 · 학원 · 즉시 차단. 넷을 늘 같은 자리에 그리고 **지금 걸린 것에 불**을 켠다.
+//     「왜 잠겼어요?」를 글로 읽지 않고 **어느 칸이 빨간지**로 본다.
+//   🔴 판정 순서는 liveSummary 와 **똑같이** 둔다(즉시차단 → 취침 → 학원 → 하루시간) — 다르면 위 큰 카드와 말이 갈린다(3-25b).
+function why4Html(){
+  const p = ST.pol || {};
+  const fl = forceLockLeft().on, dt = !!liveDowntime(), ac = !!liveAcademy();
+  const lim = liveTodayLimit();
+  const limOut = lim === 0 || (lim > 0 && lim - liveLimitBaseMin() <= 0);
+  const act = fl ? 'force' : dt ? 'dt' : ac ? 'ac' : limOut ? 'lim' : '';
+  const it = [
+    ['lim',   '⏱', '하루 시간을<br>다 쓰면', p.daily_limit_enabled === 'true'],
+    ['dt',    '🌙', '취침<br>시간',          p.dt_enabled === 'true'],
+    ['ac',    '📚', '학원<br>시간',          p.dt2_enabled === 'true'],
+    ['force', '🔒', '부모님이<br>즉시 차단',  null]
+  ];
+  return '<div class="sec">아이 폰은 이럴 때만 잠겨요</div><div class="why4">' +
+    it.map(([k, e, t, on]) => {
+      const lbl = act === k ? '지금 이것' : (on === null ? '누를 때만' : (on ? '켜 둠' : '안 씀'));
+      return '<div class="' + (act === k ? 'act' : (on === false ? 'off' : '')) + '"><b>' + e + '</b>' + t + '<br><span>' + lbl + '</span></div>';
+    }).join('') + '</div>';
+}
 function paintLive(){
   const p=ST.pol, appNm = k => (ST.apps.find(a=>a.app_package===k)||{}).app_name || k;
   const sum = liveSummary(), dt = liveDowntime(), nx = liveNextDowntime();
@@ -5905,24 +6166,22 @@ function paintLive(){
   //   그래야 「최대 140분」이 거짓말이 안 된다.
   const appLimitSum = timed.reduce((t,a)=>t+a.min, 0);
   const maxToday = (lim > 0) ? lim + appLimitSum : 0;
+  //   🎨 2026-11-10 (3차) : 같은 내용을 **식 모양**으로 — [하루 한도] + [앱별] = [오늘 최대]. 글 세 줄보다 한눈에 읽힌다.
   const limitSumLine = (lim > 0 && (appLimitSum > 0 || free.length))
-    ? '<div style="margin-top:11px;padding-top:11px;border-top:1px dashed #E4E7EC;font-size:12.5px;color:#667085;line-height:1.8;font-weight:600">'
-      + '하루 한도 <b>' + minLabel(lim) + '</b>'
+    ? '<div class="eqw"><div class="eqt">⚠️ 하루 한도를 다 써도 열리는 앱이 있어요</div>'
       + (appLimitSum > 0
-          ? '<br>＋ 앱별 한도 <b>' + timed.length + '개 ' + fmtMin(appLimitSum) + '</b>'
-            + ' <span style="color:#98A2B3">(' + timed.slice(0,3).map(t=>esc(appNm(t.pkg))+' '+t.min+'분').join(' · ')
-            + (timed.length>3 ? ' …' : '') + ')</span>'
-          : '')
+          ? '<div class="eqr"><span>하루 한도<br><b>' + minLabel(lim) + '</b></span><i>+</i>'
+            + '<span>앱별 ' + timed.length + '개<br><b>' + fmtMin(appLimitSum) + '</b></span><i>=</i>'
+            + '<span class="tot">오늘 최대<br><b>' + fmtMin(maxToday) + '</b></span></div>'
+            + '<div class="eqs">앱별 시간 : ' + timed.slice(0,3).map(t=>esc(appNm(t.pkg))+' '+t.min+'분').join(' · ')
+            + (timed.length>3 ? ' …' : '') + '</div>'
+          : '<div class="eqs"><b>무제한 앱만 쓰면</b> 하루 한도에 걸리지 않아요.</div>')
       + (free.length
-          ? '<br>＋ <b>시간 무제한 ' + free.length + '개</b>는 한도를 <b>안 깎아요</b>'
-            + ' <span style="color:#98A2B3">(' + free.slice(0,3).map(x=>esc(appNm(x))).join(' · ')
-            + (free.length>3 ? ' …' : '') + ')</span>'
+          ? '<div class="eqs">♾️ <b>시간 무제한 ' + free.length + '개</b>는 한도를 안 깎아요'
+            + (appLimitSum > 0 ? ' — 위 「오늘 최대」에도 안 들어가요' : '')
+            + ' (' + free.slice(0,3).map(x=>esc(appNm(x))).join(' · ') + (free.length>3 ? ' …' : '') + ')</div>'
           : '')
-      + (appLimitSum > 0
-          ? '<br><b style="color:#B54708">⚠️ 그래서 오늘은 최대 ' + fmtMin(maxToday) + '까지 쓸 수 있어요'
-            + (free.length ? ' (무제한 앱은 여기에도 안 들어가요)' : '') + '</b>'
-          : '<br><b style="color:#B54708">⚠️ 무제한 앱만 쓰면 하루 한도에 걸리지 않아요</b>')
-      + '<br><span style="color:#98A2B3">더 조이시려면 <b>앱별 한도를 내리는 쪽</b>이 맞아요. 매장으로 말씀해 주세요.</span>'
+      + '<div class="eqs" style="color:#98A2B3">더 조이시려면 <a class="xl" style="color:#B54708;font-weight:800;cursor:pointer" onclick="openApps()">앱 차단 · 앱별 시간 ›</a> 에서 그 앱 시간을 줄여 주세요.</div>'
       + '</div>'
     : '';
 
@@ -6066,7 +6325,7 @@ function paintLive(){
               : '자녀폰이 <b>지금 꺼져 있거나 인터넷이 끊겨 있어요.</b><br>다시 켜지면 저절로 맞춰져요.')
     + '<br>이 화면은 <b>30초마다</b> 저절로 새로고침돼요.</div>';
 
-  openSub('자녀 실시간 제한 상황', hero + dayBandHtml() + bar
+  openSub('자녀 실시간 제한 상황', hero + why4Html() + dayBandHtml() + bar
     + '<div class="sec">취침시간 (다운타임)</div>' + dtBox
     + appBox
     + '<div class="sec">인터넷 · 그 밖의 잠금</div><div class="card" style="padding-top:2px">'+rows+'</div>'
@@ -6420,7 +6679,6 @@ function paintHistory(){
     </div>` : ``;
 
   openSub('최근 7일 사용기록', `
-    <div class="note">막대는 <b>화면이 켜져 있던 시간</b>이에요 — 앱 없이 켜 둔 시간·전화·설정까지 전부 들어가요.<br>막대를 누르면 그날 쓴 앱이 보여요.</div>
     <div class="card"><div style="display:flex;gap:3px;align-items:flex-end;height:180px;padding:6px 0">${bars}</div></div>
     <div class="sec">${selTxt} · 앱별 사용시간</div>
     <div class="card">
