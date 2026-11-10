@@ -781,7 +781,12 @@
   .dayband{position:relative;height:34px;border-radius:10px;background:#E9F7EF;overflow:hidden;margin-top:6px}
   .dayband i{position:absolute;top:0;bottom:0;display:block}
   .dayband i.dt{background:#C9B8F5} .dayband i.ac{background:#FFD3A6}
-  .dayband .nowl{position:absolute;top:-2px;bottom:-2px;width:3px;background:#101828;border-radius:2px}
+  .dayband .nowl{position:absolute;top:-2px;bottom:-2px;width:4px;margin-left:-2px;background:#101828;border-radius:2px;box-shadow:0 0 0 2px #fff}
+  /* ⏰ 6차 : 「지금 HH:MM」 말풍선 — 띠 위로 꺼냈다 */
+  .daywrap{position:relative;padding-top:36px}
+  .nowt2{position:absolute;top:0;transform:translateX(-50%);background:#101828;color:#fff;font-size:13.5px;font-weight:900;
+         border-radius:10px;padding:5px 11px;white-space:nowrap;box-shadow:0 3px 8px rgba(16,24,40,.25)}
+  .nowt2:after{content:'';position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-top-color:#101828;border-bottom:0}
   .dayband .nowt{position:absolute;top:8px;transform:translateX(-50%);font-size:11px;font-weight:900;color:#fff;
     background:#101828;border-radius:6px;padding:1px 5px}
   .dayax{display:flex;justify-content:space-between;font-size:11px;color:#98A2B3;font-weight:700;margin-top:4px}
@@ -981,6 +986,59 @@
   .ppst.off .pp1 b{color:#067647}
   .ppst .pp2{font-size:12.8px;color:#475467;margin-top:3px}
   .ppst .pp3{font-size:12.4px;color:#1E40AF;margin-top:6px;font-weight:700}
+  /* 📱 6차 — 「아이 폰에서는 이렇게 돼요」 진짜 폰 화면 그림 (mkPhone · mkPair) */
+  .mk2{display:flex;align-items:flex-start;justify-content:center;gap:6px;margin:2px 0 6px}
+  .mkc{flex:1;min-width:0;max-width:160px;text-align:center}
+  .mkarr{align-self:center;flex:none;font-size:22px;color:#98A2B3;font-weight:900;margin-top:-46px}
+  .pm{position:relative;background:#1D2939;border-radius:22px;padding:5px;box-shadow:0 8px 18px rgba(16,24,40,.18)}
+  .pm .scr{position:relative;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#EAF2FF,#F8FAFF);height:262px;padding:22px 8px 8px}
+  .pm .scr.night{background:linear-gradient(180deg,#1E1B4B,#3730A3)}
+  .pm .sb{position:absolute;top:5px;left:11px;right:11px;display:flex;justify-content:space-between;font-size:9px;font-weight:800;color:#344054}
+  .pm .night .sb{color:#E0E7FF}
+  .pm .wid{background:#fff;border-radius:10px;padding:6px 7px;font-size:9.4px;font-weight:700;color:#344054;text-align:left;margin-bottom:9px;
+           box-shadow:0 2px 6px rgba(16,24,40,.08);line-height:1.3}
+  .pm .pbar{height:6px;border-radius:3px;background:#EAECF0;margin-top:4px;overflow:hidden}
+  .pm .pbar i{display:block;height:100%;background:#4F7CFF;border-radius:3px}
+  .pm .pbar i.full{background:#F04438}
+  .pm .nh{text-align:center;color:#fff;font-size:11px;font-weight:900;margin:2px 0 10px;line-height:1.35}
+  .pm .nh span{font-size:9px;font-weight:700;opacity:.8}
+  .pm .ag{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 2px}
+  .pm .ap{position:relative;font-size:8.6px;font-weight:700;color:#344054;line-height:1.2;white-space:nowrap}
+  .pm .night .ap{color:#E0E7FF}
+  .pm .ap b{display:flex;align-items:center;justify-content:center;width:33px;height:33px;margin:0 auto 3px;border-radius:10px;font-size:17px;
+            background:var(--c);box-shadow:0 2px 5px rgba(16,24,40,.14)}
+  .pm .ap.lock b{filter:grayscale(1);opacity:.4}
+  .pm .ap.lock:after{content:'🔒';position:absolute;top:19px;left:50%;margin-left:6px;font-size:11px}
+  .pm .ap.open b{box-shadow:0 0 0 2.5px #4ADE80,0 0 12px rgba(74,222,128,.7)}
+  .pm .ap.pick b{transform:scale(1.12);box-shadow:0 0 0 2.5px #4F7CFF,0 4px 10px rgba(79,124,255,.4)}
+  .pm .ap.shield b{box-shadow:0 0 0 2.5px #12B76A}
+  .pm .ap.shield:after{content:'🛡️';position:absolute;top:-4px;left:50%;margin-left:8px;font-size:12px}
+  .pm .ap .tg{display:block;width:fit-content;margin:2px auto 0;font-size:7.6px;font-weight:900;color:#fff;background:#12B76A;border-radius:6px;padding:1px 4px}
+  .pm .ap.lock .tg{background:#475467}
+  .pm .lpm{position:absolute;left:10px;top:66px;width:84px;background:#fff;border-radius:10px;box-shadow:0 6px 16px rgba(16,24,40,.25);
+           font-size:9.4px;font-weight:800;color:#344054;text-align:left;overflow:hidden;z-index:2}
+  .pm .lpm div{padding:6px 8px}
+  .pm .lpm div + div{border-top:1px solid #F2F4F7}
+  .pm .lpm .del{color:#D92D20}
+  .pm .lpm .del.dx{color:#98A2B3;text-decoration:line-through}
+  .pm .toast{position:absolute;left:7px;right:7px;bottom:9px;background:rgba(16,24,40,.9);color:#fff;font-size:9.4px;font-weight:800;
+             border-radius:10px;padding:6px 7px;line-height:1.35;text-align:center}
+  .mkcap{margin-top:8px;font-size:12.6px;font-weight:900;color:#344054;line-height:1.35}
+  .mkcap.ok{color:#067647} .mkcap.no{color:#B42318}
+  .mksub{font-size:11.2px;color:#667085;font-weight:600;margin-top:2px;line-height:1.45}
+  /* 🔑 6차 — Play 스토어 지금 상태 (초강력 차단 + PIN 잠금) */
+  .pss{background:#fff;border:1px solid #EAEEF4;border-radius:16px;padding:6px 12px 12px;margin-bottom:12px}
+  .psr{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed #E4E7EC}
+  .psi{flex:none;width:34px;height:34px;border-radius:10px;background:#F2F4F7;display:flex;align-items:center;justify-content:center;font-size:18px}
+  .pst{flex:1;min-width:0}
+  .pst b{display:block;font-size:14.5px;color:#1D2939}
+  .pst span{display:block;font-size:12.2px;color:#667085;margin-top:1px;line-height:1.45}
+  .psv{flex:none;font-size:13px;font-weight:900;border-radius:999px;padding:5px 12px}
+  .psv.g{background:#12B76A;color:#fff}
+  .psv.r{background:#FEE4E2;color:#B42318;border:1px solid #FDA29B}
+  .psv.n{background:#F2F4F7;color:#475467;border:1px solid #D0D5DD}
+  .psm{margin-top:10px;font-size:13.2px;line-height:1.6;border-radius:12px;padding:9px 11px}
+  .psm.g{background:#ECFDF3;color:#05603A} .psm.y{background:#FFFAEB;color:#93370D} .psm.r{background:#FEF3F2;color:#912018}
 </style>
 </head>
 <body>
@@ -1803,7 +1861,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월10일 5차 테스트판';
+const WEB_LABEL = '11월10일 6차 테스트판';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -3350,7 +3408,7 @@ const XP = {
   limit:{ h:'하루에 폰을 <b>몇 시간</b> 쓸지 정해요',
     d:'정한 시간을 다 쓰면 앱이 잠겨요. 매일 <b>밤 12시</b>에 다시 0분부터 시작해요.',
     f:[['📱','화면을 켜 두면<br>시간이 줄어요'],['⏱','정한 시간을<br>다 쓰면'],['🔒','앱이 잠겨요<br>(전화 받기는 돼요)']],
-    ex:'art', exT:'아이 폰에서는 이렇게 돼요',
+    ex:() => mockLimitHtml(), exT:'아이 폰에서는 이렇게 돼요',   // 📱 6차 : 진짜 폰 화면처럼
     how:['아래 <b>「하루 한도 사용」</b> 스위치를 켜요',
          '요일을 눌러 시간을 정해요 — 예) 평일 1시간 · 주말 2시간'],
     w:['<b>화면이 켜져 있으면 무엇을 하든</b> 세요 — 홈 화면·전화·설정까지요. 화면을 끄면 멈춰요.',
@@ -3412,7 +3470,7 @@ const XP = {
   uninst:{ h:'<b>설치한 앱</b>을 아이가 지우지 못하게 막아요',
     d:'목록에서 고른 앱은 아이가 <b>삭제를 눌러도 안 지워져요.</b> 카톡 · 학교 알림 앱처럼 꼭 남아 있어야 하는 앱을 넣어 두세요.',
     f:[['🗑️','아이가 앱을<br>지우려고 하면'],['🛡️','삭제가<br>막혀 있어요'],['✅','앱이 그대로<br>남아요']],
-    ex:'art', exT:'아이 폰에서는 이렇게 돼요',
+    ex:() => mockUninstHtml(), exT:'아이 폰에서는 이렇게 돼요',   // 📱 6차 : 진짜 폰 화면처럼
     how:['아래 <b>「앱 삭제 방지 사용」</b> 스위치를 켜요',
          '지키고 싶은 앱을 목록에서 <b>「추가」</b>해요'],
     tip:{ t:'이럴 때 쓰면 좋아요',
@@ -3426,16 +3484,17 @@ const XP = {
     ex:'art', exT:'아이 폰에서는 이렇게 돼요',
     how:['아래 목록에서 잠글 앱을 <b>「추가」</b>해요 — 예) 갤러리 · 사진'],
     // 💡 2026-11-10 (4차) 대표점장 : 「Play 스토어를 PIN 잠금 해 둘 때가 많아서 꿀팁 써 놓고 강조」
-    tip:{ t:'<b>Play 스토어</b>에 걸어 두세요 — 가장 많이 쓰는 방법이에요',
-          s:['Play 스토어를 잠가 두면 아이 <b>혼자서는 새 앱을 못 깔아요.</b>',
-             '필요한 앱이 생기면 부모님이 옆에서 <b>비밀번호를 넣어 주고</b> 같이 깔면 돼요.'],
-          after:() => pinPlayBtnHtml() },
+    // 💡 6차 대표점장 : 「Play 스토어에 걸어 두세요 XX → 카톡을 너무 많이 써서 며칠간 잠가 두고 싶을 때!!」
+    tip:{ t:'이럴 때 쓰면 좋아요',
+          s:['카톡을 너무 많이 써서 <b>며칠간 잠가 두고</b> 싶을 때!! — 부모님이 옆에서 열어 줄 때만 열려요',
+             '갤러리 · 사진처럼 <b>혼자 보게 두기 싫은</b> 앱이 있을 때',
+             '게임을 <b>숙제 끝난 뒤에만</b> 열어 주고 싶을 때'] },
     w:['비밀번호는 이 웹앱에 들어올 때 쓰는 <b>부모님 6자리 번호</b>예요.'] },
 
   ignoredt:{ h:'취침시간에도 <b>이 앱만은</b> 쓸 수 있게 열어 둬요',
     d:'취침시간엔 앱이 거의 다 잠겨요. <b>여기 넣은 앱만</b> 예외로 열려요.',
     f:[['🌙','취침시간이<br>되면'],['🔒','다른 앱은<br>잠겨요'],['📖','고른 앱만<br>열려요']],
-    ex:'art', exT:'아이 폰에서는 이렇게 돼요',
+    ex:() => mockIgnoreDtHtml(), exT:'아이 폰에서는 이렇게 돼요',   // 📱 6차 : 진짜 폰 화면처럼
     how:['아래 목록에서 열어 둘 앱을 <b>「추가」</b>해요 — 취침시간 중에 넣어도 <b>15초 안에</b> 열려요'],
     w:['아이가 밤에 <b>전화를 걸어야</b> 한다면 <b>전화 앱</b>을 넣어 주세요. 전화 <b>받기</b>는 넣지 않아도 돼요.',
        '많이 넣으면 취침시간이 소용없어져요. 꼭 필요한 것만 넣어 주세요.'] },
@@ -3573,35 +3632,8 @@ function appsCalcHtml(){
     '<div class="xcap">하루 전체를 더 줄이고 싶으시면 <b>그 앱의 시간을 줄여</b> 주세요 🙂</div>';
 }
 
-/** 🔑 앱 PIN 잠금 TIP — Play 스토어 바로 잠그기 버튼 */
-const VENDING_PKG = 'com.android.vending';
-function pinPlayBtnHtml(){
-  // 🔑 2026-11-10 (5차) 대표점장 : 「"Play 스토어 바로 잠그기" 버튼 아주 좋은데, 누르면 Play 스토어만! 차단 중 / 허용 중 표기」
-  //    → 지금 상태를 크게(🔒 차단 중 / 🔓 허용 중) + 버튼 하나로 **Play 스토어만** 잠그고 푼다(togglePlayPin).
-  const locked = J(ST.pol?.pin_locked_apps, []).includes(VENDING_PKG);
-  const has = (ST.apps || []).some(a => a.app_package === VENDING_PKG);
-  if (!has && !locked) return '<div class="xti">아래 목록에서 <b>Play 스토어</b>를 찾아 「추가」해 주세요.</div>';
-  const deep = ST.pol?.play_store_blocked === 'true'
-    ? '<div class="pp3">🛡️ 보안 설정의 <b>초강력 차단</b>도 켜져 있어요 — 지금은 아이 폰에 Play 스토어가 아예 안 보여요.</div>' : '';
-  return '<div class="ppst ' + (locked ? 'on' : 'off') + '">' +
-      '<div class="pp1">' + (locked ? '🔒 Play 스토어 <b>차단 중</b>' : '🔓 Play 스토어 <b>허용 중</b>') + '</div>' +
-      '<div class="pp2">' + (locked ? '부모님 비밀번호를 넣어야 열려요' : '아이가 비밀번호 없이 열 수 있어요') + '</div>' + deep + '</div>' +
-    '<button class="btn ' + (locked ? 'btn-g' : 'btn-p') + '" onclick="togglePlayPin()">' +
-      (locked ? '🔓 Play 스토어 잠금 풀기' : '🔑 Play 스토어 바로 잠그기') + '</button>';
-}
-/** Play 스토어 **하나만** PIN 잠금에 넣고 뺀다 — 다른 앱은 건드리지 않는다 */
-async function togglePlayPin(){
-  loading(true);
-  try{
-    const s = new Set(J(ST.pol.pin_locked_apps, []));
-    const lock = !s.has(VENDING_PKG);
-    lock ? s.add(VENDING_PKG) : s.delete(VENDING_PKG);
-    await savePol([{ key:'pin_locked_apps', value:JSON.stringify([...s]) }]);
-    loading(false);
-    toast(lock ? '🔒 Play 스토어를 차단했어요 — 이제 비밀번호를 넣어야 열려요' : '🔓 Play 스토어 잠금을 풀었어요');
-    openPinLock();
-  }catch(e){ loading(false); toast('실패: ' + e.message); }
-}
+// 🔑 (6차) Play 스토어 바로 잠그기 버튼·togglePlayPin 은 뺐다 — 대표점장 「잠금 풀기 같은 버튼은 유도 안 했으면」 → playStatusHtml(mock5)
+
 // ── 📦 공신폰 앱 관리 (더보기) ─────────────────────────────────────
 // 🎨 2026-11-10 (5차) 대표점장 : 「예전에 "사용 중"을 아주 눈에 띄게 강조해 줬던 게 좋았음 — ON/OFF 를 눈에 띄게,
 //    매장에서만!! ON/OFF 할 수 있는 것도 강조」 → 카드마다 초록 「사용 중」/회색 「안 쓰는 중」 알약 + 「🏪 매장에서만」 딱지,
@@ -3753,6 +3785,91 @@ function locAgreePaint(){
   if (bt){ bt.disabled = !LOC_AGREE; bt.textContent = LOC_AGREE ? '위치 확인 켜기' : '위치 확인 켜기 (' + n + '/' + LOC_CHECKS.length + ' 동의)'; }
 }
 
+// ══════════════════════════════════════════════════════════════════
+//  📱 2026-11-10 (6차) 대표점장 : 「"아이 폰에서는 이렇게 돼요" 이미지 설명이 별로 — 퀄리티 높여 줘」
+//     (하루 사용시간 한도 · 다운타임 허용 앱 · 앱 삭제 방지)
+//  ▸ 네모 6칸 그림(gaDraw) 대신 **진짜 폰 화면처럼** 그린다 — 앱 이름 · 시각 · 막대 · 잠금 · 안내 · 길게 누른 메뉴.
+//  ▸ HTML/CSS 로 그린다(글자가 선명하고 그림 파일이 필요 없다 · 카톡 안 브라우저에서도 같다).
+//  🔴 그림 속 안내 글자는 **예시**다 — 실제 문구는 폰마다 조금 다르다. 그래서 아래에 「그림이에요」를 적는다.
+// ══════════════════════════════════════════════════════════════════
+const MK_APPS = {
+  kakao:{ e:'💬', n:'카카오톡', c:'#FEE500' }, tube:{ e:'▶️', n:'유튜브', c:'#FF6B6B' }, game:{ e:'🎮', n:'게임', c:'#A78BFA' },
+  photo:{ e:'🖼️', n:'갤러리', c:'#FDBA74' }, call:{ e:'📞', n:'전화', c:'#4ADE80' }, sms:{ e:'✉️', n:'메시지', c:'#7DD3FC' },
+  book:{ e:'📖', n:'전자책', c:'#86EFAC' }, music:{ e:'🎵', n:'음악', c:'#F9A8D4' }, school:{ e:'🏫', n:'학교앱', c:'#C4B5FD' }
+};
+/** 폰 화면 하나. o = { night, time, top(html), apps:[[키, 상태('on'|'lock'|'open'|'shield'|'pick'), 꼬리표]], toast, menu(html) } */
+function mkPhone(o){
+  const apps = (o.apps || []).map(([k, st, tag]) => {
+    const a = MK_APPS[k] || { e:'📱', n:k, c:'#E4E7EC' };
+    return '<div class="ap ' + (st || 'on') + '" style="--c:' + a.c + '"><b>' + a.e + '</b>' + a.n +
+      (tag ? '<span class="tg">' + tag + '</span>' : '') + '</div>';
+  }).join('');
+  return '<div class="pm"><div class="scr' + (o.night ? ' night' : '') + '">' +
+    '<div class="sb"><span>' + (o.time || '') + '</span><span>📶 🔋</span></div>' +
+    (o.top || '') + '<div class="ag">' + apps + '</div>' + (o.menu || '') +
+    (o.toast ? '<div class="toast">' + o.toast + '</div>' : '') + '</div></div>';
+}
+/** 전 → 후 두 대 + 글 */
+function mkPair(l, r, lc, ls, rc, rs, rOk){
+  return '<div class="mk2"><div class="mkc">' + l + '<div class="mkcap">' + lc + '</div><div class="mksub">' + ls + '</div></div>' +
+    '<div class="mkarr">›</div>' +
+    '<div class="mkc">' + r + '<div class="mkcap ' + (rOk ? 'ok' : 'no') + '">' + rc + '</div><div class="mksub">' + rs + '</div></div></div>';
+}
+function mkBar(used, limit, full){
+  return '<div class="wid">⏱ 오늘 쓴 시간<br><b' + (full ? ' style="color:#D92D20"' : '') + '>' + used + '</b> / ' + limit +
+    '<div class="pbar"><i class="' + (full ? 'full' : '') + '" style="width:' + (full ? 100 : 66) + '%"></i></div></div>';
+}
+/** ⏱ 하루 사용시간 한도 */
+function mockLimitHtml(){
+  const six = st => [['kakao', st], ['tube', st], ['game', st], ['photo', st], ['call', st, st === 'lock' ? '받기 OK' : ''], ['sms', st]];
+  return mkPair(
+    mkPhone({ time:'19:20', top: mkBar('40분', '1시간'), apps: six('on') }),
+    mkPhone({ time:'20:05', top: mkBar('1시간', '1시간', true), apps: six('lock'), toast:'⏰ 오늘은 다 썼어요<br>내일 다시 쓸 수 있어요' }),
+    '아직 20분 남았어요', '앱을 그대로 쓸 수 있어요',
+    '1시간을 다 쓰면 잠겨요', '전화 받기는 돼요 · 밤 12시에 0분부터 다시', false) +
+    '<div class="xcap">그림이에요 — 강력 모드를 켜면 앱만 잠기는 대신 <b>화면 전체</b>가 잠겨요(아래 🔒 강력 모드)</div>';
+}
+/** 🌙 다운타임 허용 앱 */
+function mockIgnoreDtHtml(){
+  const top = '<div class="nh">🌙 취침 시간이에요<br><span>07:00 에 풀려요</span></div>';
+  return mkPair(
+    mkPhone({ night:true, time:'22:30', top, apps:[['kakao','lock'],['game','lock'],['book','lock'],['music','lock'],['tube','lock'],['sms','lock']] }),
+    mkPhone({ night:true, time:'22:30', top, apps:[['kakao','lock'],['game','lock'],['book','open','열려요'],['music','lock'],['tube','lock'],['sms','open','열려요']] }),
+    '허용 앱이 없으면', '전부 잠겨요 (전화 받기 · 알람은 돼요)',
+    '넣은 앱만 열려요', '예) 전자책 · 메시지를 넣었을 때', true) +
+    '<div class="xcap">그림이에요 — 밤에 아이가 <b>전화를 걸어야</b> 하면 「전화」 앱을 넣어 주세요</div>';
+}
+/** 🛡️ 앱 삭제 방지 */
+function mockUninstHtml(){
+  const menu = del => '<div class="lpm"><div>ⓘ 앱 정보</div><div class="' + (del ? 'del' : 'del dx') + '">🗑 삭제</div></div>';
+  return mkPair(
+    mkPhone({ time:'16:10', apps:[['kakao','pick'],['school','on'],['photo','on'],['call','on'],['sms','on'],['book','on']], menu: menu(true),
+              toast:'🗑 카카오톡이 지워졌어요' }),
+    mkPhone({ time:'16:10', apps:[['kakao','shield'],['school','shield'],['photo','on'],['call','on'],['sms','on'],['book','on']], menu: menu(false),
+              toast:'🛡️ 이 앱은 지울 수 없어요' }),
+    '끄면 — 지워져요', '꾹 눌러 「삭제」를 누르면 끝',
+    '켜면 — 안 지워져요', '목록에 넣은 앱(🛡️)만 지켜요', true) +
+    '<div class="xcap">그림이에요 — 실제 안내 문구는 폰마다 조금 달라요</div>';
+}
+
+// ── 🔑 앱 PIN 잠금 — 「Play 스토어 지금 상태」 두 가지를 같이 보여준다 (2026-11-10 6차 대표점장) ──
+//  「초강력 차단(보안 설정) ON/OFF」 와 「PIN 잠금 걸림/안 걸림」 을 **같이** 봐야 이해된다.
+//  🔴 풀라고 유도하지 않는다 — 버튼을 두지 않고, OFF 일 때만 「보안 설정에서 켜기」로 **더 안전한 쪽**만 안내한다.
+const VENDING_PKG = 'com.android.vending';
+function playStatusHtml(){
+  const blocked = ST.pol?.play_store_blocked === 'true';
+  const pin = J(ST.pol?.pin_locked_apps, []).includes(VENDING_PKG);
+  const row = (ico, t, val, d, cls) => '<div class="psr"><div class="psi">' + ico + '</div><div class="pst"><b>' + t + '</b><span>' + d + '</span></div>' +
+    '<div class="psv ' + cls + '">' + val + '</div></div>';
+  const msg = blocked
+    ? ['g', '✅ <b>가장 안전한 상태예요.</b> 아이 폰에 Play 스토어가 아예 안 보여서 새 앱을 못 깔아요.']
+    : pin ? ['y', '🟡 Play 스토어는 보이지만, <b>부모님 비밀번호</b>를 넣어야 열려요.<br>더 안전하게 하시려면 <a class="xl" onclick="openSecurity()">보안 설정에서 초강력 차단 켜기 ›</a>']
+          : ['r', '⚠️ 아이가 Play 스토어를 <b>자유롭게 열어 새 앱을 깔 수 있어요.</b><br><a class="xl" onclick="openSecurity()">보안 설정에서 초강력 차단 켜기 ›</a>'];
+  return '<div class="sec">📲 Play 스토어 지금 상태</div><div class="pss">' +
+    row('🛡️', '초강력 차단', blocked ? 'ON' : 'OFF', blocked ? '아이 폰에 Play 스토어가 아예 안 보여요' : 'Play 스토어가 아이 폰에 보여요 · 안전 → 보안 설정', blocked ? 'g' : 'r') +
+    row('🔑', 'PIN 잠금', pin ? '걸림' : '안 걸림', pin ? '열 때 부모님 비밀번호를 물어요' : '비밀번호 없이 열려요 · 아래 목록에서', pin ? 'g' : 'n') +
+    '<div class="psm ' + msg[0] + '">' + msg[1] + '</div></div>';
+}
 /** 설명 상자 하나를 그린다. o.mini = 작은 상자(한 화면에 여러 개일 때) · o.noEx = 실제 모습 빼기 */
 function xpHtml(k, o){
   o = o || {};
@@ -5192,7 +5309,7 @@ function openUninstall(){
 }
 function openPinLock(){
   openAppPicker('앱 PIN 잠금','pin_locked_apps',
-    '');   // 설명은 XP.pinlock
+    '', playStatusHtml());   // 설명은 XP.pinlock · 6차 : 「Play 스토어 지금 상태」(초강력 차단 + PIN 잠금) 를 목록 위에
 }
 function openIgnoreDt(){
   openAppPicker('다운타임 허용 앱','ignore_dt_apps',
@@ -6427,11 +6544,14 @@ function dayBandHtml(){
   const now = _nowMin(), pct = m => (m / 1440 * 100).toFixed(2) + '%';
   const hasDt = segs.some(s => s[0] === 'dt'), hasAc = segs.some(s => s[0] === 'ac');
   return '<div class="sec">오늘 하루 한눈에</div><div class="card">' +
+    // ⏰ 2026-11-10 (6차) 대표점장 : 「지금 ??시??분 시간이 잘 안 보임」 — 11px 글씨가 띠 안에 묻혀 잘렸다
+    //   → 띠 **위**에 큰 말풍선(13.5px)으로 꺼내고, 띠 안에는 굵은 「지금」 선만 남긴다. 말풍선은 양 끝에서 잘리지 않게 안쪽으로 붙인다.
+    '<div class="daywrap"><div class="nowt2" style="left:' + pct(Math.min(1250, Math.max(190, now))) + '">⏰ 지금 ' +
+      p2(Math.floor(now/60)) + ':' + p2(now%60) + '</div>' +
     '<div class="dayband">' +
       segs.map(s => '<i class="' + s[0] + '" style="left:' + pct(s[1][0]) + ';width:' + pct(s[1][1] - s[1][0]) + '"></i>').join('') +
       '<div class="nowl" style="left:' + pct(now) + '"></div>' +
-      '<span class="nowt" style="left:' + pct(Math.min(1380, Math.max(60, now))) + '">지금 ' + p2(Math.floor(now/60)) + ':' + p2(now%60) + '</span>' +
-    '</div>' +
+    '</div></div>' +
     '<div class="dayax"><span>0시</span><span>6시</span><span>12시</span><span>18시</span><span>24시</span></div>' +
     '<div class="daylg"><span style="--c:#E9F7EF">쓸 수 있는 시간</span>' +
       (hasDt ? '<span style="--c:#C9B8F5">취침시간 (잠김)</span>' : '') +
