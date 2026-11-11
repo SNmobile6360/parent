@@ -1786,7 +1786,11 @@ async function verifyPin(){
     const h=await sha256(pinBuf);
     let ok = false;                                   // 공통 비밀번호 통과 없음 — 자녀별 PIN 만 인정
     if(pinTarget) ok = await pinMatches(h, pinTarget);
-    else for(const k of kids()){ try{ if(await pinMatches(h,k)){ ok=true; break; } }catch(e){} }
+    else{
+      for(const k of kids()){ try{ if(await pinMatches(h,k)){ ok=true; break; } }catch(e){} }
+      // 🔒 2026-11-11 : 같은 PIN 을 쓰는 다른 자녀도 부모 열쇠를 받아 둔다(형제 PIN 이 같으면 다시 안 묻는다)
+      if(ok) for(const k of kids()){ if(!locTokenOf(k.code)){ try{ await pinMatches(h,k); }catch(e){} } }
+    }
     loading(false); pinBusy=false;
     if(ok){
       resetPinFails();                                // 🆕 성공하면 실패 기록 초기화
@@ -1817,7 +1821,13 @@ function afterUnlock(){
   if(a.length===1){ openChild(a[0]); return; }
   openList();
 }
+const PIN_ASKED = new Set();   // 이번 세션에 열쇠 때문에 PIN 을 한 번 물어본 자녀 (같은 자녀를 계속 묻지 않게)
 function openChild(k){
+  // 🔒 2026-11-11 (모의해킹 후속) : 서버 표를 잠근 뒤에는 **부모 열쇠가 없으면 그 자녀가 안 보인다.**
+  //   열쇠가 없는 자녀(형제끼리 PIN 이 달라 잠금 해제 때 못 받은 경우)는 그 자녀 PIN 을 **한 번만** 묻는다.
+  if(!locTokenOf(k.code) && !PIN_ASKED.has(k.code) && !pinTarget){
+    PIN_ASKED.add(k.code); startPin(k); return;
+  }
   // 목록에서 자녀를 고른 경우 → 뒤로가기로 목록에 돌아올 수 있게
   if(!navRestoring && !document.getElementById('scList').classList.contains('hide')) navPush(()=>openList());
   ST={ code:k.code, server:k.server, name:k.name||'', pol:{}, dev:null, usage:null, reqs:[], apps:[] };
