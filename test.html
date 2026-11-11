@@ -112,6 +112,54 @@
   #scMain .wrap{padding-bottom:calc(var(--safe-b) + 96px)}
 
   /* ── 하단 탭 ── */
+  /* 📝 2026-11-11 자녀 특이사항 · 매장 전달 */
+  .ntHero{display:flex;gap:12px;align-items:center;background:linear-gradient(135deg,#FFF7ED,#FEF3F2);border:1px solid #FCE7D6;border-radius:18px;padding:14px 15px;margin:4px 0 16px;line-height:1.6;font-size:14px;color:#5C3A1E}
+  .ntHero img{width:64px;height:64px;flex:0 0 64px}
+  .ntHero>div{flex:1;min-width:0;word-break:keep-all;overflow-wrap:anywhere}
+  .ntQ{font-size:15.5px;font-weight:800;margin:18px 2px 9px;color:#1D2939}
+  .ntQ span{font-size:12.5px;font-weight:600;color:#98A2B3}
+  .ntChips{display:flex;flex-wrap:wrap;gap:8px}
+  .ntc{border:1.5px solid #E4E7EC;background:#fff;border-radius:999px;padding:9px 13px;font-size:14px;font-weight:700;color:#344054;cursor:pointer;font-family:inherit;line-height:1.35;text-align:left}
+  .ntc.on{border-color:#F97316;background:#FFF4ED;color:#C2410C}
+  .ntc.on::before{content:'✓ '}
+  .ntTa{width:100%;min-height:96px;border:1.5px solid #E4E7EC;border-radius:14px;padding:12px 13px;font-size:15px;font-family:inherit;line-height:1.6;resize:vertical;box-sizing:border-box}
+  .ntTa:focus{outline:none;border-color:#F97316}
+  .ntCnt{text-align:right;font-size:12px;color:#98A2B3;margin-top:4px}
+  /* 🎬 2026-11-11 30초 요약 플레이어 */
+  .svCard{background:linear-gradient(135deg,#FFF7ED 0%,#FFFFFF 70%)}
+  .sv{position:fixed;inset:0;z-index:95;background:#0B1020;color:#fff;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+  .sv.hide{display:none}
+  .svBars{position:absolute;top:calc(10px + env(safe-area-inset-top));left:12px;right:12px;display:flex;gap:4px;z-index:4}
+  .svBars i{flex:1;height:3.5px;border-radius:3px;background:rgba(255,255,255,.28);overflow:hidden}
+  .svBars i b{display:block;height:100%;width:0;background:#fff;border-radius:3px}
+  .svTop{position:absolute;top:calc(22px + env(safe-area-inset-top));left:14px;right:14px;display:flex;align-items:center;gap:8px;z-index:4;font-size:13px;font-weight:700}
+  .svTop .sp{flex:1;opacity:.9;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .svBtn{background:rgba(255,255,255,.18);border:0;color:#fff;border-radius:999px;padding:8px 12px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer}
+  .svScene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:96px 26px 128px;text-align:center;box-sizing:border-box;overflow:hidden}
+  .svBg{position:absolute;inset:-8%;z-index:-1;animation:svKen 6s ease-out both}
+  .svBg::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.18),transparent 60%)}
+  @keyframes svKen{from{transform:scale(1.1)}to{transform:scale(1)}}
+  .svImg{width:150px;height:150px;object-fit:contain;filter:drop-shadow(0 18px 28px rgba(0,0,0,.35));animation:svPop .65s cubic-bezier(.2,1.4,.4,1) both}
+  .svImgW{animation:svFloat 3.4s ease-in-out .7s infinite}
+  @keyframes svFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  @keyframes svPop{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:scale(1)}}
+  @keyframes svUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .svK{font-size:13px;font-weight:800;letter-spacing:.3px;opacity:.88;margin-top:16px;animation:svUp .5s .1s both}
+  .svT{font-size:26px;font-weight:800;line-height:1.32;margin-top:8px;animation:svUp .55s .2s both;word-break:keep-all}
+  .svBig{font-size:46px;font-weight:800;line-height:1.15;margin-top:8px;animation:svPop .6s .25s both;letter-spacing:-.5px}
+  .svBig small{font-size:20px;font-weight:700;opacity:.9;margin-left:4px}
+  .svD{font-size:15.5px;line-height:1.65;margin-top:12px;opacity:.95;animation:svUp .55s .35s both;word-break:keep-all}
+  .svChips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;max-width:420px}
+  .svChip{background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:8px 13px;font-size:14px;font-weight:700;animation:svUp .45s both}
+  .svChip.off{opacity:.55;text-decoration:none}
+  .svCap{position:absolute;left:14px;right:14px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:4;background:rgba(0,0,0,.45);border-radius:14px;padding:11px 14px;font-size:14.5px;line-height:1.55;text-align:center;font-weight:600}
+  .svTapL,.svTapR{position:absolute;top:70px;bottom:96px;z-index:3}
+  .svTapL{left:0;width:32%}.svTapR{right:0;width:68%}
+  .svEnd{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-top:22px;animation:svUp .5s .45s both;position:relative;z-index:5}
+  .svEnd button{border:0;border-radius:14px;padding:15px;font-size:16px;font-weight:800;font-family:inherit;cursor:pointer}
+  .svEnd .a{background:#fff;color:#1D2939}.svEnd .b{background:rgba(255,255,255,.18);color:#fff}
+  .svPause{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;font-size:54px;opacity:0;transition:opacity .2s;pointer-events:none}
+  .sv.paused .svPause{opacity:.85}
   .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;
     background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
     border-top:1px solid #E6EAF0;padding-bottom:var(--safe-b);max-width:640px;margin:0 auto}
@@ -1193,6 +1241,19 @@
       <div class="row"><div class="ic" style="background:#FEF3F2">🚦</div>
         <div class="grow"><div class="ttl">자녀 실시간 제한 상황</div><div class="val" id="vLive">-</div></div><div class="chev">›</div></div>
     </div>
+    <!-- 🎬 2026-11-11 : 30초 요약 (대표점장 「실시간 자녀폰 상황 30초 영상+설명 요약」) — openSummary -->
+    <div class="card tap svCard" onclick="openSummary()">
+      <div class="row"><div class="ic" style="background:#FFF4ED">🎬</div>
+        <div class="grow"><div class="ttl">30초 요약 영상으로 보기 <span class="betabadge">새 기능</span></div><div class="val">지금 걸려 있는 제한을 그림 · 소리로 한눈에 보여 드려요</div></div><div class="chev">›</div></div>
+    </div>
+    <!-- 🔄 2026-11-11 : 「새로고침」을 더보기 → 홈으로 옮겼다 (대표점장) · id vSync 는 하나만 둔다 -->
+    <div class="card tap" onclick="refreshAll(true)">
+      <div class="row">
+        <div class="ic" style="background:#F2F4F7">🔄</div>
+        <div class="grow"><div class="ttl">새로고침</div><div class="val" id="vSync">최신 정보 다시 불러오기</div></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
 
     <!-- 💬 도우미 (2026-11-01 신설) — 「지금 크롬 쓸 수 있나요?」에 계산해서 답한다.
          AI API 를 쓰지 않는다(0원). 판정은 canUseApp() 이 자녀앱과 같은 순서로 한다. -->
@@ -1210,6 +1271,14 @@
 
     <!-- 📲 2026-11-10 : 설치 신청을 홈에 꺼내 둔다 (paintHomeExtras 가 채운다) -->
     <div id="addBoxHome"></div>
+
+    <!-- 📝 2026-11-11 : 자녀 특이사항 · 매장 전달사항 (대표점장 「자녀를 못 이기는 부모님이 많다」)
+         저장은 global_policies 의 parent_note_<연동코드> — 전산 「특이사항 메모」 아래에 같이 보인다. -->
+    <div class="sec">매장에 알려 주세요</div>
+    <div class="card tap" onclick="openNote()">
+      <div class="row"><div class="ic" style="background:#FFF7ED">📝</div>
+        <div class="grow"><div class="ttl">자녀 특이사항 · 매장 전달사항</div><div class="val" id="vNote">-</div></div><div class="chev">›</div></div>
+    </div>
 
     <!-- ✨ AI 매니저 (2026-11-05 대개편) — 대표점장 : 「AI매니저 잘 보이고 잘 쓸 수 있도록 유도」
          🔴 카드 하나로 끝내지 않는다. ①홈 맨 위 큰 카드 ②어느 탭에서나 보이는 플로팅 버튼 **둘 다**.
@@ -1350,13 +1419,7 @@
     </div>
     <span id="vReq" class="hide"></span><span id="vAllow" class="hide"></span>
     <div class="sec">기타</div>
-    <div class="card tap" onclick="refreshAll(true)">
-      <div class="row">
-        <div class="ic" style="background:#F2F4F7">🔄</div>
-        <div class="grow"><div class="ttl">새로고침</div><div class="val" id="vSync">최신 정보 다시 불러오기</div></div>
-        <div class="chev">›</div>
-      </div>
-    </div>
+    <!-- 🔄 2026-11-11 : 새로고침은 홈으로 옮겼다 (대표점장) -->
     <div class="card tap" onclick="openPinChange()">
       <div class="row"><div class="ic" style="background:#F2F4F7">🔢</div>
         <div class="grow"><div class="ttl">비밀번호 변경</div><div class="val">부모님 확인용 6자리 비밀번호</div></div><div class="chev">›</div></div>
@@ -1862,7 +1925,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월10일 7차 테스트판';
+const WEB_LABEL = '11월11일 8차 테스트판';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -2509,6 +2572,7 @@ function paintMain(){
       ? `<b style="color:#F97316">허락 요청 ${nq}건</b> · 볼 수 있는 영상 ${(TUBE.videos||[]).length}개`
       : `볼 수 있는 영상 ${(TUBE.videos||[]).length}개`;
   }
+  paintNoteCard();       // 📝 2026-11-11 : 자녀 특이사항 카드 둘째 줄
   paintHomeExtras();     // 🆕 2026-11-10 : 📲 더 넣기 상자 + 🗺 작은 지도
 }
 
@@ -2523,6 +2587,388 @@ function paintMain(){
 //    쓰고 있는 걸 또 권하면 「이미 있는데요?」 문의가 생긴다.
 //  ⚠️ 「무료」라고 적지 않는다 — 상품마다 다를 수 있다(표시광고법). 「매장에서 확인하고 연락드려요」까지만.
 // ══════════════════════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════════════════════
+//  📝 자녀 특이사항 · 매장 전달사항 (2026-11-11 · 대표점장)
+//  「자녀를 못 이기는 부모님이 많다 — AS 하다 들키거나, 부모웹앱을 보고 비밀번호를 알려 달라고 조른다」
+//  → 부모님이 아이 성향과 부탁을 적으면 **매장 전산 「특이사항 메모」 아래에** 보인다.
+//
+//  저장 자리 : global_policies 의 `parent_note_<연동코드>` (JSON 한 줄)
+//  🔴 policies 에 두지 않는다 — 자녀앱이 동기화에 한 번 실패하면 그 기기 정책을 **전부 지우고**
+//     자기가 아는 키만 다시 넣는다(SyncManager useDeleteInsertFallback · CLAUDE.md 3-24). 메모가 조용히 사라진다.
+//  🔴 child_devices.memo 에 직접 쓰지 않는다 — **매장이 쓴 메모를 덮어쓴다.** 전산은 둘을 나란히 보여 준다.
+//  ⚠️ 자녀폰에는 안 간다(자녀앱은 이 키를 모른다). 다만 **부모님 폰을 아이가 보면 보인다** — 화면에 적어 둔다.
+// ══════════════════════════════════════════════════════════════════════════
+const NOTE_REL  = [['good','😊','소통이 잘돼요'], ['ok','🙂','보통이에요'], ['fight','😥','자주 다투는 편이에요'], ['beg','😣','풀어 달라고 많이 졸라요']];
+const NOTE_TAGS = ['비밀번호를 알려 달라고 해요', '부모님 폰을 몰래 봐요', '설정 바꾸다 아이에게 들킨 적 있어요',
+                   '풀어 달라고 떼쓰고 울어요', '몰래 푸는 방법을 찾아봐요', '밤늦게까지 폰을 해요', '공부에 집중을 잘 못 해요'];
+const NOTE_ASKS = ['아이가 매장에 와도 설정을 풀지 말아 주세요', '설정을 바꿀 땐 부모님께 먼저 연락 주세요',
+                   '아이 앞에서는 설정 얘기를 조심해 주세요', '매장에서 아이에게 단호하게 안내해 주세요',
+                   'AS 는 아이 없이 부모님만 갈게요'];
+let NOTE = { code:'', v:null, loaded:false, err:false };
+let NOTE_DRAFT = { rel:'', tags:[], asks:[], text:'' };
+
+function noteKey(){ return 'parent_note_' + ST.code; }
+function noteFilled(v){ return !!(v && (v.rel || (v.tags||[]).length || (v.asks||[]).length || String(v.text||'').trim())); }
+function noteWhen(at){ const d = toDate(at); return d ? (d.getMonth()+1) + '월 ' + d.getDate() + '일에 적음' : ''; }
+
+/** 서버에서 읽는다. 🔴 error 를 꼭 본다(3-10) — 못 읽은 것을 「안 적음」으로 보이면 부모가 또 적는다 */
+async function loadNote(force){
+  if (!force && NOTE.loaded && NOTE.code === ST.code) return NOTE.v;
+  const code = ST.code;
+  try{
+    const { data, error } = await clientFor(ST.server).from('global_policies').select('value').eq('key', 'parent_note_' + code).maybeSingle();
+    if (error) throw error;
+    let v = null; try{ v = data && data.value ? JSON.parse(data.value) : null; }catch(e){ v = null; }
+    NOTE = { code, v, loaded:true, err:false };
+  }catch(e){
+    console.warn('loadNote 실패:', e && e.name, e && e.message);
+    NOTE = { code, v:null, loaded:false, err:true };
+  }
+  return NOTE.v;
+}
+
+/** 홈 카드 둘째 줄 — paintMain 이 부른다 (서버는 처음 한 번만 읽는다) */
+async function paintNoteCard(){
+  const el = document.getElementById('vNote'); if (!el) return;
+  const code = ST.code;
+  const v = await loadNote(false);
+  if (code !== ST.code) return;
+  if (NOTE.err){ el.textContent = '지금은 불러오지 못했어요 — 눌러서 다시 볼 수 있어요'; return; }
+  el.innerHTML = noteFilled(v)
+    ? badge(true, '매장에 전달됨') + ' ' + esc(noteWhen(v.at))
+    : '<b style="color:#C2410C">아직 안 적으셨어요 — 적어 주시면 매장이 더 잘 도와드려요</b>';
+}
+
+async function openNote(){
+  loading(true); const v = await loadNote(true); loading(false);
+  if (NOTE.err){ toast('지금은 불러올 수 없어요. 잠시 뒤 다시 눌러 주세요'); return; }
+  const c = v || {};
+  NOTE_DRAFT = { rel:c.rel || '', tags:(c.tags || []).slice(), asks:(c.asks || []).slice(), text:String(c.text || '') };
+  openSub('자녀 특이사항 · 매장 전달', noteHtml(noteFilled(v) ? v : null));
+}
+
+function noteHtml(saved){
+  const chip = (k, i, label, on) => '<button class="ntc' + (on ? ' on' : '') + '" onclick="ntTog(&#39;' + k + '&#39;,' + i + ',this)">' + label + '</button>';
+  return '<div class="ntHero">' + icoImg('store', '') +
+      '<div><b>아이에 대해 매장에 알려 주세요</b><br>적어 주신 내용은 <b>매장 전산에만</b> 보여요. 자녀폰에는 안 떠요.<br>아이 성향에 맞춰 매장이 더 단단하게 지켜 드릴게요.</div></div>' +
+    (saved ? '<div class="note">✅ ' + esc(noteWhen(saved.at)) + ' — 매장에 전달돼 있어요. 고쳐서 다시 보내셔도 돼요.</div>' : '') +
+    '<div class="ntQ">1. 아이와는 어떤 편인가요?</div><div class="ntChips">' +
+      NOTE_REL.map((r, i) => chip('rel', i, r[1] + ' ' + r[2], NOTE_DRAFT.rel === r[0])).join('') + '</div>' +
+    '<div class="ntQ">2. 이런 일이 있었나요? <span>(여러 개 골라도 돼요)</span></div><div class="ntChips">' +
+      NOTE_TAGS.map((t, i) => chip('tags', i, esc(t), NOTE_DRAFT.tags.includes(t))).join('') + '</div>' +
+    '<div class="ntQ">3. 매장에 이렇게 부탁드려요 <span>(여러 개 골라도 돼요)</span></div><div class="ntChips">' +
+      NOTE_ASKS.map((t, i) => chip('asks', i, esc(t), NOTE_DRAFT.asks.includes(t))).join('') + '</div>' +
+    '<div class="ntQ">4. 더 알려 주실 게 있으면 적어 주세요</div>' +
+    '<textarea id="ntText" class="ntTa" maxlength="500" oninput="ntCount(this)" ' +
+      'placeholder="예: 아이가 혼자 매장에 가서 풀어 달라고 할 수 있어요. 꼭 저에게 먼저 연락 주세요.">' + esc(NOTE_DRAFT.text) + '</textarea>' +
+    '<div class="ntCnt" id="ntCnt">' + NOTE_DRAFT.text.length + ' / 500</div>' +
+    '<div class="note warn" style="margin-top:12px">💡 아이가 부모님 폰을 볼 수 있다면, 다 적고 나서 이 화면을 닫아 주세요.</div>' +
+    '<button class="btn btn-p" id="ntSave" style="margin-top:14px" onclick="saveNote()">매장에 전달하기</button>' +
+    (saved ? '<button class="btn btn-g" style="margin-top:8px" onclick="clearNote()">적은 내용 지우기</button>' : '');
+}
+function ntCount(ta){ const c = document.getElementById('ntCnt'); if (c) c.textContent = ta.value.length + ' / 500'; }
+
+function ntTog(k, i, el){
+  if (k === 'rel'){
+    const v = (NOTE_REL[i] || [])[0] || '';
+    NOTE_DRAFT.rel = (NOTE_DRAFT.rel === v) ? '' : v;
+    const box = el.parentNode;
+    if (box) Array.from(box.children).forEach((b, j) => b.classList.toggle('on', !!NOTE_DRAFT.rel && (NOTE_REL[j] || [])[0] === NOTE_DRAFT.rel));
+    return;
+  }
+  const list = k === 'tags' ? NOTE_TAGS : NOTE_ASKS, arr = NOTE_DRAFT[k], t = list[i];
+  if (t === undefined) return;
+  const at = arr.indexOf(t);
+  if (at >= 0) arr.splice(at, 1); else arr.push(t);
+  el.classList.toggle('on', at < 0);
+}
+
+async function saveNote(){
+  const b = document.getElementById('ntSave');
+  NOTE_DRAFT.text = String(document.getElementById('ntText')?.value || '').trim().slice(0, 500);
+  if (!noteFilled(NOTE_DRAFT)){ toast('하나 이상 골라 주시거나 적어 주세요'); return; }
+  if (b){ b.disabled = true; b.textContent = '전달하는 중…'; }
+  const val = { v:1, rel:NOTE_DRAFT.rel, tags:NOTE_DRAFT.tags, asks:NOTE_DRAFT.asks, text:NOTE_DRAFT.text,
+                at:new Date().toISOString(), child:ST.dev?.child_name || '' };
+  try{
+    const { error } = await clientFor(ST.server).from('global_policies').upsert({ key:noteKey(), value:JSON.stringify(val) }, { onConflict:'key' });
+    if (error) throw error;
+    NOTE = { code:ST.code, v:val, loaded:true, err:false };
+    toast('매장에 전달했어요 🙏');
+    navBack();
+  }catch(e){
+    if (b){ b.disabled = false; b.textContent = '매장에 전달하기'; }
+    toast('전달하지 못했어요: ' + (e && e.message || e));
+  }
+}
+
+async function clearNote(){
+  if (!confirm('적은 내용을 지울까요? 매장 전산에서도 사라져요.')) return;
+  try{
+    const val = { v:1, rel:'', tags:[], asks:[], text:'', at:new Date().toISOString(), cleared:true };
+    const { error } = await clientFor(ST.server).from('global_policies').upsert({ key:noteKey(), value:JSON.stringify(val) }, { onConflict:'key' });
+    if (error) throw error;
+    NOTE = { code:ST.code, v:val, loaded:true, err:false };
+    toast('지웠어요');
+    navBack();
+  }catch(e){ toast('지우지 못했어요: ' + (e && e.message || e)); }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  🧮 앱 차단·시간제한 묶음 — 「실시간 제한 상황」과 「30초 요약」이 **같이** 쓴다 (2026-11-11 · 3-13)
+//  (paintLive 안에 있던 계산을 그대로 옮겼다. 두 화면이 서로 다른 개수를 말하면 안 된다)
+//   ⚠️ 「완전 차단」은 두 군데에 적힌다. 둘 다 봐야 한다.
+//     · blocked_apps  — 전산 「차단」 칩은 이것만 바꾼다 (rule_ 은 손대지 않는다)
+//     · rule_<pkg>    — 부모웹앱 「앱 즉시 차단」은 blocked_apps + 전 요일 0 을 같이 쓴다
+//   한쪽만 보면 매장에서 차단한 앱이 이 화면에 안 나온다. (2026-08-31 확인)
+// ══════════════════════════════════════════════════════════════════════════
+function liveAppSets(){
+  const p = ST.pol, wd = new Date().getDay();
+  const appB = getAppBonusToday();
+  const blSet = new Set(J(p.blocked_apps,[]));
+  const timedMap = {};
+  Object.keys(p).filter(k=>k.startsWith('rule_')).forEach(k=>{
+    const pkg=k.slice(5), m=parseRule(p[k]);
+    if(m.mode==='BLOCK'){ blSet.add(pkg); return; }
+    if(m.mode==='WEEKLY'){
+      const t=m.week[wd];
+      if(t===0) blSet.add(pkg);
+      else if(t>0) timedMap[pkg] = t + (Number(appB[pkg])||0);
+    }
+  });
+  const blocked = [...blSet];
+  const timed = Object.keys(timedMap).filter(k=>!blSet.has(k))      // 차단이 시간제한보다 우선
+    .map(k=>({ pkg:k, min:timedMap[k], bonus:Number(appB[k])||0 }))
+    .sort((a,b)=>a.min-b.min);
+  const free = J(p.whitelist_apps,[]).filter(x=>!blSet.has(x));
+  return { appB, blSet, timedMap, blocked, timed, free };
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  🎬 30초 요약 (2026-11-11 · 대표점장 「실시간 자녀폰 상황 30초 영상+설명 요약 — 아주 퀄리티 좋게」)
+//
+//  🔴 영상 파일을 만들지 않는다 — 자녀마다·시각마다 내용이 달라서 미리 만든 영상은 그 순간 거짓이 된다.
+//     「실시간 제한 상황」과 **같은 계산 함수**(liveSummary · liveTodayLimit · liveDowntime · liveAppSets …)로
+//     장면을 그때그때 만든다. 숫자가 화면마다 다르면 안 된다(3-6 · 3-25b).
+//  🔴 **켜져 있는 것만** 「막고 있어요」라고 말한다. 꺼진 차단을 막고 있다고 하면 그게 제일 큰 거짓말이다.
+//  ▸ 장면 8개 · 합쳐서 약 30초 · 위 진행 막대 · 오른쪽 누르면 다음 · 왼쪽 누르면 이전 · 꾹 누르면 멈춤
+//  ▸ 소리 : 휴대폰에 들어 있는 한국어 읽어주기(speechSynthesis) — 0원 · 소리가 안 나는 폰이면 자막만 본다
+// ══════════════════════════════════════════════════════════════════════════
+let SV = null;
+const SV_BG = ['linear-gradient(160deg,#FF8A4C,#E8505B)', 'linear-gradient(160deg,#3B82F6,#6366F1)',
+               'linear-gradient(160deg,#10B981,#0EA5A4)', 'linear-gradient(160deg,#7C3AED,#C026D3)',
+               'linear-gradient(160deg,#F59E0B,#F97316)', 'linear-gradient(160deg,#0EA5E9,#2563EB)',
+               'linear-gradient(160deg,#14B8A6,#22C55E)', 'linear-gradient(160deg,#334155,#1E293B)'];
+
+function svVoiceOn(){ try{ return localStorage.getItem('sv_voice') !== '0'; }catch(e){ return true; } }
+function svHM(d){ return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
+function svDayRange(key){ const v = ST.pol[key] || '미설정'; if (v === '미설정' || v.indexOf('|') < 0) return null; const a = v.split('|'); return a[0] + ' ~ ' + a[1]; }
+
+/** 장면 목록 — 지금 데이터로 만든다 */
+function svBuild(){
+  const p = ST.pol, name = ST.dev?.child_name || ST.name || '우리 아이';
+  const idx = _dayIdx(), now = new Date();
+  const lv = liveSummary(), lim = liveTodayLimit(), base = liveLimitBaseMin(), screen = liveUsedMin();
+  const dt = liveDowntime(), nd = liveNextDowntime(), ac = liveAcademy(), fl = forceLockLeft();
+  const A = liveAppSets();
+  const appNm = k => ((ST.apps || []).find(a => a.app_package === k) || {}).app_name || k;
+  const lvTxt = String(lv.txt || '').split(' ').slice(1).join(' ');     // 앞의 🔴/🟢 를 뗀다
+  const S = [];
+
+  // ① 표지
+  S.push({ img:'live', k:'실시간 · ' + svHM(now) + ' 기준', t:esc(name) + '의 공신폰', d:'지금 걸려 있는 제한을<br><b>30초</b>로 보여 드릴게요',
+           say:name + '의 공신폰, 지금 상황을 삼십 초로 보여 드릴게요.' });
+
+  // ② 지금 상태
+  S.push({ img: lv.lock ? 'lockhero' : 'freehero', k:'지금 이 순간', big: lv.lock ? '🔒 잠김' : '✅ 사용 가능',
+           d: esc(lvTxt) + '<br><span style="opacity:.85">오늘 화면을 켠 시간 ' + fmtMin(screen) + '</span>',
+           say: lv.lock ? ('지금은 잠겨 있어요. ' + lvTxt.split('(').join(' ').split(')').join(' ')) : ('지금은 쓸 수 있어요. 오늘 화면을 켠 시간은 ' + fmtMin(screen) + '이에요.') });
+
+  // ③ 하루 한도
+  if (lim < 0){
+    S.push({ img:'limit', k:'하루 사용시간', t:'하루 한도는 정해져 있지 않아요', d:'필요하시면 「기능 → 하루 사용시간 한도」에서<br>요일마다 정할 수 있어요',
+             say:'하루 사용시간 한도는 정해져 있지 않아요.' });
+  } else {
+    const left = Math.max(0, lim - base);
+    const extra = (A.timed.length || A.free.length) ? '<br><span style="opacity:.85">⚠️ 앱별 시간을 정한 앱 · 무제한 앱은 한도와 따로 세요</span>' : '';
+    S.push({ img:'limit', k:'오늘 하루 한도 ' + fmtMin(lim), big: lim === 0 ? '오늘은 쉬는 날' : fmtMin(left) + '<small>남았어요</small>',
+             d: lim === 0 ? '오늘은 폰을 쓸 수 없게 정해 두셨어요' : ('한도 ' + fmtMin(lim) + ' 중 ' + fmtMin(Math.min(base, lim)) + ' 썼어요' + extra),
+             say: lim === 0 ? '오늘은 폰을 쓸 수 없는 날로 정해 두셨어요.' : ('오늘 하루 한도 ' + fmtMin(lim) + ' 중에 ' + fmtMin(left) + ' 남았어요.') });
+  }
+
+  // ④ 취침 · 학원 · 즉시 차단
+  { const chips = [];
+    const dr = p.dt_enabled === 'true' ? svDayRange('dt_day_' + idx) : null;
+    const ar = p.dt2_enabled === 'true' ? svDayRange('dt2_day_' + idx) : null;
+    chips.push(dr ? { t:'🌙 오늘 취침 ' + dr } : { t: p.dt_enabled === 'true' ? '🌙 오늘은 취침시간 없음' : '🌙 취침시간 꺼짐', off:true });
+    chips.push(ar ? { t:'📚 오늘 학원 ' + ar } : { t: p.dt2_enabled === 'true' ? '📚 오늘은 학원시간 없음' : '📚 학원시간 꺼짐', off:true });
+    if (fl.on) chips.unshift({ t:'🔒 부모님이 잠가 두셨어요' + (fl.txt ? ' (' + fl.txt + ')' : '') });
+    const t = fl.on ? '지금 부모님이 잠가 두셨어요' : dt ? '지금은 취침시간이에요' : ac ? '지금은 학원시간이에요'
+            : nd ? '오늘 밤 ' + nd.s + '부터 잠겨요' : '정해 둔 시간에 저절로 잠겨요';
+    S.push({ img:'dt', k:'잠기는 시간', t, chips,
+             say: fl.on ? '지금은 부모님이 직접 잠가 두셨어요.' : dt ? ('지금은 취침시간이라 ' + dt.e + '까지 잠겨 있어요.')
+                : ac ? ('지금은 학원시간이라 ' + ac.e + '까지 잠겨 있어요.') : nd ? ('오늘 밤 ' + nd.s + '부터 취침시간이 시작돼요.')
+                : (dr || ar) ? '정해 둔 시간이 되면 저절로 잠겨요.' : '오늘은 시간 맞춰 잠기는 설정이 없어요.' });
+  }
+
+  // ⑤ 앱
+  { const U = (typeof LIVE_APPUSE === 'object' && LIVE_APPUSE) ? LIVE_APPUSE : {};
+    const top = Object.keys(U).map(k => ({ k, m:Number(U[k]) || 0 })).filter(x => x.m > 0)
+                  .sort((a, b) => b.m - a.m).slice(0, 3);
+    const chips = [{ t:'⛔ 막은 앱 ' + A.blocked.length + '개' }, { t:'⏱️ 시간 정한 앱 ' + A.timed.length + '개' }, { t:'♾️ 무제한 앱 ' + A.free.length + '개' }];
+    S.push({ img:'apps', k:'앱 관리', t:'오늘 가장 많이 쓴 앱',
+             d: top.length ? top.map(x => esc(appNm(x.k)) + ' <b>' + fmtMin(x.m) + '</b>').join(' · ') : '오늘은 아직 쓴 앱이 없어요',
+             chips,
+             say: '막아 둔 앱은 ' + A.blocked.length + '개, 시간을 정해 둔 앱은 ' + A.timed.length + '개예요.' +
+                  (top.length ? ' 오늘 제일 오래 쓴 앱은 ' + appNm(top[0].k) + ', ' + fmtMin(top[0].m) + '이에요.' : '') });
+  }
+
+  // ⑥ 인터넷 · 우회 차단 — ⭐ 시내모바일 핵심 기술. 🔴 켜져 있는 것만 「막아요」라고 말한다
+  { const chips = [];
+    // 카톡 링크 차단은 「값이 없으면 차단」이 기본이다(전산 kakaoBlocked · 3-23)
+    if (p.kakao_inapp_browser_blocked !== 'false') chips.push({ t:'💬 카톡 링크로 인터넷 열기 차단' });
+    const ks = ['open_chat_blocked','kakao_openchat_create_blocked','kakao_openprofile_blocked','kakao_multiprofile_blocked','kakao_shortform_blocked','kakao_now_tab_blocked'];
+    const kn = ks.filter(k => p[k] === 'true').length;
+    if (kn) chips.push({ t:'💬 카톡 오픈채팅·숏폼 등 ' + kn + '가지 차단' });
+    if (p.youtube_outside_tube_blocked === 'true') chips.push({ t:'📺 유튜브는 시내YouTube 에서만' });
+    if (p.instagram_outside_dm_blocked === 'true') chips.push({ t:'📷 인스타는 시내디엠 DM 만' });
+    chips.push(p.chrome_enabled === 'true' ? { t:'🌐 크롬은 허락한 사이트 ' + J(p.chrome_allowed_domains, []).length + '개만' } : { t:'🌐 인터넷(크롬) 꺼짐', off:true });
+    const real = chips.filter(c => !c.off).length;
+    S.push({ img:'kakao', k:'인터넷 · 우회 차단', t: real ? '앱 속 인터넷 · 유튜브<br>우회도 막고 있어요' : '인터넷 차단을 확인해 주세요',
+             chips,
+             say: real ? '카톡 같은 앱 안에서 인터넷이나 유튜브로 빠져나가는 길도 막고 있어요.' : '인터넷 차단 설정을 한 번 확인해 주세요.' });
+  }
+
+  // ⑦ 안전
+  { const chips = [
+      { t: locOn() ? '📍 위치 확인 켜짐' : '📍 위치 확인 꺼짐', off: !locOn() },
+      { t: '🆘 긴급 연락처 ' + J(p.sos_whitelist, []).length + '개', off: !J(p.sos_whitelist, []).length },
+      { t: p.uninstall_blocked === 'true' ? '🛡️ 앱 삭제 방지 켜짐' : '🛡️ 앱 삭제 방지 꺼짐', off: p.uninstall_blocked !== 'true' },
+      { t: p.play_store_blocked === 'true' ? '🏪 Play 스토어 차단' : '🏪 Play 스토어 열림', off: p.play_store_blocked !== 'true' } ];
+    const onN = chips.filter(c => !c.off).length;
+    S.push({ img:'security', k:'안전장치', t: onN ? '안전장치도 함께 지키고 있어요' : '안전장치를 한 번 확인해 주세요', chips,
+             say: onN ? '위치 확인과 앱 삭제 방지 같은 안전장치도 함께 보여 드렸어요.' : '안전장치가 꺼져 있어요. 한 번 확인해 주세요.' });
+  }
+
+  // ⑧ 마무리
+  S.push({ img:'doumi', k:'바꾸고 싶으시면', t:'말로 하시면 바로 바꿔 드려요', d:'AI 매니저에게 「하루 2시간으로 해줘」처럼<br>말씀만 하시면 돼요', end:true,
+           say:'바꾸고 싶은 게 있으면 AI 매니저에게 말로 하시면 바로 바꿔 드려요.' });
+
+  S.forEach((s, i) => { s.bg = SV_BG[i % SV_BG.length];
+    s.dur = s.end ? 5000 : Math.max(3000, Math.min(4600, 1000 + (s.say || '').length * 75)); });   // 합쳐서 약 30초
+  return S;
+}
+
+async function openSummary(){
+  loading(true);
+  const ok = await liveReload();
+  try{ const M = ST.appMeta; await loadAppMeta(!!(M && M.code === ST.code && !Object.keys(M.icons || {}).length && (ST.apps || []).length)); }catch(e){}
+  loading(false);
+  if (ok === false){ toast('자녀폰 정보를 불러오지 못했어요. 잠시 뒤 다시 눌러 주세요'); return; }
+  let el = document.getElementById('svBox');
+  if (!el){ el = document.createElement('div'); el.id = 'svBox'; el.className = 'sv hide'; document.body.appendChild(el); }
+  SV = { i:0, scenes:svBuild(), el:0, last:performance.now(), paused:false, hold:null, raf:0, voice:svVoiceOn() };
+  el.innerHTML =
+    '<div class="svBars">' + SV.scenes.map(() => '<i><b></b></i>').join('') + '</div>' +
+    '<div class="svTop"><span class="sp">🎬 30초 요약 · ' + esc(ST.dev?.child_name || ST.name || '') + '</span>' +
+      '<button class="svBtn" id="svVoice" onclick="svToggleVoice()"></button><button class="svBtn" onclick="navBack()">닫기 ✕</button></div>' +
+    '<div id="svStage"></div><div class="svPause">⏸</div>' +
+    '<div class="svTapL" id="svL"></div><div class="svTapR" id="svR"></div>' +
+    '<div class="svCap" id="svCap"></div>';
+  el.classList.remove('hide');
+  document.body.style.overflow = 'hidden';
+  navPush(() => svClose());
+  svWireTap(document.getElementById('svL'), -1);
+  svWireTap(document.getElementById('svR'), +1);
+  svPaintVoice();
+  svGo(0);
+  cancelAnimationFrame(SV.raf); SV.raf = requestAnimationFrame(svLoop);
+}
+
+/** 눌렀다 떼면 넘기고, 꾹 누르고 있으면 멈춘다 */
+function svWireTap(el, dir){
+  if (!el) return;
+  el.addEventListener('pointerdown', () => { if (!SV) return; SV.hold = setTimeout(() => { if (SV){ SV.hold = 'held'; svPause(true); } }, 280); });
+  el.addEventListener('pointerup', () => { if (!SV) return;
+    if (SV.hold === 'held'){ SV.hold = null; svPause(false); return; }
+    clearTimeout(SV.hold); SV.hold = null; svGo(SV.i + dir); });
+  el.addEventListener('pointercancel', () => { if (!SV) return; clearTimeout(SV.hold); if (SV.hold === 'held') svPause(false); SV.hold = null; });
+}
+
+function svPause(on){
+  if (!SV) return;
+  SV.paused = on;
+  const b = document.getElementById('svBox'); if (b) b.classList.toggle('paused', on);
+  try{ if ('speechSynthesis' in window){ if (on) speechSynthesis.pause(); else speechSynthesis.resume(); } }catch(e){}
+}
+
+function svGo(i){
+  if (!SV) return;
+  i = Math.max(0, Math.min(SV.scenes.length - 1, i));
+  SV.i = i; SV.el = 0; SV.last = performance.now();
+  const s = SV.scenes[i];
+  const chips = (s.chips || []).map((c, j) => '<span class="svChip' + (c.off ? ' off' : '') + '" style="animation-delay:' + (0.45 + j * 0.12).toFixed(2) + 's">' + esc(c.t) + '</span>').join('');
+  document.getElementById('svStage').innerHTML =
+    '<div class="svScene"><div class="svBg" style="background:' + s.bg + '"></div>' +
+      '<div class="svImgW">' + icoImg(s.img, 'svImg') + '</div>' +
+      '<div class="svK">' + esc(s.k || '') + '</div>' +
+      (s.big ? '<div class="svBig">' + s.big + '</div>' : '') +
+      (s.t ? '<div class="svT">' + s.t + '</div>' : '') +
+      (s.d ? '<div class="svD">' + s.d + '</div>' : '') +
+      (chips ? '<div class="svChips">' + chips + '</div>' : '') +
+      (s.end ? '<div class="svEnd"><button class="a" onclick="svOpenAi()">✨ AI 매니저에게 말하기</button>' +
+               '<button class="b" onclick="svGo(0)">🔁 처음부터 다시 보기</button><button class="b" onclick="navBack()">닫기</button></div>' : '') +
+    '</div>';
+  // 마지막 장면에서는 버튼을 눌러야 하니 넘기기 영역을 치운다
+  ['svL','svR'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = s.end ? 'none' : ''; });
+  const cap = document.getElementById('svCap'); if (cap) cap.textContent = s.say || '';
+  document.querySelectorAll('#svBox .svBars i b').forEach((b, j) => { b.style.width = j < i ? '100%' : '0'; });
+  svPause(false);
+  svSay(s.say);
+}
+
+function svLoop(){
+  if (!SV) return;
+  const now = performance.now();
+  if (!SV.paused && !document.hidden) SV.el += now - SV.last;
+  SV.last = now;
+  const s = SV.scenes[SV.i], f = Math.min(1, SV.el / s.dur);
+  const bars = document.querySelectorAll('#svBox .svBars i b');
+  if (bars[SV.i]) bars[SV.i].style.width = (f * 100).toFixed(1) + '%';
+  if (f >= 1 && SV.i < SV.scenes.length - 1) svGo(SV.i + 1);
+  if (SV) SV.raf = requestAnimationFrame(svLoop);
+}
+
+function svSay(t){
+  try{
+    if (!('speechSynthesis' in window)) return;
+    speechSynthesis.cancel();
+    if (!SV || !SV.voice || !t) return;
+    const u = new SpeechSynthesisUtterance(t);
+    u.lang = 'ko-KR'; u.rate = 1.08; u.pitch = 1.05;
+    const v = speechSynthesis.getVoices().find(x => String(x.lang || '').toLowerCase().indexOf('ko') === 0);
+    if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  }catch(e){ console.warn('읽어주기 실패:', e && e.name, e && e.message); }
+}
+function svPaintVoice(){ const b = document.getElementById('svVoice'); if (b) b.textContent = SV && SV.voice ? '🔊 소리 켬' : '🔇 소리 끔'; }
+function svToggleVoice(){
+  if (!SV) return;
+  SV.voice = !SV.voice;
+  try{ localStorage.setItem('sv_voice', SV.voice ? '1' : '0'); }catch(e){}
+  svPaintVoice();
+  if (SV.voice) svSay(SV.scenes[SV.i].say); else { try{ speechSynthesis.cancel(); }catch(e){} }
+}
+function svClose(){
+  if (SV){ cancelAnimationFrame(SV.raf); clearTimeout(SV.hold); }
+  SV = null;
+  try{ if ('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){}
+  const el = document.getElementById('svBox'); if (el){ el.classList.add('hide'); el.innerHTML = ''; }
+  document.body.style.overflow = '';
+}
+function svOpenAi(){ navBack(); setTimeout(() => { try{ openDoumi(); }catch(e){} }, 60); }
+
 const DM_PKG = 'com.example.dmonly_v2';
 const ADD_ITEMS = [
   { key:'chrome_requested', ico:'allow', t:'공신폰 크롬',
@@ -2906,6 +3352,7 @@ const CARD_EXP = {
   openDmHub     : '인스타그램에서 DM(메시지)만 쓸 수 있는 앱이에요.',
   openList   : '자녀폰을 더 연결하거나, 다른 자녀로 바꿔요.',
   refreshAll : '자녀폰이 올린 최신 정보를 다시 불러와요.',
+  openNote   : '아이 성향이나 집 상황을 적어 주시면 매장이 그에 맞춰 관리해 드려요. 자녀폰에는 안 보여요.',
   doLogout   : '이 목록에서 이 자녀폰을 뺍니다. 자녀폰 설정은 그대로예요.'
 };
 
@@ -3957,7 +4404,8 @@ function icoImg(k, cls){
 /** 메인 카드의 onclick 함수 이름 → 그림 키 */
 const ICO_BY_FN = (() => {
   const m = { togglePush:'push', refreshAll:'refresh', openList:'kids', doLogout:'logout', openDocs:'docs',
-              openChromeHub:'allow', openTubeHub:'tube', openDmHub:'dm' };
+              openChromeHub:'allow', openTubeHub:'tube', openDmHub:'dm',
+              openNote:'store', openSummary:'live' };   // 🆕 2026-11-11
   Object.keys(F_OPEN).forEach(k => { const fn = F_OPEN[k]; if (!m[fn]) m[fn] = k; });
   return m;
 })();
@@ -6640,27 +7088,7 @@ function paintLive(){
   // ── 🆕 2026-11-03 : 앱별 제한 집계를 **여기로 올렸다** ──
   //   아래 ④ 에서만 쓰던 것인데, 설계안 E(「합쳐서 최대 N분」)를 ② 막대 카드에 적어야 해서
   //   그보다 먼저 계산해야 한다. 🔴 **같은 값을 두 번 자르지 않는다**(CLAUDE.md 3-13) — 옮긴 것이다.
-  const appB = getAppBonusToday();
-  //   ⚠️ 「완전 차단」은 두 군데에 적힌다. 둘 다 봐야 한다.
-  //     · blocked_apps  — 전산 「차단」 칩은 이것만 바꾼다 (rule_ 은 손대지 않는다)
-  //     · rule_<pkg>    — 부모웹앱 「앱 즉시 차단」은 blocked_apps + 전 요일 0 을 같이 쓴다
-  //   한쪽만 보면 매장에서 차단한 앱이 이 화면에 안 나온다. (2026-08-31 확인)
-  const blSet = new Set(J(p.blocked_apps,[]));
-  const timedMap = {};
-  Object.keys(p).filter(k=>k.startsWith('rule_')).forEach(k=>{
-    const pkg=k.slice(5), m=parseRule(p[k]);
-    if(m.mode==='BLOCK'){ blSet.add(pkg); return; }
-    if(m.mode==='WEEKLY'){
-      const t=m.week[wd];
-      if(t===0) blSet.add(pkg);
-      else if(t>0) timedMap[pkg] = t + (Number(appB[pkg])||0);
-    }
-  });
-  const blocked = [...blSet];
-  const timed = Object.keys(timedMap).filter(k=>!blSet.has(k))      // 차단이 시간제한보다 우선
-    .map(k=>({ pkg:k, min:timedMap[k], bonus:Number(appB[k])||0 }))
-    .sort((a,b)=>a.min-b.min);
-  const free = J(p.whitelist_apps,[]).filter(x=>!blSet.has(x));
+  const { appB, blSet, timedMap, blocked, timed, free } = liveAppSets();   // 🆕 2026-11-11 : 30초 요약과 같은 계산을 쓴다(3-13)
 
   // ══════════ ⭐ 설계안 E : 「하루 60분 + 앱별 80분 = 최대 140분」을 **화면에 적는다** ══════════
   //
