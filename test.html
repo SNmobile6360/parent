@@ -1752,7 +1752,7 @@ async function pinMatches(h, k){
   //   서버에 아직 함수가 없으면(404) 옛 방식으로 돌아간다 → 서버·웹 중 무엇을 먼저 올려도 안 깨진다.
   try{
     const res = await locRpc(k.server, 'sn_parent_unlock', { p_device:k.code, p_pin_hash:h });
-    if(res==='OK'){ ensureParentToken(k, h); return true; }
+    if(res==='OK'){ await ensureParentToken(k, h); return true; }   // 열쇠를 받은 뒤에 화면을 읽는다(잠근 뒤 빈 화면 방지)
     if(res==='BAD_PIN' || res==='NO_DEVICE') return false;
     if(res==='LOCKED') throw new Error('비밀번호를 너무 여러 번 틀려서 10분 동안 잠겼어요');
     throw new Error(String(res||'서버 응답이 없어요'));
@@ -1764,7 +1764,7 @@ async function pinMatches(h, k){
     .select('key,value').eq('device_code',k.code).in('key',['pin_hash']);
   if(error) throw error;          // 「못 물어봤다」와 「틀렸다」를 구분한다 — 실패 횟수를 올리지 않는다
   const ok = (data||[]).some(r=>r.value===h);
-  if(ok) ensureParentToken(k, h);
+  if(ok) await ensureParentToken(k, h);
   return ok;
 }
 
