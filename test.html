@@ -1565,9 +1565,21 @@ const DAYS  = ['일','월','화','수','목','금','토'];   // limit_day_1=일 
 const DORDER = ['일','월','화','수','목','금','토'];  // rule_ 문자열 순서 (부모앱과 동일)
 
 const clients = {};
+// 🔒 2026-11-11 (모의해킹 후속) : 그 서버에 있는 자녀들의 **부모 열쇠**를 모든 요청에 싣는다(x-device-token · 쉼표로 여러 개).
+//   지금은 서버가 이 헤더를 안 보지만, 서버 표를 잠그면 **이 열쇠가 있어야** 자녀 화면이 읽힌다.
+//   열쇠가 바뀌면 클라이언트를 새로 만든다(_snTok 비교). 열쇠는 PIN 을 서버가 확인한 뒤에만 받는다(ensureParentToken).
+function parentTokensFor(label){
+  try{ return kids().filter(k=>k.server===label).map(k=>locTokenOf(k.code)).filter(Boolean).join(','); }
+  catch(e){ return ''; }   // 스크립트가 아직 다 안 읽혔을 때(아래쪽 const 전) — 헤더 없이 간다
+}
 function clientFor(label){
   const s = SERVERS.find(x=>x.label===label) || SERVERS[0];
-  if(!clients[s.label]) clients[s.label] = window.supabase.createClient(s.url, s.key);
+  const tk = parentTokensFor(s.label);
+  if(!clients[s.label] || clients[s.label]._snTok !== tk){
+    clients[s.label] = window.supabase.createClient(s.url, s.key,
+      tk ? { global: { headers: { 'x-device-token': tk } } } : undefined);
+    clients[s.label]._snTok = tk;
+  }
   return clients[s.label];
 }
 
@@ -1734,10 +1746,37 @@ async function pinMatches(h, k){
   // 🔴 2026-11-05 : `error` 를 받는다. 안 받으면 **서버가 죽은 것이 「비밀번호 틀림」으로 보이고**
   //    5번이면 10분 잠금까지 걸린다. 2026-10-23 에 바로 이 증상으로 민원이 왔는데
   //    그때 고친 곳은 다른 함수들이었고 **정작 PIN 검사는 그대로였다.** (CLAUDE.md 3-10)
+  // 🔒 2026-11-11 (모의해킹 후속) : PIN 을 **서버가** 확인한다(sn_parent_unlock · 서버에서도 10분 10회 잠금).
+  //   지금까지는 브라우저가 pin_hash 를 읽어 비교했다 — 그러면 공개 열쇠만 있으면 누구나 pin_hash 를 읽는다.
+  //   표를 잠그면 브라우저는 pin_hash 를 못 읽으므로 **잠그기 전에 이 길로 옮겨 둔다.**
+  //   서버에 아직 함수가 없으면(404) 옛 방식으로 돌아간다 → 서버·웹 중 무엇을 먼저 올려도 안 깨진다.
+  try{
+    const res = await locRpc(k.server, 'sn_parent_unlock', { p_device:k.code, p_pin_hash:h });
+    if(res==='OK'){ ensureParentToken(k, h); return true; }
+    if(res==='BAD_PIN' || res==='NO_DEVICE') return false;
+    if(res==='LOCKED') throw new Error('비밀번호를 너무 여러 번 틀려서 10분 동안 잠겼어요');
+    throw new Error(String(res||'서버 응답이 없어요'));
+  }catch(e){
+    if(!(e && e.status===404)) throw e;   // 「못 물어봤다」와 「틀렸다」를 구분한다 — 실패 횟수를 올리지 않는다
+  }
+  // ↓ 옛 방식 (서버에 sn_parent_unlock 이 아직 없을 때만)
   const { data, error } = await clientFor(k.server).from('policies')
     .select('key,value').eq('device_code',k.code).in('key',['pin_hash']);
   if(error) throw error;          // 「못 물어봤다」와 「틀렸다」를 구분한다 — 실패 횟수를 올리지 않는다
-  return (data||[]).some(r=>r.value===h);
+  const ok = (data||[]).some(r=>r.value===h);
+  if(ok) ensureParentToken(k, h);
+  return ok;
+}
+
+// 🔒 부모 열쇠를 챙긴다 — PIN 이 서버에서 맞았을 때만 부른다. 없거나 90일이 지났으면 새로 받는다(서버 유효기간 180일).
+//   받은 열쇠는 이 브라우저에만 있고 서버엔 해시만 있다. 실패해도 조용히 넘어간다(다음 잠금 해제 때 다시).
+async function ensureParentToken(k, h){
+  try{
+    const at = (JSON.parse(localStorage.getItem(LOC_TOK_AT_KEY)||'{}')||{})[k.code] || 0;
+    if(locTokenOf(k.code) && Date.now()-at < 90*86400000) return;
+    const res = await locRpc(k.server, 'loc_register_parent_token', { p_device:k.code, p_pin_hash:h });
+    if(typeof res==='string' && /^[0-9a-f]{64}$/.test(res)) setLocTokenOf(k.code, res);
+  }catch(e){ /* 다음 기회에 */ }
 }
 async function verifyPin(){
   if(pinLockLeftSec()>0){ pinBuf=''; drawPin();
@@ -7669,9 +7708,13 @@ function srvOf(label){ return SERVERS.find(x=>x.label===label) || SERVERS[0]; }
 
 function locTokens(){ try{ return JSON.parse(localStorage.getItem(LOC_TOK_KEY)||'{}')||{}; }catch(e){ return {}; } }
 function locTokenOf(code){ return locTokens()[code] || ''; }
+const LOC_TOK_AT_KEY = 'sinae_loc_token_at';   // { 기기코드: 받은 시각(ms) } — 90일마다 새로 받는다
 function setLocTokenOf(code, t){
   try{ const o=locTokens(); if(t) o[code]=t; else delete o[code];
-       localStorage.setItem(LOC_TOK_KEY, JSON.stringify(o)); }catch(e){}
+       localStorage.setItem(LOC_TOK_KEY, JSON.stringify(o));
+       const a=JSON.parse(localStorage.getItem(LOC_TOK_AT_KEY)||'{}')||{};
+       if(t) a[code]=Date.now(); else delete a[code];
+       localStorage.setItem(LOC_TOK_AT_KEY, JSON.stringify(a)); }catch(e){}
 }
 function locPinHash(){ try{ return sessionStorage.getItem(LOC_PINH_KEY)||''; }catch(e){ return ''; } }
 
