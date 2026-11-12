@@ -1087,6 +1087,71 @@
   .psv.n{background:#F2F4F7;color:#475467;border:1px solid #D0D5DD}
   .psm{margin-top:10px;font-size:13.2px;line-height:1.6;border-radius:12px;padding:9px 11px}
   .psm.g{background:#ECFDF3;color:#05603A} .psm.y{background:#FFFAEB;color:#93370D} .psm.r{background:#FEF3F2;color:#912018}
+  /* ══ 🆕 2026-11-12 — 📘 설명 과 ⚙️ 켜고 끄는 곳 을 색·모양으로 나눈다 (대표점장 「UI 가 바뀌어서 뭐가 뭔지 모른다」) ══
+     · 설명  = 크림색 + 점선 테두리 + 「📘 설명」 이름표 · 길면 접혀 있다(펼치기 ▾)
+     · 기능  = 흰 카드 + 파란 굵은 왼쪽 줄 + 「⚙️ 켜고 끄는 곳」 이름표 · 스위치 안에 「켬 / 끔」 글자
+     🔴 이 블록은 <style> **맨 끝**에 둔다 — 앞쪽 .note 규칙보다 나중에 와야 이긴다(3-20). */
+  .dsc{background:#FFFBF3;border:1.5px dashed #E6D3AE;border-radius:16px;margin:2px 0 16px;overflow:hidden}
+  .dsc>summary{list-style:none;display:flex;align-items:center;gap:8px;padding:12px 14px;cursor:pointer;font-size:14px;color:#5C4414;line-height:1.5;-webkit-tap-highlight-color:transparent}
+  .dsc>summary::-webkit-details-marker{display:none}
+  .dscTag{flex:none;background:#F3E3C3;color:#7A5418;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:800}
+  .dscH{flex:1;min-width:0;font-weight:700;word-break:keep-all}
+  .dscMore{flex:none}
+  details.dsc>summary>span.dscMore::after{content:'펼치기 ▾' !important;font-size:12px;font-weight:800;color:#B07A2A;white-space:nowrap}
+  details.dsc[open]>summary>span.dscMore::after{content:'접기 ▴' !important}   /* 649행 「details:not([open]) > summary span:last-child::after{▸}」 보다 이겨야 한다 */
+  .dscB{padding:0 12px 12px}
+  .dscB .xbox{background:#fff;border-color:#F0E4CC;margin-top:0}
+  .dscB .sec{margin-top:12px}
+  .card:has(.sw){border:1.5px solid #BFD3FE !important;border-left:6px solid #2563EB !important;background:#fff !important}
+  .card:has(.sw)::before{content:'⚙️ 켜고 끄는 곳';display:inline-block;margin:0 0 8px;padding:2px 9px;border-radius:999px;background:#EFF4FF;color:#1D4ED8;font-size:11.5px;font-weight:800}
+  .sw i::after{content:'끔';position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10.5px;font-weight:800;color:#475467;font-style:normal;line-height:1}
+  .sw input:checked + i::after{content:'켬';left:8px;right:auto;color:#fff}
+  .note{background:#FFFBF3;border-color:#EBD9B4;color:#5C4414}
+  .note.warn{background:#FFF4ED;border-color:#FDBA8C;color:#9A3412}
+  /* 📝 2026-11-12 특이사항 설문 */
+  .nqProg{font-size:13.5px;color:#475467;margin:2px 2px 10px;font-weight:600}
+  .nq{background:#fff;border:1.5px solid #EAECF0;border-radius:16px;padding:13px 14px;margin-bottom:10px}
+  .nqT{display:flex;gap:9px;align-items:flex-start;font-size:15px;line-height:1.55;color:#1D2939;word-break:keep-all}
+  .nqN{flex:none;width:24px;height:24px;border-radius:50%;background:#FFF4ED;color:#C2410C;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .nqA{display:flex;gap:8px;margin:11px 0 9px}
+  .nqB{flex:1;border:1.5px solid #E4E7EC;background:#fff;border-radius:12px;padding:11px 0;font-size:15.5px;font-weight:800;color:#475467;cursor:pointer;font-family:inherit}
+  .nqB.yes.on{background:#ECFDF3;border-color:#12B76A;color:#027A48}
+  .nqB.no.on{background:#FEF3F2;border-color:#F97066;color:#B42318}
+  .nqB.on::before{content:'✓ '}
+  .nqM{width:100%;box-sizing:border-box;border:1.5px solid #EAECF0;border-radius:11px;padding:9px 11px;font-size:13.5px;font-family:inherit;background:#FCFCFD}
+  .nqM:focus{outline:none;border-color:#F97316;background:#fff}
+  /* 👆 2026-11-12 지문 · 얼굴 잠금 */
+  .bioBtn{display:block;margin:18px auto 0;border:0;border-radius:999px;padding:13px 22px;font-size:16px;font-weight:800;font-family:inherit;background:#2563EB;color:#fff;box-shadow:0 6px 16px rgba(37,99,235,.25);cursor:pointer}
+  .bioBtn.back{background:#F2F4F7;color:#344054;box-shadow:none}
+  .bioBtn.hide{display:none}
+  .lkBox{display:flex;flex-direction:column;gap:10px;margin:4px 0 14px}
+  .lkOpt{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid #EAECF0;border-radius:16px;padding:14px;cursor:pointer}
+  .lkOpt.on{border-color:#2563EB;background:#F5F8FF}
+  .lkOpt.dis{opacity:.5;cursor:default}
+  .lkR{font-size:20px;color:#2563EB;width:22px;text-align:center}
+  .lkI{font-size:26px}
+  .lkT{font-size:16px;font-weight:800;color:#1D2939}
+  .lkD{font-size:13px;color:#667085;margin-top:3px;line-height:1.5}
+  /* 🎬 2026-11-12 요약 영상 2판 — 아래 조작줄 · 경고 장면 · 고치러 가기 */
+  .svBot{position:absolute;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:4;display:flex;flex-direction:column;gap:8px}
+  .svBot .svCap{position:static}
+  .svCtl{display:flex;gap:8px;align-items:center}
+  .svCb{border:0;border-radius:12px;padding:11px 12px;font-size:15px;font-weight:800;font-family:inherit;background:rgba(255,255,255,.2);color:#fff;cursor:pointer}
+  .svCb.big{flex:1;background:#fff;color:#1D2939}
+  .svCb.wide{flex:0 0 auto;font-size:13px}
+  .svTapL,.svTapR{bottom:180px}
+  .svScene{padding-bottom:190px}
+  .svScene.end{justify-content:flex-start;padding-top:86px;overflow-y:auto}
+  .svChip.bad{background:#FEE4E2;color:#B42318;border-color:#FDA29B}
+  .svChip.amb{background:#FFFAEB;color:#B54708;border-color:#FEC84B}
+  .svScene.warn .svT{font-size:24px}
+  .svFix{border:0;border-radius:13px;padding:12px 14px;font-size:14.5px;font-weight:800;font-family:inherit;background:#FFFAEB;color:#B54708;text-align:left;cursor:pointer}
+  .svFix.r{background:#FEF3F2;color:#B42318}
+  .svFixN{font-size:13px;opacity:.9;text-align:left;padding:2px 4px}
+  #svBox.endmode .svCap{display:none}
+  .svScene.end{padding-bottom:96px}
+  .svScene.end .svImg{width:92px;height:92px}
+  .svScene.end .svT{font-size:22px}
 </style>
 </head>
 <body>
@@ -1176,6 +1241,8 @@
     <button class="key" onclick="pinTap('0')">0</button>
     <button class="key" onclick="pinDel()">⌫</button>
   </div>
+  <!-- 👆 2026-11-12 : 지문 · 얼굴로 열기 (bioPinBtnClick) — 잠금 방식에서 켠 폰에만 보인다 -->
+  <button id="bioBtn" class="bioBtn hide" onclick="bioPinBtnClick()">👆 지문으로 열기</button>
 
   <!-- ══ 💬 비밀번호를 잊은 부모용 문의 (2026-08-31 추가) ══
        비밀번호를 잊으면 여기서 더 갈 데가 없다. 5회 틀려 10분 잠긴 동안에도 이 버튼은 그대로 보인다.
@@ -1244,7 +1311,7 @@
     <!-- 🎬 2026-11-11 : 30초 요약 (대표점장 「실시간 자녀폰 상황 30초 영상+설명 요약」) — openSummary -->
     <div class="card tap svCard" onclick="openSummary()">
       <div class="row"><div class="ic" style="background:#FFF4ED">🎬</div>
-        <div class="grow"><div class="ttl">30초 요약 영상으로 보기 <span class="betabadge">새 기능</span></div><div class="val">지금 걸려 있는 제한을 그림 · 소리로 한눈에 보여 드려요</div></div><div class="chev">›</div></div>
+        <div class="grow"><div class="ttl">자녀 실시간 제한 상황 30초 요약 영상으로 보기 <span class="betabadge">새 기능</span></div><div class="val">지금 걸린 제한과 <b>잘못 설정된 곳</b>까지 그림 · 소리로 알려 드려요</div></div><div class="chev">›</div></div>
     </div>
     <!-- 🔄 2026-11-11 : 「새로고침」을 더보기 → 홈으로 옮겼다 (대표점장) · id vSync 는 하나만 둔다 -->
     <div class="card tap" onclick="refreshAll(true)">
@@ -1423,6 +1490,11 @@
     <div class="card tap" onclick="openPinChange()">
       <div class="row"><div class="ic" style="background:#F2F4F7">🔢</div>
         <div class="grow"><div class="ttl">비밀번호 변경</div><div class="val">부모님 확인용 6자리 비밀번호</div></div><div class="chev">›</div></div>
+    </div>
+    <!-- 👆 2026-11-12 : 잠금 방식 (비밀번호 / 지문 · 얼굴) — 카카오톡 화면잠금처럼 고른다 -->
+    <div class="card tap" onclick="openLockType()">
+      <div class="row"><div class="ic" style="background:#EFF4FF">👆</div>
+        <div class="grow"><div class="ttl">잠금 방식 <span class="betabadge">새 기능</span></div><div class="val">비밀번호 대신 지문 · 얼굴로 열 수 있어요</div></div><div class="chev">›</div></div>
     </div>
     <div class="card tap" onclick="openList()">
       <div class="row">
@@ -1731,6 +1803,8 @@ function startPin(target){
   if(pinLockLeftSec()>0){ el.textContent=pinLockMsg(); startPinTick(); }
   else el.textContent = target ? `${target.name}의 비밀번호를 입력하세요` : '비밀번호를 입력하세요';
   show('scPin');
+  bioPaintPinBtn();
+  if (!target && !REAUTH_THEN && bioSaved() && pinLockLeftSec() <= 0) setTimeout(() => bioUnlockFromPin(true), 350);   // 👆 2026-11-12
 }
 function drawPin(){ document.querySelectorAll('#scPin .dot2').forEach((d,i)=>d.classList.toggle('f', i<pinBuf.length)); }
 function pinDel(){ if(pinBusy) return; pinBuf=pinBuf.slice(0,-1); drawPin(); }
@@ -1799,6 +1873,9 @@ async function verifyPin(){
       //   그 토큰은 서버가 **PIN 을 확인한 뒤**에만 내준다 → 이번 세션 동안만 해시를 들고 있는다.
       //   ⚠️ sessionStorage 다(앱을 닫으면 사라진다). localStorage 에 두지 않는다.
       try{ sessionStorage.setItem(LOC_PINH_KEY, h); }catch(e){}
+      try{ sessionStorage.setItem('sinae_auth_by','pin'); }catch(e){}
+      // 👆 2026-11-12 : 지문으로 연 세션에서 비밀번호가 꼭 필요한 일(위치 켜기 등)을 하던 중이면 이어서 한다
+      if(!pinTarget && REAUTH_THEN){ const f=REAUTH_THEN; REAUTH_THEN=null; show('scMain'); try{ f(); }catch(e){ toast('이어서 하지 못했어요: '+e.message); } return; }
       if(pinTarget){ const t=pinTarget; pinTarget=null; upsertKid(t); clearAddParam(); toast(`${t.name} 연결되었습니다`); openChild(t); }
       else afterUnlock();
     }
@@ -1974,7 +2051,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월11일 8차 테스트판';
+const WEB_LABEL = '11월12일 10차 테스트판';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -2638,28 +2715,62 @@ function paintMain(){
 // ══════════════════════════════════════════════════════════════════════════
 
 // ══════════════════════════════════════════════════════════════════════════
-//  📝 자녀 특이사항 · 매장 전달사항 (2026-11-11 · 대표점장)
-//  「자녀를 못 이기는 부모님이 많다 — AS 하다 들키거나, 부모웹앱을 보고 비밀번호를 알려 달라고 조른다」
-//  → 부모님이 아이 성향과 부탁을 적으면 **매장 전산 「특이사항 메모」 아래에** 보인다.
+//  📝 자녀 특이사항 · 매장 전달사항 — 🆕 2026-11-12 설문판 (v2)
+//  대표점장 : 「5~10가지 문항으로 예 · 아니오로만 답할 수 있는 설문조사 느낌 + 문항마다 특이사항」
+//    예) 자녀가 「위치 조회」를 부모님께서 하시는 걸 아는 걸 원하시나요?  예 / 아니오 · 특이사항
 //
-//  저장 자리 : global_policies 의 `parent_note_<연동코드>` (JSON 한 줄)
-//  🔴 policies 에 두지 않는다 — 자녀앱이 동기화에 한 번 실패하면 그 기기 정책을 **전부 지우고**
-//     자기가 아는 키만 다시 넣는다(SyncManager useDeleteInsertFallback · CLAUDE.md 3-24). 메모가 조용히 사라진다.
-//  🔴 child_devices.memo 에 직접 쓰지 않는다 — **매장이 쓴 메모를 덮어쓴다.** 전산은 둘을 나란히 보여 준다.
-//  ⚠️ 자녀폰에는 안 간다(자녀앱은 이 키를 모른다). 다만 **부모님 폰을 아이가 보면 보인다** — 화면에 적어 둔다.
+//  저장 자리 : global_policies 의 `parent_note_<연동코드>` (JSON 한 줄) — 11-11 판과 같은 자리
+//    { v:2, at, child, ans:{ <id>:{ t:"짧은 이름", q:"질문", a:"yes"|"no"|"", m:"특이사항", warn:true|false } }, memo }
+//  🔴 질문 문구(t·q)를 **답과 같이 저장한다** — 전산이 질문 목록을 따로 들고 있으면 한쪽만 고쳐진다(3-13).
+//  🔴 policies 에 두지 않는다 — 자녀앱이 동기화에 한 번 실패하면 그 기기 정책을 전부 지운다(3-24).
+//  🔴 child_devices.memo(매장 메모)에 직접 쓰지 않는다 — 매장이 쓴 메모를 덮어쓴다.
+//  ⚠️ 11-11 판(v1 : rel·tags·asks·text)으로 적은 것은 전산이 그대로 읽는다. 여기서 다시 저장하면 v2 로 바뀐다.
 // ══════════════════════════════════════════════════════════════════════════
-const NOTE_REL  = [['good','😊','소통이 잘돼요'], ['ok','🙂','보통이에요'], ['fight','😥','자주 다투는 편이에요'], ['beg','😣','풀어 달라고 많이 졸라요']];
-const NOTE_TAGS = ['비밀번호를 알려 달라고 해요', '부모님 폰을 몰래 봐요', '설정 바꾸다 아이에게 들킨 적 있어요',
-                   '풀어 달라고 떼쓰고 울어요', '몰래 푸는 방법을 찾아봐요', '밤늦게까지 폰을 해요', '공부에 집중을 잘 못 해요'];
-const NOTE_ASKS = ['아이가 매장에 와도 설정을 풀지 말아 주세요', '설정을 바꿀 땐 부모님께 먼저 연락 주세요',
-                   '아이 앞에서는 설정 얘기를 조심해 주세요', '매장에서 아이에게 단호하게 안내해 주세요',
-                   'AS 는 아이 없이 부모님만 갈게요'];
+//  warnOn : 이 답이면 전산에서 **빨갛게** 보인다(매장이 꼭 봐야 하는 답)
+const NOTE_QS = [
+  { id:'loc_know',  t:'위치 조회를 자녀가 알아도 됨', warnOn:'no',
+    q:'자녀가 「위치 조회」를 부모님께서 하시는 걸 <b>아는 걸</b> 원하시나요?',
+    ph:'예) 아이가 알면 폰을 꺼 둘 것 같아요' },
+  { id:'ctl_know',  t:'폰 제어를 자녀가 알아도 됨', warnOn:'no',
+    q:'자녀가 「자녀폰 제어」를 부모님께서 하시는 걸 <b>아는 걸</b> 원하시나요?',
+    ph:'예) 매장에서만 조정할 수 있는 부분으로 알게 해 주세요' },
+  { id:'talk',      t:'자녀와 대화가 잘 됨', warnOn:'no',
+    q:'자녀와 <b>대화가 잘 되는</b> 편인가요?',
+    ph:'예) 폰 얘기만 나오면 다퉈요' },
+  { id:'ask_pw',    t:'비밀번호를 알려 달라고 조름', warnOn:'yes',
+    q:'자녀가 부모님 <b>비밀번호를 알려 달라고</b> 조른 적이 있나요?',
+    ph:'예) 부모웹앱을 열 때 옆에서 봐요' },
+  { id:'bypass',    t:'몰래 풀려고 한 적 있음', warnOn:'yes',
+    q:'자녀가 설정을 <b>몰래 풀려고</b> 한 적이 있나요?',
+    ph:'예) 친구한테 푸는 방법을 들었대요' },
+  { id:'store_no',  t:'자녀 혼자 오면 풀어 주지 않기', warnOn:'yes',
+    q:'자녀가 <b>혼자 매장에 와서</b> 풀어 달라고 하면 <b>거절</b>해 주길 원하시나요?',
+    ph:'예) 꼭 저에게 먼저 전화 주세요' },
+  { id:'call_first',t:'바꾸기 전에 부모님께 먼저 연락', warnOn:'yes',
+    q:'설정을 바꿀 때 매장에서 <b>부모님께 먼저 연락</b>드리길 원하시나요?',
+    ph:'예) 문자로 먼저 알려 주세요' },
+  { id:'as_quiet',  t:'자녀 앞에서 설정 얘기 조심', warnOn:'yes',
+    q:'AS · 점검 때 <b>자녀 앞에서 설정 얘기</b>는 피해 주길 원하시나요?',
+    ph:'예) AS 는 제가 혼자 갈게요' },
+  { id:'night',     t:'밤늦게 쓰는 게 가장 걱정', warnOn:'yes',
+    q:'자녀가 <b>밤늦게</b> 폰을 쓰는 게 가장 걱정되시나요?',
+    ph:'예) 새벽 2시까지 해요' },
+  { id:'guide',     t:'매장이 자녀에게 규칙 안내', warnOn:'',
+    q:'매장에서 자녀에게 <b>사용 규칙을 직접 안내</b>해 드릴까요?',
+    ph:'예) 다음 방문 때 같이 들을게요' }
+];
 let NOTE = { code:'', v:null, loaded:false, err:false };
-let NOTE_DRAFT = { rel:'', tags:[], asks:[], text:'' };
+let NOTE_DRAFT = { ans:{}, memo:'' };
 
 function noteKey(){ return 'parent_note_' + ST.code; }
-function noteFilled(v){ return !!(v && (v.rel || (v.tags||[]).length || (v.asks||[]).length || String(v.text||'').trim())); }
+/** v1(11-11 판)·v2 둘 다 「뭔가 적혀 있나」로 본다 */
+function noteFilled(v){
+  if (!v) return false;
+  if (v.v === 2) return Object.values(v.ans || {}).some(a => a && (a.a || String(a.m || '').trim())) || !!String(v.memo || '').trim();
+  return !!(v.rel || (v.tags||[]).length || (v.asks||[]).length || String(v.text||'').trim());
+}
 function noteWhen(at){ const d = toDate(at); return d ? (d.getMonth()+1) + '월 ' + d.getDate() + '일에 적음' : ''; }
+function noteAnswered(v){ return v && v.v === 2 ? Object.values(v.ans || {}).filter(a => a && a.a).length : 0; }
 
 /** 서버에서 읽는다. 🔴 error 를 꼭 본다(3-10) — 못 읽은 것을 「안 적음」으로 보이면 부모가 또 적는다 */
 async function loadNote(force){
@@ -2685,61 +2796,85 @@ async function paintNoteCard(){
   if (code !== ST.code) return;
   if (NOTE.err){ el.textContent = '지금은 불러오지 못했어요 — 눌러서 다시 볼 수 있어요'; return; }
   el.innerHTML = noteFilled(v)
-    ? badge(true, '매장에 전달됨') + ' ' + esc(noteWhen(v.at))
-    : '<b style="color:#C2410C">아직 안 적으셨어요 — 적어 주시면 매장이 더 잘 도와드려요</b>';
+    ? badge(true, '매장에 전달됨') + ' ' + esc(noteWhen(v.at)) + (v.v === 2 ? ' · ' + noteAnswered(v) + '/' + NOTE_QS.length + '문항' : '')
+    : '<b style="color:#C2410C">아직 안 적으셨어요 — 예 · 아니오만 누르시면 돼요</b>';
 }
 
 async function openNote(){
   loading(true); const v = await loadNote(true); loading(false);
   if (NOTE.err){ toast('지금은 불러올 수 없어요. 잠시 뒤 다시 눌러 주세요'); return; }
-  const c = v || {};
-  NOTE_DRAFT = { rel:c.rel || '', tags:(c.tags || []).slice(), asks:(c.asks || []).slice(), text:String(c.text || '') };
+  NOTE_DRAFT = { ans:{}, memo:'' };
+  if (v && v.v === 2){
+    NOTE_QS.forEach(q => { const a = (v.ans || {})[q.id]; if (a) NOTE_DRAFT.ans[q.id] = { a:a.a || '', m:String(a.m || '') }; });
+    NOTE_DRAFT.memo = String(v.memo || '');
+  } else if (v && noteFilled(v)){
+    // 11-11 판에 적은 글은 「더 알려 주실 것」 칸으로 옮겨 보여 준다 — 지우지 않는다
+    NOTE_DRAFT.memo = [v.text, (v.tags || []).join(' · '), (v.asks || []).join(' · ')].filter(Boolean).join('\n');
+  }
   openSub('자녀 특이사항 · 매장 전달', noteHtml(noteFilled(v) ? v : null));
 }
 
 function noteHtml(saved){
-  const chip = (k, i, label, on) => '<button class="ntc' + (on ? ' on' : '') + '" onclick="ntTog(&#39;' + k + '&#39;,' + i + ',this)">' + label + '</button>';
+  const rows = NOTE_QS.map((q, i) => {
+    const d = NOTE_DRAFT.ans[q.id] || { a:'', m:'' };
+    return '<div class="nq" id="nq_' + q.id + '">' +
+      '<div class="nqT"><b class="nqN">' + (i + 1) + '</b><span>' + q.q + '</span></div>' +
+      '<div class="nqA">' +
+        '<button class="nqB yes' + (d.a === 'yes' ? ' on' : '') + '" onclick="ntAns(&#39;' + q.id + '&#39;,&#39;yes&#39;)">예</button>' +
+        '<button class="nqB no' + (d.a === 'no' ? ' on' : '') + '" onclick="ntAns(&#39;' + q.id + '&#39;,&#39;no&#39;)">아니오</button>' +
+      '</div>' +
+      '<input class="nqM" id="nqm_' + q.id + '" maxlength="120" placeholder="특이사항 (선택) — ' + esc(q.ph.replace(/^예\) ?/, '')) + '" value="' + esc(d.m) + '">' +
+    '</div>';
+  }).join('');
   return '<div class="ntHero">' + icoImg('store', '') +
-      '<div><b>아이에 대해 매장에 알려 주세요</b><br>적어 주신 내용은 <b>매장 전산에만</b> 보여요. 자녀폰에는 안 떠요.<br>아이 성향에 맞춰 매장이 더 단단하게 지켜 드릴게요.</div></div>' +
+      '<div><b>아이에 대해 매장에 알려 주세요</b><br>「예 · 아니오」만 누르시면 돼요. 적어 주신 내용은 <b>매장 전산에만</b> 보이고, 자녀폰에는 안 떠요.</div></div>' +
     (saved ? '<div class="note">✅ ' + esc(noteWhen(saved.at)) + ' — 매장에 전달돼 있어요. 고쳐서 다시 보내셔도 돼요.</div>' : '') +
-    '<div class="ntQ">1. 아이와는 어떤 편인가요?</div><div class="ntChips">' +
-      NOTE_REL.map((r, i) => chip('rel', i, r[1] + ' ' + r[2], NOTE_DRAFT.rel === r[0])).join('') + '</div>' +
-    '<div class="ntQ">2. 이런 일이 있었나요? <span>(여러 개 골라도 돼요)</span></div><div class="ntChips">' +
-      NOTE_TAGS.map((t, i) => chip('tags', i, esc(t), NOTE_DRAFT.tags.includes(t))).join('') + '</div>' +
-    '<div class="ntQ">3. 매장에 이렇게 부탁드려요 <span>(여러 개 골라도 돼요)</span></div><div class="ntChips">' +
-      NOTE_ASKS.map((t, i) => chip('asks', i, esc(t), NOTE_DRAFT.asks.includes(t))).join('') + '</div>' +
-    '<div class="ntQ">4. 더 알려 주실 게 있으면 적어 주세요</div>' +
+    '<div class="nqProg" id="nqProg">' + noteProgText() + '</div>' +
+    rows +
+    '<div class="ntQ">더 알려 주실 게 있으면 적어 주세요 <span>(선택)</span></div>' +
     '<textarea id="ntText" class="ntTa" maxlength="500" oninput="ntCount(this)" ' +
-      'placeholder="예: 아이가 혼자 매장에 가서 풀어 달라고 할 수 있어요. 꼭 저에게 먼저 연락 주세요.">' + esc(NOTE_DRAFT.text) + '</textarea>' +
-    '<div class="ntCnt" id="ntCnt">' + NOTE_DRAFT.text.length + ' / 500</div>' +
+      'placeholder="예: 아이가 혼자 매장에 가서 풀어 달라고 할 수 있어요. 꼭 저에게 먼저 연락 주세요.">' + esc(NOTE_DRAFT.memo) + '</textarea>' +
+    '<div class="ntCnt" id="ntCnt">' + NOTE_DRAFT.memo.length + ' / 500</div>' +
     '<div class="note warn" style="margin-top:12px">💡 아이가 부모님 폰을 볼 수 있다면, 다 적고 나서 이 화면을 닫아 주세요.</div>' +
     '<button class="btn btn-p" id="ntSave" style="margin-top:14px" onclick="saveNote()">매장에 전달하기</button>' +
     (saved ? '<button class="btn btn-g" style="margin-top:8px" onclick="clearNote()">적은 내용 지우기</button>' : '');
 }
+function noteProgText(){
+  const n = NOTE_QS.filter(q => (NOTE_DRAFT.ans[q.id] || {}).a).length;
+  return '📋 ' + NOTE_QS.length + '문항 중 <b>' + n + '개</b> 답했어요 · 모르는 건 건너뛰셔도 돼요';
+}
 function ntCount(ta){ const c = document.getElementById('ntCnt'); if (c) c.textContent = ta.value.length + ' / 500'; }
 
-function ntTog(k, i, el){
-  if (k === 'rel'){
-    const v = (NOTE_REL[i] || [])[0] || '';
-    NOTE_DRAFT.rel = (NOTE_DRAFT.rel === v) ? '' : v;
-    const box = el.parentNode;
-    if (box) Array.from(box.children).forEach((b, j) => b.classList.toggle('on', !!NOTE_DRAFT.rel && (NOTE_REL[j] || [])[0] === NOTE_DRAFT.rel));
-    return;
+/** 예 · 아니오 — 같은 걸 한 번 더 누르면 답을 지운다 */
+function ntAns(id, a){
+  const cur = NOTE_DRAFT.ans[id] || { a:'', m:'' };
+  cur.a = (cur.a === a) ? '' : a;
+  NOTE_DRAFT.ans[id] = cur;
+  const box = document.getElementById('nq_' + id);
+  if (box){
+    box.querySelector('.nqB.yes').classList.toggle('on', cur.a === 'yes');
+    box.querySelector('.nqB.no').classList.toggle('on', cur.a === 'no');
   }
-  const list = k === 'tags' ? NOTE_TAGS : NOTE_ASKS, arr = NOTE_DRAFT[k], t = list[i];
-  if (t === undefined) return;
-  const at = arr.indexOf(t);
-  if (at >= 0) arr.splice(at, 1); else arr.push(t);
-  el.classList.toggle('on', at < 0);
+  const p = document.getElementById('nqProg'); if (p) p.innerHTML = noteProgText();
 }
 
 async function saveNote(){
   const b = document.getElementById('ntSave');
-  NOTE_DRAFT.text = String(document.getElementById('ntText')?.value || '').trim().slice(0, 500);
-  if (!noteFilled(NOTE_DRAFT)){ toast('하나 이상 골라 주시거나 적어 주세요'); return; }
+  NOTE_QS.forEach(q => {
+    const m = String(document.getElementById('nqm_' + q.id)?.value || '').trim().slice(0, 120);
+    const cur = NOTE_DRAFT.ans[q.id] || { a:'', m:'' };
+    cur.m = m; NOTE_DRAFT.ans[q.id] = cur;
+  });
+  NOTE_DRAFT.memo = String(document.getElementById('ntText')?.value || '').trim().slice(0, 500);
+  const ans = {};
+  NOTE_QS.forEach(q => {
+    const d = NOTE_DRAFT.ans[q.id];
+    if (!d || (!d.a && !d.m)) return;
+    ans[q.id] = { t:q.t, q:q.q.replace(/<[^>]+>/g, ''), a:d.a, m:d.m, warn: !!(q.warnOn && d.a === q.warnOn) };
+  });
+  const val = { v:2, at:new Date().toISOString(), child:ST.dev?.child_name || '', ans, memo:NOTE_DRAFT.memo };
+  if (!noteFilled(val)){ toast('하나 이상 답해 주세요'); return; }
   if (b){ b.disabled = true; b.textContent = '전달하는 중…'; }
-  const val = { v:1, rel:NOTE_DRAFT.rel, tags:NOTE_DRAFT.tags, asks:NOTE_DRAFT.asks, text:NOTE_DRAFT.text,
-                at:new Date().toISOString(), child:ST.dev?.child_name || '' };
   try{
     const { error } = await clientFor(ST.server).from('global_policies').upsert({ key:noteKey(), value:JSON.stringify(val) }, { onConflict:'key' });
     if (error) throw error;
@@ -2755,7 +2890,7 @@ async function saveNote(){
 async function clearNote(){
   if (!confirm('적은 내용을 지울까요? 매장 전산에서도 사라져요.')) return;
   try{
-    const val = { v:1, rel:'', tags:[], asks:[], text:'', at:new Date().toISOString(), cleared:true };
+    const val = { v:2, at:new Date().toISOString(), ans:{}, memo:'', cleared:true };
     const { error } = await clientFor(ST.server).from('global_policies').upsert({ key:noteKey(), value:JSON.stringify(val) }, { onConflict:'key' });
     if (error) throw error;
     NOTE = { code:ST.code, v:val, loaded:true, err:false };
@@ -2795,24 +2930,77 @@ function liveAppSets(){
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-//  🎬 30초 요약 (2026-11-11 · 대표점장 「실시간 자녀폰 상황 30초 영상+설명 요약 — 아주 퀄리티 좋게」)
+//  🎬 자녀 실시간 제한 상황 요약 영상 (2026-11-11 신설 · 🆕 2026-11-12 2판)
+//  대표점장 (11-12) : 「안내 목소리 톤 마음에 안 듦 · 멈추는 기능이 없음 · 딱 30초 맞출 필요 없음(30~50초)
+//                     · 주의가 필요해 보이거나 잘못 설정한 것 같은 건 강조해서 알려 줘야 됨
+//                       예) 현재 Play 스토어가 열려 있어 지금 앱을 다운받을 수 있어요」
 //
 //  🔴 영상 파일을 만들지 않는다 — 자녀마다·시각마다 내용이 달라서 미리 만든 영상은 그 순간 거짓이 된다.
 //     「실시간 제한 상황」과 **같은 계산 함수**(liveSummary · liveTodayLimit · liveDowntime · liveAppSets …)로
 //     장면을 그때그때 만든다. 숫자가 화면마다 다르면 안 된다(3-6 · 3-25b).
 //  🔴 **켜져 있는 것만** 「막고 있어요」라고 말한다. 꺼진 차단을 막고 있다고 하면 그게 제일 큰 거짓말이다.
-//  ▸ 장면 8개 · 합쳐서 약 30초 · 위 진행 막대 · 오른쪽 누르면 다음 · 왼쪽 누르면 이전 · 꾹 누르면 멈춤
-//  ▸ 소리 : 휴대폰에 들어 있는 한국어 읽어주기(speechSynthesis) — 0원 · 소리가 안 나는 폰이면 자막만 본다
+//  🆕 2판 :
+//    ▸ ⚠️ 「꼭 확인해 주세요」 장면 — svWarnings() 가 **잘못됐거나 위험한 설정**을 찾아 빨갛게 보여 주고 읽어 준다.
+//       마지막 장면에서 「고치러 가기」 버튼으로 그 화면을 바로 연다.
+//    ▸ 장면 길이 = **말이 끝날 때까지** (소리를 끄면 글자 수로) → 합쳐서 30~50초.
+//    ▸ ⏸ 멈춤 버튼 · 🗣 목소리 바꾸기(폰에 있는 한국어 목소리 중 고름 · 기억함).
+//    ▸ 안드로이드 크롬은 speechSynthesis.pause() 가 잘 안 먹는다 → 멈추면 말을 끊고, 계속하면 **그 장면을 처음부터** 다시 읽는다.
 // ══════════════════════════════════════════════════════════════════════════
 let SV = null;
+const SV_TITLE = '자녀 실시간 제한 상황 30초 요약';
 const SV_BG = ['linear-gradient(160deg,#FF8A4C,#E8505B)', 'linear-gradient(160deg,#3B82F6,#6366F1)',
                'linear-gradient(160deg,#10B981,#0EA5A4)', 'linear-gradient(160deg,#7C3AED,#C026D3)',
                'linear-gradient(160deg,#F59E0B,#F97316)', 'linear-gradient(160deg,#0EA5E9,#2563EB)',
                'linear-gradient(160deg,#14B8A6,#22C55E)', 'linear-gradient(160deg,#334155,#1E293B)'];
+const SV_BG_WARN = 'linear-gradient(160deg,#B42318,#7A271A)';
 
 function svVoiceOn(){ try{ return localStorage.getItem('sv_voice') !== '0'; }catch(e){ return true; } }
 function svHM(d){ return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
 function svDayRange(key){ const v = ST.pol[key] || '미설정'; if (v === '미설정' || v.indexOf('|') < 0) return null; const a = v.split('|'); return a[0] + ' ~ ' + a[1]; }
+
+/**
+ * ⚠️ 잘못됐거나 위험해 보이는 설정 — 「요약 영상」과 끝 장면 「고치러 가기」가 같이 쓴다.
+ *   lv : 'red'(꼭) · 'amber'(알아 두세요)   go : 누르면 열 화면(함수 이름 · 없으면 매장 문의)
+ *   🔴 **확실한 것만** 넣는다 — 추측으로 「잘못됐어요」라고 하면 부모가 멀쩡한 걸 고친다.
+ */
+function svWarnings(){
+  const p = ST.pol || {}, W = [];
+  const days = k => [1,2,3,4,5,6,7].map(i => p[k + i]);
+  if (p.play_store_blocked !== 'true')
+    W.push({ lv:'red', t:'Play 스토어가 열려 있어요', d:'지금 아이가 <b>앱을 마음대로 다운받을 수</b> 있어요.',
+             say:'지금 플레이 스토어가 열려 있어서, 아이가 앱을 마음대로 다운받을 수 있어요.', go:'openSecurity', btn:'Play 스토어 막으러 가기' });
+  // 하루 한도 — 스위치와 요일값이 어긋나면 **에러 없이** 안 걸린다(CLAUDE.md ⏰ 규칙 · 3-11)
+  { const on = p.daily_limit_enabled === 'true', set = days('limit_day_').some(v => Number(v ?? -1) >= 0);
+    if (on && !set) W.push({ lv:'red', t:'하루 한도가 실제로는 안 걸려요', d:'한도를 켜 두셨는데 <b>요일별 시간이 비어</b> 있어요.',
+                             say:'하루 한도를 켜 두셨는데, 요일별 시간이 비어 있어서 실제로는 안 걸려요.', go:'openLimit', btn:'하루 한도 고치기' });
+    if (!on && set) W.push({ lv:'red', t:'하루 한도 스위치가 꺼져 있어요', d:'요일별 시간은 적혀 있는데 <b>스위치가 꺼져</b> 있어 안 걸려요.',
+                             say:'요일별 시간은 적어 두셨는데, 하루 한도 스위치가 꺼져 있어서 안 걸려요.', go:'openLimit', btn:'하루 한도 켜기' }); }
+  { const on = p.dt_enabled === 'true', set = days('dt_day_').some(v => v && v !== '미설정');
+    if (on && !set) W.push({ lv:'red', t:'취침시간이 실제로는 안 걸려요', d:'취침시간을 켜 두셨는데 <b>요일별 시간이 비어</b> 있어요.',
+                             say:'취침시간을 켜 두셨는데, 요일별 시간이 비어 있어서 실제로는 안 걸려요.', go:'openDt', btn:'취침시간 고치기' });
+    if (!on && set) W.push({ lv:'red', t:'취침시간 스위치가 꺼져 있어요', d:'시간은 정해 두셨는데 <b>스위치가 꺼져</b> 있어 안 잠겨요.',
+                             say:'취침시간은 정해 두셨는데, 스위치가 꺼져 있어서 안 잠겨요.', go:'openDt', btn:'취침시간 켜기' });
+    // 취침 중엔 「허용 앱」에 없는 앱이 전부 막힌다 — 전화 **걸기**·문자도(받기는 된다 · 3-30)
+    if (on && set && !J(p.ignore_dt_apps, []).length)
+      W.push({ lv:'amber', t:'취침시간엔 전화 걸기·문자도 막혀요', d:'받기는 돼요. 걸게 하려면 「다운타임 허용 앱」에 넣어 주세요.',
+               say:'참고로 취침시간에는 전화 걸기와 문자도 막혀요. 받는 건 돼요.', go:'openIgnoreDt', btn:'허용 앱 정하기' }); }
+  // 부모 비밀번호가 너무 쉬우면 아이가 맞힌다 — 2026-10-26 실측 333대 중 64대가 123456 (3-11)
+  { const pin = String(p.pin_plain || '');
+    const easy = /^[0-9]{6}$/.test(pin) && (/^(.)\1{5}$/.test(pin) || '0123456789'.includes(pin) || '9876543210'.includes(pin) ||
+                 ['123123','112233','121212','111222','000000','123456','654321','202020','131313'].includes(pin));
+    if (easy) W.push({ lv:'red', t:'부모님 비밀번호가 너무 쉬워요', d:'아이가 <b>맞힐 수 있는</b> 숫자예요. 바꾸는 걸 권해요.',
+                       say:'부모님 비밀번호가 너무 쉬워서 아이가 맞힐 수 있어요. 바꾸시는 걸 권해요.', go:'openPinChange', btn:'비밀번호 바꾸기' }); }
+  if (p.kakao_inapp_browser_blocked === 'false')
+    W.push({ lv:'red', t:'카톡 링크로 인터넷이 열려요', d:'카톡 대화방 링크를 누르면 <b>인터넷이 열려요</b>.',
+             say:'지금은 카톡 대화방 링크를 누르면 인터넷이 열려요.', go:'openKakao', btn:'카톡 링크 막기' });
+  if (p.uninstall_blocked !== 'true')
+    W.push({ lv:'amber', t:'앱 삭제 방지가 꺼져 있어요', d:'아이가 깔려 있는 앱을 <b>지울 수</b> 있어요.',
+             say:'앱 삭제 방지가 꺼져 있어서, 아이가 앱을 지울 수 있어요.', go:'openUninstall', btn:'앱 삭제 방지 켜기' });
+  if (p.apk_install_blocked === 'false')
+    W.push({ lv:'amber', t:'앱 파일(APK) 설치가 열려 있어요', d:'인터넷에서 받은 <b>앱 파일로도</b> 설치할 수 있어요. 매장에서 막아 드려요.',
+             say:'인터넷에서 받은 앱 파일로도 설치할 수 있게 열려 있어요. 매장에서 막아 드릴 수 있어요.', go:'', btn:'' });
+  return W.sort((a, b) => (a.lv === 'red' ? 0 : 1) - (b.lv === 'red' ? 0 : 1));
+}
 
 /** 장면 목록 — 지금 데이터로 만든다 */
 function svBuild(){
@@ -2820,33 +3008,42 @@ function svBuild(){
   const idx = _dayIdx(), now = new Date();
   const lv = liveSummary(), lim = liveTodayLimit(), base = liveLimitBaseMin(), screen = liveUsedMin();
   const dt = liveDowntime(), nd = liveNextDowntime(), ac = liveAcademy(), fl = forceLockLeft();
-  const A = liveAppSets();
+  const A = liveAppSets(), W = svWarnings();
   const appNm = k => ((ST.apps || []).find(a => a.app_package === k) || {}).app_name || k;
   const lvTxt = String(lv.txt || '').split(' ').slice(1).join(' ');     // 앞의 🔴/🟢 를 뗀다
   const S = [];
 
   // ① 표지
-  S.push({ img:'live', k:'실시간 · ' + svHM(now) + ' 기준', t:esc(name) + '의 공신폰', d:'지금 걸려 있는 제한을<br><b>30초</b>로 보여 드릴게요',
-           say:name + '의 공신폰, 지금 상황을 삼십 초로 보여 드릴게요.' });
+  S.push({ img:'live', k:'실시간 · ' + svHM(now) + ' 기준', t:esc(name) + '의 공신폰', d:'지금 어떻게 지켜지고 있는지<br>같이 살펴볼게요',
+           say:name + '의 폰이 지금 어떻게 지켜지고 있는지, 같이 살펴볼게요.' });
 
   // ② 지금 상태
-  S.push({ img: lv.lock ? 'lockhero' : 'freehero', k:'지금 이 순간', big: lv.lock ? '🔒 잠김' : '✅ 사용 가능',
+  S.push({ img: lv.lock ? 'lockhero' : 'freehero', k:'지금 이 순간', big: lv.lock ? '🔒 잠겨 있어요' : '✅ 쓸 수 있어요',
            d: esc(lvTxt) + '<br><span style="opacity:.85">오늘 화면을 켠 시간 ' + fmtMin(screen) + '</span>',
-           say: lv.lock ? ('지금은 잠겨 있어요. ' + lvTxt.split('(').join(' ').split(')').join(' ')) : ('지금은 쓸 수 있어요. 오늘 화면을 켠 시간은 ' + fmtMin(screen) + '이에요.') });
+           say: lv.lock ? ('지금은 잠겨 있어요. ' + lvTxt.split('(').join(' ').split(')').join(' ') + '.') : ('지금은 폰을 쓸 수 있어요. 오늘 화면을 켠 시간은 ' + fmtMin(screen) + '이에요.') });
 
-  // ③ 하루 한도
+  // ③ ⚠️ 꼭 확인해 주세요 — 있을 때만 · 빨간 배경으로 눈에 띄게
+  if (W.length){
+    const red = W.filter(w => w.lv === 'red').length;
+    S.push({ img:'security', warn:true, k:'⚠️ 꼭 확인해 주세요', t:(red ? '확인이 필요한 곳이 ' : '알아 두실 것이 ') + W.length + '개 있어요',
+             chips: W.slice(0, 5).map(w => ({ t:(w.lv === 'red' ? '🔴 ' : '🟠 ') + w.t, bad: w.lv === 'red', amb: w.lv !== 'red' })),
+             d: W.length > 5 ? '그 밖에 ' + (W.length - 5) + '개 더 있어요 — 마지막 화면에서 볼 수 있어요' : '',
+             say: '잠깐, 꼭 확인해 주세요. ' + W.slice(0, 3).map(w => w.say).join(' ') + (W.length > 3 ? ' 나머지는 마지막 화면에서 보실 수 있어요.' : '') });
+  }
+
+  // ④ 하루 한도
   if (lim < 0){
     S.push({ img:'limit', k:'하루 사용시간', t:'하루 한도는 정해져 있지 않아요', d:'필요하시면 「기능 → 하루 사용시간 한도」에서<br>요일마다 정할 수 있어요',
-             say:'하루 사용시간 한도는 정해져 있지 않아요.' });
+             say:'하루 사용시간 한도는 아직 정해져 있지 않아요.' });
   } else {
     const left = Math.max(0, lim - base);
     const extra = (A.timed.length || A.free.length) ? '<br><span style="opacity:.85">⚠️ 앱별 시간을 정한 앱 · 무제한 앱은 한도와 따로 세요</span>' : '';
     S.push({ img:'limit', k:'오늘 하루 한도 ' + fmtMin(lim), big: lim === 0 ? '오늘은 쉬는 날' : fmtMin(left) + '<small>남았어요</small>',
              d: lim === 0 ? '오늘은 폰을 쓸 수 없게 정해 두셨어요' : ('한도 ' + fmtMin(lim) + ' 중 ' + fmtMin(Math.min(base, lim)) + ' 썼어요' + extra),
-             say: lim === 0 ? '오늘은 폰을 쓸 수 없는 날로 정해 두셨어요.' : ('오늘 하루 한도 ' + fmtMin(lim) + ' 중에 ' + fmtMin(left) + ' 남았어요.') });
+             say: lim === 0 ? '오늘은 폰을 쓸 수 없는 날로 정해 두셨어요.' : ('오늘 하루 한도 ' + fmtMin(lim) + ' 중에, ' + fmtMin(left) + ' 남았어요.') });
   }
 
-  // ④ 취침 · 학원 · 즉시 차단
+  // ⑤ 취침 · 학원 · 즉시 차단
   { const chips = [];
     const dr = p.dt_enabled === 'true' ? svDayRange('dt_day_' + idx) : null;
     const ar = p.dt2_enabled === 'true' ? svDayRange('dt2_day_' + idx) : null;
@@ -2861,7 +3058,7 @@ function svBuild(){
                 : (dr || ar) ? '정해 둔 시간이 되면 저절로 잠겨요.' : '오늘은 시간 맞춰 잠기는 설정이 없어요.' });
   }
 
-  // ⑤ 앱
+  // ⑥ 앱
   { const U = (typeof LIVE_APPUSE === 'object' && LIVE_APPUSE) ? LIVE_APPUSE : {};
     const top = Object.keys(U).map(k => ({ k, m:Number(U[k]) || 0 })).filter(x => x.m > 0)
                   .sort((a, b) => b.m - a.m).slice(0, 3);
@@ -2873,58 +3070,96 @@ function svBuild(){
                   (top.length ? ' 오늘 제일 오래 쓴 앱은 ' + appNm(top[0].k) + ', ' + fmtMin(top[0].m) + '이에요.' : '') });
   }
 
-  // ⑥ 인터넷 · 우회 차단 — ⭐ 시내모바일 핵심 기술. 🔴 켜져 있는 것만 「막아요」라고 말한다
+  // ⑦ 인터넷 · 우회 차단 — ⭐ 시내모바일 핵심 기술. 🔴 켜져 있는 것만 「막아요」라고 말한다
   { const chips = [];
     // 카톡 링크 차단은 「값이 없으면 차단」이 기본이다(전산 kakaoBlocked · 3-23)
-    if (p.kakao_inapp_browser_blocked !== 'false') chips.push({ t:'💬 카톡 링크로 인터넷 열기 차단' });
+    chips.push(p.kakao_inapp_browser_blocked !== 'false' ? { t:'💬 카톡 링크로 인터넷 열기 차단' } : { t:'💬 카톡 링크로 인터넷이 열려요', bad:true });
     const ks = ['open_chat_blocked','kakao_openchat_create_blocked','kakao_openprofile_blocked','kakao_multiprofile_blocked','kakao_shortform_blocked','kakao_now_tab_blocked'];
     const kn = ks.filter(k => p[k] === 'true').length;
     if (kn) chips.push({ t:'💬 카톡 오픈채팅·숏폼 등 ' + kn + '가지 차단' });
     if (p.youtube_outside_tube_blocked === 'true') chips.push({ t:'📺 유튜브는 시내YouTube 에서만' });
     if (p.instagram_outside_dm_blocked === 'true') chips.push({ t:'📷 인스타는 시내디엠 DM 만' });
     chips.push(p.chrome_enabled === 'true' ? { t:'🌐 크롬은 허락한 사이트 ' + J(p.chrome_allowed_domains, []).length + '개만' } : { t:'🌐 인터넷(크롬) 꺼짐', off:true });
-    const real = chips.filter(c => !c.off).length;
+    const real = chips.filter(c => !c.off && !c.bad).length;
     S.push({ img:'kakao', k:'인터넷 · 우회 차단', t: real ? '앱 속 인터넷 · 유튜브<br>우회도 막고 있어요' : '인터넷 차단을 확인해 주세요',
              chips,
              say: real ? '카톡 같은 앱 안에서 인터넷이나 유튜브로 빠져나가는 길도 막고 있어요.' : '인터넷 차단 설정을 한 번 확인해 주세요.' });
   }
 
-  // ⑦ 안전
+  // ⑧ 안전
   { const chips = [
       { t: locOn() ? '📍 위치 확인 켜짐' : '📍 위치 확인 꺼짐', off: !locOn() },
       { t: '🆘 긴급 연락처 ' + J(p.sos_whitelist, []).length + '개', off: !J(p.sos_whitelist, []).length },
       { t: p.uninstall_blocked === 'true' ? '🛡️ 앱 삭제 방지 켜짐' : '🛡️ 앱 삭제 방지 꺼짐', off: p.uninstall_blocked !== 'true' },
-      { t: p.play_store_blocked === 'true' ? '🏪 Play 스토어 차단' : '🏪 Play 스토어 열림', off: p.play_store_blocked !== 'true' } ];
-    const onN = chips.filter(c => !c.off).length;
+      { t: p.play_store_blocked === 'true' ? '🏪 Play 스토어 차단' : '🏪 Play 스토어 열림', bad: p.play_store_blocked !== 'true' } ];
+    const onN = chips.filter(c => !c.off && !c.bad).length;
     S.push({ img:'security', k:'안전장치', t: onN ? '안전장치도 함께 지키고 있어요' : '안전장치를 한 번 확인해 주세요', chips,
              say: onN ? '위치 확인과 앱 삭제 방지 같은 안전장치도 함께 보여 드렸어요.' : '안전장치가 꺼져 있어요. 한 번 확인해 주세요.' });
   }
 
-  // ⑧ 마무리
-  S.push({ img:'doumi', k:'바꾸고 싶으시면', t:'말로 하시면 바로 바꿔 드려요', d:'AI 매니저에게 「하루 2시간으로 해줘」처럼<br>말씀만 하시면 돼요', end:true,
-           say:'바꾸고 싶은 게 있으면 AI 매니저에게 말로 하시면 바로 바꿔 드려요.' });
+  // ⑨ 마무리 — 확인할 것이 있으면 「고치러 가기」 버튼을 같이 보여 준다
+  S.push({ img:'doumi', k:'마지막으로', t: W.length ? '고칠 곳은 아래에서 바로 열 수 있어요' : '바꾸고 싶으시면 말로 하세요',
+           d: W.length ? '' : 'AI 매니저에게 「하루 2시간으로 해줘」처럼<br>말씀만 하시면 바로 바꿔 드려요', end:true, warns:W,
+           say: W.length ? '확인이 필요한 곳은 아래 버튼을 눌러 바로 고치실 수 있어요. 끝까지 봐 주셔서 고마워요.'
+                         : '바꾸고 싶은 게 있으면 AI 매니저에게 말로 하시면 바로 바꿔 드려요. 끝까지 봐 주셔서 고마워요.' });
 
-  S.forEach((s, i) => { s.bg = SV_BG[i % SV_BG.length];
-    s.dur = s.end ? 5000 : Math.max(3000, Math.min(4600, 1000 + (s.say || '').length * 75)); });   // 합쳐서 약 30초
+  // 장면 길이 — 소리를 켜면 「말이 끝날 때까지」(svLoop), 끄면 글자 수로. 이 값은 진행 막대와 「소리 끔」일 때 쓴다
+  S.forEach((s, i) => { s.bg = s.warn ? SV_BG_WARN : SV_BG[i % SV_BG.length];
+    s.dur = Math.max(3500, Math.min(9000, 1500 + (s.say || '').length * 95)); });
   return S;
+}
+
+// ── 목소리 ────────────────────────────────────────────────────────────
+//  폰마다 들어 있는 한국어 목소리가 다르다 — 이름에 「Google·Neural·Natural·Premium·Enhanced·유나·Yuna·Sora」가 들어간
+//  것이 대체로 자연스럽다. 부모가 「목소리 바꾸기」로 고르면 그 이름을 기억한다(sv_voice_name).
+function svKoVoices(){
+  try{
+    const all = (speechSynthesis.getVoices() || []).filter(v => String(v.lang || '').toLowerCase().indexOf('ko') === 0);
+    const score = v => { const n = String(v.name || ''); let s = 0;
+      if (/Neural|Natural|Premium|Enhanced|향상/i.test(n)) s += 5;
+      if (/Google/i.test(n)) s += 3;
+      if (/Yuna|유나|Sora|Samsung|SMT/i.test(n)) s += 2;
+      if (v.localService) s += 1;
+      return s; };
+    return all.sort((a, b) => score(b) - score(a));
+  }catch(e){ return []; }
+}
+function svPickVoice(){
+  const list = svKoVoices(); if (!list.length) return null;
+  let want = ''; try{ want = localStorage.getItem('sv_voice_name') || ''; }catch(e){}
+  return list.find(v => v.name === want) || list[0];
+}
+function svNextVoice(){
+  const list = svKoVoices();
+  if (list.length < 2){ toast(list.length ? '이 폰에는 한국어 목소리가 하나뿐이에요' : '이 폰에서는 읽어주기를 쓸 수 없어요'); return; }
+  const cur = svPickVoice(), i = Math.max(0, list.findIndex(v => cur && v.name === cur.name));
+  const nx = list[(i + 1) % list.length];
+  try{ localStorage.setItem('sv_voice_name', nx.name); }catch(e){}
+  toast('🗣 목소리 ' + ((i + 1) % list.length + 1) + '번 (' + list.length + '개 중)');
+  if (SV){ SV.voice = true; try{ localStorage.setItem('sv_voice', '1'); }catch(e){} svPaintVoice(); svGo(SV.i); }
 }
 
 async function openSummary(){
   loading(true);
   const ok = await liveReload();
   try{ const M = ST.appMeta; await loadAppMeta(!!(M && M.code === ST.code && !Object.keys(M.icons || {}).length && (ST.apps || []).length)); }catch(e){}
+  try{ speechSynthesis.getVoices(); }catch(e){}           // 목소리 목록을 미리 깨운다(크롬은 처음에 빈 배열을 준다)
   loading(false);
   if (ok === false){ toast('자녀폰 정보를 불러오지 못했어요. 잠시 뒤 다시 눌러 주세요'); return; }
   let el = document.getElementById('svBox');
   if (!el){ el = document.createElement('div'); el.id = 'svBox'; el.className = 'sv hide'; document.body.appendChild(el); }
-  SV = { i:0, scenes:svBuild(), el:0, last:performance.now(), paused:false, hold:null, raf:0, voice:svVoiceOn() };
+  SV = { i:0, scenes:svBuild(), el:0, last:performance.now(), paused:false, hold:null, raf:0, voice:svVoiceOn(), spoke:false, doneAt:0, uid:0 };
   el.innerHTML =
     '<div class="svBars">' + SV.scenes.map(() => '<i><b></b></i>').join('') + '</div>' +
-    '<div class="svTop"><span class="sp">🎬 30초 요약 · ' + esc(ST.dev?.child_name || ST.name || '') + '</span>' +
+    '<div class="svTop"><span class="sp">🎬 ' + esc(ST.dev?.child_name || ST.name || '') + ' · 실시간 요약</span>' +
       '<button class="svBtn" id="svVoice" onclick="svToggleVoice()"></button><button class="svBtn" onclick="navBack()">닫기 ✕</button></div>' +
     '<div id="svStage"></div><div class="svPause">⏸</div>' +
     '<div class="svTapL" id="svL"></div><div class="svTapR" id="svR"></div>' +
-    '<div class="svCap" id="svCap"></div>';
+    '<div class="svBot"><div class="svCap" id="svCap"></div>' +
+      '<div class="svCtl"><button class="svCb" onclick="svGo(SV.i-1)" aria-label="이전">◀</button>' +
+      '<button class="svCb big" id="svPP" onclick="svPause(!SV.paused)">⏸ 멈춤</button>' +
+      '<button class="svCb" onclick="svGo(SV.i+1)" aria-label="다음">▶</button>' +
+      '<button class="svCb wide" onclick="svNextVoice()">🗣 목소리 바꾸기</button></div></div>';
   el.classList.remove('hide');
   document.body.style.overflow = 'hidden';
   navPush(() => svClose());
@@ -2932,7 +3167,8 @@ async function openSummary(){
   svWireTap(document.getElementById('svR'), +1);
   svPaintVoice();
   svGo(0);
-  cancelAnimationFrame(SV.raf); SV.raf = requestAnimationFrame(svLoop);
+  // ⏱ requestAnimationFrame 은 화면을 안 그리는 동안 멈춘다(폰 절전·창 가림) → 0.1초 간격 타이머로 잰다
+  clearInterval(SV.tick); SV.tick = setInterval(svLoop, 100);
 }
 
 /** 눌렀다 떼면 넘기고, 꾹 누르고 있으면 멈춘다 */
@@ -2945,61 +3181,85 @@ function svWireTap(el, dir){
   el.addEventListener('pointercancel', () => { if (!SV) return; clearTimeout(SV.hold); if (SV.hold === 'held') svPause(false); SV.hold = null; });
 }
 
+/** 멈춤 / 계속 — 멈추면 말을 끊고, 계속하면 그 장면을 처음부터 다시 읽는다(안드로이드 pause 가 불안정하다) */
 function svPause(on){
   if (!SV) return;
   SV.paused = on;
   const b = document.getElementById('svBox'); if (b) b.classList.toggle('paused', on);
-  try{ if ('speechSynthesis' in window){ if (on) speechSynthesis.pause(); else speechSynthesis.resume(); } }catch(e){}
+  const pp = document.getElementById('svPP'); if (pp) pp.textContent = on ? '▶ 계속' : '⏸ 멈춤';
+  if (on){ try{ if ('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){} }
+  else svGo(SV.i, true);
 }
 
-function svGo(i){
+function svGo(i, keepPause){
   if (!SV) return;
   i = Math.max(0, Math.min(SV.scenes.length - 1, i));
-  SV.i = i; SV.el = 0; SV.last = performance.now();
+  SV.i = i; SV.el = 0; SV.last = performance.now(); SV.spoke = false; SV.doneAt = 0;
   const s = SV.scenes[i];
-  const chips = (s.chips || []).map((c, j) => '<span class="svChip' + (c.off ? ' off' : '') + '" style="animation-delay:' + (0.45 + j * 0.12).toFixed(2) + 's">' + esc(c.t) + '</span>').join('');
+  const chips = (s.chips || []).map((c, j) => '<span class="svChip' + (c.off ? ' off' : '') + (c.bad ? ' bad' : '') + (c.amb ? ' amb' : '') +
+    '" style="animation-delay:' + (0.45 + j * 0.12).toFixed(2) + 's">' + esc(c.t) + '</span>').join('');
+  const fix = (s.warns || []).filter(w => w.go).map(w => '<button class="svFix' + (w.lv === 'red' ? ' r' : '') + '" onclick="svFixGo(&#39;' + w.go + '&#39;)">' +
+    (w.lv === 'red' ? '🔴 ' : '🟠 ') + esc(w.btn || w.t) + ' ›</button>').join('');
+  const noFix = (s.warns || []).filter(w => !w.go).map(w => '<div class="svFixN">🟠 ' + esc(w.t) + ' — 매장에 말씀해 주세요</div>').join('');
   document.getElementById('svStage').innerHTML =
-    '<div class="svScene"><div class="svBg" style="background:' + s.bg + '"></div>' +
+    '<div class="svScene' + (s.warn ? ' warn' : '') + (s.end ? ' end' : '') + '"><div class="svBg" style="background:' + s.bg + '"></div>' +
       '<div class="svImgW">' + icoImg(s.img, 'svImg') + '</div>' +
       '<div class="svK">' + esc(s.k || '') + '</div>' +
       (s.big ? '<div class="svBig">' + s.big + '</div>' : '') +
       (s.t ? '<div class="svT">' + s.t + '</div>' : '') +
       (s.d ? '<div class="svD">' + s.d + '</div>' : '') +
       (chips ? '<div class="svChips">' + chips + '</div>' : '') +
-      (s.end ? '<div class="svEnd"><button class="a" onclick="svOpenAi()">✨ AI 매니저에게 말하기</button>' +
+      (s.end ? '<div class="svEnd">' + fix + noFix +
+               '<button class="a" onclick="svOpenAi()">✨ AI 매니저에게 말하기</button>' +
                '<button class="b" onclick="svGo(0)">🔁 처음부터 다시 보기</button><button class="b" onclick="navBack()">닫기</button></div>' : '') +
     '</div>';
   // 마지막 장면에서는 버튼을 눌러야 하니 넘기기 영역을 치운다
   ['svL','svR'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = s.end ? 'none' : ''; });
   const cap = document.getElementById('svCap'); if (cap) cap.textContent = s.say || '';
+  { const bx = document.getElementById('svBox'); if (bx) bx.classList.toggle('endmode', !!s.end); }   // 마지막 장면은 자막을 숨겨 버튼을 가리지 않게
   document.querySelectorAll('#svBox .svBars i b').forEach((b, j) => { b.style.width = j < i ? '100%' : '0'; });
-  svPause(false);
-  svSay(s.say);
+  if (!keepPause && SV.paused){ SV.paused = false; const bx = document.getElementById('svBox'); if (bx) bx.classList.remove('paused');
+    const pp = document.getElementById('svPP'); if (pp) pp.textContent = '⏸ 멈춤'; }
+  if (!SV.paused) svSay(s.say);
 }
 
+/** 다음 장면으로 넘기는 판단 — 소리를 켜면 「말이 끝나고 1초 뒤」, 끄면 글자 수로 정한 시간 */
 function svLoop(){
   if (!SV) return;
   const now = performance.now();
   if (!SV.paused && !document.hidden) SV.el += now - SV.last;
   SV.last = now;
-  const s = SV.scenes[SV.i], f = Math.min(1, SV.el / s.dur);
+  const s = SV.scenes[SV.i];
+  let f, next = false;
+  if (SV.voice && SV.canSpeak){
+    f = SV.spoke ? 1 : Math.min(0.95, SV.el / s.dur);
+    // 말이 끝났으면 1초 쉬고 넘긴다 · 말이 안 끝나도 너무 오래면(소리가 막힌 폰) 넘긴다
+    next = (SV.spoke && now - SV.doneAt > 1000 && SV.el > 2500) || SV.el > s.dur + 9000;
+  } else {
+    f = Math.min(1, SV.el / s.dur);
+    next = f >= 1;
+  }
   const bars = document.querySelectorAll('#svBox .svBars i b');
   if (bars[SV.i]) bars[SV.i].style.width = (f * 100).toFixed(1) + '%';
-  if (f >= 1 && SV.i < SV.scenes.length - 1) svGo(SV.i + 1);
-  if (SV) SV.raf = requestAnimationFrame(svLoop);
+  if (next && !SV.paused && SV.i < SV.scenes.length - 1) svGo(SV.i + 1);
 }
 
 function svSay(t){
+  if (!SV) return;
+  SV.canSpeak = false;
   try{
     if (!('speechSynthesis' in window)) return;
     speechSynthesis.cancel();
-    if (!SV || !SV.voice || !t) return;
+    if (!SV.voice || !t) return;
     const u = new SpeechSynthesisUtterance(t);
-    u.lang = 'ko-KR'; u.rate = 1.08; u.pitch = 1.05;
-    const v = speechSynthesis.getVoices().find(x => String(x.lang || '').toLowerCase().indexOf('ko') === 0);
-    if (v) u.voice = v;
+    u.lang = 'ko-KR'; u.rate = 1.05; u.pitch = 1.0;   // 너무 느리면 50초를 넘는다(PC 목소리 실측 · 장면당 7초) u.volume = 1;
+    const v = svPickVoice(); if (v) u.voice = v;
+    const uid = ++SV.uid;
+    u.onend = () => { if (SV && SV.uid === uid){ SV.spoke = true; SV.doneAt = performance.now(); } };
+    u.onerror = () => { if (SV && SV.uid === uid){ SV.spoke = true; SV.doneAt = performance.now(); } };
+    SV.canSpeak = true;
     speechSynthesis.speak(u);
-  }catch(e){ console.warn('읽어주기 실패:', e && e.name, e && e.message); }
+  }catch(e){ console.warn('읽어주기 실패:', e && e.name, e && e.message); SV.canSpeak = false; }
 }
 function svPaintVoice(){ const b = document.getElementById('svVoice'); if (b) b.textContent = SV && SV.voice ? '🔊 소리 켬' : '🔇 소리 끔'; }
 function svToggleVoice(){
@@ -3007,16 +3267,154 @@ function svToggleVoice(){
   SV.voice = !SV.voice;
   try{ localStorage.setItem('sv_voice', SV.voice ? '1' : '0'); }catch(e){}
   svPaintVoice();
-  if (SV.voice) svSay(SV.scenes[SV.i].say); else { try{ speechSynthesis.cancel(); }catch(e){} }
+  if (SV.voice) svGo(SV.i, true); else { try{ speechSynthesis.cancel(); }catch(e){} SV.canSpeak = false; }
 }
 function svClose(){
-  if (SV){ cancelAnimationFrame(SV.raf); clearTimeout(SV.hold); }
+  if (SV){ clearInterval(SV.tick); clearTimeout(SV.hold); }
   SV = null;
   try{ if ('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){}
   const el = document.getElementById('svBox'); if (el){ el.classList.add('hide'); el.innerHTML = ''; }
   document.body.style.overflow = '';
 }
 function svOpenAi(){ navBack(); setTimeout(() => { try{ openDoumi(); }catch(e){} }, 60); }
+/** 「고치러 가기」 — 영상을 닫고 그 화면을 연다 */
+// ══════════════════════════════════════════════════════════════════════════
+//  👆 지문 · 얼굴로 열기 (2026-11-12 · 대표점장)
+//  「부모폰에서 비밀번호 치고 들어가는 거 지문이나 얼굴인식으로 할 수 있는지 · 갤럭시 지문 · 아이폰 Face ID
+//    카카오톡 화면잠금처럼 "선택"할 수 있게 — 비밀번호 · 지문. 패턴은 들킬 확률이 높아 XX」
+//
+//  ▸ 브라우저 표준 WebAuthn(패스키)의 「이 기기 잠금(지문·얼굴)으로 본인 확인」을 쓴다 — 앱 설치·서버·돈 0.
+//    갤럭시 크롬·삼성인터넷 = 지문(얼굴) · 아이폰 사파리 = Face ID / Touch ID. 홈 화면 바로가기로 열어도 된다.
+//  ▸ 지문 데이터는 **폰 밖으로 나오지 않는다** — 우리가 받는 건 「확인됐다」 한 가지뿐이다.
+//  ▸ 비밀번호는 **예비로 늘 남는다.** 지문이 안 되거나 취소하면 그대로 숫자판이 있다.
+//  ⚠️ 이 확인은 **이 폰 안에서만** 한다(서버가 서명을 검사하지 않는다) — 지금 「한 번 통과하면 이번 세션 동안 안 묻는」
+//     비밀번호 잠금과 같은 높이의 잠금이다. 「부모 열쇠」(서버 표 접근)는 **비밀번호를 처음 넣었을 때 받은 것**을 그대로 쓴다.
+//  ⚠️ 폰에 따라 지문이 안 될 때 **폰 잠금 화면 비밀번호·패턴**으로 넘어가는 경우가 있다(안드로이드 설정) — 화면에 적는다.
+//  🔴 위치 켜기처럼 서버가 「PIN 을 다시 확인」해야 하는 일은 지문으로 연 세션에서 **비밀번호를 한 번 더** 묻는다(needPinThen).
+// ══════════════════════════════════════════════════════════════════════════
+const BIO_KEY = 'sinae_bio';            // { id:base64url, at } — 이 브라우저에 만든 열쇠 이름(공개해도 되는 값)
+let REAUTH_THEN = null;                  // 지문으로 연 세션에서 비밀번호가 꼭 필요한 일을 비밀번호 확인 뒤에 이어서 한다
+
+function bioSaved(){ try{ const v = JSON.parse(localStorage.getItem(BIO_KEY) || 'null'); return v && v.id ? v : null; }catch(e){ return null; } }
+async function bioAvailable(){
+  try{ return !!(window.PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable &&
+                 await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()); }
+  catch(e){ return false; }
+}
+// base64url — 백슬래시를 안 쓰려고 split/join 으로 바꾼다(CLAUDE.md 3-14)
+function bioB64(buf){ let s = ''; new Uint8Array(buf).forEach(b => { s += String.fromCharCode(b); });
+  return btoa(s).split('+').join('-').split('/').join('_').split('=').join(''); }
+function bioUnB64(s){ s = String(s).split('-').join('+').split('_').join('/'); while (s.length % 4) s += '=';
+  const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u.buffer; }
+function bioName(){ return /iPhone|iPad|Macintosh/.test(navigator.userAgent || '') ? 'Face ID' : '지문'; }
+
+async function bioEnable(){
+  if (!(await bioAvailable())){ toast('이 폰(브라우저)에서는 ' + bioName() + ' 잠금을 쓸 수 없어요. 폰 설정에 지문·얼굴이 등록돼 있는지 봐 주세요'); return false; }
+  try{
+    const cred = await navigator.credentials.create({ publicKey:{
+      challenge: crypto.getRandomValues(new Uint8Array(32)),
+      rp: { name:'시내모바일 부모 관리' },                       // id 를 안 주면 지금 주소(snmobile6360.github.io)가 된다
+      user: { id: crypto.getRandomValues(new Uint8Array(16)), name:'parent', displayName:'부모님' },
+      pubKeyCredParams: [{ type:'public-key', alg:-7 }, { type:'public-key', alg:-257 }],
+      authenticatorSelection: { authenticatorAttachment:'platform', userVerification:'required', residentKey:'discouraged' },
+      timeout: 60000, attestation: 'none' } });
+    if (!cred) throw new Error('취소');
+    localStorage.setItem(BIO_KEY, JSON.stringify({ id: bioB64(cred.rawId), at: Date.now() }));
+    return true;
+  }catch(e){
+    console.warn('지문 등록 실패:', e && e.name, e && e.message);
+    toast(e && e.name === 'NotAllowedError' ? '취소했어요' : '설정하지 못했어요 (' + (e && e.name || '') + ')');
+    return false;
+  }
+}
+async function bioCheck(){
+  const s = bioSaved(); if (!s) return false;
+  try{
+    const a = await navigator.credentials.get({ publicKey:{
+      challenge: crypto.getRandomValues(new Uint8Array(32)),
+      allowCredentials: [{ type:'public-key', id: bioUnB64(s.id), transports:['internal'] }],
+      userVerification: 'required', timeout: 60000 } });
+    return !!a;
+  }catch(e){ console.warn('지문 확인 실패:', e && e.name, e && e.message); return false; }
+}
+
+/** 비밀번호 화면의 「👆 지문으로 열기」 — 자녀 추가(pinTarget)·비밀번호 재확인(REAUTH_THEN) 때는 안 쓴다 */
+function bioPaintPinBtn(){
+  const b = document.getElementById('bioBtn'); if (!b) return;
+  const on = (!!bioSaved() && !pinTarget) || !!REAUTH_THEN;
+  b.classList.toggle('hide', !on);
+  b.classList.toggle('back', !!REAUTH_THEN);
+  if (REAUTH_THEN) b.textContent = '← 취소하고 돌아가기';
+  else if (on) b.textContent = (bioName() === 'Face ID' ? '🙂 Face ID 로 열기' : '👆 지문으로 열기');
+}
+/** 비밀번호 화면 아래 버튼 하나가 두 가지를 한다 — 평소엔 「지문으로 열기」, 재확인 중엔 「취소」 */
+function bioPinBtnClick(){
+  if (REAUTH_THEN){ REAUTH_THEN = null; show('scMain'); paintMain(); return; }
+  bioUnlockFromPin(false);
+}
+let BIO_BUSY = false;
+async function bioUnlockFromPin(auto){
+  if (BIO_BUSY || !bioSaved() || pinTarget || REAUTH_THEN) return;
+  if (pinLockLeftSec() > 0){ if (!auto) toast(pinLockMsg()); return; }
+  BIO_BUSY = true;
+  const ok = await bioCheck();
+  BIO_BUSY = false;
+  if (!ok){ if (!auto) toast('확인되지 않았어요 — 비밀번호로 열어 주세요'); return; }
+  resetPinFails();
+  sessionStorage.setItem('sinae_auth', '1');
+  sessionStorage.setItem('sinae_auth_by', 'bio');      // 위치 켜기 같은 일에서 비밀번호를 한 번 더 묻는다
+  afterUnlock();
+}
+
+/** 지문으로 연 세션에서 「비밀번호가 꼭 필요한 일」 — 비밀번호를 받고 이어서 한다 */
+function needPinThen(fn, why){
+  REAUTH_THEN = fn;
+  startPin();
+  const el = document.getElementById('pinMsg'); if (el && why) el.textContent = why;
+}
+
+// ── 더보기 → 「잠금 방식」 (카카오톡 화면잠금처럼 고른다) ──
+async function openLockType(){
+  const saved = !!bioSaved(), can = await bioAvailable(), nm = bioName();
+  const opt = (on, ico, t, d, fn, dis) =>
+    '<div class="lkOpt' + (on ? ' on' : '') + (dis ? ' dis' : '') + '" onclick="' + (dis ? '' : fn) + '">' +
+      '<div class="lkR">' + (on ? '●' : '○') + '</div><div class="lkI">' + ico + '</div>' +
+      '<div class="grow"><div class="lkT">' + t + '</div><div class="lkD">' + d + '</div></div></div>';
+  openSub('잠금 방식', `
+    <div class="note">부모웹앱을 열 때 무엇으로 확인할지 골라 주세요. 아이가 옆에서 보고 있어도 <b>${nm}</b>은 따라 할 수 없어요.</div>
+    <div class="lkBox">
+      ${opt(!saved, '🔢', '비밀번호 (숫자 6자리)', '지금처럼 숫자를 눌러 열어요', 'lockPickPin()', false)}
+      ${opt(saved, nm === 'Face ID' ? '🙂' : '👆', nm + (nm === 'Face ID' ? '' : ' · 얼굴 인식'),
+            can ? '폰에 등록한 ' + nm + '으로 바로 열어요 · 안 되면 비밀번호로 열 수 있어요'
+                : '이 폰(브라우저)에서는 쓸 수 없어요 — 폰 설정에 지문·얼굴을 먼저 등록해 주세요', 'lockPickBio()', !can)}
+    </div>
+    <div class="note warn">🙅 <b>패턴은 만들지 않았어요</b> — 손가락 자국이나 옆에서 보는 것만으로 아이가 알아내기 쉬워요.</div>
+    <div class="note">💡 알아 두세요<br>· 지문 정보는 <b>폰 밖으로 나가지 않아요</b>. 저희도 볼 수 없어요.<br>
+      · 폰에 따라 지문이 안 될 때 <b>폰 잠금 비밀번호</b>를 대신 물을 수 있어요(폰 설정).<br>
+      · 위치 확인 켜기처럼 중요한 일은 <b>비밀번호를 한 번 더</b> 물어봐요.<br>
+      · 다른 폰·브라우저에서는 다시 골라 주셔야 해요.</div>`);
+}
+function lockPickPin(){
+  if (!bioSaved()){ toast('지금 비밀번호로 쓰고 있어요'); return; }
+  if (!confirm(bioName() + ' 잠금을 끌까요?\n다음부터는 비밀번호로 열어요.')) return;
+  try{ localStorage.removeItem(BIO_KEY); }catch(e){}
+  toast('비밀번호로 바꿨어요'); openLockType();
+}
+async function lockPickBio(){
+  if (bioSaved()){ toast('지금 ' + bioName() + '으로 쓰고 있어요'); return; }
+  const ok = await bioEnable();
+  if (!ok) return;
+  // 바로 한 번 확인해 본다 — 「등록은 됐는데 열 때 안 되는」 폰을 지금 걸러 낸다
+  const ok2 = await bioCheck();
+  if (!ok2){ try{ localStorage.removeItem(BIO_KEY); }catch(e){} toast('확인이 안 돼서 비밀번호로 그대로 둘게요'); openLockType(); return; }
+  toast('✅ 다음부터 ' + bioName() + '으로 열어요'); openLockType();
+}
+
+function svFixGo(fn){
+  navBack();
+  setTimeout(() => { try{ if (typeof window[fn] === 'function') window[fn](); }catch(e){ toast('화면을 열지 못했어요'); } }, 80);
+}
+
 
 const DM_PKG = 'com.example.dmonly_v2';
 const ADD_ITEMS = [
@@ -4428,7 +4826,7 @@ function xpHtml(k, o){
   if (x.tip) h += tipHtml(x.tip);      // 💡 2026-11-10 (4차) — 「이럴 때 쓰면 좋아요」 노란 상자
   if (x.w && x.w.length) h += '<div class="xwarn">' + x.w.map(s => '<div>' + s + '</div>').join('') + '</div>';
   if (o.mini) h += '</div>';
-  return h;
+  return dscWrap(h, x.h, k);   // 🆕 2026-11-12 : 📘 설명 — 길면 접는다
 }
 // ══════════════════════════════════════════════════════════════════
 //  🎨 2026-11-10 — 3D 그림 아이콘 + 화면마다 「그림+설명 상자」
@@ -4454,7 +4852,7 @@ function icoImg(k, cls){
 const ICO_BY_FN = (() => {
   const m = { togglePush:'push', refreshAll:'refresh', openList:'kids', doLogout:'logout', openDocs:'docs',
               openChromeHub:'allow', openTubeHub:'tube', openDmHub:'dm',
-              openNote:'store', openSummary:'live' };   // 🆕 2026-11-11
+              openNote:'store', openSummary:'live', openLockType:'pin' };   // 🆕 2026-11-11
   Object.keys(F_OPEN).forEach(k => { const fn = F_OPEN[k]; if (!m[fn]) m[fn] = k; });
   return m;
 })();
@@ -4542,11 +4940,29 @@ function guideStrip(title){
         String(x.t).replace(/^[^가-힣A-Za-z0-9]+/, '') + '</b> — ' + x.one + '</div>').join('') + '</div>'
     : '';
   const when = (list.length === 1 && f.when && f.when[0]) ? '<div class="xwhen">💡 이럴 때 써요 · ' + f.when[0] + '</div>' : '';
-  return '<div class="xbox"><div class="xi">' + icoImg(f.k, '') + '</div><div class="xt">' +
+  return dscWrap('<div class="xbox"><div class="xi">' + icoImg(f.k, '') + '</div><div class="xt">' +
     '<div class="xh">' + (list.length > 1 ? '이 화면에서는 <b>' + list.length + '가지</b>를 할 수 있어요' : f.one) + '</div>' +
     (what && list.length === 1 ? '<div class="xd">' + what + '</div>' : '') +
-    steps + when + '</div></div>';
+    steps + when + '</div></div>', f.one, f.k);   // 🆕 2026-11-12 : 📘 설명으로 감싼다
 }
+/**
+ * 📘 설명 상자 (2026-11-12 · 대표점장 「설명 · 기능 ON/OFF 를 색깔+디자인으로 구분 · 설명이 길면 접었다 폈다」)
+ *   ▸ 설명은 크림색 점선 상자 + 「📘 설명」 이름표 + 한 줄 요약(head)이 늘 보인다.
+ *   ▸ 짧으면 펼쳐 두고, 길면 접어 둔다. 부모가 한 번 펴거나 접으면 **그 화면은 그대로 기억**한다(dsc_<키>).
+ *   ▸ 「켜고 끄는 곳」(스위치가 든 카드)은 CSS(.card:has(.sw))가 파란 줄로 따로 표시한다.
+ */
+function dscWrap(inner, head, key){
+  if (!inner) return '';
+  const k = String(key || 'x').replace(/[^A-Za-z0-9_]/g, '_');
+  let mem = null; try{ mem = localStorage.getItem('dsc_' + k); }catch(e){}
+  const plain = String(inner).replace(/<[^>]+>/g, '').replace(/[ ]+/g, ' ').trim();
+  const open = mem === null ? plain.length < 120 : mem === '1';
+  return '<details class="dsc"' + (open ? ' open' : '') + ' ontoggle="dscRemember(this,&#39;' + k + '&#39;)">' +
+    '<summary><span class="dscTag">📘 설명</span><span class="dscH">' + (head || '이 기능은 이런 거예요') + '</span><span class="dscMore"></span></summary>' +
+    '<div class="dscB">' + inner + '</div></details>';
+}
+function dscRemember(el, k){ try{ localStorage.setItem('dsc_' + k, el.open ? '1' : '0'); }catch(e){} }
+
 const GUIDE_SKIP = ['기능 설명', '✨ AI 매니저', '어디 있나요', '장소 관리', '자주 가는 장소 (세이프존)', '장소 등록',
                     '자녀 실시간 제한 상황', '허용 사이트 관리', '소리 변경 · 앱 숨기기',
                     '보안 설정',    // 🛡️ 4차 : 상태 → 스위치 → 설명 순서로 openSecurity 가 직접 그린다
@@ -8401,6 +8817,8 @@ function openLocConsent(){
 
 async function locTurnOn(){
   if(!LOC_AGREE){ toast('동의에 체크해 주세요'); return; }
+  // 👆 2026-11-12 : 서버가 PIN 으로 부모 열쇠를 다시 내주므로 비밀번호가 꼭 필요하다(지문으로 열었으면 없다)
+  if(!locPinHash()){ needPinThen(() => locTurnOn(), '위치를 켜려면 비밀번호를 한 번 더 넣어 주세요'); return; }
   loading(true);
   try{
     // ⓞ **이 서버에 위치 표가 깔려 있나부터 본다.**
