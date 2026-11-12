@@ -3570,6 +3570,7 @@ const STUDY_MIN_VER = 68;
 const TUBE_INSTA_ROOTS = ['youtube.com','youtu.be','youtube-nocookie.com','youtubekids.com','instagram.com','instagr.am','cdninstagram.com','ig.me'];
 function isTubeInstaHost(d){
   d = String(d||'').trim().toLowerCase().replace(/^https?:\/\//,'').replace(/[\/?#:].*$/,'').replace(/^\.+/,'');
+  if (d === 'accounts.youtube.com') return false;   // 구글 로그인이 거쳐 가는 주소 — 영상이 아니다(자녀앱 StudyPass.GOOGLE_LOGIN_YT_HOST)
   return TUBE_INSTA_ROOTS.some(r => d === r || d.endsWith('.' + r));
 }
 function chromeNoTubeHtml(){
