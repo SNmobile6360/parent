@@ -3550,21 +3550,106 @@ async function loadTube(){
     ]);
     TUBE.videos = (v.data||[]).filter(x=>!x.deleted_at);
     TUBE.reqs   = (r.data||[]).filter(x=>x.status==='pending');
+    // 🆕 2026-11-12 : 이미 볼 수 있는 영상의 요청은 숨긴다(📖 공부 시간이 먼저 넣었거나 다른 곳에서 넣은 경우)
+    TUBE.reqs   = TUBE.reqs.filter(q => !TUBE.videos.some(v => v.video_id === q.video_id));
   }catch(e){ /* 조용히 넘어간다 — 시내YouTube 때문에 메인 화면이 깨지면 안 된다 */ }
 }
 
+// ══════════ 🆕 2026-11-12 안재율 피드백 ①②③④ ══════════
+//  ② 볼 수 있는 영상·자녀 요청에 **유튜브 링크**까지 — 보기·복사 (예전엔 제목만 보여서 무슨 영상인지 못 열어 봤다)
+//  ③ 📖 공부 시간 — 1시간 열어 두면 교재 QR 영상은 허락 없이 바로 시내YouTube 에 들어간다(added_by='qr')
+//     · 정책 키 `tube_study_until` = 끝나는 시각(epoch ms) · 자녀앱이 받기만 한다(폰이 되올리지 않는다)
+//     · 🔴 자녀앱 **다음 업데이트(STUDY_MIN_VER)** 부터 동작 — 그 전 폰엔 「업데이트 뒤부터」 안내
+//  ④ 공신폰 전용 크롬에선 유튜브·인스타가 **허락해도** 안 열린다 — 문구는 CHROME_NO_TUBE_INSTA 한 곳
+//     (자녀앱 StudyPass.CHROME_NO_TUBE_INSTA · 전산 같은 이름 상수와 글자까지 같게)
+const CHROME_NO_TUBE_INSTA = '「공신폰 전용 크롬」에서 유튜브·인스타는 부모님이 허락해 주셔도 접속이 안 됩니다.\n유튜브·인스타를 이용하고 싶으시면 「시내YouTube」·「시내디엠」 앱을 이용하시거나 매장에 문의해 주세요.';
+// 🔴 버전 숫자는 대표점장이 정한다 — 이 기능이 들어간 자녀앱 versionCode 로 고칠 것(지금은 「v67 다음」이라 68 로 적어 둠)
+const STUDY_MIN_VER = 68;
+const TUBE_INSTA_ROOTS = ['youtube.com','youtu.be','youtube-nocookie.com','youtubekids.com','instagram.com','instagr.am','cdninstagram.com','ig.me'];
+function isTubeInstaHost(d){
+  d = String(d||'').trim().toLowerCase().replace(/^https?:\/\//,'').replace(/[\/?#:].*$/,'').replace(/^\.+/,'');
+  return TUBE_INSTA_ROOTS.some(r => d === r || d.endsWith('.' + r));
+}
+function chromeNoTubeHtml(){
+  return '<div class="note" style="background:#FFF7ED;border-color:#FED7AA;color:#9A3412">📵 ' +
+         esc(CHROME_NO_TUBE_INSTA).replace(/\n/g,'<br>') + '</div>';
+}
+function tubeNoChromeAlert(){ alert(CHROME_NO_TUBE_INSTA); }
+function tubeUrlOf(id){ return 'https://youtu.be/' + id; }
+function tubeCopy(id){
+  const u = tubeUrlOf(id), done = function(){ toast('링크를 복사했어요 📋'); };
+  try{
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(done, function(){ fallbackCopy(u, done); });
+    else fallbackCopy(u, done);
+  }catch(e){ fallbackCopy(u, done); }
+}
+/** 영상 한 줄 아래에 붙는 링크 줄 — 누르면 부모님 폰에서 열리고, 📋 로 복사 */
+function tubeLinkHtml(id){
+  const u = tubeUrlOf(id);
+  return '<div style="display:flex;align-items:center;gap:6px;margin-top:5px">' +
+    '<a href="' + esc(u) + '" target="_blank" rel="noopener" style="flex:1;min-width:0;font-size:12.5px;font-weight:700;color:#2563EB;word-break:break-all;text-decoration:underline">🔗 ' + esc(u) + '</a>' +
+    '<button onclick="tubeCopy(\'' + esc(id) + '\')" style="flex:none;border:1px solid #D0D5DD;background:#fff;border-radius:9px;padding:5px 9px;font-size:12px;font-weight:700;color:#344054">📋 복사</button></div>';
+}
+
+function studyUntil(){ return Number(ST.pol?.tube_study_until || 0) || 0; }
+function studyOn(){ return studyUntil() > Date.now(); }
+function studyCardHtml(){
+  const on = studyOn(), u = studyUntil();
+  const left = Math.max(0, Math.ceil((u - Date.now()) / 60000));
+  const hm = new Date(u).toLocaleTimeString('ko-KR', { hour:'2-digit', minute:'2-digit' });
+  const ver = Number(ST.pol?.app_version_code || 0) || 0;
+  const oldApp = ver > 0 && ver < STUDY_MIN_VER;
+  const nQr = (TUBE.videos || []).filter(v => v.added_by === 'qr').length;
+  return `<div class="card">
+    <div style="font-weight:800;font-size:15.5px;margin-bottom:6px">📖 공부 시간 <span style="font-weight:700;color:#667085;font-size:13px">· 교재 QR 영상 바로 보기</span></div>
+    <div style="font-size:13px;line-height:1.65;color:#475467">
+      문제집마다 해설 영상 QR 이 수십 개라 하나하나 허락하기 힘드시죠 🙂<br>
+      <b>공부 시간</b>을 열어 두시면 그동안 아이가 <b>교재 QR 을 찍어서 연 유튜브 영상</b>은 허락 없이 바로 시내YouTube 에 들어가요.<br>
+      · 주소를 직접 쳐서 연 영상 · 쇼츠·라이브 · 게임·먹방 같은 영상은 <b>예전처럼 요청</b>으로 와요<br>
+      · QR 로 연 <b>학습 사이트</b>도 공부 시간이 끝날 때까지만 열려요 (유튜브·인스타·SNS·게임·검색은 안 열려요)<br>
+      · 넣은 영상은 아래 「볼 수 있는 영상」에 <b>📖 표시</b>로 남아요${nQr ? ' (지금 ' + nQr + '개)' : ''} — 언제든 보고 지우실 수 있어요
+    </div>
+    ${on
+      ? `<div class="note" style="margin:10px 0 8px;background:#ECFDF3;border-color:#ABEFC6;color:#067647">🟢 지금 열려 있어요 · <b>${hm}</b> 까지 (${left}분 남음)</div>
+         <div style="display:flex;gap:8px"><button class="btn btn-p" style="flex:1;margin:0" onclick="studySet(60)">⏱ 1시간 더</button>
+         <button class="btn btn-g" style="flex:1;margin:0" onclick="studySet(0)">지금 끄기</button></div>`
+      : `<div class="note" style="margin:10px 0 8px">⚪ 지금은 꺼져 있어요 — QR 영상도 하나씩 허락해 주셔야 해요</div>
+         <button class="btn btn-p" style="margin:0" onclick="studySet(60)">📖 1시간 열어주기</button>`}
+    ${oldApp ? `<div class="kkhint" style="color:#B54708">⚠️ 아이 폰의 공신폰 앱이 아직 예전 버전이에요 — <b>다음 업데이트가 깔리면</b> 동작해요</div>` : ''}
+  </div>`;
+}
+async function studySet(min){
+  const now = Date.now();
+  let until = 0;
+  if (min > 0){
+    until = (studyOn() ? studyUntil() : now) + min * 60000;
+    until = Math.min(until, now + 3 * 3600000);   // 한 번에 3시간까지만 쌓인다
+  }
+  loading(true);
+  try{
+    await savePol([{ key:'tube_study_until', value:String(Math.round(until)) }]);
+    loading(false);
+    toast(min > 0 ? '📖 공부 시간을 열었어요' : '공부 시간을 껐어요');
+    openTube();
+  }catch(e){ loading(false); toast('실패: ' + e.message); }
+}
+
 function openTube(){
-  const reqs = TUBE.reqs||[], vids = TUBE.videos||[];
-  const reqBody = reqs.length ? reqs.map(r=>`<div class="item">
-      <div class="grow"><div class="nm">${esc(r.title||r.video_id)}</div>
-        <div class="sm">${esc(r.channel||'')} · ${ago(r.requested_at)} 요청</div></div>
+  const reqs = TUBE.reqs||[];
+  // 최근에 넣은 것이 위로 (📖 공부 시간에 들어온 영상을 바로 볼 수 있게)
+  const vids = (TUBE.videos||[]).slice().sort((a,b) => String(b.added_at||'').localeCompare(String(a.added_at||'')));
+  const reqBody = reqs.length ? reqs.map(r=>`<div class="item" style="align-items:flex-start">
+      <div class="grow" style="min-width:0"><div class="nm">${esc(r.title||r.video_id)}</div>
+        <div class="sm">${esc(r.channel||'')} · ${ago(r.requested_at)} 요청</div>
+        ${tubeLinkHtml(r.video_id)}</div>
       <button class="add" onclick="tubeDecide('${esc(r.video_id)}',true)">허락</button>
       <button class="x" onclick="tubeDecide('${esc(r.video_id)}',false)">거절</button></div>`).join('')
     : `<div class="empty">새로운 요청이 없습니다</div>`;
 
-  const vidBody = vids.length ? vids.map(v=>`<div class="item">
-      <div class="grow"><div class="nm">${esc(v.title||v.video_id)}</div>
-        <div class="sm">${esc(v.channel||'')}</div></div>
+  const vidBody = vids.length ? vids.map(v=>`<div class="item" style="align-items:flex-start">
+      <div class="grow" style="min-width:0"><div class="nm">${v.added_by==='qr' ? '<span style="display:inline-block;background:#ECFDF3;color:#067647;border:1px solid #ABEFC6;border-radius:8px;padding:0 6px;font-size:11.5px;font-weight:800;margin-right:4px">📖 공부 시간</span>' : ''}${esc(v.title||v.video_id)}</div>
+        <div class="sm">${esc(v.channel||'')}${v.added_by==='qr' ? ' · 아이가 QR 로 넣음 · ' + ago(v.added_at) : ''}</div>
+        ${tubeLinkHtml(v.video_id)}</div>
       <button class="x" onclick="tubeRemove('${esc(v.video_id)}')">삭제</button></div>`).join('')
     : `<div class="empty">아직 허락한 영상이 없습니다</div>`;
 
@@ -3573,7 +3658,10 @@ function openTube(){
     ${hubStateHtml(true, '아이 폰에서 <b>쓰고 있어요</b>', '부모님이 고른 영상만 보여요.', '', '', '', '', '')}
     ${xpHtml('tube')}
     <div class="sec">자녀의 허락 요청 (${reqs.length}건)</div>
-    <div class="card">${reqBody}</div>
+    <div class="card">${reqBody}
+      <div class="kkhint">🔗 링크를 누르면 부모님 폰에서 먼저 열어 보실 수 있어요</div></div>
+    <div class="sec">📖 공부 시간</div>
+    ${studyCardHtml()}
     <div class="sec">영상 직접 추가</div>
     <div class="card"><div class="field"><label>유튜브 주소</label>
       <input id="tubeUrl" type="text" placeholder="https://youtu.be/..." autocapitalize="none" spellcheck="false"></div>
@@ -3581,6 +3669,7 @@ function openTube(){
       <div class="kkhint">퍼가기가 막힌 영상은 허락해도 재생되지 않습니다. 추가할 때 미리 걸러집니다.</div></div>
     <div class="sec">볼 수 있는 영상 (${vids.length}개)</div>
     <div class="card">${vidBody}</div>
+    ${chromeNoTubeHtml()}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>
     ${tubeInstalled() ? cancelLinkHtml('tube_cancel_requested','시내YouTube') : ''}`);
 }
@@ -4596,6 +4685,7 @@ function openChromeHub(){
                  '지금 <b>꺼져 있어요</b>', '신청하시면 매장이 확인하고 켜 드려요.',
                  'chrome_requested', '공신폰 크롬', '🌐 크롬 켜기 신청하기') +
     xpHtml('chrome') +
+    chromeNoTubeHtml() +   // 🆕 2026-11-12 ④
     '<div class="sec">여기서 관리해요</div>' +
     hubCard('openReq()', 'req', '자녀의 사이트 접속 요청', '아이가 「이 사이트 열어 주세요」 하고 보낸 부탁이에요',
             n ? '<b style="color:#F97316">새 요청 ' + n + '건</b> — 확인해 주세요' : '새 요청 없음') +
@@ -5824,7 +5914,7 @@ async function dtSheetSave(d){
 function openReq(){
   const list=ST.reqs||[];
   const body=list.length? list.map(r=>`<div class="item">
-      <div class="grow"><div class="nm">${esc(r.domain)}</div><div class="sm">${ago(r.requested_at)} 요청</div></div>
+      <div class="grow"><div class="nm">${esc(r.domain)}</div><div class="sm">${ago(r.requested_at)} 요청</div>${isTubeInstaHost(r.domain) ? '<div class="sm" style="color:#B54708;font-weight:700">📵 크롬에서는 허락해도 안 열려요 — 시내YouTube·시내디엠을 써 주세요</div>' : ''}</div>
       <button class="add" onclick="approveReq('${esc(r.domain)}')">허용</button>
       <button class="x" onclick="rejectReq('${esc(r.domain)}')">거절</button></div>`).join('')
     : `<div class="empty">새로운 요청이 없습니다</div>`;
@@ -5833,6 +5923,7 @@ function openReq(){
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`, () => openChromeHub());   // 🔀 4차 : 공신폰 크롬 안으로 옮겼다
 }
 async function approveReq(d){
+  if(isTubeInstaHost(d)){ tubeNoChromeAlert(); return; }   // 🆕 2026-11-12 ④
   loading(true);
   try{
     const allow=J(ST.pol.chrome_allowed_domains,[]);
@@ -5993,6 +6084,7 @@ function cleanDomain(v){ return (v||'').trim().toLowerCase().replace(/^https?:\/
 async function addAllow(){
   const d=cleanDomain(document.getElementById('newDom').value);
   if(!d||!d.includes('.')){ toast('올바른 주소를 입력해 주세요 (예: ebs.co.kr)'); return; }
+  if(isTubeInstaHost(d)){ tubeNoChromeAlert(); return; }   // 🆕 2026-11-12 ④
   loading(true);
   try{
     const allow=J(ST.pol.chrome_allowed_domains,[]);
