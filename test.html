@@ -1109,6 +1109,8 @@
   .note{background:#FFFBF3;border-color:#EBD9B4;color:#5C4414}
   .note.warn{background:#FFF4ED;border-color:#FDBA8C;color:#9A3412}
   /* 📝 2026-11-12 특이사항 설문 */
+  .nqAd{font-size:12.8px;color:#1D4ED8;margin:-2px 2px 8px;line-height:1.5}
+  .nqAd:empty{display:none}
   .nqProg{font-size:13.5px;color:#475467;margin:2px 2px 10px;font-weight:600}
   .nq{background:#fff;border:1.5px solid #EAECF0;border-radius:16px;padding:13px 14px;margin-bottom:10px}
   .nqT{display:flex;gap:9px;align-items:flex-start;font-size:15px;line-height:1.55;color:#1D2939;word-break:keep-all}
@@ -2120,7 +2122,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월13일 13차 테스트판';
+const WEB_LABEL = '11월13일 14차 테스트판';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -2797,32 +2799,41 @@ function paintMain(){
 // ══════════════════════════════════════════════════════════════════════════
 //  warnOn : 이 답이면 전산에서 **빨갛게** 보인다(매장이 꼭 봐야 하는 답)
 //  set:true  : 이 답으로 「⚙️ 맞춤 설정 추천」(recBuild)이 설정을 골라 준다. 없으면 매장에만 전달된다.
-//  🆕 2026-11-13 : 맞춤 설정 질문 2개(하루 시간 · 카톡)를 넣고, 설정과 안 이어지는 「대화가 잘 됨」·「자녀 앞에서 설정 얘기 조심」을 뺐다(10문항 유지).
-//  🆕 2026-11-13 (13차 · 대표점장 「10문항은 길다 · 7 · 8 · 10번 마음에 안 듦」) : 카톡 걱정 · 혼자 오면 거절 · 매장이 규칙 안내를 뺐다 → 7문항.
-//     🔴 recBuild 의 A() 는 **지금 목록에 있는 질문만** 본다 — 예전에 저장된 kakao · store_no · guide 답으로는 설정을 고르지 않는다.
+//  y · n    : 「예 · 아니오」가 **무슨 뜻인지** 한 줄로 — 답과 같이 `ad` 로 저장해서 **전산이 그 문장을 그대로** 보여 준다.
+//             (「위치 조회를 자녀가 알아도 됨 : 아니오」는 거꾸로 읽히기 쉽다 → 「자녀가 몰랐으면 해요 (원하지 않음)」)
+//  🆕 2026-11-13 (13차) : 10 → 7문항(카톡 걱정 · 혼자 오면 거절 · 매장이 규칙 안내 뺌).
+//  🆕 2026-11-13 (14차 · 대표점장 「매장이 부모 허락 없이 먼저 바꾸는 일은 없다」) : 「바꾸기 전에 먼저 연락」 → 「학원에 다님」(맞춤 설정 : 학원 시간).
+//     🔴 recBuild 의 A() 는 **지금 `NOTE_QS` 에 있는 질문만** 본다 — 예전에 저장된 kakao · store_no · guide · call_first 답으로 설정을 고르지 않는다.
 //        (전산은 저장된 답을 질문 문구째 읽으므로 예전 답도 그대로 보인다 · 다시 저장하면 빠진다)
 const NOTE_QS = [
   { id:'loc_know',  t:'위치 조회를 자녀가 알아도 됨', warnOn:'no', set:true,
     q:'자녀가 「위치 조회」를 부모님께서 하시는 걸 <b>아는 걸</b> 원하시나요?',
+    y:'자녀가 알아도 돼요 (원함)', n:'자녀가 몰랐으면 해요 (원하지 않음)',
     ph:'예) 아이가 알면 폰을 꺼 둘 것 같아요' },
   { id:'ctl_know',  t:'폰 제어를 자녀가 알아도 됨', warnOn:'no', set:true,
     q:'자녀가 「자녀폰 제어」를 부모님께서 하시는 걸 <b>아는 걸</b> 원하시나요?',
+    y:'자녀가 알아도 돼요 (원함)', n:'자녀가 몰랐으면 해요 (원하지 않음)',
     ph:'예) 매장에서만 조정할 수 있는 부분으로 알게 해 주세요' },
   { id:'ask_pw',    t:'비밀번호를 알려 달라고 조름', warnOn:'yes', set:true,
     q:'자녀가 부모님 <b>비밀번호를 알려 달라고</b> 조른 적이 있나요?',
+    y:'조른 적 있어요', n:'조른 적 없어요',
     ph:'예) 부모웹앱을 열 때 옆에서 봐요' },
   { id:'bypass',    t:'몰래 풀려고 한 적 있음', warnOn:'yes', set:true,
     q:'자녀가 설정을 <b>몰래 풀려고</b> 한 적이 있나요?',
+    y:'몰래 풀려고 한 적 있어요', n:'그런 적 없어요',
     ph:'예) 친구한테 푸는 방법을 들었대요' },
   { id:'night',     t:'밤늦게 쓰는 게 가장 걱정', warnOn:'yes', set:true,
     q:'자녀가 <b>밤늦게</b> 폰을 쓰는 게 가장 걱정되시나요?',
+    y:'밤늦게 쓰는 게 걱정이에요', n:'밤 사용은 크게 걱정 안 해요',
     ph:'예) 새벽 2시까지 해요' },
   { id:'limit',     t:'하루 쓰는 시간을 정하고 싶음', warnOn:'', set:true,
     q:'자녀가 <b>하루에 폰을 쓰는 시간</b>을 정해 두고 싶으신가요?',
+    y:'하루 시간을 정하고 싶어요 (원함)', n:'시간은 안 정해도 돼요 (원하지 않음)',
     ph:'예) 평일엔 2시간이면 충분해요' },
-  { id:'call_first',t:'바꾸기 전에 부모님께 먼저 연락', warnOn:'yes',
-    q:'설정을 바꿀 때 매장에서 <b>부모님께 먼저 연락</b>드리길 원하시나요?',
-    ph:'예) 문자로 먼저 알려 주세요' }
+  { id:'academy',   t:'학원에 다님', warnOn:'', set:true,
+    q:'자녀가 <b>학원</b>에 다니나요?',
+    y:'학원에 다녀요', n:'학원은 안 다녀요',
+    ph:'예) 월·수·금 오후 4시~7시 영어학원이에요' }
 ];
 let NOTE = { code:'', v:null, loaded:false, err:false };
 let NOTE_DRAFT = { ans:{}, memo:'' };
@@ -2928,6 +2939,7 @@ function noteHtml(saved){
         '<button class="nqB yes' + (d.a === 'yes' ? ' on' : '') + '" onclick="ntAns(&#39;' + q.id + '&#39;,&#39;yes&#39;)">예</button>' +
         '<button class="nqB no' + (d.a === 'no' ? ' on' : '') + '" onclick="ntAns(&#39;' + q.id + '&#39;,&#39;no&#39;)">아니오</button>' +
       '</div>' +
+      '<div class="nqAd" id="nqad_' + q.id + '">' + nqAdText(q, d.a) + '</div>' +
       '<input class="nqM" id="nqm_' + q.id + '" maxlength="120" placeholder="특이사항 (선택) — ' + esc(q.ph.replace(/^예\) ?/, '')) + '" value="' + esc(d.m) + '">' +
     '</div>';
   }).join('');
@@ -2945,6 +2957,8 @@ function noteHtml(saved){
     '<button class="btn btn-p" id="ntSave" style="margin-top:14px" onclick="saveNote()">매장에 전달하고 맞춤 설정 보기</button>' +
     (saved ? '<button class="btn btn-g" style="margin-top:8px" onclick="clearNote()">적은 내용 지우기</button>' : '');
 }
+/** 14차 : 고른 답이 무슨 뜻인지 한 줄로 — 매장 전산에도 이 문장이 그대로 간다 */
+function nqAdText(q, a){ const t = a === 'yes' ? q.y : a === 'no' ? q.n : ''; return t ? '→ 매장에 「<b>' + esc(t) + '</b>」로 전달돼요' : ''; }
 function noteProgText(){
   const n = NOTE_QS.filter(q => (NOTE_DRAFT.ans[q.id] || {}).a).length;
   return '📋 ' + NOTE_QS.length + '문항 중 <b>' + n + '개</b> 답했어요 · 모르는 건 건너뛰셔도 돼요';
@@ -2962,6 +2976,7 @@ function ntAns(id, a){
     box.querySelector('.nqB.no').classList.toggle('on', cur.a === 'no');
   }
   const p = document.getElementById('nqProg'); if (p) p.innerHTML = noteProgText();
+  const q = NOTE_QS.find(x => x.id === id), ad = document.getElementById('nqad_' + id); if (q && ad) ad.innerHTML = nqAdText(q, cur.a);
 }
 
 async function saveNote(){
@@ -2976,7 +2991,7 @@ async function saveNote(){
   NOTE_QS.forEach(q => {
     const d = NOTE_DRAFT.ans[q.id];
     if (!d || (!d.a && !d.m)) return;
-    ans[q.id] = { t:q.t, q:q.q.replace(/<[^>]+>/g, ''), a:d.a, m:d.m, warn: !!(q.warnOn && d.a === q.warnOn) };
+    ans[q.id] = { t:q.t, q:q.q.replace(/<[^>]+>/g, ''), a:d.a, ad: d.a === 'yes' ? (q.y || '') : d.a === 'no' ? (q.n || '') : '', m:d.m, warn: !!(q.warnOn && d.a === q.warnOn) };   // ad : 전산이 그대로 보여 줄 답 문장(14차)
   });
   const val = { v:2, at:new Date().toISOString(), child:ST.dev?.child_name || '', ans, memo:NOTE_DRAFT.memo };
   if (NOTE.v && Array.isArray(NOTE.v.auto)) val.auto = NOTE.v.auto;   // ⚙️ 맞춤 설정 기록은 지우지 않는다
@@ -3090,7 +3105,7 @@ function recBuild(ans, p){
   const out = { auto:[], manual:[], done:[], info:[] };
   const seen = {};
   // 「답하신 것」에는 **답까지** 적는다 — 「폰 제어를 자녀가 알아도 됨」만 적으면 「아니오」라고 답한 부모가 거꾸로 읽는다
-  const QA = id => Q(id) + ' → ' + (A(id) === 'yes' ? '예' : A(id) === 'no' ? '아니오' : '');
+  const QA = id => { const q = NOTE_QS.find(x => x.id === id) || {}; return Q(id) + ' → ' + (A(id) === 'yes' ? (q.y || '예') : A(id) === 'no' ? (q.n || '아니오') : ''); };
   const put = (kind, it, fromId) => {
     const k = kind + ':' + it.id;
     if (seen[k]){ if (fromId && !seen[k].from.includes(QA(fromId))) seen[k].from.push(QA(fromId)); return; }
@@ -3227,6 +3242,17 @@ function recBuild(ans, p){
         else put('done', { id:'kadv', t:'카톡 오픈채팅방 만들기 · 오픈프로필 · 숏폼 · 커뮤니티 — 이미 막혀 있어요' }, 'kakao');
       } else put('info', { id:'kadv', t:'💬 카톡 오픈채팅방 만들기 · 숏폼 막기', d:'아이 폰 앱이 업데이트된 뒤에 쓸 수 있어요. 업데이트는 저절로 돼요.' }, 'kakao');
     }
+  }
+  // ── 학원 (14차) : 요일마다 시간이 달라 우리가 대신 못 정한다 → 학원 시간 화면으로 보낸다 ──
+  if (A('academy') === 'yes'){
+    const acSet = [1,2,3,4,5,6,7].some(i => (p['dt2_day_' + i] || '미설정') !== '미설정');
+    if (ver > 0 && ver < ACADEMY_MIN_VER)
+      put('info', { id:'ac', t:'📚 학원 시간', d:'아이 폰 앱이 업데이트된 뒤에 쓸 수 있어요. 업데이트는 저절로 돼요.' }, 'academy');
+    else if (p.dt2_enabled === 'true' && acSet)
+      put('done', { id:'ac', t:'학원 시간 — 이미 정해져 있어요' }, 'academy');
+    else
+      put('manual', { id:'ac', t:'📚 학원 시간 정하기', d:'학원에 있는 동안 폰을 쉬게 할 수 있어요. 요일마다 시간이 달라서 <b>직접 골라 주셔야 해요.</b> 학원 안 가는 날은 그날만 풀어 줄 수도 있어요.',
+        btn:'학원 시간 정하러 가기', fn:'openAcademy' }, 'academy');
   }
   // ── 위치 확인을 아이가 몰랐으면 → 못 숨긴다 ────────────────────
   if (A('loc_know') === 'no')
