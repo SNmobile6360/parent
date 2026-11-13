@@ -1188,6 +1188,37 @@
   .svScene.end{padding-bottom:96px}
   .svScene.end .svImg{width:92px;height:92px}
   .svScene.end .svT{font-size:22px}
+  /* ══ 🆕 2026-11-13 (13차) — 대표점장 「설명 폴더 · 기능 ON/OFF 를 더!! 눈에 띄게」 ══
+     · 📘 설명 = 진한 노랑 실선 상자 + 주황 「📘 설명」 이름표 + 「펼치기 ▾」 단추 모양
+     · ⚙️ 켜고 끄는 곳 = 파란 테두리 + 굵은 왼쪽 줄 + 파란 바탕 이름표 + 스위치 둘레 빛
+     🔴 <style> 맨 끝에 둔다 — 11-12 블록(.dsc · .card:has(.sw))보다 뒤에 와야 이긴다(3-20 · 3-41) */
+  .dsc{background:#FFF6DD;border:2px solid #F3C35B;box-shadow:0 3px 10px rgba(243,195,91,.22)}
+  .dsc>summary{padding:13px 13px;font-size:14.5px;color:#5A3A00}
+  .dscTag{background:#F59E0B;color:#fff;font-size:12.5px;font-weight:900;padding:4px 10px}
+  .dscH{font-weight:800}
+  details.dsc>summary>span.dscMore::after{display:inline-block;background:#fff;border:1.5px solid #F3C35B;border-radius:999px;padding:4px 10px;font-size:12.5px;color:#B45309}
+  details.dsc[open]>summary{border-bottom:1.5px dashed #F3C35B;margin-bottom:10px}
+  .card:has(.sw),.card.xctl{border:2px solid #93B4FD !important;border-left:8px solid #2563EB !important;background:#F7FAFF !important;box-shadow:0 4px 14px rgba(37,99,235,.13) !important}
+  .card:has(.sw)::before,.card.xctl::before{content:'⚙️ 켜고 끄는 곳';display:inline-block;margin:0 0 9px;padding:4px 11px;border-radius:999px;background:#2563EB;color:#fff;font-size:12.5px;font-weight:900}
+  .card:has(.sw) .sw i,.card.xctl .sw i{box-shadow:0 0 0 3px rgba(37,99,235,.2)}
+  .card:has(.sw) .ttl{font-size:15.5px}
+  .card.xctl{padding:12px 12px 4px;margin:10px 0 12px}
+  .card.xctl .xsw{background:#fff;border:1.5px solid #DCE6FB;margin-bottom:9px}
+  .card.xctl .row{margin-bottom:8px}
+  .xmini .dsc{margin:0 0 12px}
+  .xm-ye{background:linear-gradient(135deg,#FFFBEB,#FFFDF5);border-color:#FBE3A3}
+  .xmini .xmE{font-size:30px;line-height:1;flex:none;width:50px;text-align:center}
+  .bnNow{font-size:14px;font-weight:700;color:#B54708;background:#FFFAEB;border-radius:10px;padding:7px 10px;margin-bottom:9px}
+  /* 🎬 13차 : 「30초 요약 영상으로 보기」를 따로 크게 */
+  .svHot{display:inline-flex;align-items:center;gap:6px;margin:7px 0 5px;padding:6px 14px;border-radius:999px;background:linear-gradient(135deg,#FF7A30,#F04438);color:#fff;font-size:15px;font-weight:900;box-shadow:0 3px 10px rgba(240,68,56,.28)}
+  /* 📝 13차 : 설문 안 한 부모님께 — 홈 맨 위 알림 */
+  .ntNudge{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#FFF1E5,#FFF8F1);border:2px solid #FDBA8C;border-radius:18px;padding:13px 13px;margin:4px 0 14px;cursor:pointer;box-shadow:0 4px 14px rgba(249,115,22,.15)}
+  .ntNudge .nnI{font-size:30px;line-height:1;flex:none}
+  .ntNudge .nnT{font-size:15.5px;font-weight:900;color:#9A3412;line-height:1.4;word-break:keep-all}
+  .ntNudge .nnD{font-size:13.5px;color:#7C2D12;margin-top:3px;line-height:1.5;word-break:keep-all}
+  .ntNudge .nnB{flex:none;background:#F97316;color:#fff;font-size:13.5px;font-weight:900;border-radius:999px;padding:7px 12px}
+  .ntPopE{text-align:center;font-size:44px;line-height:1;margin:4px 0 8px}
+  .ntPopD{font-size:14.5px;color:#475467;line-height:1.7;text-align:center;word-break:keep-all;margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -1338,6 +1369,8 @@
 
     <!-- 🙋 2026-10-21 : 자녀가 「더 쓰고 싶다」고 누르면 여기에 뜬다 (평소엔 비어 있다) -->
     <div id="timeReqBox"></div>
+    <!-- 📝 2026-11-13 13차 : 특이사항 안 적은 부모님께만 보이는 알림 (paintNoteNudge) -->
+    <div id="noteNudge"></div>
 
     <div class="sec">지금 상황</div>
     <div class="card tap" onclick="openLive()">
@@ -1347,7 +1380,7 @@
     <!-- 🎬 2026-11-11 : 30초 요약 (대표점장 「실시간 자녀폰 상황 30초 영상+설명 요약」) — openSummary -->
     <div class="card tap svCard" onclick="openSummary()">
       <div class="row"><div class="ic" style="background:#FFF4ED">🎬</div>
-        <div class="grow"><div class="ttl">자녀 실시간 제한 상황 30초 요약 영상으로 보기 <span class="betabadge">새 기능</span></div><div class="val">지금 걸린 제한과 <b>잘못 설정된 곳</b>까지 그림 · 소리로 알려 드려요</div></div><div class="chev">›</div></div>
+        <div class="grow"><div class="ttl">자녀 실시간 제한 상황 <span class="betabadge">새 기능</span></div><div class="svHot">▶ 30초 요약 영상으로 보기</div><div class="val">지금 걸린 제한과 <b>잘못 설정된 곳</b>까지 그림 · 소리로 알려 드려요</div></div><div class="chev">›</div></div>
     </div>
     <!-- 🔄 2026-11-11 : 「새로고침」을 더보기 → 홈으로 옮겼다 (대표점장) · id vSync 는 하나만 둔다 -->
     <div class="card tap" onclick="refreshAll(true)">
@@ -1377,7 +1410,7 @@
 
     <!-- 📝 2026-11-11 : 자녀 특이사항 · 매장 전달사항 (대표점장 「자녀를 못 이기는 부모님이 많다」)
          저장은 global_policies 의 parent_note_<연동코드> — 전산 「특이사항 메모」 아래에 같이 보인다. -->
-    <div class="sec">매장에 알려 주세요</div>
+    <div class="sec">🏪 매장 집중 케어</div>
     <div class="card tap" onclick="openNote()">
       <div class="row"><div class="ic" style="background:#FFF7ED">📝</div>
         <div class="grow"><div class="ttl">자녀 특이사항 · 매장 전달사항</div><div class="val" id="vNote">-</div></div><div class="chev">›</div></div>
@@ -2087,7 +2120,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월13일 12차 테스트판';
+const WEB_LABEL = '11월13일 13차 테스트판';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -2765,6 +2798,9 @@ function paintMain(){
 //  warnOn : 이 답이면 전산에서 **빨갛게** 보인다(매장이 꼭 봐야 하는 답)
 //  set:true  : 이 답으로 「⚙️ 맞춤 설정 추천」(recBuild)이 설정을 골라 준다. 없으면 매장에만 전달된다.
 //  🆕 2026-11-13 : 맞춤 설정 질문 2개(하루 시간 · 카톡)를 넣고, 설정과 안 이어지는 「대화가 잘 됨」·「자녀 앞에서 설정 얘기 조심」을 뺐다(10문항 유지).
+//  🆕 2026-11-13 (13차 · 대표점장 「10문항은 길다 · 7 · 8 · 10번 마음에 안 듦」) : 카톡 걱정 · 혼자 오면 거절 · 매장이 규칙 안내를 뺐다 → 7문항.
+//     🔴 recBuild 의 A() 는 **지금 목록에 있는 질문만** 본다 — 예전에 저장된 kakao · store_no · guide 답으로는 설정을 고르지 않는다.
+//        (전산은 저장된 답을 질문 문구째 읽으므로 예전 답도 그대로 보인다 · 다시 저장하면 빠진다)
 const NOTE_QS = [
   { id:'loc_know',  t:'위치 조회를 자녀가 알아도 됨', warnOn:'no', set:true,
     q:'자녀가 「위치 조회」를 부모님께서 하시는 걸 <b>아는 걸</b> 원하시나요?',
@@ -2784,18 +2820,9 @@ const NOTE_QS = [
   { id:'limit',     t:'하루 쓰는 시간을 정하고 싶음', warnOn:'', set:true,
     q:'자녀가 <b>하루에 폰을 쓰는 시간</b>을 정해 두고 싶으신가요?',
     ph:'예) 평일엔 2시간이면 충분해요' },
-  { id:'kakao',     t:'카톡 모르는 사람 · 숏폼 걱정', warnOn:'', set:true,
-    q:'카톡에서 <b>모르는 사람과 채팅</b>하거나 <b>짧은 영상(숏폼)</b>을 보는 게 걱정되시나요?',
-    ph:'예) 오픈채팅에서 모르는 사람이랑 얘기해요' },
-  { id:'store_no',  t:'자녀 혼자 오면 풀어 주지 않기', warnOn:'yes',
-    q:'자녀가 <b>혼자 매장에 와서</b> 풀어 달라고 하면 <b>거절</b>해 주길 원하시나요?',
-    ph:'예) 꼭 저에게 먼저 전화 주세요' },
   { id:'call_first',t:'바꾸기 전에 부모님께 먼저 연락', warnOn:'yes',
     q:'설정을 바꿀 때 매장에서 <b>부모님께 먼저 연락</b>드리길 원하시나요?',
-    ph:'예) 문자로 먼저 알려 주세요' },
-  { id:'guide',     t:'매장이 자녀에게 규칙 안내', warnOn:'',
-    q:'매장에서 자녀에게 <b>사용 규칙을 직접 안내</b>해 드릴까요?',
-    ph:'예) 다음 방문 때 같이 들을게요' }
+    ph:'예) 문자로 먼저 알려 주세요' }
 ];
 let NOTE = { code:'', v:null, loaded:false, err:false };
 let NOTE_DRAFT = { ans:{}, memo:'' };
@@ -2832,10 +2859,44 @@ async function paintNoteCard(){
   const code = ST.code;
   const v = await loadNote(false);
   if (code !== ST.code) return;
+  paintNoteNudge(v);   // 📝 13차 : 안 적은 부모님께 홈 맨 위 알림
   if (NOTE.err){ el.textContent = '지금은 불러오지 못했어요 — 눌러서 다시 볼 수 있어요'; return; }
   el.innerHTML = noteFilled(v)
     ? badge(true, '매장에 전달됨') + ' ' + esc(noteWhen(v.at)) + (v.v === 2 ? ' · ' + noteAnswered(v) + '/' + NOTE_QS.length + '문항' : '')
-    : '<b style="color:#C2410C">아직 안 적으셨어요 — 예 · 아니오만 누르시면 돼요</b>';
+    : '<b style="color:#C2410C">매장에서 더 집중해서 케어해 드릴 수 있게 ' + NOTE_QS.length + '가지만 예 · 아니오로 알려 주세요</b>';
+}
+
+/**
+ * 📝 2026-11-13 (13차 · 대표점장 「참여 안 한 고객은 알림을 띄워 주면 좋겠다」)
+ *   ▸ 아직 안 적은 부모님께만 — ①홈 맨 위 알림 상자(적을 때까지 늘 보인다) ②작은 창(3일에 한 번만)
+ *   ▸ 못 읽었으면(NOTE.err) 아무것도 안 띄운다 — 적은 분에게 「아직 안 적으셨어요」라고 하면 안 된다(3-10)
+ *   ▸ 창은 홈 화면이 보이고 다른 창이 없을 때만 띄운다. 띄운 시각은 기기 · 자녀마다 기억한다(note_nudge_<연동코드>)
+ */
+const NOTE_NUDGE_MS = 3 * 24 * 3600 * 1000;
+function paintNoteNudge(v){
+  const el = document.getElementById('noteNudge'); if (!el) return;
+  const need = !NOTE.err && NOTE.loaded && !noteFilled(v);
+  el.innerHTML = need
+    ? '<div class="ntNudge" onclick="openNote()"><div class="nnI">📝</div><div class="grow">' +
+        '<div class="nnT">매장에서 더 집중해서 케어해 드릴게요</div>' +
+        '<div class="nnD"><b>' + NOTE_QS.length + '가지만</b> 예 · 아니오로 알려 주세요 · 1분이면 끝나요</div></div>' +
+        '<div class="nnB">시작 ›</div></div>'
+    : '';
+  if (need) setTimeout(() => noteNudgePopup(ST.code), 1500);
+}
+function noteNudgePopup(code){
+  if (code !== ST.code || NOTE.err || !NOTE.loaded || noteFilled(NOTE.v)) return;
+  const main = document.getElementById('scMain'), sh = document.getElementById('sheet');
+  if (!main || main.classList.contains('hide') || !sh || !sh.classList.contains('hide')) return;
+  const k = 'note_nudge_' + code;
+  let last = 0; try{ last = Number(localStorage.getItem(k) || 0) || 0; }catch(e){ return; }
+  if (Date.now() - last < NOTE_NUDGE_MS) return;
+  try{ localStorage.setItem(k, String(Date.now())); }catch(e){ return; }
+  openSheet('<div class="grip"></div><div class="ntPopE">📝</div>' +
+    '<h3>매장에서 더 집중해서 케어해 드릴게요</h3>' +
+    '<div class="ntPopD">자녀에 대해 <b>' + NOTE_QS.length + '가지만</b> 「예 · 아니오」로 알려 주세요.<br>1분이면 끝나요. 답에 맞춰 <b>설정도 골라 드려요.</b><br>적어 주신 내용은 <b>자녀폰에는 안 보여요.</b></div>' +
+    '<div class="btns"><button class="btn btn-g" onclick="closeSheet()">나중에 할게요</button>' +
+    '<button class="btn btn-p" onclick="closeSheet(); openNote()">지금 할게요</button></div>');
 }
 
 async function openNote(){
@@ -2871,7 +2932,7 @@ function noteHtml(saved){
     '</div>';
   }).join('');
   return '<div class="ntHero">' + icoImg('store', '') +
-      '<div><b>아이에 대해 매장에 알려 주세요</b><br>「예 · 아니오」만 누르시면 돼요. 적어 주신 내용은 <b>매장 전산에만</b> 보이고, 자녀폰에는 안 떠요.<br><span class="nqTag set" style="margin:0">⚙️ 맞춤 설정</span> 질문은 답에 맞춰 <b>설정을 골라 드려요</b> — 확인하고 누르셔야 바뀌어요.</div></div>' +
+      '<div><b>매장에서 더 집중해서 케어해 드릴 수 있게, ' + NOTE_QS.length + '가지만 알려 주세요 🙏</b><br>「예 · 아니오」만 누르시면 <b>1분이면 끝나요.</b> 적어 주신 내용은 <b>매장 전산에만</b> 보이고, <b>자녀폰에는 안 보여요.</b><br><span class="nqTag set" style="margin:0">⚙️ 맞춤 설정</span> 질문은 답에 맞춰 <b>설정을 골라 드려요</b> — 확인하고 누르셔야 바뀌어요.</div></div>' +
     (saved ? '<div class="note">✅ ' + esc(noteWhen(saved.at)) + ' — 매장에 전달돼 있어요. 고쳐서 다시 보내셔도 돼요.</div>' : '') +
     (saved && saved.v === 2 && recAnyFor(saved.ans) ? '<button class="btn btn-p" style="margin:0 0 12px" onclick="openRecs(true)">⚙️ 답에 맞춘 추천 설정 보기</button>' : '') +
     '<div class="nqProg" id="nqProg">' + noteProgText() + '</div>' +
@@ -3024,7 +3085,7 @@ function recLimitLocksNow(vals){
  */
 function recBuild(ans, p){
   ans = ans || {}; p = p || {};
-  const A = id => (ans[id] || {}).a || '';
+  const A = id => NOTE_QS.some(q => q.id === id) ? ((ans[id] || {}).a || '') : '';   // 13차 : 지금 목록에 있는 질문만 본다(뺀 질문의 옛 답으로 설정을 고르지 않는다)
   const Q = id => (NOTE_QS.find(q => q.id === id) || {}).t || id;
   const out = { auto:[], manual:[], done:[], info:[] };
   const seen = {};
@@ -4136,7 +4197,7 @@ function openTube(){
 
   // 🎨 2026-11-10 (5차) : 다른 허브처럼 맨 위에 「사용 중 · 매장에서만!」 상자 → 그다음 설명(GUIDE_SKIP 에 넣고 직접 그린다)
   openSub('시내YouTube', `
-    ${hubStateHtml(true, '아이 폰에서 <b>쓰고 있어요</b>', '부모님이 고른 영상만 보여요.', '', '', '', '', '')}
+    ${hubStateHtml(true, '자녀 폰에서 <b>쓰고 있어요</b>', '부모님이 고른 영상만 보여요.', '', '', '', '', '')}
     ${xpHtml('tube')}
     ${TUBE.err ? '<div class="note" style="background:#FEF3F2;border-color:#FECDCA;color:#B42318">⚠️ 시내YouTube 목록을 불러오지 못했어요 — 잠시 뒤 새로고침해 주세요. (아래가 비어 보여도 실제로 비어 있는 게 아닐 수 있어요)</div>' : ''}
     <div class="sec">자녀의 허락 요청 (${reqs.length}건)</div>
@@ -5186,7 +5247,7 @@ function openTubeHub(){
 function openDmHub(){
   const using = HUB_ON.dm();
   openSub('시내디엠',
-    hubStateHtml(using, '아이 폰에서 <b>쓰고 있어요</b>', 'DM만 열리고 릴스 · 피드 · 탐색 · 스토리는 막혀 있어요.',
+    hubStateHtml(using, '자녀 폰에서 <b>쓰고 있어요</b>', 'DM만 열리고 릴스 · 피드 · 탐색 · 스토리는 막혀 있어요.',
                  '아직 아이 폰에 <b>없어요</b>', '신청하시면 매장에서 확인하고 <b>원격으로</b> 넣어 드려요.',
                  'dm_install_requested', '시내디엠', '💬 시내디엠 신청하기') +
     xpHtml('dm') +
@@ -5523,12 +5584,12 @@ function guideStrip(title){
  *   ▸ 짧으면 펼쳐 두고, 길면 접어 둔다. 부모가 한 번 펴거나 접으면 **그 화면은 그대로 기억**한다(dsc_<키>).
  *   ▸ 「켜고 끄는 곳」(스위치가 든 카드)은 CSS(.card:has(.sw))가 파란 줄로 따로 표시한다.
  */
-function dscWrap(inner, head, key){
+function dscWrap(inner, head, key, defOpen){   // 13차 : defOpen 을 주면 처음 상태를 그걸로(안 주면 예전처럼 짧으면 펼침)
   if (!inner) return '';
   const k = String(key || 'x').replace(/[^A-Za-z0-9_]/g, '_');
   let mem = null; try{ mem = localStorage.getItem('dsc_' + k); }catch(e){}
   const plain = String(inner).replace(/<[^>]+>/g, '').replace(/[ ]+/g, ' ').trim();
-  const open = mem === null ? plain.length < 120 : mem === '1';
+  const open = mem === null ? (defOpen === undefined ? plain.length < 120 : !!defOpen) : mem === '1';
   return '<details class="dsc"' + (open ? ' open' : '') + ' ontoggle="dscRemember(this,&#39;' + k + '&#39;)">' +
     '<summary><span class="dscTag">📘 설명</span><span class="dscH">' + (head || '이 기능은 이런 거예요') + '</span><span class="dscMore"></span></summary>' +
     '<div class="dscB">' + inner + '</div></details>';
@@ -5930,20 +5991,20 @@ async function applyForceLock(mins){
 }
 
 function bonusCard(){
+  // 📂 2026-11-13 (13차) : 다른 상자와 같은 모양 — 머리줄 → ⚙️ 고르는 곳(늘 보임) → 📘 설명(접힘)
   const cur = getBonusToday();
-  return `<div class="card">
-    <div class="row"><div class="grow">
-      <div class="ttl">🎁 오늘만 보너스</div>
-      <div class="val">위에서 정한 요일별 한도는 <b>그대로</b> 두고, 오늘 하루만 시간을 더 줍니다.<br>
-        <b>내일이 되면 저절로 원래대로 돌아갑니다</b> — 따로 해제하지 않아도 됩니다.</div>
-    </div></div>
-    ${cur>0?`<div class="row"><div class="grow"><div class="val" style="color:#F9AB00;font-weight:700">
-      지금 오늘 +${minLabel(cur)} 적용 중</div></div></div>`:''}
-    <div class="row" style="gap:8px;align-items:center">
-      <select id="bonusPick" class="sel">${bonusOptions(cur)}</select>
-      <button class="btn btn-y" onclick="applyBonus()">적용</button>
+  return `<div class="xmini xm-ye">
+    <div class="xmh"><div class="xmE">🎁</div><div><b>오늘만 보너스</b> — 오늘 하루만 시간을 더 줘요</div></div>
+    <div class="card xctl">
+      ${cur>0?`<div class="bnNow">지금 오늘 <b>+${minLabel(cur)}</b> 적용 중이에요</div>`:''}
+      <div class="row" style="gap:8px;align-items:center">
+        <select id="bonusPick" class="sel">${bonusOptions(cur)}</select>
+        <button class="btn btn-y" onclick="applyBonus()">적용</button>
+      </div>
     </div>
-    <div class="row"><div class="grow"><div class="val">5분 단위 · 0분을 고르면 보너스가 없어집니다</div></div></div>
+    ${dscWrap(`<div class="xwarn" style="margin:0"><div>위에서 정한 요일별 한도는 <b>그대로</b> 두고, <b>오늘 하루만</b> 시간을 더 줘요.</div>
+      <div><b>내일이 되면 저절로 원래대로</b> 돌아가요 — 따로 풀지 않아도 돼요.</div>
+      <div>5분 단위로 고를 수 있어요. <b>0분</b>을 고르면 보너스가 없어져요.</div></div>`, '오늘만 보너스는 이렇게 돼요', 'bonus_limit', false)}
   </div>`;
 }
 function appBonusCard(pkg){
@@ -5971,13 +6032,13 @@ function openLimit(){
       <div class="dv ${v<0?'off':''}">${minLabel(v)}</div><div class="chev">›</div></div>`;
   }
   openSub('하루 사용시간 한도', `
-    <details class="xmore"><summary>🔎 시간은 정확히 이렇게 세요</summary><div>
+    ${dscWrap(`<div class="xd" style="margin:0">
       · <b>화면이 켜져 있으면 뭘 하든</b> 세요. 홈 화면·전화·문자·설정까지요.<br>
       · 화면을 끄면 <b>멈춰요.</b> 단, <b>음악·영상 소리가 계속 나면</b> 그 앱은 계속 세요.<br>
       · 한도를 다 써도 <b>통화 중이면 전화가 끊기지 않아요.</b> 끊고 나오실 때 잠겨요.<br>
       · 숫자는 <b>5분마다</b> 올라와요. 조금 늦게 보여도 고장이 아니에요.<br>
       · 요일 칸의 <b>무제한</b> = 제한 없음 · <b>사용 불가</b> = 그날은 쓸 수 없어요.
-    </div></details>
+    </div>`, '🔎 시간은 정확히 이렇게 세요', 'lim_count', false)}
     <div class="card"><div class="row"><div class="grow"><div class="ttl">하루 한도 사용</div>
       <div class="val">꺼두면 요일 설정과 상관없이 제한하지 않습니다</div></div>
       <label class="sw"><input type="checkbox" ${p.daily_limit_enabled==='true'?'checked':''}
@@ -6333,9 +6394,9 @@ function openDt(){
     <div class="card">${rows}</div>
     ${lockModeCard('dt')}
     ${commsOffCard('dt')}
-    <div class="note">⏰ <b>알람</b>은 다운타임 · 전화 끄기와 상관없이 항상 울려요.<br>
+    ${dscWrap(`<div class="xd" style="margin:0">⏰ <b>알람</b>은 다운타임 · 전화 끄기와 상관없이 항상 울려요.<br>
       📞 전화 끄기를 안 켜면 전화 <b>받기</b>는 돼요. 아이가 전화를 <b>걸거나 문자 앱을 열게</b> 하려면
-      <a class="xl" onclick="openIgnoreDt()">다운타임 허용 앱 ›</a> 에 전화 · 메시지 앱을 넣어 주세요.</div>
+      <a class="xl" onclick="openIgnoreDt()">다운타임 허용 앱 ›</a> 에 전화 · 메시지 앱을 넣어 주세요.</div>`, '📞 취침 중 전화 · 알람은 이렇게 돼요', 'dt_calls', false)}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 function dtSheet(d){
@@ -6878,20 +6939,26 @@ function commsOffCard(scope){
   const row = (k,on,t,d)=>`<div class="xsw"><div class="grow"><div class="ttl">${t}</div><div class="val">${d}</div>
       <span class="xst ${on?'on':''}">${on?'켜짐 — 막고 있어요':'꺼짐'}</span></div>
       <label class="sw"><input type="checkbox" ${on?'checked':''} onchange="toggleComms('${k}',this.checked,'${scope}')"><i></i></label></div>`;
-  return `<div class="xmini xm-or">
-    <div class="xmh">${icoImg('commsoff','')}<div>📵 <b>${isDt ? '취침 시간 동안' : '하루 시간을 다 쓰면'}</b> 전화 · 문자도 쉬게 해요</div></div>
-    <div class="xd">${isDt ? '취침 시간에' : '하루 한도를 다 쓴 뒤에'} <b>전화와 문자까지</b> 막아요. 막고 싶은 것만 따로 켤 수 있어요.</div>
+  // 📂 2026-11-13 (13차) : 스위치 두 개는 늘 보이고, 설명(그림 · 주의 · TIP)은 📘 설명으로 접는다.
+  //   🔴 「부모님 전화도 안 받아져요」는 접힌 곳에만 두면 안 된다 → 전화 끄기 스위치 설명줄에도 적었다.
+  const explain =
+    `<div class="xd" style="margin:0 0 10px">${isDt ? '취침 시간에' : '하루 한도를 다 쓴 뒤에'} <b>전화와 문자까지</b> 막아요. 막고 싶은 것만 따로 켤 수 있어요.</div>
     <div class="flow3"><div><b>📞</b>전화 끄기<br>걸기·받기 막힘</div><i>·</i>
       <div><b>💬</b>문자 끄기<br>문자 앱 잠김</div><i>·</i><div><b>🚨</b>112 · 119는<br>언제나 돼요</div></div>
     <div class="xex">${pic}</div>
-    ${row(kP,onP,'📞 전화 끄기','걸기 · 받기가 모두 막혀요')}
-    ${row(kS,onS,'💬 문자 끄기','문자 앱이 잠겨요 — 받은 문자는 그대로 쌓여요')}
     <div class="xwarn"><div>전화를 끄면 <b>부모님 전화도</b> 안 받아져요 — 예외 번호는 없어요.</div>
       <div>단, <b>긴급 연락처(SOS)</b>로 3번 걸면 4번째엔 저절로 받는 기능은 그대로 돼요.</div>
       <div>받은 문자는 안 사라져요. 끝나면 <b>다 볼 수 있어요.</b></div></div>
     ${tipHtml({ t:'이럴 때 켜 두세요', s: isDt
       ? ['밤늦게 친구 <b>전화 · 문자</b> 때문에 잠을 못 잘 때', '취침 시간에 <b>통화로</b> 몰래 시간을 보낼 때']
-      : ['하루 시간을 다 쓴 뒤에 <b>통화 · 문자로</b> 계속 시간을 보낼 때'] })}
+      : ['하루 시간을 다 쓴 뒤에 <b>통화 · 문자로</b> 계속 시간을 보낼 때'] })}`;
+  return `<div class="xmini xm-or">
+    <div class="xmh">${icoImg('commsoff','')}<div>📵 <b>${isDt ? '취침 시간 동안' : '하루 시간을 다 쓰면'}</b> 전화 · 문자도 쉬게 해요</div></div>
+    <div class="card xctl">
+    ${row(kP,onP,'📞 전화 끄기','걸기 · 받기가 모두 막혀요 (부모님 전화도)')}
+    ${row(kS,onS,'💬 문자 끄기','문자 앱이 잠겨요 — 받은 문자는 그대로 쌓여요')}
+    </div>
+    ${dscWrap(explain, '전화 · 문자를 끄면 어떻게 되나요?', 'co_' + scope, false)}
   </div>`;
 }
 function toggleComms(key,val,scope){ toggleFlag(key,val, scope==='dt'?openDt:openLimit); }
@@ -6906,6 +6973,8 @@ function toggleComms(key,val,scope){ toggleFlag(key,val, scope==='dt'?openDt:ope
 function lockModeCard(scope){
   // 🎨 2026-11-10 (4차) : 「강력 모드」를 그림으로 — 끄면 앱만 하나씩 · 켜면 화면 전체 (문자로 받기 틀)
   //   🔴 「홈 화면·설정을 만지작」 팁의 근거 : 런처는 정지 목록에 못 들어가 강력모드 OFF 면 한도 뒤에도 시간이 쌓인다(CLAUDE.md 3-19)
+  // 📂 2026-11-13 (13차 · 대표점장 「강력모드 · 보너스 · 전화문자 설명란도 폴더로」) :
+  //   머리줄 → ⚙️ 켜고 끄는 곳(늘 보임) → 📘 설명(그림 · 주의 · TIP 은 접어 둔다) 순서. 문구는 그대로 옮겼다.
   const isDt = scope==='dt';
   const key = isDt ? 'downtime_lock_enabled' : 'daily_limit_lock_enabled';
   const on = ST.pol[key]==='true';
@@ -6913,18 +6982,20 @@ function lockModeCard(scope){
     gaGrid({ n:6, hi:-1, others:'lock' }),
     gaFull({ emo:'🔒', txt: isDt ? '취침 시간이에요' : '오늘 시간 끝!', sub:'긴급전화만 돼요', bg:'#F1ECFB', fg:'#6D4AAE' }),
     '끄면: 앱만 잠겨요', '켜면: 화면 다 잠겨요', true, '강력 모드 끄면과 켜면');
-  return `<div class="xmini xm-pu">
-    <div class="xmh">${icoImg('lockmode','')}<div>🔒 <b>강력 모드</b> — ${isDt ? '취침 시간에' : '시간을 다 쓰면'} <b>화면 전체</b>를 잠가요</div></div>
-    <div class="xd">끄면 막힌 <b>앱만 하나씩</b> 잠기고 홈 화면 · 설정은 그대로 열려요. 켜면 폰 화면이 <b>잠금 화면으로 통째로</b> 덮여요.</div>
+  const explain =
+    `<div class="xd" style="margin:0 0 10px">끄면 막힌 <b>앱만 하나씩</b> 잠기고 홈 화면 · 설정은 그대로 열려요. 켜면 폰 화면이 <b>잠금 화면으로 통째로</b> 덮여요.</div>
     <div class="xex">${pic}</div>
-    <div class="xsw"><div class="grow"><div class="ttl">강력 모드 켜기</div>
-      <span class="xst ${on?'pu':''}">${on ? '켜짐 — 화면 전체가 잠겨요' : '꺼짐 — 앱만 하나씩 잠겨요'}</span></div>
-      <label class="sw"><input type="checkbox" ${on?'checked':''} onchange="toggleLockMode('${key}',this.checked,'${scope}')"><i></i></label></div>
     <div class="xwarn"><div>${isDt ? '켜도 <b>긴급전화 · 알람 · 다운타임 허용 앱</b>은 돼요.' : '켜도 <b>긴급전화</b>와 <b>「시간 더 주세요」 요청</b>은 보낼 수 있어요.'}</div></div>
     ${tipHtml({ t:'이럴 때 켜 두세요', s: isDt
       ? ['밤에 이불 속에서 <b>홈 화면 · 설정</b>을 만지작거리며 잠을 안 잘 때', '취침 시간엔 폰을 <b>아예 내려놓게</b> 하고 싶을 때']
       : ['앱이 막혀도 <b>홈 화면 · 설정</b>을 계속 만지작거릴 때 — 그 시간도 쌓여서 「난 안 썼는데」 다툼이 생겨요',
-         '「조금만 더」 하면서 폰을 <b>손에서 못 놓을 때</b>'] })}
+         '「조금만 더」 하면서 폰을 <b>손에서 못 놓을 때</b>'] })}`;
+  return `<div class="xmini xm-pu">
+    <div class="xmh">${icoImg('lockmode','')}<div>🔒 <b>강력 모드</b> — ${isDt ? '취침 시간에' : '시간을 다 쓰면'} <b>화면 전체</b>를 잠가요</div></div>
+    <div class="card xctl"><div class="xsw"><div class="grow"><div class="ttl">강력 모드 켜기</div>
+      <span class="xst ${on?'pu':''}">${on ? '켜짐 — 화면 전체가 잠겨요' : '꺼짐 — 앱만 하나씩 잠겨요'}</span></div>
+      <label class="sw"><input type="checkbox" ${on?'checked':''} onchange="toggleLockMode('${key}',this.checked,'${scope}')"><i></i></label></div></div>
+    ${dscWrap(explain, '강력 모드를 켜면 어떻게 되나요?', 'lm_' + scope, false)}
   </div>`;
 }
 function toggleLockMode(key,val,scope){ toggleFlag(key,val, scope==='dt'?openDt:openLimit); }
