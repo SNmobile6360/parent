@@ -2122,7 +2122,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월13일 15차 테스트판';
+const WEB_LABEL = '11월13일 16차 테스트판';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -2753,8 +2753,7 @@ function paintMain(){
     const el = document.getElementById('vKakao');
     if (el) el.innerHTML = on === 0 ? '모두 꺼져 있어요' : badge(true, on + '가지 막는 중'); }
   // 🆕 2026-09-29 : 소리 변경 · 앱 숨기기 요약
-  document.getElementById('vStealth').innerHTML =
-    `아이콘 ${p.app_icon_hidden==='true'?'숨김':'보임'} · 안내창 ${p.app_notify_hidden==='true'?'숨김':'보임'}`;
+  paintStealthVal();   // 🆕 2026-11-13 : 소리 모드도 같이 (sound.js)
 
   // 📺 시내YouTube — 앱이 깔린 폰, 또는 **매장이 설치를 승인한 폰**에서 카드를 보여준다
   //   🔴 2026-10-03 : 전에는 `tubeInstalled()` 만 봤다. 그런데 설치가 늦어지거나 실패하면
@@ -4724,7 +4723,7 @@ const FEATURES = [
 { k:'limit', t:'⏱️ 하루 사용시간 한도', sub:'하루 사용시간 한도',
   one:'하루에 폰을 쓸 수 있는 시간을 정해요. 다 쓰면 앱이 잠겨요.',
   what:['요일마다 다르게 정할 수 있어요. 평일은 1시간, 주말은 2시간처럼요.',
-        '<b>화면이 켜져 있는 시간</b>을 셉니다. 어떤 앱을 쓰든, 홈 화면만 보고 있어도 줄어들어요.',
+        '<b>화면이 켜져 있는 시간</b>을 셉니다. 어떤 앱을 쓰든 줄어들어요. <b>홈 화면만 보던 시간</b>(앱 없이 켜 둔 시간)은 최신 공신폰 앱부터 <b>기본으로 안 깎아요</b> — 사용기록 맨 아래에서 바꿀 수 있어요.',
         '다 쓰면 앱이 잠기고, 자녀에게 「오늘은 다 썼어요」 안내가 떠요.'],
   when:['가장 먼저 정하시는 기능이에요. 이것만 걸어도 하루 사용량이 눈에 띄게 줄어요.'],
   note:['⚠️ <b>앱별 시간을 따로 걸어둔 앱은 하루 한도를 다 써도 열려요.</b> 둘이 더해집니다 — 하루 1시간 + 크롬 30분이면 <b>최대 1시간 30분</b>이에요.',
@@ -4875,9 +4874,10 @@ const FEATURES = [
   art:{ kind:'list', rows:[{ ok:true, w:50 },{ ok:true, w:58 },{ ok:false, w:44 },{ ok:false, w:52 }],
         lc:'대화는 되고 링크는 막혀요', alt:'카톡 차단' } },
 
-{ k:'sound', t:'🔔 무음·진동 → 소리로 변경', sub:'소리 변경 · 앱 숨기기',
-  one:'자녀폰이 무음이면 소리 모드로 되돌려요.',
-  what:['자녀폰이 무음·진동으로 되어 있으면 <b>소리 모드로 바꾸고</b> 벨소리도 최대로 올려요.',
+{ k:'sound', t:'🔔 소리 · 📳 진동 · 🔇 무음 바꾸기', sub:'소리 변경 · 앱 숨기기',
+  one:'자녀폰 소리 모드를 소리 · 진동 · 무음으로 바꿔요.',
+  what:['「소리」를 누르면 <b>소리 모드로 바꾸고</b> 벨소리도 최대로 올려요.',
+        '「진동」·「무음」을 누르면 그 모드로 바꿔요. <b>무음이면 부모님 전화도 안 울려요.</b> (최신 공신폰 앱부터)',
         '바뀌는 동안 소리는 나지 않아요 — 조용히 바뀝니다.'],
   when:['전화를 걸었는데 자녀가 계속 못 받을 때요.'],
   note:['자녀폰이 꺼져 있으면 <b>켜질 때</b> 바뀌어요.',
@@ -4912,7 +4912,7 @@ const FEATURES = [
   what:['날짜를 고르면 그날 <b>어떤 앱을 몇 분</b> 썼는지 아이콘과 함께 보여드려요.',
         '맨 위 막대는 <b>하루 한도에서 깎인 시간</b>이에요.'],
   when:['「오늘 왜 벌써 다 썼지?」가 궁금할 때요.'],
-  note:['<b>「앱 없이 켜 둔 시간」</b>은 홈 화면만 보거나 알림창을 내렸을 때처럼, 특정 앱이 아닌 시간이에요. 이 시간도 한도에서 깎여요.',
+  note:['<b>「앱 없이 켜 둔 시간」</b>은 홈 화면만 보거나 알림창을 내렸을 때처럼, 특정 앱이 아닌 시간이에요. 한도에서 깎을지는 그 칸의 <b>스위치</b>로 정해요 (기본 : 안 깎음).',
         '<b>「한도 안 깎음」</b> 배지가 붙은 앱은 시간이 깎이지 않은 앱이에요 (제외앱이거나 앱별 시간이 따로 걸린 앱).'],
   art:{ kind:'bar', t1:'월요일 — 1시간 12분', t2:'화요일 — 2시간', lc:'날짜별로', rc:'앱별로 봐요', alt:'사용기록' } },
 
@@ -4964,7 +4964,7 @@ const XP = {
     ex:() => mockLimitHtml(), exT:'아이 폰에서는 이렇게 돼요',   // 📱 6차 : 진짜 폰 화면처럼
     how:['아래 <b>「하루 한도 사용」</b> 스위치를 켜요',
          '요일을 눌러 시간을 정해요 — 예) 평일 1시간 · 주말 2시간'],
-    w:['<b>화면이 켜져 있으면 무엇을 하든</b> 세요 — 홈 화면·전화·설정까지요. 화면을 끄면 멈춰요.',
+    w:['<b>화면이 켜져 있으면</b> 세요 — 전화·설정 같은 앱까지요. 화면을 끄면 멈춰요. <b>홈 화면만 보던 시간</b>은 기본으로 안 깎아요(사용기록 맨 아래에서 바꿔요).',
        '<b>앱별 시간을 따로 준 앱</b>은 하루 한도를 다 써도 열려요. 하루 1시간 + 유튜브 30분이면 <b>최대 1시간 30분</b>이에요.',
        '오래 통화하는 날엔 통화만으로 한도가 찰 수 있어요. 계속 쓰게 할 앱은 <a class="xl" onclick="openApps()">앱 관리 ›</a> 에서 <b>♾️ 시간 무제한</b>으로 바꿔 주세요.'] },
 
@@ -5099,7 +5099,7 @@ const XP = {
     d:'막대 하나가 하루예요. 막대를 누르면 그날 쓴 앱이 <b>많이 쓴 순서</b>대로 나와요.',
     f:[['📊','막대 =<br>그날 화면 켠 시간'],['👆','막대를<br>누르면'],['📋','그날 앱별<br>사용시간']],
     w:['<b>파란 줄</b> = 하루 한도를 깎은 앱 · <b>회색 「한도 안 깎음」</b> = 시간 무제한 · 한도 제외 앱',
-       '<b>🏠 앱 없이 켜 둔 시간</b> = 홈 화면 · 알림창을 보거나 화면을 켜 둔 채 둔 시간이에요.'] },
+       '<b>🏠 앱 없이 켜 둔 시간</b> = 홈 화면 · 알림창을 보거나 화면을 켜 둔 채 둔 시간이에요. 한도에서 깎을지는 <b>그 칸의 스위치</b>로 정해요.'] },
 
   pin:{ h:'부모님만 아는 <b>6자리 비밀번호</b>를 바꿔요',
     d:'이 번호만 알면 한도 · 취침 · 차단을 <b>전부 바꿀 수 있어요.</b> 아이가 알아챈 것 같으면 바로 바꿔 주세요.',
@@ -5110,12 +5110,13 @@ const XP = {
 
   // ── 「소리 변경 · 앱 숨기기」 화면은 세 가지가 한 화면이라 **작은 상자(mini)** 로 각 카드 위에 붙인다 ──
   sound:{ h:'아이 폰이 <b>무음</b>이라 전화를 못 받을 때',
-    f:[['🔇','아이 폰이<br>무음 · 진동'],['👆','「소리로 바꾸기」<br>누르면'],['🔔','소리 모드 +<br>벨소리 최대']],
+    f:[['🔇','아이 폰이<br>무음 · 진동'],['👆','「소리」를<br>누르면'],['🔔','소리 모드 +<br>벨소리 최대']],
     tip:{ t:'이럴 때 쓰면 좋아요',
           s:['수업 끝나고 <b>무음을 안 풀어서</b> 전화를 계속 못 받을 때',
              '하교 · 학원 시간에 꼭 통화해야 하는데 <b>진동이라 못 느낄 때</b>',
              '누른 뒤 <b>다시 전화</b>해 보세요. 그래도 안 받으면 <a class="xl" onclick="openSos()">긴급 연락처(SOS) ›</a>'] },
-    w:['바뀌는 동안 소리는 안 나요 — <b>조용히</b> 바뀌어요. 아이가 다시 무음으로 돌리면 한 번 더 눌러 주세요.'] },
+    w:['바뀌는 동안 소리는 안 나요 — <b>조용히</b> 바뀌어요. 아이가 다시 무음으로 돌리면 한 번 더 눌러 주세요.',
+       '수업 · 시험 때는 <b>「진동」·「무음」</b>으로 바꿔 둘 수도 있어요. 무음이면 <b>부모님 전화도 안 울리니</b> 끝나면 「소리」로 돌려 주세요.'] },
   hideicon:{ ico:'hideicon', h:'공신폰 앱 <b>아이콘만</b> 안 보이게 해요',
     d:'아이 폰에는 시간을 세고 앱을 잠그는 <b>공신폰 앱</b>이 하나 있어요. 아이콘만 숨기고 <b>기능은 전부 그대로</b> 돌아가요.',
     f:[['📱','앱 목록에<br>공신폰 앱'],['🙈','스위치를<br>켜면'],['✨','아이콘만<br>사라져요']],
@@ -6059,7 +6060,7 @@ function openLimit(){
   }
   openSub('하루 사용시간 한도', `
     ${dscWrap(`<div class="xd" style="margin:0">
-      · <b>화면이 켜져 있으면 뭘 하든</b> 세요. 홈 화면·전화·문자·설정까지요.<br>
+      · <b>화면이 켜져 있으면</b> 세요. ${noAppCounted() ? '홈 화면·전화·문자·설정까지요.' : '전화·문자·설정 같은 앱까지요. <b>홈 화면만 보던 시간은 안 깎아요.</b>'}<br>
       · 화면을 끄면 <b>멈춰요.</b> 단, <b>음악·영상 소리가 계속 나면</b> 그 앱은 계속 세요.<br>
       · 한도를 다 써도 <b>통화 중이면 전화가 끊기지 않아요.</b> 끊고 나오실 때 잠겨요.<br>
       · 숫자는 <b>5분마다</b> 올라와요. 조금 늦게 보여도 고장이 아니에요.<br>
@@ -7178,9 +7179,9 @@ function openStealth(){
   openSub('소리 변경 · 앱 숨기기', `
     <div class="xbox"><div class="xi">${icoImg('sound','')}</div><div class="xt">
       <div class="xh">이 화면에서는 <b>3가지</b>를 할 수 있어요</div>
-      <div class="xd">① 무음인 아이 폰을 소리로 · ② 공신폰 앱 아이콘 숨기기 · ③ 「지금은 못 써요」 안내창 숨기기</div></div></div>
+      <div class="xd">① 아이 폰 소리 · 진동 · 무음 바꾸기 · ② 공신폰 앱 아이콘 숨기기 · ③ 「지금은 못 써요」 안내창 숨기기</div></div></div>
     ${xpHtml('sound', { mini:true })}
-    <div class="card"><button class="btn btn-p" style="margin:0" onclick="soundOn()">🔔 소리로 바꾸기</button></div>
+    ${soundCard()}
     ${xpHtml('hideicon', { mini:true })}
     ${sw('app_icon_hidden','🙈 공신폰 앱 아이콘 숨기기',
          '켜면 아이 폰 앱 목록에서 아이콘만 안 보여요',
@@ -7194,8 +7195,36 @@ function openStealth(){
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
 }
 
-/** 🔔 무음·진동 → 소리 변경 — remote_commands 에 SOUND_ON 한 건을 넣는다. 자녀폰이 Realtime 으로 즉시 받는다. */
-async function soundOn(){
+/** 🔔📳🔇 2026-11-13 소리 모드 바꾸기 — remote_commands 에 SOUND_ON · SOUND_VIBRATE · SOUND_SILENT 한 건을 넣는다.
+ *   ● 새 자녀앱은 바꾼 뒤 지금 모드를 `ringer_mode_now`(normal · vibrate · silent) 로 올린다 → 그 값이 **새로 올라오면** 결과를 알려 준다.
+ *   🔴 「바꿨습니다」라고 먼저 말하지 않는다 — 보낸 것과 바뀐 것은 다르다(3-7 · 3-34). 확인된 뒤에만 「됐어요」.
+ *   ⚠️ 옛 자녀앱(값이 없는 폰)은 SOUND_ON 하나만 알아듣는다 — 진동·무음 버튼을 안 보여 준다(soundCard). */
+const SND_NAME = { normal:'🔔 소리', vibrate:'📳 진동', silent:'🔇 무음' };
+const SND_TO   = { normal:'소리로', vibrate:'진동으로', silent:'무음으로' };
+const SND_CMD  = { SOUND_ON:'normal', SOUND_VIBRATE:'vibrate', SOUND_SILENT:'silent' };
+function soundCard(){
+  const m = ST.pol.ringer_mode_now;
+  if (!m) return `<div class="card" id="sndCard"><button class="btn btn-p" style="margin:0" onclick="soundSet('SOUND_ON')">🔔 소리로 바꾸기</button>
+    <div style="font-size:12px;color:#98A2B3;margin-top:8px;line-height:1.55">📳 진동 · 🔇 무음으로 바꾸기는 <b>아이 폰 공신폰 앱이 업데이트된 뒤</b> 쓸 수 있어요.</div></div>`;
+  const b = (cmd) => { const mode = SND_CMD[cmd];
+    return `<button class="btn ${m === mode ? 'btn-p' : 'btn-g'}" style="margin:0;flex:1;min-width:0;padding-left:4px;padding-right:4px" onclick="soundSet('${cmd}')">${SND_NAME[mode]}</button>`; };
+  return `<div class="card" id="sndCard">
+    <div style="font-size:13px;color:#667085;font-weight:700;margin-bottom:9px">마지막으로 확인한 아이 폰 : <b style="color:#1D2939">${SND_NAME[m] || '알 수 없음'}</b></div>
+    <div style="display:flex;gap:8px">${b('SOUND_ON')}${b('SOUND_VIBRATE')}${b('SOUND_SILENT')}</div>
+    <div style="font-size:12px;color:#98A2B3;margin-top:8px;line-height:1.55">누르면 아이 폰이 <b>조용히</b> 바뀌어요. 「소리」는 벨소리도 최대로 올려요.<br>무음이면 <b>부모님 전화도 안 울려요.</b></div></div>`;
+}
+function soundRepaint(){ const el = document.getElementById('sndCard'); if (el) el.outerHTML = soundCard(); }
+async function readRinger(sb){
+  const { data, error } = await sb.from('policies').select('value,updated_at')
+    .eq('device_code', ST.code).eq('key', 'ringer_mode_now').maybeSingle();
+  if (error) throw error;   // 🔴 error 를 꼭 본다 (3-10)
+  return data || null;
+}
+async function soundSet(cmd){
+  const want = SND_CMD[cmd];
+  if (!want) return;
+  const hasMode = !!ST.pol.ringer_mode_now;
+  if (!hasMode && cmd !== 'SOUND_ON') { toast('아이 폰 공신폰 앱이 업데이트된 뒤 쓸 수 있어요'); return; }
   loading(true);
   try{
     const sb = clientFor(ST.server);
@@ -7204,12 +7233,52 @@ async function soundOn(){
       .select('id').eq('device_code', ST.code).maybeSingle();
     if(e1) throw e1;
     if(!dev) throw new Error('자녀폰을 찾을 수 없습니다');
+    const before = hasMode ? await readRinger(sb) : null;   // 보내기 전 시각 — 이것보다 새 값이 와야 「결과」다
     const { error:e2 } = await sb.from('remote_commands')
-      .insert({ child_device_id: dev.id, command:'SOUND_ON', executed:false });
+      .insert({ child_device_id: dev.id, command: cmd, executed:false });
     if(e2) throw e2;
     loading(false);
-    toast('🔔 자녀폰을 소리 모드로 바꿨습니다');
+    if (!hasMode) { toast('🔔 아이 폰에 「소리로 바꾸기」를 보냈어요'); return; }
+    toast(SND_NAME[want] + ' — 아이 폰에 보냈어요. 바뀌었는지 확인하고 있어요');
+    soundCheck(sb, before, want);
   }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+async function soundOn(){ return soundSet('SOUND_ON'); }   // 옛 이름 — 다른 곳에서 부를 수 있어 남긴다
+async function soundCheck(sb, before, want){
+  for (let i = 0; i < 10; i++){
+    await new Promise(r => setTimeout(r, 2000));
+    let r = null;
+    try { r = await readRinger(sb); } catch(e){ continue; }
+    if (!r || (before && r.updated_at === before.updated_at)) continue;
+    ST.pol.ringer_mode_now = r.value;
+    soundRepaint(); paintStealthVal();
+    if (r.value === want) toast('✅ 아이 폰이 ' + SND_TO[want] + ' 바뀌었어요');
+    else toast('⚠️ 아이 폰이 ' + SND_TO[want] + ' 안 바뀌었어요 (지금 ' + (SND_NAME[r.value] || r.value) + ') — 매장에 말씀해 주세요');
+    return;
+  }
+  toast('아이 폰이 꺼져 있거나 인터넷이 안 되나 봐요. 켜지면 바뀌어요');
+}
+function paintStealthVal(){
+  const p = ST.pol, el = document.getElementById('vStealth');
+  if (!el) return;
+  el.innerHTML = (p.ringer_mode_now ? (SND_NAME[p.ringer_mode_now] || '') + ' · ' : '') +
+    `아이콘 ${p.app_icon_hidden==='true'?'숨김':'보임'} · 안내창 ${p.app_notify_hidden==='true'?'숨김':'보임'}`;
+}
+
+/** 🏠 2026-11-13 「앱 없이 켜 둔 시간」이 하루 한도를 깎나 (대표점장 지시 · 기본 = 안 깎음)
+ *   · noapp_switch_ok = 이 폰 공신폰 앱이 스위치를 알아듣는다(폰이 올린다). 없으면 옛 폰이라 **늘 깎는다.**
+ *   · limit_noapp_counts = "true" 일 때만 깎는다. 없거나 "false" 면 안 깎는다.
+ *   🔴 화면 문구는 전부 이 두 함수를 본다 — 따로 판단하면 설명과 폰이 어긋난다(3-25b). */
+function noAppSwitchOk(p){ p = p || ST.pol || {}; return p.noapp_switch_ok === 'true'; }
+function noAppCounted(p){ p = p || ST.pol || {}; return !noAppSwitchOk(p) || p.limit_noapp_counts === 'true'; }
+async function setNoAppCounted(on){
+  loading(true);
+  try{
+    await savePol([{ key:'limit_noapp_counts', value: on ? 'true' : 'false' }]);
+    loading(false);
+    toast(on ? '이제 앱 없이 켜 둔 시간도 한도에서 깎아요' : '이제 앱 없이 켜 둔 시간은 한도에서 안 깎아요');
+    paintHistory();
+  }catch(e){ loading(false); toast('실패: '+e.message); paintHistory(); }
 }
 
 // ══════════ 비밀번호 변경 ══════════
@@ -7673,6 +7742,7 @@ const DOUMI_FAQ = [
       + '</div>'
       + '<p>카카오톡 같은 <b>앱 이름이 아니에요.</b> 특정 앱을 쓴 게 아니라 '
       + '<b>화면이 켜져 있던 시간</b>이라서 목록 아래에 따로 보여드려요.</p>'
+      + (noAppCounted() ? '<p>이 시간도 <b>하루 한도에서 깎여요.</b></p>' : '<p>이 시간은 <b>하루 한도에서 안 깎아요.</b> 사용기록 맨 아래 스위치로 바꿀 수 있어요.</p>')
       + '<p><span style="color:#98A2B3">예전에는 이 칸을 「홈 화면」이라고 적었어요. 같은 시간이에요.</span></p>'
       + '<div class="note warn">🔔 하루 한도를 다 쓴 뒤에도 이 시간은 쌓여요. '
       + '홈 화면은 폰에서 없앨 수 없는 화면이라, 아이가 켜 두면 계속 세어져요.<br>'
@@ -8626,7 +8696,20 @@ function paintHistory(){
   //   ⚠️ v56 이하 폰은 홈 화면이 이름으로 안 올라와 `miscMin` 쪽으로 들어온다 —
   //     **합쳐 놓으면 두 경우가 저절로 같은 칸으로 모인다.** 합치는 또 하나의 이유다.
   const nonAppMin = homeMin + miscMin;
-  const nonAppCard = (nonAppMin >= 1) ? `
+  // 🏠 2026-11-13 (대표점장 지시) : 이 칸에 **「한도 깎음 / 안 깎음」 스위치**를 붙인다. 기본 = OFF(안 깎음).
+  //   ● 폰이 스위치를 알아들으면(noapp_switch_ok) 그날 시간이 0분이어도 칸을 보여 준다 — 스위치를 찾을 곳이 여기뿐이다.
+  //   ● 옛 폰은 늘 깎으므로 스위치 대신 「업데이트되면 바꿀 수 있어요」만 적는다(켜도 아무 일도 안 일어나는 스위치는 거짓말이다 · 3-11).
+  const naOk = noAppSwitchOk(), naCnt = noAppCounted();
+  const naState = !naOk
+    ? `<div style="margin-top:10px;padding:9px 11px;border-radius:11px;background:#F9FAFB;font-size:12.5px;color:#667085;line-height:1.6">지금은 이 시간도 <b>하루 한도에서 깎여요.</b><br>아이 폰 공신폰 앱이 업데이트되면 여기서 <b>안 깎게</b> 바꿀 수 있어요.</div>`
+    : `<div style="display:flex;align-items:center;gap:10px;margin-top:10px;padding:11px 12px;border-radius:13px;background:${naCnt ? '#FFF6ED' : '#ECFDF3'};border:1.5px solid ${naCnt ? '#FDDCAB' : '#ABEFC6'}">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:15.5px;font-weight:800;color:${naCnt ? '#B54708' : '#027A48'}">${naCnt ? 'ON · 한도 깎음' : 'OFF · 한도 안 깎음'}</div>
+          <div style="font-size:12px;color:#667085;margin-top:3px;line-height:1.5">${naCnt ? '홈 화면만 보던 시간도 하루 한도에서 줄어요' : '홈 화면만 보던 시간은 하루 한도에서 <b>안 줄어요</b>'}</div>
+        </div>
+        <label class="sw"><input type="checkbox" ${naCnt ? 'checked' : ''} onchange="setNoAppCounted(this.checked)"><i></i></label>
+      </div>`;
+  const nonAppCard = (nonAppMin >= 1 || naOk) ? `
     <div class="sec">앱 없이 켜 둔 시간</div>
     <div class="card"><div class="item">
       <div style="width:34px;height:34px;border-radius:9px;background:#F2F4F7;border:1px solid #E4E7EC;flex:none;display:flex;align-items:center;justify-content:center;font-size:17px">🏠</div>
@@ -8635,7 +8718,7 @@ function paintHistory(){
         <div style="font-size:11.5px;color:#98A2B3;margin-top:3px;font-weight:500;line-height:1.55">홈 화면·알림창을 보거나, 화면을 <b>켜 둔 채로 둔 시간</b>이에요<br>1분이 안 되는 앱도 여기 들어가요</div>
       </div>
       <div style="font-size:13.5px;font-weight:800;color:#475467;flex:none">${mmss(nonAppMin)}</div>
-    </div></div>` : ``;
+    </div>${naState}</div>` : ``;
 
   // ── 🆕 2026-11-03 설계안 H : 「뒤에서 켜져 있던 앱」 카드 ──
   //   ⛔ **자녀를 탓하는 이름을 쓰지 마라**(CLAUDE.md 3-6). 자녀가 한 일이 아니다 — 앱이 떠 있던 것이다.
@@ -8662,7 +8745,7 @@ function paintHistory(){
   //     최악은 막대 284분 중 248분(87%). 부모는 「4시간 썼는데 왜 안 잠겨?」가 된다.
   const exMin   = list.filter(a=>exempt.has(a.p)).reduce((t,a)=>t+a.m,0);
   const exCount = list.filter(a=>exempt.has(a.p)).length;
-  const cutMin  = Math.max(0, totMin - exMin);   // 하루 한도에서 실제로 깎인 시간
+  const cutMin  = Math.max(0, totMin - exMin - (naCnt ? 0 : nonAppMin));   // 하루 한도에서 실제로 깎인 시간 (🏠 2026-11-13 : 안 깎는 설정이면 앱 없이 켜 둔 시간도 뺀다)
   const exCard  = exMin >= 1 ? `
     <div class="card" style="background:#F9FAFB;border-color:#EAECF0;padding:13px 14px">
       <div style="font-size:13px;color:#475467;line-height:1.75;font-weight:600">
