@@ -4910,7 +4910,7 @@ const FEATURES = [
 { k:'hist', t:'📊 최근 7일 사용기록', sub:'최근 7일 사용기록',
   one:'어떤 앱을 얼마나 썼는지 날짜별로 봐요.',
   what:['날짜를 고르면 그날 <b>어떤 앱을 몇 분</b> 썼는지 아이콘과 함께 보여드려요.',
-        '맨 위 막대는 <b>하루 한도에서 깎인 시간</b>이에요.'],
+        '맨 위 막대는 <b>화면을 켠 시간</b>이에요. 「한도 제외」 앱과 (스위치가 꺼져 있으면) <b>앱 없이 켜 둔 시간</b>은 하루 한도를 안 깎아요.'],
   when:['「오늘 왜 벌써 다 썼지?」가 궁금할 때요.'],
   note:['<b>「앱 없이 켜 둔 시간」</b>은 홈 화면만 보거나 알림창을 내렸을 때처럼, 특정 앱이 아닌 시간이에요. 한도에서 깎을지는 그 칸의 <b>스위치</b>로 정해요 (기본 : 안 깎음).',
         '<b>「한도 안 깎음」</b> 배지가 붙은 앱은 시간이 깎이지 않은 앱이에요 (제외앱이거나 앱별 시간이 따로 걸린 앱).'],
@@ -7245,18 +7245,21 @@ async function soundSet(cmd){
 }
 async function soundOn(){ return soundSet('SOUND_ON'); }   // 옛 이름 — 다른 곳에서 부를 수 있어 남긴다
 async function soundCheck(sb, before, want){
+  // 🔴 명령을 받기 **전에** 다른 일로 업로드가 한 번 일어나면 옛 값이 새 시각으로 올라온다(독립 검토가 잡음).
+  //    그래서 원하는 값이 오면 바로 「됐어요」, 다른 값이면 **끝까지 기다린 뒤** 마지막 값으로 말한다.
+  let last = null;
   for (let i = 0; i < 10; i++){
     await new Promise(r => setTimeout(r, 2000));
     let r = null;
     try { r = await readRinger(sb); } catch(e){ continue; }
     if (!r || (before && r.updated_at === before.updated_at)) continue;
+    last = r;
     ST.pol.ringer_mode_now = r.value;
     soundRepaint(); paintStealthVal();
-    if (r.value === want) toast('✅ 아이 폰이 ' + SND_TO[want] + ' 바뀌었어요');
-    else toast('⚠️ 아이 폰이 ' + SND_TO[want] + ' 안 바뀌었어요 (지금 ' + (SND_NAME[r.value] || r.value) + ') — 매장에 말씀해 주세요');
-    return;
+    if (r.value === want) { toast('✅ 아이 폰이 ' + SND_TO[want] + ' 바뀌었어요'); return; }
   }
-  toast('아이 폰이 꺼져 있거나 인터넷이 안 되나 봐요. 켜지면 바뀌어요');
+  if (last) toast('⚠️ 아이 폰이 ' + SND_TO[want] + ' 안 바뀌었어요 (지금 ' + (SND_NAME[last.value] || last.value) + ') — 매장에 말씀해 주세요');
+  else toast('아이 폰이 꺼져 있거나 인터넷이 안 되나 봐요. 켜지면 바뀌어요');
 }
 function paintStealthVal(){
   const p = ST.pol, el = document.getElementById('vStealth');
@@ -7677,7 +7680,7 @@ function doumiPinNote(pkg){
 const DOUMI_FAQ = [
   { q: '지금 왜 안 잠겨 있나요?',
     a: () => {
-      const p = ST.pol || {}, lim = liveTodayLimit(), used = liveUsedMin();
+      const p = ST.pol || {}, lim = liveTodayLimit(), used = liveLimitBaseMin();   // 🏠 2026-11-13 : 메인 화면과 같은 값(폰이 깎은 시간)
       const sum = liveSummary();
       let h = '';
       if (sum.lock) {
@@ -7701,6 +7704,7 @@ const DOUMI_FAQ = [
             : '없어요') + '<br>'
         + '<b>② 앱별 시간이 남은 앱</b> — ' + (timed.length ? timed.length + '개 앱에 따로 시간을 걸어 두셨어요' : '없어요') + '<br>'
         + '<b>③ 전화 · 연락처 · 설정</b> — 늘 열어 둬요(강력 모드를 켜면 설정은 막혀요)'
+        + (noAppCounted() ? '' : '<br><b>④ 앱 없이 켜 둔 시간</b> — 홈 화면만 보던 시간은 <b>한도에서 안 깎아요</b>(사용기록 맨 아래 스위치)')
         + '</div>';
       if (lim > 0 && timed.length) {
         let mx = 0; timed.forEach(pk => { const w = parseRule(p['rule_' + pk]).week[new Date().getDay()]; if (w > mx) mx = Number(w); });
@@ -7759,7 +7763,8 @@ const DOUMI_FAQ = [
       + '올라가요. 화면은 10분만 켜져 있었으니 막대는 10분이에요.</p>'
       + '<div class="note">🆕 그래서 그런 앱은 <b>7일 기록에서 「뒤에서 켜져 있던 앱」으로 따로</b> 내렸어요.<br>'
       + '<b>위에 남은 앱 목록은 더하면 막대와 맞아요.</b></div>'
-      + '<p><b>하루 한도는 막대 쪽(화면이 켜진 시간)으로 깎여요.</b> 앱별 목록은 '
+      + (noAppCounted() ? '<p><b>하루 한도는 막대 쪽(화면이 켜진 시간)으로 깎여요.</b> 앱별 목록은 '
+                        : '<p><b>하루 한도는 막대 쪽(화면이 켜진 시간)에서 「앱 없이 켜 둔 시간」을 뺀 만큼 깎여요.</b> 앱별 목록은 ')
       + '「무엇을 많이 했나」를 보는 데 쓰시면 돼요.</p>' },
 
   { q: '취침시간인데 쓰고 있는 것 같아요',
@@ -8340,7 +8345,7 @@ function paintLive(){
   const screenLine = (hasPhoneCut && exemptGap >= 1)
     ? '<div style="margin-top:9px;font-size:12.5px;color:#98A2B3;font-weight:600;line-height:1.7">'
       + '화면을 켠 시간은 <b>' + fmtMin(screenMin) + '</b>이에요'
-      + '<br>그중 <b>' + fmtMin(exemptGap) + '</b>은 전화·문자처럼 <b>한도를 안 깎는 앱</b>이에요'
+      + '<br>그중 <b>' + fmtMin(exemptGap) + '</b>은 ' + (noAppCounted() ? '전화·문자처럼 <b>한도를 안 깎는 앱</b>이에요' : '<b>홈 화면만 보던 시간</b>이나 <b>한도를 안 깎는 앱</b>이에요')
       + '</div>'
     : '';
 
@@ -8745,12 +8750,14 @@ function paintHistory(){
   //     최악은 막대 284분 중 248분(87%). 부모는 「4시간 썼는데 왜 안 잠겨?」가 된다.
   const exMin   = list.filter(a=>exempt.has(a.p)).reduce((t,a)=>t+a.m,0);
   const exCount = list.filter(a=>exempt.has(a.p)).length;
-  const cutMin  = Math.max(0, totMin - exMin - (naCnt ? 0 : nonAppMin));   // 하루 한도에서 실제로 깎인 시간 (🏠 2026-11-13 : 안 깎는 설정이면 앱 없이 켜 둔 시간도 뺀다)
+  const phoneCut = selIsToday ? liveLimitUsedMin() : null;   // 오늘은 폰이 실제로 깎은 값(limit_used_min_today)이 있다
+  const cutApprox = (phoneCut === null && !naCnt);           // 지난 날을 지금 스위치 값으로 계산 → 「약」(3-12 : 그날 설정은 모른다)
+  const cutMin  = phoneCut !== null ? phoneCut : Math.max(0, totMin - exMin - (naCnt ? 0 : nonAppMin));   // 하루 한도에서 실제로 깎인 시간 (🏠 2026-11-13 : 안 깎는 설정이면 앱 없이 켜 둔 시간도 뺀다)
   const exCard  = exMin >= 1 ? `
     <div class="card" style="background:#F9FAFB;border-color:#EAECF0;padding:13px 14px">
       <div style="font-size:13px;color:#475467;line-height:1.75;font-weight:600">
         회색 <b>${exCount}개</b>는 매장에서 <b>「한도 제외」</b>로 설정한 앱이에요 · 합계 <b>${mmss(exMin)}</b><br>
-        <b style="color:#1B3A8F">이 날 하루 한도에서 깎인 시간은 ${mmss(cutMin)}이에요.</b>
+        <b style="color:#1B3A8F">이 날 하루 한도에서 깎인 시간은 ${cutApprox ? '약 ' : ''}${mmss(cutMin)}이에요.</b>
         <span style="color:#98A2B3">(화면을 켠 시간은 ${mmss(totMin)})</span>
       </div>
     </div>` : ``;
