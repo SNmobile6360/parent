@@ -1715,13 +1715,45 @@ function parentTokensFor(label){
   try{ return kids().filter(k=>k.server===label).map(k=>locTokenOf(k.code)).filter(Boolean).join(','); }
   catch(e){ return ''; }   // 스크립트가 아직 다 안 읽혔을 때(아래쪽 const 전) — 헤더 없이 간다
 }
+// 🔗 2026-11-19 : 이 부모 폰(브라우저)의 고유번호 — 서버 「부모 연결 장부」(parent_links)가 부모 폰마다 따로 줄을 만든다.
+//   → 전산이 「부모1 → 자녀2」 · 「부모2 → 자녀1」을 구분한다. 한 번 만들어 localStorage 에 둔다(무작위값 · 개인정보 아님).
+//   브라우저 데이터를 지우면 새 부모 폰으로 센다(옛 줄은 30일 지나면 전산에 「오래됨」으로 보인다).
+//   x-parent-push : 알림 구독 주소의 sha256 앞 16자 — 서버가 알림으로 채워 둔 같은 부모 줄('push:…')을 이 줄로 합친다.
+//   🔴 서버 트리거는 이 헤더를 「정책을 쓸 때」만 본다(reportParentLink 의 parent_last_seen). 헤더가 이상하면 무시하고 옛 방식으로 적는다.
+function parentId(){
+  try{
+    let v = localStorage.getItem('sn_parent_id') || '';
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(v)){
+      v = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+        : 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, () => Math.floor(Math.random() * 16).toString(16));
+      localStorage.setItem('sn_parent_id', v);
+    }
+    return v;
+  }catch(e){ return ''; }
+}
+function parentPushHash(){
+  try{ const h = localStorage.getItem('sn_parent_push') || ''; return /^[0-9a-f]{16}$/.test(h) ? h : ''; }catch(e){ return ''; }
+}
+async function storePushHash(endpoint){
+  try{
+    if (!endpoint || !(window.crypto && crypto.subtle)) return;
+    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(endpoint));
+    const h = [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('').slice(0, 16);
+    localStorage.setItem('sn_parent_push', h);
+  }catch(e){ /* 없어도 장부는 고유번호로 적힌다 */ }
+}
 function clientFor(label){
   const s = SERVERS.find(x=>x.label===label) || SERVERS[0];
   const tk = parentTokensFor(s.label);
-  if(!clients[s.label] || clients[s.label]._snTok !== tk){
-    clients[s.label] = window.supabase.createClient(s.url, s.key,
-      tk ? { global: { headers: { 'x-device-token': tk } } } : undefined);
-    clients[s.label]._snTok = tk;
+  const pid = parentId(), ph = parentPushHash();
+  const sig = tk + '|' + pid + '|' + ph;   // 열쇠·고유번호·알림주소 중 하나라도 바뀌면 새로 만든다
+  if(!clients[s.label] || clients[s.label]._snTok !== sig){
+    const headers = {};
+    if (tk)  headers['x-device-token'] = tk;
+    if (pid) headers['x-parent-id']    = pid;
+    if (ph)  headers['x-parent-push']  = ph;
+    clients[s.label] = window.supabase.createClient(s.url, s.key, { global: { headers } });
+    clients[s.label]._snTok = sig;
   }
   return clients[s.label];
 }
@@ -2122,7 +2154,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월13일 17차 테스트판';
+const WEB_LABEL = '11월19일 18차 테스트판 · 부모 고유번호';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -2292,6 +2324,7 @@ async function currentSub(){
 // ● 이 부모가 보는 자녀 「전원」의 서버에 저장한다.
 //   자녀가 서로 다른 서버에 있어도 각자 자기 서버에 1행씩 들어간다.
 async function saveSubForAllKids(sub){
+  storePushHash(sub.endpoint);   // 🔗 2026-11-19
   const base = {
     endpoint: sub.endpoint,
     p256dh:   subKey(sub, 'p256dh'),
@@ -2332,6 +2365,7 @@ async function refreshPushUI(){
     el.innerHTML = '<b style="color:#EF4444">차단됨</b> — 브라우저 설정에서 알림을 허용해 주세요'; return;
   }
   const s = await currentSub();
+  if (s) storePushHash(s.endpoint);   // 🔗 2026-11-19 부모 연결 장부 — 알림으로 채운 줄과 합치기
   el.innerHTML = s
     ? '<b style="color:#16A34A">켜짐</b> — 아이가 부탁하면 알림과 소리가 울려요'
     : '<b style="color:#B42318">꺼져 있어요</b> — 자녀폰에서 보낸 요청 알림을 못 받아요 · 눌러서 켜기';
