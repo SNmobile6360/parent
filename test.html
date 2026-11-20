@@ -1510,6 +1510,11 @@
       <div class="row"><div class="ic" style="background:#FEF2F2">🆘</div>
         <div class="grow"><div class="ttl">긴급 연락처 (SOS)</div><div class="val" id="vSos">-</div></div><div class="chev">›</div></div>
     </div>
+    <!-- 📵 2026-11-20 (v69) 모르는 번호 전화 막기 — 전산에도 같은 스위치가 있다 -->
+    <div class="card tap" onclick="openUnknownCall()">
+      <div class="row"><div class="ic" style="background:#FFF7ED">📵</div>
+        <div class="grow"><div class="ttl">모르는 번호 전화 막기</div><div class="val" id="vUnknownCall">-</div></div><div class="chev">›</div></div>
+    </div>
     <div class="card tap" onclick="openSecurity()">
       <div class="row"><div class="ic" style="background:#F0FDF4">🔐</div>
         <div class="grow"><div class="ttl">보안 설정</div><div class="val" id="vSecurity">-</div></div><div class="chev">›</div></div>
@@ -2761,6 +2766,9 @@ function paintMain(){
   document.getElementById('vPinLock').textContent = J(p.pin_locked_apps,[]).length+'개 앱 잠금';
   document.getElementById('vIgnoreDt').textContent = J(p.ignore_dt_apps,[]).length+'개 앱 허용';
   document.getElementById('vSos').textContent = J(p.sos_whitelist,[]).length+'개 번호 등록';
+  { const el = document.getElementById('vUnknownCall');   // 📵 2026-11-20
+    if (el) el.innerHTML = p.unknown_call_ok !== 'true' ? '자녀폰 업데이트 후 쓸 수 있어요'
+      : (p.unknown_call_blocked === 'true' ? badge(true, '막는 중') + ' 받을 번호 ' + J(p.call_allow_numbers,[]).length + '개' : '꺼져 있어요 — 모든 전화를 받아요'); }
   document.getElementById('vSecurity').innerHTML =
     `Play스토어 ${p.play_store_blocked==='true'?'차단':'허용'}`;
   // 💬 2026-10-15 : 카톡 차단 몇 개 켜져 있나
@@ -4906,6 +4914,17 @@ const FEATURES = [
         r:{ emo:'🔊', txt:'저절로 받았어요', sub:'스피커가 켜져요', bg:'#EAF7F0', fg:'#2B8A5A' },
         lc:'3번 안 받으면', rc:'4번째 전화', rok:true, alt:'긴급 연락처 자동 받기' } },
 
+// 📵 2026-11-20 (자녀앱 v69) 모르는 번호 전화 막기 — 설명은 여기·XP 한 곳에만(3-13)
+{ k:'unknowncall', t:'📵 모르는 번호 전화 막기', sub:'모르는 번호 전화 막기',
+  one:'아는 번호만 울리고, 모르는 번호 전화는 저절로 끊겨요.',
+  what:['아이 폰 <b>연락처에 저장된 번호</b> · 부모님이 <b>추가한 번호</b> · <b>부모님 · 긴급 연락처(SOS) 번호</b>만 울려요. 그 밖의 번호와 <b>발신번호 표시 제한</b> 전화는 끊겨요.'],
+  when:['모르는 번호로 오는 전화 · 광고 전화가 걱정될 때요.'],
+  note:['112 · 119 처럼 <b>세 자리 번호</b>는 늘 울려요.',
+        '아이가 연락처에 번호를 저장하면 그 번호도 받을 수 있어요.'],
+  art:{ kind:'full', l:{ emo:'❓', txt:'모르는 번호', sub:'울리지 않아요' },
+        r:{ emo:'📞', txt:'아는 번호', sub:'그대로 울려요', bg:'#EAF7F0', fg:'#2B8A5A' },
+        lc:'모르는 번호', rc:'아는 번호', rok:true, alt:'모르는 번호 전화 막기' } },
+
 { k:'security', t:'🔐 보안 설정', sub:'보안 설정',
   one:'Play 스토어를 초강력 차단해서 아이가 새 앱을 못 깔게 해요.',
   what:['아이콘만 숨기는 게 아니라 <b>기기 관리(MDM) 권한</b>으로 Play 스토어를 아예 꺼 둬요.',
@@ -4988,7 +5007,7 @@ const F_OPEN = {
   live:'openLive', loc:'openLoc', limit:'openLimit', dt:'openDt', academy:'openAcademy',
   force:'openForceLock', req:'openReq', allow:'openAllow', apps:'openApps', newapp:'openSecurityNew',
   tube:'openTube', uninst:'openUninstall', pinlock:'openPinLock', ignoredt:'openIgnoreDt',
-  sos:'openSos', security:'openSecurity', kakao:'openKakao', sound:'openStealth',
+  sos:'openSos', unknowncall:'openUnknownCall', security:'openSecurity', kakao:'openKakao', sound:'openStealth',
   hideicon:'openStealth', hidenotify:'openStealth', hist:'openHistory', pin:'openPinChange'
 };
 
@@ -5101,6 +5120,15 @@ const XP = {
     w:['아이가 밤에 <b>전화를 걸어야</b> 한다면 <b>전화 앱</b>을 넣어 주세요. 전화 <b>받기</b>는 넣지 않아도 돼요.',
        '많이 넣으면 취침시간이 소용없어져요. 꼭 필요한 것만 넣어 주세요.'] },
 
+  unknowncall:{ h:'모르는 번호 전화는 — <b>울리지 않게</b> 해요',
+    d:'켜 두면 <b>아는 번호만</b> 울려요. 모르는 번호와 발신번호 표시 제한 전화는 <b>저절로 끊기고</b> 아래 기록에 남아요.',
+    f:[['📒','연락처에 저장된 번호<br>· 추가한 번호'],['👨‍👩‍👧','부모님 · SOS<br>번호'],['✅','이 번호들만<br>울려요']],
+    ex:'art', exT:'이렇게 돼요',
+    how:['아래 스위치를 켜요',
+         '학원 · 학교처럼 <b>연락처에 없는 번호</b>는 「받을 번호 추가」에 넣어요 — 숫자만, 예) 0212345678'],
+    w:['112 · 119 처럼 <b>세 자리 번호</b>는 늘 울려요.',
+       '아이가 연락처에 번호를 저장하면 그 번호도 받을 수 있어요.',
+       '자녀폰 시내모바일 앱이 <b>업데이트된 뒤</b>에 켤 수 있어요.'] },
   sos:{ h:'아이가 전화를 안 받을 때 — <b>자동으로 받게</b> 해요',
     d:'여기 넣은 번호로 걸었는데 아이가 <b>3번</b> 안 받으면, <b>4번째</b>엔 아이 폰이 <b>저절로 받고 스피커가 켜져요.</b>',
     f:[['📞','넣은 번호로 걸었는데<br>3번 안 받으면'],['☎️','4번째로<br>걸면'],['🔊','저절로 받고<br>스피커가 켜져요']],
@@ -7112,6 +7140,64 @@ async function delSos(n){
     await savePol([{key:'sos_whitelist', value:JSON.stringify(list)}]);
     loading(false); toast('삭제했습니다'); openSos();
   }catch(e){ loading(false); toast('실패: '+e.message); }
+}
+
+// ══════════ 📵 모르는 번호 전화 막기 (2026-11-20 · 자녀앱 v69) ══════════
+//   unknown_call_blocked · call_allow_numbers 는 부모·매장이 쓰고 폰은 받기만 한다.
+//   폰이 올리는 것 : unknown_call_ok(이 기능이 있는 폰) · contacts_perm_ok · unknown_call_log([{t,n}] 최근 30건)
+function ucNorm(s){ let d=String(s||'').replace(/[^0-9]/g,''); if(d.startsWith('82') && d.length>=11) d='0'+d.slice(2); return d; }
+function ucFmt(d){ d=ucNorm(d); if(d.startsWith('02') && (d.length===9||d.length===10)) return '02-'+d.slice(2,d.length-4)+'-'+d.slice(-4); if(d.length===11) return d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7); if(d.length===10) return d.slice(0,3)+'-'+d.slice(3,6)+'-'+d.slice(6); return d; }
+function openUnknownCall(){
+  const p = ST.pol, ready = p.unknown_call_ok === 'true', on = p.unknown_call_blocked === 'true';
+  const list = J(p.call_allow_numbers, []).map(ucNorm).filter(Boolean);
+  let log = J(p.unknown_call_log, []); if (!Array.isArray(log)) log = [];
+  const warn = !ready
+    ? '<div class="xtip">📲 공신폰 앱이 업데이트된 뒤에 켤 수 있어요. (매장에 업데이트를 부탁하셔도 돼요)</div>'
+    : (p.contacts_perm_ok === 'false' ? '<div class="xtip" style="background:#FEF3F2;border-color:#FDA29B">⚠ 자녀폰에 <b>연락처 권한</b>이 꺼져 있어서 지금은 아무 전화도 막지 않아요. 매장에 말씀해 주세요.</div>' : '');
+  const nums = list.length ? list.map(n => `<div class="item"><div class="grow"><div class="nm">${esc(ucFmt(n))}</div></div>
+      <button class="x" onclick="ucDel('${n}')">삭제</button></div>`).join('')
+    : '<div class="empty">추가한 번호가 없어요</div>';
+  const logs = log.length ? log.slice(0, 30).map(x => {
+      const t = new Date(Number(x && x.t) || 0);
+      const w = (t.getMonth()+1)+'/'+t.getDate()+' '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');
+      return `<div class="item"><div class="grow"><div class="nm">${esc(x && x.n ? ucFmt(x.n) : '발신번호 표시 제한')}</div><div class="sub">${esc(w)}</div></div></div>`;
+    }).join('') : '<div class="empty">아직 막은 전화가 없어요</div>';
+  openSub('모르는 번호 전화 막기', `
+    ${warn}
+    <div class="card xctl"><div class="xsw"><div class="grow"><div class="ttl">모르는 번호 전화 막기</div>
+      <span class="xst ${on?'pu':''}">${on ? '켜짐 — 아는 번호만 울려요' : '꺼짐 — 모든 전화를 받아요'}</span></div>
+      <label class="sw"><input type="checkbox" ${on?'checked':''} ${ready?'':'disabled'} onchange="ucToggle(this.checked)"><i></i></label></div></div>
+    <div class="card"><div class="field"><label>받을 번호 추가</label>
+      <input id="ucNew" type="tel" inputmode="numeric" placeholder="01012345678"></div>
+      <button class="btn btn-p" onclick="ucAdd()" ${ready?'':'disabled'}>추가하기</button></div>
+    <div class="sec">추가한 번호 (${list.length}개)</div>
+    <div class="card">${nums}</div>
+    <div class="sec">막은 전화 기록 (${log.length}건)</div>
+    <div class="card">${logs}</div>
+    <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
+}
+async function ucToggle(on){
+  loading(true);
+  try{ await savePol([{ key:'unknown_call_blocked', value: on ? 'true' : 'false' }]); loading(false);
+       toast(on ? '모르는 번호 전화를 막았어요' : '모든 전화를 받게 했어요'); openUnknownCall(); }
+  catch(e){ loading(false); toast('실패: '+e.message); openUnknownCall(); }
+}
+async function ucAdd(){
+  const n = ucNorm(document.getElementById('ucNew').value);
+  if (n.length < 8 || n.length > 12) { toast('번호를 정확히 입력해 주세요'); return; }
+  const list = J(ST.pol.call_allow_numbers, []).map(ucNorm).filter(Boolean);
+  if (list.includes(n)) { toast('이미 있는 번호예요'); return; }
+  list.push(n);
+  loading(true);
+  try{ await savePol([{ key:'call_allow_numbers', value: JSON.stringify(list) }]); loading(false); toast('추가했어요'); openUnknownCall(); }
+  catch(e){ loading(false); toast('실패: '+e.message); }
+}
+async function ucDel(n){
+  n = ucNorm(n);
+  const list = J(ST.pol.call_allow_numbers, []).map(ucNorm).filter(x => x && x !== n);
+  loading(true);
+  try{ await savePol([{ key:'call_allow_numbers', value: JSON.stringify(list) }]); loading(false); toast('삭제했어요'); openUnknownCall(); }
+  catch(e){ loading(false); toast('실패: '+e.message); }
 }
 
 // ══════════ 보안 설정 ══════════
