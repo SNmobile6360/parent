@@ -8659,7 +8659,7 @@ async function locRevoke(btn){
   if (!id) return;
   if (!confirm(mine
       ? '이 폰의 위치 확인 연결을 끊을까요?\n끊으면 이 폰에서는 아이 위치를 볼 수 없어요. 다시 보려면 비밀번호만 넣으면 돼요.'
-      : '이 폰의 연결을 끊을까요?\n끊으면 그 폰은 더 이상 아이 위치를 볼 수 없어요. 아이 폰에도 알림이 가요.')) return;
+      : '이 폰의 연결을 끊을까요?\n끊으면 그 폰에서는 바로 아이 위치가 안 보여요. 비밀번호를 아는 폰은 다시 연결할 수 있으니, 모르는 폰이면 비밀번호도 바꿔 주세요. 아이 폰에도 알림이 가요.')) return;
   loading(true);
   let r;
   try{ r = await locRpc(ST.server, 'loc_token_revoke', { p_device:ST.code, p_id:id }, locTokenOf(ST.code)); }
