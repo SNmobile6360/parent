@@ -1234,6 +1234,51 @@
   .ntNudge .nnB{flex:none;background:#F97316;color:#fff;font-size:13.5px;font-weight:900;border-radius:999px;padding:7px 12px}
   .ntPopE{text-align:center;font-size:44px;line-height:1;margin:4px 0 8px}
   .ntPopD{font-size:14.5px;color:#475467;line-height:1.7;text-align:center;word-break:keep-all;margin-bottom:6px}
+  /* 📍 2026-11-21 위치 개편 — 새 폰 허락(노랑) · 대기 화면 · 지금 위치 받기 · 문자로 물어보기 · 장소 고치기
+     🔴 이름은 전부 lx 로 시작한다(겹치는 옛 이름이 없는지 grep 으로 셌다 · 3-41). 빨강은 「막기」 안내 같은 진짜 경고에만. */
+  .lxTop{margin:0 0 22px}
+  .lxReq{background:#FFFAEB;border:1.5px solid #FEC84B;border-radius:16px;padding:13px 14px;margin-bottom:10px}
+  .lxRh{font-size:15px;font-weight:800;color:#7A2E0E;line-height:1.45}
+  .lxRm{font-size:12.8px;color:#93370D;margin-top:3px;font-weight:600}
+  .lxRm2{font-size:12px;color:#93370D;margin-top:5px;line-height:1.5}
+  .lxRb{display:flex;gap:8px;margin-top:10px}
+  .lxRb button{flex:1;border-radius:12px;padding:11px 0;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer}
+  .lxOk{background:#2563EB;color:#fff;border:0}
+  .lxNo{background:#fff;color:#B42318;border:1.5px solid #FDA29B}
+  .lxRw{font-size:12.8px;color:#B42318;font-weight:700;margin-top:8px;line-height:1.5}
+  .lxWarnO{background:#FFF4ED;border:1.5px solid #FDBA8C;color:#9A3412;border-radius:14px;padding:11px 13px;font-size:13.5px;line-height:1.6;margin-bottom:10px}
+  .lxWait{background:#EFF6FF;border:1.5px solid #BFD9FF;border-radius:16px;padding:15px;margin-bottom:12px}
+  .lxWait.no{background:#FEF3F2;border-color:#FDA29B}
+  .lxWh{font-size:16px;font-weight:800;color:#1D2939;line-height:1.45}
+  .lxWd{font-size:13.8px;color:#475467;margin-top:6px;line-height:1.65}
+  .lxBar{height:8px;background:#EAECF0;border-radius:999px;overflow:hidden;margin-top:10px}
+  .lxBar i{display:block;height:100%;background:#2563EB;border-radius:999px;transition:width .9s linear}
+  .lxStep{margin-top:10px;background:#EFF6FF;color:#1D4ED8;border-radius:12px;padding:9px 11px;font-size:13px;font-weight:700;line-height:1.5}
+  .lxStep.wait{background:#F6F8FA;color:#475467}
+  .lxGot{display:inline-block;background:#ECFDF3;color:#05603A;border-radius:12px;padding:8px 11px;font-size:13.5px;font-weight:800;margin-bottom:8px}
+  .lxNav{display:block;width:100%;margin-top:12px;border:0;border-radius:14px;padding:15px 8px;background:var(--ng);color:#fff;font-size:16.5px;font-weight:800;font-family:inherit;cursor:pointer;text-align:center}
+  .lxLast{margin-top:10px;background:#FFF8EB;color:#93370D;border-radius:12px;padding:10px 12px;font-size:15px;font-weight:700}
+  .lxSms{display:block;margin-top:12px;border-radius:14px;padding:14px 8px;background:#2563EB;color:#fff !important;font-size:16px;font-weight:800;text-align:center;text-decoration:none}
+  .lmBtn.wide{display:block;width:100%;margin-top:10px}
+  .lmBtn:disabled{opacity:.5;cursor:default}
+  .lxLink{border:0;background:none;color:#1D4ED8;font-weight:800;font-family:inherit;font-size:inherit;padding:0;cursor:pointer;text-decoration:underline}
+  .lxTag{display:inline-block;border-radius:999px;padding:2px 8px;font-size:11.5px;font-weight:800;margin-left:4px;vertical-align:middle}
+  .lxTag.me{background:#EFF4FF;color:#1D4ED8}
+  .lxTag.p{background:#FFFAEB;color:#B54708}
+  .lxTag.old{background:#F2F4F7;color:#475467;margin-left:0}
+  .lxEv{white-space:normal !important;font-size:14px !important;line-height:1.5}
+  .lxEvL{color:#667085;font-weight:600}
+  .lxZi{cursor:pointer}
+  .lxOff{color:#98A2B3;font-weight:700}
+  .lxLbl{font-size:13px;font-weight:800;color:#475467;margin:14px 4px 7px}
+  .lxRad{display:flex;gap:8px;margin-bottom:8px}
+  .lxRc{flex:1;border:1.5px solid #D0D5DD;background:#fff;color:#344054;border-radius:999px;padding:10px 0;font-size:14.5px;font-weight:800;font-family:inherit;cursor:pointer}
+  .lxRc.on{background:#2563EB;border-color:#2563EB;color:#fff}
+  .lxChk{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:14px;font-weight:700;color:#344054}
+  .lxChk label{display:flex;align-items:center;gap:6px;cursor:pointer}
+  .lxChk input{width:18px;height:18px;margin:0}
+  .lxDel{display:block;width:100%;margin-top:10px;border:0;background:none;color:#B42318;font-size:14.5px;font-weight:800;font-family:inherit;padding:10px 0;cursor:pointer}
+  .smsb.lxMe{background:#FFF3B0;border-radius:18px 18px 6px 18px;margin:0 0 9px 40%}
 </style>
 </head>
 <body>
@@ -1369,6 +1414,8 @@
   </div>
   <div class="wrap">
     <div class="pane" id="pane_home">
+    <!-- 🔔 2026-11-21 : 「새 폰이 ○○ 위치를 보려고 해요 [허락][막기]」 — 대기 요청이 있을 때만 (locHomeCheck) -->
+    <div id="locReqBox"></div>
     <div class="hero" onclick="openHistory()" style="cursor:pointer">
       <img class="hico" src="img/i-today.webp?v=20261110" alt="" onerror="this.remove()">
       <div class="lbl">오늘 아이가 폰을 쓴 시간</div>
@@ -1933,15 +1980,16 @@ async function pinMatches(h, k){
   return ok;
 }
 
-// 🔒 부모 열쇠를 챙긴다 — PIN 이 서버에서 맞았을 때만 부른다. 없거나 90일이 지났으면 새로 받는다(서버 유효기간 180일).
-//   받은 열쇠는 이 브라우저에만 있고 서버엔 해시만 있다. 실패해도 조용히 넘어간다(다음 잠금 해제 때 다시).
+// 🔒 부모 열쇠를 챙긴다 — PIN 이 서버에서 맞았을 때만 부른다. 실패해도 조용히 넘어간다(다음 잠금 해제 때 다시).
+//   🔐 2026-11-21 위치 개편 : ① 가진 열쇠를 서버에 먼저 묻는다(loc_token_status · 만료를 180일 뒤로 민다)
+//      ② 끊겼거나 없을 때만 새로 받는다. 🔴 옛 「90일마다 새로 받기」는 없앴다 — 새로 받으면 먼저 연결한 폰이 있는 집에서는
+//      **대기 열쇠**가 오고, 그게 쓰던 열쇠 자리를 덮으면 진짜 부모가 24시간 못 본다(설계서 ★-5 #2).
 async function ensureParentToken(k, h){
   try{
-    const at = (JSON.parse(localStorage.getItem(LOC_TOK_AT_KEY)||'{}')||{})[k.code] || 0;
-    if(locTokenOf(k.code) && Date.now()-at < 90*86400000) return;
-    const res = await locRpc(k.server, 'loc_register_parent_token', { p_device:k.code, p_pin_hash:h });
-    if(typeof res==='string' && /^[0-9a-f]{64}$/.test(res)) setLocTokenOf(k.code, res);
-  }catch(e){ /* 다음 기회에 */ }
+    const c = await locTokenCheck(k.code, k.server);
+    if (c.state !== 'none') return;          // active · pending · denied — 새로 받지 않는다
+    await locRegister(k.code, k.server, h);
+  }catch(e){ console.warn('부모 열쇠 챙기기 실패 (다음 기회에):', e && e.message); }
 }
 async function verifyPin(){
   if(pinLockLeftSec()>0){ pinBuf=''; drawPin();
@@ -2126,6 +2174,7 @@ async function enterMain(){
   // 자녀가 2명 이상일 때만 상단에 "‹ 목록" 버튼 (갤럭시 부모앱 대시보드의 뒤로가기와 동일)
   document.getElementById('mBack').classList.toggle('hide', kids().length<2);
   show('scMain'); await reportParentLink(); await refreshAll(false); showIosTip();
+  locHomeCheck(true);   // 🔔 2026-11-21 : 새 폰 위치 연결 요청 (실패는 조용히)
   // 🎬 처음 들어오신 분께 대표 영상을 한 번 보여준다 (메인을 다 그린 뒤)
   if(!introSeen()) showIntro();
 }
@@ -2142,7 +2191,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월20일 20차 테스트판 · 요약 영상 아나운서 목소리';
+const WEB_LABEL = '11월21일 21차 테스트판 · 위치 개편';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -2670,7 +2719,7 @@ async function refreshAll(manual){
     ST.apps=(appR.data||[]).sort((a,b)=>(a.app_name||'').localeCompare(b.app_name||'','ko'));
     await loadTube();          // 📺 2026-09-22 : 시내YouTube 요청·목록 (앱이 깔린 폰만)
     paintMain();
-    if(manual) toast('최신 정보로 새로고침했습니다');
+    if(manual){ toast('최신 정보로 새로고침했습니다'); locHomeCheck(true); }
   }catch(e){ toast('불러오기 실패: '+e.message); }
   loading(false);
 }
@@ -2700,18 +2749,7 @@ function paintMain(){
 
   // 📍 2026-11-05 : 위치 확인 — 꺼져 있으면 「켜 보세요」, 켜져 있으면 **자녀폰이 준비됐나**를 적는다.
   //   🔴 「켜짐」만 적으면 안 된다 — 권한이 없으면 켜져 있어도 **한 건도 안 올라온다**(3-11 의 모양).
-  { const $l=document.getElementById('vLoc');
-    if($l){
-      if(ST.pol?.location_tracking_enabled !== 'true'){
-        $l.innerHTML = '<b style="color:#1D4ED8">새로 생겼어요 — 눌러서 켜 보세요</b>';
-      } else {
-        const s = locPhoneState();
-        $l.innerHTML = !s.perm   ? '<b style="color:#B42318">자녀폰에서 위치 허용이 필요해요</b>'
-                     : !s.svc    ? '<b style="color:#B42318">자녀폰 GPS 가 꺼져 있어요</b>'
-                     : !s.okSent ? '첫 위치를 기다리고 있어요'
-                     : badge(true,'켜짐') + ' 마지막 확인 ' + esc(ago(s.sent));
-      }
-    } }
+  paintLocCard();     // 📍 2026-11-21 : 값이 지워진 폰(3-24)도 동의 기록으로 「켜짐」을 판정한다(locOn)
 
   paintTimeRequest();
 
@@ -4767,12 +4805,15 @@ const FEATURES = [
   one:'자녀가 지금 어디 있는지 보고, 집·학교에 도착했는지 알 수 있어요.',
   what:['자녀폰이 <b>5분마다</b> 위치를 보내요. 「네이버지도로 열기」를 누르면 지도에서 바로 보여요.',
         '집·학교처럼 자주 가는 곳을 <b>세이프존</b>으로 등록하면, 좌표 대신 <b>「지금 학교에 있어요」</b>처럼 이름으로 알려드려요.',
-        '🔴 <b>자녀폰 인터넷이 끊겨도</b> 폰이 위치를 쌓아 두고, 연결되면 한꺼번에 올려요. 30분 넘게 끊기면 <b>문자(SMS)로</b> 마지막 위치를 보내 드려요.'],
+        '🔴 <b>자녀폰 인터넷이 끊겨도</b> 폰이 위치를 쌓아 두고, 연결되면 한꺼번에 올려요. 30분 넘게 끊기면 <b>문자(SMS)로</b> 마지막 위치를 보내 드려요.',
+        '📍 <b>「지금 위치 받기」</b>를 누르면 아이 폰에 <b>바로 물어봐요</b>(보통 10~30초). 아이 폰에는 「보호자가 위치를 확인했어요」 알림이 조용히 떠요.',
+        '✉️ 아이 폰 인터넷이 안 될 땐 <b>아이 폰 번호로 「위치」라고 문자</b>를 보내면 <b>답장</b>으로 위치가 와요 — 「문자로 받기」를 켜 두고, 등록한 부모님 번호에서 보낼 때만이에요.'],
   when:['하교 시간에 「왜 아직 안 왔지?」가 궁금할 때요.','학원에 제대로 갔는지 확인하고 싶을 때요.'],
   note:['처음 켤 때 <b>동의</b>가 필요해요 — 위치정보는 법으로 정해져 있어요.',
         '자녀폰에도 「부모님이 위치 확인을 켜셨어요」 안내가 <b>한 번 떠요.</b> 몰래 보는 기능이 아니에요.',
         '⚠️ 실내에서는 위치가 <b>50~100m</b> 틀릴 수 있어요. 세이프존 반경은 <b>150~200m</b> 가 알맞아요.',
-        '이동 기록은 <b>7일</b>만 보관하고 그 뒤엔 자동으로 지워져요.'],
+        '이동 기록은 <b>7일</b>만 보관하고 그 뒤엔 자동으로 지워져요.',
+        '🔐 <b>새 폰</b>으로 보려면 먼저 연결한 보호자가 「허락」하거나 <b>하루</b>가 지나야 해요 — 다른 사람이 몰래 보지 못하게 하려는 거예요.'],
   art:{ kind:'full', l:{ emo:'🏫', txt:'학교', sub:'08:40 도착', bg:'#ECFDF3', fg:'#1F7A4D' },
         r:{ emo:'🏠', txt:'집', sub:'16:20 도착', bg:'#EFF6FF', fg:'#1D4ED8' },
         lc:'학교에 도착하면', rc:'집에 오면', rok:true, alt:'학교·집 도착 기록' } },
@@ -8328,7 +8369,7 @@ function srvOf(label){ return SERVERS.find(x=>x.label===label) || SERVERS[0]; }
 
 function locTokens(){ try{ return JSON.parse(localStorage.getItem(LOC_TOK_KEY)||'{}')||{}; }catch(e){ return {}; } }
 function locTokenOf(code){ return locTokens()[code] || ''; }
-const LOC_TOK_AT_KEY = 'sinae_loc_token_at';   // { 기기코드: 받은 시각(ms) } — 90일마다 새로 받는다
+const LOC_TOK_AT_KEY = 'sinae_loc_token_at';   // { 기기코드: 받은 시각(ms) } — 기록만 한다(2026-11-21 : 90일 재발급 없앰 · 만료는 서버가 민다)
 function setLocTokenOf(code, t){
   try{ const o=locTokens(); if(t) o[code]=t; else delete o[code];
        localStorage.setItem(LOC_TOK_KEY, JSON.stringify(o));
@@ -8341,11 +8382,13 @@ function locPinHash(){ try{ return sessionStorage.getItem(LOC_PINH_KEY)||''; }ca
 // ── 서버와 이야기하는 두 가지 길 ───────────────────────────────────────────
 //  🔴 **오류를 반드시 던진다.** 삼키면 「서버가 죽은 것」이 「위치가 없음」으로 보이고,
 //     부모님은 「추적이 안 된다」고 신고한다. (CLAUDE.md 3-10)
-async function locRpc(server, fn, body){
+async function locRpc(server, fn, body, tok){
   const s = srvOf(server);
+  const h = { apikey:s.key, Authorization:'Bearer '+s.key, 'Content-Type':'application/json' };
+  if(tok) h['x-device-token'] = tok;            // 🔐 2026-11-21 : 열쇠가 필요한 함수(loc_token_status · loc_locate_now …)
   const r = await fetch(s.url + '/rest/v1/rpc/' + fn, {
     method:'POST',
-    headers:{ apikey:s.key, Authorization:'Bearer '+s.key, 'Content-Type':'application/json' },
+    headers:h,
     body: JSON.stringify(body)
   });
   const txt = await r.text();
@@ -8353,10 +8396,10 @@ async function locRpc(server, fn, body){
   try{ return JSON.parse(txt); }catch(e){ return txt; }
 }
 
-async function locApi(server, code, path, method, body){
+async function locApi(server, code, path, method, body, hdrs){
   const s = srvOf(server);
-  const h = { apikey:s.key, Authorization:'Bearer '+s.key,
-              'x-device-token': locTokenOf(code), 'Content-Type':'application/json' };
+  const h = Object.assign({ apikey:s.key, Authorization:'Bearer '+s.key,
+              'x-device-token': locTokenOf(code), 'Content-Type':'application/json' }, hdrs || {});
   const r = await fetch(s.url + '/rest/v1/' + path,
     { method: method||'GET', headers:h, body: body?JSON.stringify(body):undefined });
   const txt = await r.text();
@@ -8364,24 +8407,397 @@ async function locApi(server, code, path, method, body){
   try{ return JSON.parse(txt||'[]'); }catch(e){ return []; }
 }
 
+// ══════════ 🔐 2026-11-21 위치 개편 — 부모 열쇠 「24시간 대기」 (설계서 ★-4 · ★-5 · 서버 약속 contract) ══════════
+//  ▸ 열쇠는 「자녀 한 명 × 이 브라우저」마다 하나. 쓸 수 있는 열쇠(active)는 sinae_loc_token, 대기 열쇠는 sinae_loc_pending.
+//  🔴 서버가 `PENDING:<열쇠>` 를 주면 **active 칸에는 절대 넣지 않는다** — 넣으면 쓰던 열쇠가 덮여 진짜 부모가 24시간 못 본다(★-5 #2).
+//  🔴 이미 쓸 수 있는 열쇠가 있으면 새로 받지 않는다 — 받으면 「먼저 연결한 폰」이 있는 집에선 **자기 자신이 대기**에 걸린다.
+//     옛 90일 재발급도 없앴다 · 만료는 서버가 loc_token_status 를 부를 때마다 180일 뒤로 민다.
+//  ▸ loc_token_status 는 위치 화면을 열 때 · PIN 을 풀 때 · 홈을 열 때 부른다(대기 요청 배너).
+const LOC_PEND_KEY = 'sinae_loc_pending';   // { 기기코드: 대기 열쇠 }
+function locPendings(){ try{ return JSON.parse(localStorage.getItem(LOC_PEND_KEY)||'{}')||{}; }catch(e){ return {}; } }
+function locPendingOf(code){ return locPendings()[code] || ''; }
+function setLocPendingOf(code, t){
+  try{ const o=locPendings(); if(t) o[code]=t; else delete o[code]; localStorage.setItem(LOC_PEND_KEY, JSON.stringify(o)); }catch(e){}
+}
+const LOC_TS = {};            // { 기기코드: 마지막 loc_token_status 결과 (active 일 때) }
+const LOC_CONSENT = {};       // { 기기코드: true|false } — 철회 안 된 동의 기록이 있나 (3장 ①)
+const LOC_REVIEW_DONE = {};   // { 기기코드: true } — 이번 세션에 「예전에 연결된 폰」 목록을 보여 줬다
+
+/** 이 브라우저 이름표 — 「갤럭시 · 크롬」「아이폰 · 사파리」「아이폰 · 홈 화면 앱」 (서버는 60자까지만 받는다) */
+function locLabel(){
+  const ua = navigator.userAgent || '';
+  let standalone = false;
+  try{ standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches)); }catch(e){}
+  let dev, br;
+  if (/iPhone|iPod/i.test(ua)) dev = '아이폰';
+  else if (/iPad/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) dev = '아이패드';
+  else if (/Android/i.test(ua)) dev = /SM-|SAMSUNG|Galaxy/i.test(ua) ? '갤럭시' : '안드로이드 폰';
+  else if (/Windows/i.test(ua)) dev = '윈도우 PC';
+  else if (/Macintosh/i.test(ua)) dev = '맥';
+  else dev = '기타 기기';
+  if (/KAKAOTALK/i.test(ua)) br = '카카오톡';
+  else if (/NAVER/.test(ua)) br = '네이버 앱';
+  else if (standalone) br = '홈 화면 앱';
+  else if (/SamsungBrowser/i.test(ua)) br = '삼성 인터넷';
+  else if (/Edg/i.test(ua)) br = '엣지';
+  else if (/CriOS|Chrome\//i.test(ua)) br = '크롬';
+  else if (/FxiOS|Firefox/i.test(ua)) br = '파이어폭스';
+  else if (/Safari/i.test(ua)) br = '사파리';
+  else br = '브라우저';
+  return dev + ' · ' + br;
+}
+
+/** 열쇠 받기 (PIN 이 서버에서 맞아야 준다) → { state:'active'|'pending'|'err', tok, note } */
+async function locRegister(code, server, h){
+  const pid = parentId();
+  const res = await locRpc(server, 'loc_register_parent_token',
+    { p_device:code, p_pin_hash:h, p_parent_id: pid || null, p_label: locLabel() });
+  const s = (typeof res === 'string') ? res : '';
+  if (/^[0-9a-f]{64}$/.test(s)){ setLocTokenOf(code, s); setLocPendingOf(code, ''); return { state:'active', tok:s }; }
+  if (/^PENDING:[0-9a-f]{64}$/.test(s)){ setLocPendingOf(code, s.slice(8)); return { state:'pending' }; }
+  return { state:'err', note: s || String(res || '') };     // BAD_PIN · NO_DEVICE · BAD_INPUT
+}
+
 /**
- * 부모 토큰을 챙긴다. 없으면 **PIN 을 확인받아** 서버에서 새로 받아온다.
- * 🔴 평문 토큰은 서버가 **발급할 때 한 번만** 준다 → 받으면 이 브라우저에 저장한다.
- *    서버에는 해시만 남아서, 잃어버리면 다시 받아야 한다(그래서 PIN 해시를 세션에 들고 있다).
- *    ⚠️ PIN 해시를 `sessionStorage` 에 두는 건, 그 값이 이미 공개 키로 읽히는 값이라서다
- *       (9장 `pin_plain` 항목). 앱을 닫으면 사라진다. localStorage 에는 두지 않는다.
+ * 이 브라우저 열쇠가 지금 어떤 상태인가 — 서버에 묻는다(만료 연장 · 24시간 지난 대기를 허락으로 바꾸는 것도 이때 서버가 한다).
+ *  → { state:'active'|'pending'|'denied'|'none', st:(서버 결과) }
+ *  ▸ active 열쇠와 대기 열쇠를 **하나씩 따로** 묻는다 — 같이 실으면 서버가 어느 쪽을 골랐는지 알 수 없다.
+ *  🔴 「못 물어봤다」(네트워크·서버 오류)로는 열쇠를 지우지 않는다(3-10). 서버가 분명히 none·revoked·expired 라고 할 때만 지운다.
  */
-async function locEnsureToken(force){
-  if(!force && locTokenOf(ST.code)) return locTokenOf(ST.code);
+async function locTokenCheck(code, server, ack){
+  const a = locTokenOf(code);
+  if (a){
+    let r = null;
+    try{ r = await locRpc(server, 'loc_token_status', { p_device:code, p_ack:!!ack }, a); }
+    catch(e){
+      if (!(e && e.status === 404)) console.warn('열쇠 상태 확인 실패 (열쇠는 그대로 둔다):', e && e.message);
+      return { state:'active', st:null, err:e };
+    }
+    const s = r && r.status;
+    if (s === 'active'){ LOC_TS[code] = r; setLocPendingOf(code, ''); return { state:'active', st:r }; }
+    if (s === 'pending' || s === 'denied'){ setLocTokenOf(code, ''); setLocPendingOf(code, a); return { state:s, st:r }; }
+    setLocTokenOf(code, '');                       // none · revoked · expired — 이 열쇠는 끝났다
+  }
+  const p = locPendingOf(code);
+  if (p){
+    let r = null;
+    try{ r = await locRpc(server, 'loc_token_status', { p_device:code, p_ack:false }, p); }
+    catch(e){ console.warn('대기 열쇠 상태 확인 실패:', e && e.message); return { state:'pending', st:null, err:e }; }
+    const s = r && r.status;
+    if (s === 'active'){ setLocTokenOf(code, p); setLocPendingOf(code, ''); LOC_TS[code] = r; return { state:'active', st:r, fresh:true }; }
+    if (s === 'pending' || s === 'denied') return { state:s, st:r };
+    setLocPendingOf(code, '');
+  }
+  return { state:'none', st:null };
+}
+
+/**
+ * 부모 열쇠를 챙긴다 (위치 화면 안에서). 쓸 수 있는 열쇠가 있으면 그것을 쓰고, 없을 때만 PIN 으로 받는다.
+ *  🔴 평문 열쇠는 서버가 발급할 때 한 번만 준다 → 받으면 이 브라우저에 저장한다(서버엔 해시만).
+ *  ⚠️ PIN 해시는 sessionStorage 에만 둔다(앱을 닫으면 사라진다).
+ */
+async function locEnsureToken(){
+  if (locTokenOf(ST.code)) return locTokenOf(ST.code);
+  if (locPendingOf(ST.code)){ LOC.note = 'PENDING'; return ''; }
   const h = locPinHash();
-  if(!h){ LOC.note = 'NOPIN'; return ''; }
-  const res = await locRpc(ST.server, 'loc_register_parent_token', { p_device:ST.code, p_pin_hash:h });
-  if(typeof res==='string' && /^[0-9a-f]{64}$/.test(res)){ setLocTokenOf(ST.code, res); LOC.note=''; return res; }
-  LOC.note = String(res||'');     // BAD_PIN · LOCKED · NO_DEVICE · BAD_INPUT
+  if (!h){ LOC.note = 'NOPIN'; return ''; }
+  const r = await locRegister(ST.code, ST.server, h);
+  if (r.state === 'active'){ LOC.note = ''; return r.tok; }
+  LOC.note = r.state === 'pending' ? 'PENDING' : r.note;
   return '';
 }
 
-function locOn(){ return ST.pol?.location_tracking_enabled === 'true'; }
+/**
+ * 위치가 켜져 있나 (3장 ①).
+ *  정책 값이 'true' 면 켜짐 · 'false' 로 분명하면 꺼짐(동의보다 우선 · ★-2 #10) ·
+ *  **값이 없으면**(전부삭제 모드 폰이 지운 것 · 3-24) 철회 안 된 동의 기록이 있으면 켜짐으로 본다.
+ */
+function locOn(){
+  const v = ST.pol?.location_tracking_enabled;
+  if (v === 'true') return true;
+  if (v === 'false') return false;
+  return LOC_CONSENT[ST.code] === true;
+}
+/** 철회 안 된 동의 기록이 있나 — 열쇠가 있어야 읽힌다(없으면 꺼짐으로 본다). 한 번 묻고 기억한다. */
+async function locConsentCheck(code, server){
+  if (LOC_CONSENT[code] !== undefined) return LOC_CONSENT[code];
+  if (!locTokenOf(code)) return false;
+  try{
+    const rows = await locApi(server, code, 'location_consents?device_code=eq.' + encodeURIComponent(code) +
+                              '&revoked_at=is.null&select=device_code&limit=1');
+    LOC_CONSENT[code] = Array.isArray(rows) && rows.length > 0;
+  }catch(e){ console.warn('동의 기록 확인 실패:', e && e.message); return false; }
+  return LOC_CONSENT[code];
+}
+
+/** 오늘 21:31 · 내일 21:31 · 11월 25일 21:31 */
+function locDayHm(d){
+  if (!d) return '-';
+  const now = new Date();
+  const t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const t1 = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const days = Math.round((t1 - t0) / 86400000);
+  const hm = p2(d.getHours()) + ':' + p2(d.getMinutes());
+  return (days === 0 ? '오늘 ' : days === 1 ? '내일 ' : days === -1 ? '어제 ' : (d.getMonth()+1) + '월 ' + d.getDate() + '일 ') + hm;
+}
+function locDate(iso){ const d = toDate(iso); return d ? (d.getMonth()+1) + '월 ' + d.getDate() + '일' : '-'; }
+/** 받침 있으면 「과」, 없으면 「와」 */
+function locGwa(w){ const c = String(w||'').charCodeAt(String(w||'').length - 1); return (c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28) ? '과' : '와'; }
+
+/** 대기·막힘 화면 (그림 4 가운데) */
+function locWaitScreen(chk){
+  const st = (chk && chk.st) || {};
+  let h;
+  if (chk && chk.state === 'denied'){
+    h = '<div class="lxWait no"><div class="lxWh">🚫 기존 보호자가 막았어요</div>' +
+        '<div class="lxWd">보호자가 맞으면 <b>매장에 말씀해 주세요.</b> 매장에서 확인하고 열어 드려요.</div></div>';
+  } else {
+    const at = toDate(st.approve_after);
+    h = '<div class="lxWait"><div class="lxWh">⏳ 기존 보호자 허락을 기다리고 있어요</div>' +
+        '<div class="lxWd">허락되면 바로 보여요. 아니면 ' + (at ? '<b>' + esc(locDayHm(at)) + '</b> 에' : '<b>하루 뒤</b>') + ' 저절로 열려요.<br>' +
+        '급하시면 매장에 말씀해 주세요.</div></div>' +
+        '<div class="note">🔐 이 아이 위치를 <b>먼저 연결한 보호자 폰</b>이 있어요. 새 폰은 그 보호자가 「허락」을 누르거나 하루가 지나야 볼 수 있어요. ' +
+        '아이 위치를 다른 사람이 몰래 보지 못하게 하려는 거예요.</div>';
+  }
+  h += '<button class="btn btn-p" onclick="openLoc(LOC.day)">다시 확인하기</button>' +
+       '<button class="btn btn-g" onclick="closeSub()">닫기</button>';
+  openSub('어디 있나요', h);
+}
+
+/** 🔔 「새 폰이 ○○ 위치를 보려고 해요 [허락][막기]」 — 위치 화면·홈 공통 (그림 4 왼쪽)
+ *  🔴 onclick 안에 사용자 값을 넣지 않는다(3-43) — 기기코드·열쇠번호는 data- 로 넘긴다. */
+function locReqBannerHtml(code, name, st){
+  const list = (st && Array.isArray(st.tokens)) ? st.tokens.filter(t => t.status === 'pending' && t.can_decide) : [];
+  return list.map(t => {
+    const at = toDate(t.approve_after);
+    return '<div class="lxReq"><div class="lxRh">🔔 새 폰이 <b>' + esc(name) + '</b> 위치를 보려고 해요</div>' +
+      '<div class="lxRm">' + esc(t.label || '이름 모르는 폰') + ' · ' + esc(locDayHm(toDate(t.created_at))) + '</div>' +
+      '<div class="lxRb"><button class="lxOk" data-code="' + esc(code) + '" data-id="' + esc(t.id) + '" onclick="locDecide(this,true)">허락</button>' +
+      '<button class="lxNo" data-code="' + esc(code) + '" data-id="' + esc(t.id) + '" onclick="locDecide(this,false)">막기</button></div>' +
+      '<div class="lxRw">직접 요청하지 않았으면 「막기」를 눌러 주세요</div>' +
+      (at ? '<div class="lxRm2">아무것도 안 누르면 ' + esc(locDayHm(at)) + ' 에 저절로 허락돼요</div>' : '') +
+      '</div>';
+  }).join('');
+}
+
+async function locDecide(btn, allow){
+  const code = btn && btn.dataset ? btn.dataset.code : '', id = Number(btn && btn.dataset ? btn.dataset.id : 0);
+  const k = kids().find(x => x.code === code) || (code === ST.code ? { code, server:ST.server } : null);
+  if (!k || !id) return;
+  if (allow && !confirm('이 폰이 아이 위치를 보게 허락할까요?\n직접 요청한 폰(가족 폰)이 맞을 때만 허락해 주세요.')) return;
+  loading(true);
+  let r;
+  try{ r = await locRpc(k.server, 'loc_token_decide', { p_device:code, p_id:id, p_allow:!!allow }, locTokenOf(code)); }
+  catch(e){ loading(false); toast('처리하지 못했어요: ' + e.message); return; }
+  loading(false);
+  if (r === 'OK') toast(allow ? '허락했어요 — 이제 그 폰에서도 볼 수 있어요' : '막았어요 — 그 폰은 위치를 볼 수 없어요');
+  else if (r === 'FULL') alert('볼 수 있는 폰이 6대로 꽉 찼어요.\n「위치를 볼 수 있는 폰」에서 안 쓰는 폰을 하나 끊은 뒤 다시 허락해 주세요.');
+  else if (r === 'NOT_ALLOWED') alert('이 요청은 먼저 연결한 보호자 폰에서만 허락·막기를 할 수 있어요.');
+  else if (r === 'NOT_FOUND') toast('이미 처리된 요청이에요');
+  else toast('처리하지 못했어요: ' + r);
+  locAfterChange(code);
+}
+/** 허락·막기·끊기 뒤 — 지금 보는 화면을 다시 그린다 */
+function locAfterChange(code){
+  const onSub = !document.getElementById('scSub').classList.contains('hide');
+  const t = document.getElementById('sTitle').textContent;
+  if (onSub && code === ST.code && t === LOC_PH_TITLE) openLocPhones(LOC_PH_REVIEW);
+  else if (onSub && code === ST.code && t === '어디 있나요') openLoc(LOC.day);
+  else locHomeCheck(true);
+}
+
+/** 📱 「○○ 위치를 볼 수 있는 폰」 목록 — 보기 · 끊기 · 대기 허락/막기 · 최근 바뀐 것 */
+const LOC_PH_TITLE = '위치를 볼 수 있는 폰';
+let LOC_PH_REVIEW = false;
+async function openLocPhones(review){
+  loading(true);
+  let c;
+  try{ c = await locTokenCheck(ST.code, ST.server); }catch(e){ c = { state:'none' }; }
+  loading(false);
+  if (c.state !== 'active'){ openLoc(LOC.day); return; }
+  if (!c.st){ toast('목록을 불러오지 못했어요 — 잠시 뒤 다시 눌러 주세요'); return; }
+  LOC.ts = c.st;
+  LOC_PH_REVIEW = !!review;
+  const nm = ST.dev?.child_name || ST.name || '자녀';
+  const toks = Array.isArray(c.st.tokens) ? c.st.tokens : [];
+  const act = toks.filter(t => t.status === 'active');
+  let h = '';
+  if (review) h += '<div class="note warn">🔐 <b>예전에 연결된 폰들이에요.</b> 모르는 폰이 있으면 「끊기」를 눌러 주세요.<br>다 보셨으면 맨 아래 <b>「확인했어요」</b>를 눌러 주세요.</div>';
+  h += locReqBannerHtml(ST.code, nm, c.st);
+  h += '<div class="sec">📱 ' + esc(nm) + ' 위치를 볼 수 있는 폰 ' + act.length + '대</div><div class="card">';
+  h += toks.length ? toks.map(t => {
+    const tag = t.status === 'pending' ? '<span class="lxTag p">허락 기다리는 중</span>'
+              : t.mine ? '<span class="lxTag me">지금 이 폰</span>' : '';
+    const used = t.status === 'pending' ? '' : (t.last_used_at ? ' · 마지막 사용 ' + ago(t.last_used_at) : ' · 아직 안 씀');
+    return '<div class="item"><div class="grow"><div class="nm">📱 ' + esc(t.label || '이름 모르는 폰') + ' ' + tag + '</div>' +
+      '<div class="val">받은 날 ' + esc(locDate(t.created_at)) + (t.legacy ? ' · <span class="lxTag old">예전에 연결됨</span>' : '') + esc(used) + '</div></div>' +
+      (t.can_cut ? '<button class="x" data-id="' + esc(t.id) + '" data-mine="' + (t.mine ? '1' : '') + '" onclick="locRevoke(this)">끊기</button>' : '') +
+      '</div>';
+  }).join('') : '<div class="empty">연결된 폰이 없어요</div>';
+  h += '</div>';
+  h += '<div class="note">✂️ 다른 폰은 <b>그 폰보다 먼저 연결한 폰</b>에서만 끊을 수 있어요. 이 폰 연결은 언제든 끊을 수 있어요 — ' +
+       '다시 연결하면 다른 보호자 폰이 있을 때 허락을 기다려야 해요.</div>';
+  h += locEventsHtml(c.st);
+  h += review ? '<button class="btn btn-p" onclick="closeSub()">확인했어요</button>'
+              : '<button class="btn btn-g" onclick="closeSub()">위치 화면으로</button>';
+  openSub(LOC_PH_TITLE, h, review ? (() => locReviewDone()) : (() => openLoc(LOC.day)));
+}
+/** 「예전에 연결된 폰」 목록을 닫을 때 — 서버에 「봤다」를 남긴다(p_ack) */
+async function locReviewDone(){
+  LOC_REVIEW_DONE[ST.code] = true;
+  try{ await locRpc(ST.server, 'loc_token_status', { p_device:ST.code, p_ack:true }, locTokenOf(ST.code)); }
+  catch(e){ console.warn('확인 표시 실패 (이번 세션엔 다시 안 띄운다):', e && e.message); }
+  openLoc(LOC.day);
+}
+async function locRevoke(btn){
+  const id = Number(btn && btn.dataset ? btn.dataset.id : 0), mine = !!(btn && btn.dataset && btn.dataset.mine === '1');
+  if (!id) return;
+  if (!confirm(mine
+      ? '이 폰의 위치 확인 연결을 끊을까요?\n끊으면 이 폰에서는 아이 위치를 볼 수 없어요. 다시 연결하려면 비밀번호를 넣고, 다른 보호자 폰이 있으면 허락을 기다려야 해요.'
+      : '이 폰의 연결을 끊을까요?\n끊으면 그 폰은 더 이상 아이 위치를 볼 수 없어요. 아이 폰에도 알림이 가요.')) return;
+  loading(true);
+  let r;
+  try{ r = await locRpc(ST.server, 'loc_token_revoke', { p_device:ST.code, p_id:id }, locTokenOf(ST.code)); }
+  catch(e){ loading(false); toast('끊지 못했어요: ' + e.message); return; }
+  loading(false);
+  if (r === 'OK'){
+    if (mine){
+      setLocTokenOf(ST.code, ''); setLocPendingOf(ST.code, ''); delete LOC_CONSENT[ST.code]; lnStop(); LOCNOW = null;
+      toast('이 폰 연결을 끊었어요');
+      show('scMain'); paintMain();
+      return;
+    }
+    toast('끊었어요');
+    openLocPhones(LOC_PH_REVIEW);
+    return;
+  }
+  toast(r === 'NOT_ALLOWED' ? '먼저 연결한 보호자 폰에서만 끊을 수 있어요' : r === 'NOT_FOUND' ? '이미 끊긴 폰이에요' : '끊지 못했어요: ' + r);
+}
+
+/** 🕑 최근 바뀐 것 — events 를 사람 말로 (세이프존 「새로 넣고 옛것 지우기」 한 쌍은 「고쳤어요」 한 줄로 합친다) */
+function locEvDetail(e){
+  let d = e && e.detail;
+  if (typeof d === 'string'){ try{ d = JSON.parse(d); }catch(x){ d = {}; } }
+  return (d && typeof d === 'object') ? d : {};
+}
+function locEvText(e){
+  const d = locEvDetail(e);
+  const lb = d.label ? ' <span class="lxEvL">(' + esc(d.label) + ')</span>' : '';
+  const on = (d.new && typeof d.new === 'object') ? d.new : {}, od = (d.old && typeof d.old === 'object') ? d.old : {};
+  switch (e.action){
+    case 'PARENT_TOKEN_NEW':     return '📱 ' + (d.first ? '첫 보호자 폰이' : '새 폰이') + ' 위치 확인에 연결됐어요' + lb;
+    case 'PARENT_TOKEN_PENDING': return '⏳ 새 폰이 위치를 보려고 요청했어요' + lb;
+    case 'PARENT_TOKEN_ALLOW':   return '✅ 새 폰을 허락했어요' + lb;
+    case 'PARENT_TOKEN_DENY':    return '🚫 새 폰을 막았어요' + lb;
+    case 'PARENT_TOKEN_REVOKE':  return '✂️ ' + (d.self ? '한 폰이 스스로 연결을 끊었어요' : '폰 연결을 끊었어요') + lb;
+    case 'PARENT_TOKEN_AUTO':    return '⏰ 하루가 지나 새 폰이 저절로 허락됐어요' + lb;
+    case 'ZONE_INSERT':          return '🏫 「' + esc(on.name || '장소') + '」 장소를 추가했어요';
+    case 'ZONE_DELETE':          return '🗑 「' + esc(od.name || '장소') + '」 장소를 지웠어요';
+    case 'ZONE_UPDATE': {
+      const parts = [];
+      if (od.name !== on.name) parts.push('이름 「' + esc(od.name || '') + '」 → 「' + esc(on.name || '') + '」');
+      if (od.r !== on.r) parts.push('반경 ' + esc(od.r) + 'm → ' + esc(on.r) + 'm');
+      if (od.lat !== on.lat || od.lng !== on.lng) parts.push('위치 옮김');
+      if (od.on !== on.on) parts.push(on.on ? '다시 켬' : '잠깐 끔');
+      if (od.in !== on.in || od.out !== on.out) parts.push('기록 설정 바꿈');
+      return '✏️ 「' + esc(on.name || od.name || '장소') + '」 ' + (parts.length ? parts.join(' · ') : '고쳤어요');
+    }
+    case 'PARENT_PHONE_CHANGED': {
+      const m = [d.masked, d.new, d.to, d.phone].find(x => typeof x === 'string' && /[*]/.test(x));
+      return '📞 부모님 문자 번호가 바뀌었어요' + (m ? ' → ' + esc(m) : '');
+    }
+    default: return esc(e.action || '');
+  }
+}
+function locEventsHtml(st){
+  const ev = (st && Array.isArray(st.events)) ? st.events.slice() : [];
+  if (!ev.length) return '';
+  const used = new Set(), rows = [];
+  ev.forEach((e, i) => {
+    if (used.has(i)) return;
+    if (e.action === 'ZONE_INSERT' || e.action === 'ZONE_DELETE'){
+      const me = locEvDetail(e), nm = (e.action === 'ZONE_INSERT' ? (me.new||{}).name : (me.old||{}).name) || '';
+      const want = e.action === 'ZONE_INSERT' ? 'ZONE_DELETE' : 'ZONE_INSERT';
+      const t = toDate(e.at);
+      const j = ev.findIndex((x, k) => k !== i && !used.has(k) && x.action === want && t && toDate(x.at) &&
+        Math.abs(toDate(x.at) - t) < 120000 &&
+        ((want === 'ZONE_DELETE' ? (locEvDetail(x).old||{}).name : (locEvDetail(x).new||{}).name) || '') === nm);
+      if (j >= 0){
+        used.add(i); used.add(j);
+        const ins = e.action === 'ZONE_INSERT' ? me : locEvDetail(ev[j]), del = e.action === 'ZONE_DELETE' ? me : locEvDetail(ev[j]);
+        const a = del.old || {}, b = ins.new || {}, parts = [];
+        if (a.r !== b.r) parts.push('반경 ' + esc(a.r) + 'm → ' + esc(b.r) + 'm');
+        if (a.lat !== b.lat || a.lng !== b.lng) parts.push('위치 옮김');
+        if (a.on !== b.on) parts.push(b.on ? '다시 켬' : '잠깐 끔');
+        if (a.in !== b.in || a.out !== b.out) parts.push('기록 설정 바꿈');
+        rows.push({ at:e.at, txt:'✏️ 「' + esc(nm || '장소') + '」 ' + (parts.length ? parts.join(' · ') : '고쳤어요') });
+        return;
+      }
+    }
+    used.add(i);
+    rows.push({ at:e.at, txt:locEvText(e) });
+  });
+  return '<div class="sec">🕑 최근 바뀐 것 (7일)</div><div class="card">' +
+    rows.map(r => '<div class="item"><div class="grow"><div class="nm lxEv">' + r.txt + '</div>' +
+      '<div class="val">' + esc(locDayHm(toDate(r.at))) + '</div></div></div>').join('') + '</div>' +
+    '<div class="lmHint" style="margin:-4px 4px 12px">누가 언제 무엇을 바꿨는지 서버에 남아요. 직접 하신 게 아니면 매장에 알려 주세요.</div>';
+}
+/** 📞 부모 번호가 7일 안에 바뀌었으면 위치 화면 맨 위 주황 배너 */
+function locPhoneChangedHtml(st){
+  const ev = (st && Array.isArray(st.events)) ? st.events : [];
+  const e = ev.find(x => x.action === 'PARENT_PHONE_CHANGED' && toDate(x.at) && (Date.now() - toDate(x.at)) < 7 * 86400000);
+  if (!e) return '';
+  return '<div class="lxWarnO">📞 <b>부모님 문자 번호가 바뀌었어요</b> (' + esc(locDayHm(toDate(e.at))) + ').<br>' +
+         '직접 바꾸신 게 아니면 <b>매장에 알려 주세요.</b> 위치가 담긴 문자가 엉뚱한 번호로 갈 수 있어요.</div>';
+}
+
+/** 🏠 홈 — 위치가 켜진 자녀(또는 값이 지워진 자녀) 중 열쇠가 있는 자녀마다 대기 요청이 있나 본다. 실패는 조용히. */
+let LOC_HOME_AT = 0;
+async function locHomeCheck(force){
+  if (!force && Date.now() - LOC_HOME_AT < 60000) return;
+  LOC_HOME_AT = Date.now();
+  const box = document.getElementById('locReqBox');
+  try{
+    const list = kids().filter(k => locTokenOf(k.code) || locPendingOf(k.code));
+    const out = await Promise.all(list.map(async k => {
+      try{
+        let v;
+        if (k.code === ST.code) v = ST.pol?.location_tracking_enabled;
+        else {
+          const { data, error } = await clientFor(k.server).from('policies').select('value')
+            .eq('device_code', k.code).eq('key', 'location_tracking_enabled').maybeSingle();
+          if (error) throw error;
+          v = data ? data.value : undefined;
+        }
+        if (v === 'false') return '';
+        const c = await locTokenCheck(k.code, k.server);
+        if (c.state !== 'active' || !c.st) return '';
+        if (k.code === ST.code && v !== 'true' && LOC_CONSENT[k.code] === undefined){
+          await locConsentCheck(k.code, k.server);
+          paintLocCard();
+          if (typeof homeLocPreview === 'function') homeLocPreview();
+        }
+        const nm = (k.code === ST.code ? (ST.dev?.child_name || ST.name) : '') || k.name || '자녀';
+        return locReqBannerHtml(k.code, nm, c.st);
+      }catch(e){ console.warn('위치 연결 요청 확인 실패:', k.code, e && e.message); return ''; }
+    }));
+    if (box) box.innerHTML = out.join('');
+  }catch(e){ console.warn('위치 연결 요청 확인 실패:', e && e.message); }
+}
+/** 홈 「위치 확인 · 세이프존」 카드 한 줄 */
+function paintLocCard(){
+  const $l = document.getElementById('vLoc');
+  if (!$l) return;
+  if (!locOn()){
+    $l.innerHTML = '<b style="color:#1D4ED8">새로 생겼어요 — 눌러서 켜 보세요</b>';
+  } else {
+    const s = locPhoneState();
+    $l.innerHTML = !s.perm   ? '<b style="color:#B42318">자녀폰에서 위치 허용이 필요해요</b>'
+                 : !s.svc    ? '<b style="color:#B42318">자녀폰 GPS 가 꺼져 있어요</b>'
+                 : !s.okSent ? '첫 위치를 기다리고 있어요'
+                 : badge(true,'켜짐') + ' 마지막 확인 ' + esc(ago(s.sent));
+  }
+}
 
 // ── 거리 (하버사인) ───────────────────────────────────────────────────────
 //  ⚠️ 자녀앱은 `Location.distanceBetween`(안드로이드 내장)을 쓴다. 값이 몇 m 다를 수 있는데,
@@ -8427,17 +8843,31 @@ async function locLoad(day){
   const from = new Date(LOC.day + 'T00:00:00').toISOString(),
         to   = new Date(LOC.day + 'T23:59:59.999').toISOString();
   const q = 'device_code=eq.' + encodeURIComponent(ST.code);
-  const [lastR, histR, zoneR, evR] = await Promise.all([
+  // 📍 2026-11-21 : 아이 폰 번호(문자로 물어보기)와 기기 id 를 같이 읽는다. child_phone 칸이 없는 서버면 id 만 — 실패해도 화면은 그린다.
+  const devP = (async () => {
+    try{
+      const sb = clientFor(ST.server);
+      let r = await sb.from('child_devices').select('id,child_phone').eq('device_code', ST.code).maybeSingle();
+      if (r.error) r = await sb.from('child_devices').select('id').eq('device_code', ST.code).maybeSingle();
+      if (r.error) throw r.error;
+      return r.data || null;
+    }catch(e){ console.warn('아이 폰 번호를 못 읽었어요:', e && e.message); return null; }
+  })();
+  const [lastR, histR, zoneR, evR, devR] = await Promise.all([
     locApi(ST.server, ST.code, 'device_locations?'+q+'&select=lat,lng,accuracy_m,battery,captured_at,updated_at'),
     locApi(ST.server, ST.code, 'location_history?'+q+'&captured_at=gte.'+from+'&captured_at=lte.'+to+
            '&select=lat,lng,accuracy_m,captured_at&order=captured_at.asc&limit=1000'),
     locApi(ST.server, ST.code, 'safe_zones?'+q+'&select=id,name,lat,lng,radius_m,enabled,notify_enter,notify_exit,created_at&order=created_at.asc'),
-    locApi(ST.server, ST.code, 'zone_events?'+q+'&select=zone_name,event,happened_at&order=happened_at.desc&limit=20')
+    // 📍 2026-11-21 : zone_id 도 읽는다 — 이름을 고친 장소는 기록에 **지금 이름**으로 보인다(★-2 #9)
+    locApi(ST.server, ST.code, 'zone_events?'+q+'&select=zone_id,zone_name,event,happened_at&order=happened_at.desc&limit=20'),
+    devP
   ]);
   LOC.last   = Array.isArray(lastR)? (lastR[0]||null) : null;
   LOC.hist   = Array.isArray(histR)? histR : [];
   LOC.zones  = Array.isArray(zoneR)? zoneR : [];
   LOC.events = Array.isArray(evR)? evR : [];
+  LOC.devId  = devR ? devR.id : '';
+  LOC.childPhone = devR ? String(devR.child_phone || '') : '';
   LOC.ready  = true;
   // 🔴 법 제16조 — 「누가 언제 봤나」를 남긴다. 실패해도 화면은 계속 보여준다.
   try{ await locApi(ST.server, ST.code, 'location_access_log', 'POST',
@@ -8470,8 +8900,23 @@ function locStateNote(){
 
 // ── 메인 화면 ─────────────────────────────────────────────────────────────
 async function openLoc(day){
-  if(!locOn()){ openLocConsent(); return; }
+  // 🔐 2026-11-21 : 열쇠 상태부터 본다(loc_token_status) — 대기·막힘이면 그 화면, 끊겼으면 PIN 으로 다시 받기.
+  const v = ST.pol?.location_tracking_enabled;
+  if(v === 'false'){ openLocConsent(); return; }        // 분명히 꺼졌으면 동의 화면 (값이 없을 때는 동의 기록을 본다 · 3장 ①)
   loading(true);
+  let chk;
+  try{ chk = await locTokenCheck(ST.code, ST.server); }
+  catch(e){ chk = { state: locTokenOf(ST.code) ? 'active' : 'none' }; }
+  if(chk.state === 'none' && locPinHash()){
+    try{
+      const r = await locRegister(ST.code, ST.server, locPinHash());
+      if(r.state === 'active' || r.state === 'pending') chk = await locTokenCheck(ST.code, ST.server);
+      else LOC.note = r.note;
+    }catch(e){ if(!(e && e.status === 404)) console.warn('열쇠 다시 받기 실패:', e && e.message); }
+  }
+  if(chk.state === 'pending' || chk.state === 'denied'){ loading(false); locWaitScreen(chk); return; }
+  if(v !== 'true' && chk.state === 'active') await locConsentCheck(ST.code, ST.server);
+  if(!locOn()){ loading(false); openLocConsent(); return; }
   try{ await locLoad(day); }
   catch(e){
     loading(false);
@@ -8487,16 +8932,20 @@ async function openLoc(day){
 
   if(!LOC.ready){
     const n = LOC.note;
-    const msg = n==='LOCKED'   ? '🔒 비밀번호를 여러 번 틀려서 <b>10분간 잠겼어요.</b> 조금 뒤 다시 해 주세요.'
-              : n==='BAD_PIN'  ? '🔑 <b>이 자녀의 비밀번호로 들어와 주세요.</b><br>자녀가 둘 이상이면, 위치를 볼 자녀의 비밀번호로 앱을 다시 열어 주세요.'
+    if(n === 'PENDING'){ locWaitScreen({ state:'pending', st: null }); return; }
+    const msg = n==='BAD_PIN'  ? '🔑 <b>이 자녀의 비밀번호로 들어와 주세요.</b><br>자녀가 둘 이상이면, 위치를 볼 자녀의 비밀번호로 앱을 다시 열어 주세요.'
               : n==='NO_DEVICE'? '❓ 이 자녀의 비밀번호가 서버에 없어요. 매장에 문의해 주세요.'
               : '🔑 <b>비밀번호 확인이 필요해요.</b> 앱을 완전히 닫고 다시 열어 비밀번호를 넣어 주세요.';
     openSub('어디 있나요', '<div class="note warn">'+msg+'</div>'+
       '<button class="btn btn-g" onclick="closeSub()">닫기</button>');
     return;
   }
+  LOC.ts = (chk.state === 'active' && chk.st) ? chk.st : (LOC_TS[ST.code] || null);
+  // 🔐 예전(11-21 전)에 받은 열쇠가 있는 집 — 「볼 수 있는 폰」 목록을 한 번 꼭 보여 준다(★-5 #12)
+  if(LOC.ts && LOC.ts.review && !LOC_REVIEW_DONE[ST.code]){ openLocPhones(true); return; }
   openSub('어디 있나요', locHtml(), null, { label:'🏫 세이프존', fn: openZones });
   locDrawMap('now');
+  lnResume();
 }
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -8625,6 +9074,7 @@ async function locDrawMap(mode){
   const bounds = [];
   (LOC.zones || []).forEach(z => {
     if (z.enabled === false) return;
+    if (mode === 'pick' && LOC_NEW && LOC_NEW.edit && String(z.id) === String(LOC_NEW.id)) return;   // 📍 11-21 고치는 장소의 옛 동그라미
     const c = [Number(z.lat), Number(z.lng)];
     L.circle(c, { radius:Number(z.radius_m||150), color:NAVER_GREEN, weight:2, dashArray:'6 6',
                   fillColor:NAVER_GREEN, fillOpacity:.08, interactive:false }).addTo(map);
@@ -8638,7 +9088,8 @@ async function locDrawMap(mode){
     LMAP_L.circ = L.circle([n.lat, n.lng], { radius:n.radius, color:'#2563EB', weight:2,
                   fillColor:'#2563EB', fillOpacity:.12, interactive:false }).addTo(map);
     map.on('move',    () => LMAP_L.circ.setLatLng(map.getCenter()));
-    map.on('moveend', () => { const c = map.getCenter(); LOC_NEW.lat = c.lat; LOC_NEW.lng = c.lng; });
+    map.on('moveend', () => { if (!LOC_NEW) return; const c = map.getCenter(); LOC_NEW.lat = c.lat; LOC_NEW.lng = c.lng;
+                              if (LOC_NEW.edit) zoneOverlapPaint(); });
     return;
   }
 
@@ -8655,11 +9106,11 @@ async function locDrawMap(mode){
     if (P){
       const c = [Number(P.lat), Number(P.lng)];
       if (Number(P.accuracy_m) > 0)
-        L.circle(c, { radius:Math.min(Number(P.accuracy_m), 500), stroke:false,
+        LMAP_L.accC = L.circle(c, { radius:Math.min(Number(P.accuracy_m), 500), stroke:false,
                       fillColor:NAVER_GREEN, fillOpacity:.14, interactive:false }).addTo(map);
       const t = toDate(P.captured_at);
       const old = !today || !t || (Date.now() - t.getTime()) > 30*60000;
-      L.marker(c, { icon:kidPinIcon(L, old), zIndexOffset:1000, interactive:false }).addTo(map);
+      LMAP_L.kidM = L.marker(c, { icon:kidPinIcon(L, old), zIndexOffset:1000, interactive:false }).addTo(map);
       LMAP_L.kid = c;
     }
     if (today && P) map.setView(LMAP_L.kid, 16);
@@ -8717,45 +9168,21 @@ function locHtml(){
   const nm = ST.dev?.child_name || '자녀';
   const dd = new Date(LOC.day + 'T12:00:00');
   const dayTxt = today ? '지금 위치' : (dd.getMonth()+1) + '월 ' + dd.getDate() + '일 동선';
+  const sup = today && lnSupported();
 
-  let h = '<div class="lmapw" id="lmapw"><div id="lmap"></div>' +
+  // 🔐 2026-11-21 : 맨 위 — 부모 번호 바뀜(주황) · 새 폰 요청(노랑)
+  let top = locPhoneChangedHtml(LOC.ts) + locReqBannerHtml(ST.code, nm, LOC.ts);
+  let h = top ? '<div class="lxTop">' + top + '</div>' : '';
+  h += '<div class="lmapw" id="lmapw"><div id="lmap"></div>' +
     '<div class="lmChip">🧒 ' + esc(nm) + ' · ' + dayTxt + '</div>' +
     '<div class="lmFabs">' +
       (P ? '<button class="lmFab" onclick="locMapToKid()" aria-label="아이 위치로">◎</button>' : '') +
-      '<button class="lmFab" onclick="openLoc(LOC.day)" aria-label="새로고침">↻</button></div>' +
+      (sup ? '<button class="lmFab" id="lnFab" onclick="locNowStart(\'refresh\')" aria-label="지금 위치 받기">📍</button>'
+           : '<button class="lmFab" onclick="openLoc(LOC.day)" aria-label="새로고침">↻</button>') + '</div>' +
     '</div>';
 
-  // ① 아래 장소 카드 — 네이버지도의 「장소 카드」 모양
-  h += '<div class="lmCard">';
-  if (P){
-    const z = locZoneAt(Number(P.lat), Number(P.lng));
-    const when = toDate(P.captured_at);
-    const mins = when ? Math.floor((Date.now() - when.getTime()) / 60000) : -1;
-    const where = z ? locZoneEmo(z.name) + ' <b>' + esc(z.name) + '</b>'
-                    : '🚶 <b class="o">등록한 장소 밖</b>';
-    h += '<div class="lmPlace">' + where + (today ? '에 있어요' : ' — 이 날 마지막 위치') + '</div>';
-    const meta = [];
-    if (when) meta.push(locHm(P.captured_at) + ' 확인');
-    if (today && mins >= 0) meta.push(mins < 1 ? '방금' : (mins < 60 ? mins + '분 전' : ago(P.captured_at)));
-    if (Number(P.accuracy_m) > 0) meta.push('오차 약 ' + Math.round(P.accuracy_m) + 'm');
-    if (today && Number(P.battery) > 0) meta.push('🔋 ' + Math.round(P.battery) + '%');
-    h += '<div class="lmMeta">' + meta.join(' · ') + '</div>';
-    if (!z && LOC.zones.length){
-      let near = null, nd = Infinity;
-      LOC.zones.forEach(x => { const d = locDist(Number(P.lat), Number(P.lng), Number(x.lat), Number(x.lng));
-                               if (d < nd){ nd = d; near = x; } });
-      if (near) h += '<div class="lmNear">📏 ' + locZoneEmo(near.name) + ' ' + esc(near.name) + '에서 약 <b>' + locM(nd) + '</b> 떨어져 있어요</div>';
-    }
-    if (today && mins > 20) h += '<div class="lmNear warn">⏱ <b>' + (mins < 60 ? mins + '분' : ago(P.captured_at).replace(/ 전$/, '')) + ' 전</b> 위치예요. 실내에 있거나 인터넷이 끊기면 조금 늦게 올라와요.</div>';
-    h += '<div class="lmBtns">' +
-      '<button class="lmBtn g" onclick="locOpenNaver(' + Number(P.lat) + ',' + Number(P.lng) + ')">🧭 네이버지도로 길찾기</button>' +
-      '<button class="lmBtn" onclick="openLoc(LOC.day)">↻ 새로고침</button></div>';
-    h += '<div class="lmHint">길찾기를 누르면 네이버지도 앱이 열리고 <b>지금 내 자리에서 아이 있는 곳까지</b> 길을 알려줘요.</div>';
-  } else {
-    h += '<div class="lmPlace">🕐 ' + (today ? '아직 올라온 위치가 없어요' : '이 날은 올라온 위치가 없어요') + '</div>' +
-         '<div class="lmMeta">' + (today ? '자녀폰이 위치를 허용하고 바깥에 한 번 나가면 첫 위치가 잡혀요.' : '다른 날짜를 눌러 보세요.') + '</div>';
-  }
-  h += '</div>';
+  // ① 아래 장소 카드 — 네이버지도의 「장소 카드」 모양. 「지금 위치 받기」 진행 상태도 이 카드 안에서 바뀐다(lnPaint)
+  h += '<div class="lmCard" id="lmCard">' + locCardInner() + '</div>';
 
   h += locStateNote();
 
@@ -8772,11 +9199,15 @@ function locHtml(){
 
   if (LOC.events.length){
     h += '<div class="sec">도착 · 출발 기록</div><div class="card">';
-    h += LOC.events.map(e =>
-      '<div class="row" style="padding:6px 0"><div class="ic" style="background:' + (e.event === 'ENTER' ? '#ECFDF3' : '#FEF3F2') + '">' +
-      (e.event === 'ENTER' ? '🏁' : '👋') + '</div><div class="grow">' +
-      '<div class="ttl">' + esc(e.zone_name || '장소') + (e.event === 'ENTER' ? '에 도착했어요' : '에서 나왔어요') + '</div>' +
-      '<div class="val">' + esc(ago(e.happened_at)) + '</div></div></div>').join('');
+    h += LOC.events.map(e => {
+      // 📍 2026-11-21 : zone_id 로 지금 이름을 찾는다(이름을 고친 장소) · 없으면 기록 당시 이름
+      const zz = e.zone_id ? (LOC.zones || []).find(z => String(z.id) === String(e.zone_id)) : null;
+      const zn = zz ? zz.name : (e.zone_name || '장소');
+      return '<div class="row" style="padding:6px 0"><div class="ic" style="background:' + (e.event === 'ENTER' ? '#ECFDF3' : '#FEF3F2') + '">' +
+        (e.event === 'ENTER' ? '🏁' : '👋') + '</div><div class="grow">' +
+        '<div class="ttl">' + esc(zn) + (e.event === 'ENTER' ? '에 도착했어요' : '에서 나왔어요') + '</div>' +
+        '<div class="val">' + esc(ago(e.happened_at)) + '</div></div></div>';
+    }).join('');
     h += '</div>';
   }
 
@@ -8784,22 +9215,335 @@ function locHtml(){
   h += '<div class="sec">🏫 자주 가는 장소 (세이프존)</div>';
   h += '<div class="card tap" onclick="openZones()"><div class="row">' +
        '<div class="ic has3d">' + icoImg('loc') + '</div><div class="grow">' +
-       '<div class="ttl">' + (LOC.zones.length ? '등록한 장소 ' + LOC.zones.length + '곳 · 더 등록하기' : '집·학교·학원을 등록해 보세요') + '</div>' +
+       '<div class="ttl">' + (LOC.zones.length ? '등록한 장소 ' + LOC.zones.length + '곳 · 고치기 · 더 등록하기' : '집·학교·학원을 등록해 보세요') + '</div>' +
        '<div class="exp" style="margin-top:3px">' + (LOC.zones.length
-          ? esc(LOC.zones.map(z => z.name).join(' · ')) + ' — 지도에 동그라미로 보이고, 도착·출발이 기록돼요'
+          ? esc(LOC.zones.map(z => z.name).join(' · ')) + ' — 지도에 동그라미로 보이고, 도착·출발이 기록돼요. 장소를 누르면 고칠 수 있어요'
           : '주소로 찾아 등록하면 「지금 <b>학교</b>에 있어요」처럼 장소 이름으로 알려드리고, 도착·출발이 기록돼요. 여러 곳 등록할 수 있어요') + '</div>' +
        '</div><div class="chev">›</div></div></div>';
+
+  // ④ 🔐 누가 볼 수 있나요 (2026-11-21)
+  if (LOC.ts && Array.isArray(LOC.ts.tokens)){
+    const act = LOC.ts.tokens.filter(t => t.status === 'active').length;
+    const pend = LOC.ts.tokens.filter(t => t.status === 'pending').length;
+    h += '<div class="sec">🔐 누가 볼 수 있나요</div>' +
+         '<div class="card tap" onclick="openLocPhones()"><div class="row"><div class="ic" style="background:#EFF4FF">📱</div><div class="grow">' +
+         '<div class="ttl">' + esc(nm) + ' 위치를 볼 수 있는 폰 ' + act + '대</div>' +
+         '<div class="val">' + (pend ? '허락 기다리는 폰 ' + pend + '대 · ' : '') + '보기 · 끊기</div></div><div class="chev">›</div></div></div>';
+    h += locEventsHtml(LOC.ts);
+  }
 
   // 🔌 전원 끄기 막기 (2026-11-10 대표점장 요청 — 자녀앱 새 버전이 필요하다)
   h += '<div class="sec">🔌 전원 끄기 막기</div>' + locPowerHtml();
 
-  h += '<div class="sec">📵 아이 폰 인터넷이 끊겼을 때 — 문자로 받기</div>' + locSmsHtml();
+  h += '<div class="sec" id="locSmsSec">📵 아이 폰 인터넷이 끊겼을 때 — 문자로 받기</div>' + locSmsHtml();
 
   h += '<div class="sec">위치 확인 끄기</div>' +
        '<div class="note">끄면 자녀폰이 <b>위치를 더 이상 보내지 않아요.</b> 지금까지의 기록은 7일 뒤 자동으로 지워져요.</div>' +
        '<button class="btn btn-d" onclick="locTurnOff()">위치 확인 끄기</button>';
   return h;
 }
+
+/** N분 전 · 방금 · 3시간 전 */
+function locAgeTxt(iso){
+  const t = toDate(iso); if (!t) return '';
+  const m = Math.floor((Date.now() - t.getTime()) / 60000);
+  return m < 1 ? '방금' : (m < 60 ? m + '분 전' : ago(iso));
+}
+function locNum(x){ const n = Number(x); return isFinite(n) ? n : null; }
+/** 길찾기 버튼 onclick — 숫자만 넣는다 */
+function locNavCall(P){
+  const a = locNum(P && P.lat), o = locNum(P && P.lng);
+  return (a === null || o === null) ? '' : 'locOpenNaver(' + a + ',' + o + ')';
+}
+
+/** 장소 카드 안쪽 — 「지금 위치 받기」 단계(물어보는 중 · 받았어요 · 답이 없어요)에 따라 모양이 바뀐다 (그림 1 · 그림 3) */
+function locCardInner(){
+  const today = LOC.day === ymd(new Date());
+  const P = today ? LOC.last : ((LOC.hist || []).slice(-1)[0] || null);
+  const L = (today && lnActive()) ? LOCNOW : null;
+  if (L && L.phase === 'ask') return lnAskHtml(P);
+  if (L && (L.phase === 'got' || L.phase === 'done') && P) return lnGotHtml(P);
+  if (L && L.phase === 'timeout') return lnTimeoutHtml(P);
+  const sup = today && lnSupported();
+  let h = '';
+  if (P){
+    const z = locZoneAt(Number(P.lat), Number(P.lng));
+    const when = toDate(P.captured_at);
+    const mins = when ? Math.floor((Date.now() - when.getTime()) / 60000) : -1;
+    const where = z ? locZoneEmo(z.name) + ' <b>' + esc(z.name) + '</b>'
+                    : '🚶 <b class="o">등록한 장소 밖</b>';
+    h += '<div class="lmPlace">' + where + (today ? '에 있어요' : ' — 이 날 마지막 위치') + '</div>';
+    const meta = [];
+    if (when) meta.push(locHm(P.captured_at) + ' 확인');
+    if (today && mins >= 0) meta.push(mins < 1 ? '방금' : (mins < 60 ? mins + '분 전' : ago(P.captured_at)));
+    if (Number(P.accuracy_m) > 0) meta.push('오차 약 ' + Math.round(P.accuracy_m) + 'm');
+    if (today && Number(P.battery) > 0) meta.push('🔋 ' + Math.round(P.battery) + '%');
+    h += '<div class="lmMeta">' + meta.join(' · ') + '</div>';
+    h += locNearHtml(P, z);
+    if (today && mins > 20) h += '<div class="lmNear warn">⏱ <b>' + (mins < 60 ? mins + '분' : ago(P.captured_at).replace(/ 전$/, '')) + ' 전</b> 위치예요. ' +
+      (sup ? '<b>「📍 지금 위치 받기」</b>를 누르면 아이 폰에 바로 물어봐요.' : '실내에 있거나 인터넷이 끊기면 조금 늦게 올라와요.') + '</div>';
+    // 🧭 길찾기 — 받은 지 1분 안 점이면 바로 · 아니면 먼저 「지금 위치 받기」(크롬은 기다린 뒤 저절로 다른 앱을 못 연다 → 초록 버튼을 한 번 더)
+    const fresh = mins >= 0 && mins < 1;
+    const navLbl = (!today || fresh || sup) ? '🧭 네이버지도로 길찾기' : '🧭 ' + locAgeTxt(P.captured_at) + ' 위치로 길찾기';
+    h += '<div class="lmBtns">' +
+      '<button class="lmBtn g" onclick="locNavTap()">' + navLbl + '</button>' +
+      (sup ? '<button class="lmBtn" id="lnBtn" onclick="locNowStart(\'refresh\')"' + (lnLocked() ? ' disabled' : '') + '>📍 지금 위치 받기</button>'
+           : '<button class="lmBtn" onclick="openLoc(LOC.day)">↻ 새로고침</button>') + '</div>';
+    if (sup) h += '<div class="lmHint"><b>「📍 지금 위치 받기」</b>를 누르면 아이 폰에 <b>바로 물어봐요</b>(보통 10~30초). 길찾기도 먼저 새 위치를 받고, 받으면 <b>초록 버튼</b>이 한 번 더 떠요 — 그걸 누르면 네이버지도가 열려요.</div>';
+    else if (today) h += '<div class="lmHint">길찾기를 누르면 네이버지도 앱이 열리고 <b>지금 내 자리에서 아이 있는 곳까지</b> 길을 알려줘요.<br>' +
+      '📍 아이 폰이 업데이트되면 <b>「지금 위치 받기」</b>로 바로 물어볼 수 있어요. 지금은 아이 폰이 5분마다 올린 <b>마지막 위치</b>예요.</div>';
+    else h += '<div class="lmHint">길찾기를 누르면 네이버지도 앱이 열리고 <b>이 날 마지막 위치</b>까지 길을 알려줘요.</div>';
+  } else {
+    h += '<div class="lmPlace">🕐 ' + (today ? '아직 올라온 위치가 없어요' : '이 날은 올라온 위치가 없어요') + '</div>' +
+         '<div class="lmMeta">' + (today ? '자녀폰이 위치를 허용하고 바깥에 한 번 나가면 첫 위치가 잡혀요.' : '다른 날짜를 눌러 보세요.') + '</div>';
+    if (sup) h += '<div class="lmBtns"><button class="lmBtn g" id="lnBtn" onclick="locNowStart(\'refresh\')"' + (lnLocked() ? ' disabled' : '') + '>📍 지금 위치 받기</button></div>';
+  }
+  return h;
+}
+function locNearHtml(P, z){
+  if (z || !(LOC.zones || []).length) return '';
+  let near = null, nd = Infinity;
+  LOC.zones.forEach(x => { if (x.enabled === false) return;
+    const d = locDist(Number(P.lat), Number(P.lng), Number(x.lat), Number(x.lng)); if (d < nd){ nd = d; near = x; } });
+  return near ? '<div class="lmNear">📏 ' + locZoneEmo(near.name) + ' ' + esc(near.name) + '에서 약 <b>' + locM(nd) + '</b> 떨어져 있어요</div>' : '';
+}
+function locNavTap(){
+  const today = LOC.day === ymd(new Date());
+  const P = today ? LOC.last : ((LOC.hist || []).slice(-1)[0] || null);
+  if (!P) return;
+  const t = toDate(P.captured_at);
+  const fresh = t && (Date.now() - t.getTime()) < 60000;
+  if (!today || fresh || !lnSupported()){ locOpenNaver(Number(P.lat), Number(P.lng)); return; }
+  locNowStart('nav');
+}
+
+// ══════════ 📍 지금 위치 받기 (2026-11-21 · 설계서 1-0 · 1-1 · ★-2 #3 #12 #13 #14) ══════════
+//  ▸ 누를 때만 묻는다(화면을 여는 것만으로는 안 묻는다 — 하루 수십 번 GPS 가 켜진다).
+//  ▸ 서버 함수 loc_locate_now 만 명령을 넣는다(서명 · 30초 간격 · 하루 60번 · 확인기록을 서버가 센다).
+//  ▸ 3초마다 device_locations **1행만** 읽는다 — locLoad 를 쓰면 확인기록이 매번 쌓이고 동선 1000행을 또 받는다.
+//  ▸ 성공 = captured_at ≥ 명령 created_at(서버 시각) − 10초 · 옛 점이 새 시각으로 먼저 올라와도 속지 않는다.
+//  ▸ 남은 시간은 Date.now() 로 잰다 · setInterval(requestAnimationFrame 금지 · 3-41) · 다른 화면이면 멈춘다.
+//  🔴 길찾기는 새 점이 온 뒤 **초록 버튼의 onclick 안에서 곧장** locOpenNaver (await 를 끼우면 크롬이 다른 앱 열기를 막는다).
+const LN_WAIT_MS = 90000, LN_LOCK_MS = 30000, LN_MORE_MS = 30000, LN_POLL_MS = 3000;
+let LOCNOW = null;   // { code, server, id, created, t0, lockUntil, mode, phase:'ask'|'got'|'done'|'timeout', exec, got, firstAt, timer, busy, lastPoll }
+function lnSupported(){ return ST.pol?.locate_now_ok === 'true'; }
+function lnActive(){ return !!(LOCNOW && LOCNOW.code === ST.code); }
+function lnLocked(){ return lnActive() && Date.now() < LOCNOW.lockUntil; }
+function lnOnScreen(){
+  return !document.getElementById('scSub').classList.contains('hide') &&
+         document.getElementById('sTitle').textContent === '어디 있나요' &&
+         !!document.getElementById('lmCard') && LOC.day === ymd(new Date());
+}
+function lnStop(){ if (LOCNOW && LOCNOW.timer){ clearInterval(LOCNOW.timer); LOCNOW.timer = null; } }
+function lnStartTimer(){ if (!LOCNOW) return; lnStop(); LOCNOW.timer = setInterval(lnTick, 1000); }
+function lnPaint(){ const c = document.getElementById('lmCard'); if (c && lnOnScreen()) c.innerHTML = locCardInner(); }
+const LN_LOC_SEL = '&select=lat,lng,accuracy_m,battery,captured_at,updated_at';
+
+async function locNowStart(mode){
+  if (!lnSupported()){ toast('아이 폰이 업데이트되면 쓸 수 있어요'); return; }
+  if (LOC.day !== ymd(new Date())){ openLoc(); return; }           // 지난 날짜를 보고 있었으면 오늘로
+  if (lnLocked()){ toast('방금 물어봤어요 — ' + Math.ceil((LOCNOW.lockUntil - Date.now()) / 1000) + '초 뒤에 다시 눌러 주세요'); return; }
+  const code = ST.code, server = ST.server;
+  loading(true);
+  // ① 지금 행이 보이나 — 0건인데 폰이 보낸 적이 있으면 **열쇠 문제**다(200 + 빈 배열 · 3-18). 막 켠 폰(never)은 건너뛴다(★-2 #14)
+  let base = null;
+  try{
+    const rows = await locApi(server, code, 'device_locations?device_code=eq.' + encodeURIComponent(code) + LN_LOC_SEL);
+    base = Array.isArray(rows) ? (rows[0] || null) : null;
+    const ls = ST.pol?.location_last_sent_at || '';
+    if (!base && ls && ls !== 'never'){
+      loading(false);
+      toast('위치를 읽을 열쇠를 다시 확인할게요');
+      openLoc(LOC.day);
+      return;
+    }
+  }catch(e){ loading(false); toast('위치를 불러오지 못했어요: ' + e.message); return; }
+  // ② 서버 함수로 명령을 넣는다 (부모 active 열쇠 필요)
+  let r;
+  try{ r = await locRpc(server, 'loc_locate_now', { p_device:code }, locTokenOf(code)); }
+  catch(e){
+    loading(false);
+    toast(e.status === 404 ? '이 서버에는 아직 준비가 안 됐어요 — 매장에 문의해 주세요' : '아이 폰에 물어보지 못했어요: ' + e.message);
+    return;
+  }
+  loading(false);
+  if (typeof r === 'string'){ try{ r = JSON.parse(r); }catch(e){} }
+  if (!r || r.ok !== true){
+    const err = r && r.err;
+    if (err === 'WAIT') toast('방금 물어봤어요 — ' + (Number(r.wait_sec) || 30) + '초 뒤에 다시 눌러 주세요');
+    else if (err === 'DAILY') toast('오늘은 더 물어볼 수 없어요(하루 60번까지) — 마지막 위치를 보여 드려요');
+    else if (err === 'NOT_ALLOWED'){ toast('열쇠를 다시 확인할게요'); openLoc(LOC.day); }
+    else if (err === 'NO_CHILD_TOKEN') alert('아이 폰이 아직 「지금 위치 받기」 준비가 안 됐어요.\n아이 폰이 인터넷에 연결돼 있으면 조금 뒤 저절로 준비돼요. 계속 이러면 매장에 말씀해 주세요.');
+    else if (err === 'NO_DEVICE') toast('이 자녀를 서버에서 찾지 못했어요 — 매장에 문의해 주세요');
+    else toast('아이 폰에 물어보지 못했어요' + (err ? ' (' + err + ')' : ''));
+    return;
+  }
+  const created = toDate(r.created_at);
+  lnStop();
+  LOCNOW = { code, server, id:r.id, created: created ? created.getTime() : Date.now(),
+             t0:Date.now(), lockUntil:Date.now() + LN_LOCK_MS, mode: mode || 'refresh',
+             phase:'ask', exec:false, got:null, firstAt:0, timer:null, busy:false, lastPoll:Date.now(), base };
+  lnPaint();
+  lnStartTimer();
+}
+/** 화면을 다시 그렸을 때(다른 화면에 갔다 옴) 진행 중이면 이어서 */
+function lnResume(){
+  if (!lnActive() || !lnOnScreen()) return;
+  if (LOCNOW.phase === 'ask' || LOCNOW.phase === 'got'){ LOCNOW.lastPoll = 0; lnStartTimer(); lnTick(); }
+}
+function lnTick(){
+  const L = LOCNOW;
+  if (!L) return;
+  if (L.code !== ST.code || !lnOnScreen()){ lnStop(); return; }      // 다른 화면 · 다른 자녀 → 멈춘다
+  const now = Date.now();
+  if (L.phase === 'ask' && now - L.t0 >= LN_WAIT_MS){ L.phase = 'timeout'; lnStop(); lnPaint(); return; }
+  if (L.phase === 'got' && now - L.firstAt >= LN_MORE_MS){ L.phase = 'done'; lnStop(); lnPaint(); return; }
+  if (L.phase !== 'ask' && L.phase !== 'got'){ lnStop(); return; }
+  if (now - L.lastPoll >= LN_POLL_MS) lnPoll();
+  lnPaintTick();
+}
+async function lnPoll(){
+  const L = LOCNOW;
+  if (!L || L.busy) return;
+  L.busy = true; L.lastPoll = Date.now();
+  try{
+    const [rows, cmd] = await Promise.all([
+      locApi(L.server, L.code, 'device_locations?device_code=eq.' + encodeURIComponent(L.code) + LN_LOC_SEL),
+      L.exec ? Promise.resolve(null)
+             : clientFor(L.server).from('remote_commands').select('executed').eq('id', L.id).maybeSingle()
+    ]);
+    if (LOCNOW !== L) return;
+    let repaint = false;
+    if (cmd && cmd.error) console.warn('명령 확인 실패:', cmd.error.message);
+    if (cmd && !cmd.error && cmd.data && cmd.data.executed === true && !L.exec){ L.exec = true; repaint = true; }
+    const row = Array.isArray(rows) ? (rows[0] || null) : null;
+    const t = row ? toDate(row.captured_at) : null;
+    if (row && t && t.getTime() >= L.created - 10000){
+      if (!L.got){
+        L.got = row; L.firstAt = Date.now(); L.phase = 'got'; L.exec = true;
+        LOC.last = row; repaint = true; lnMoveMap(row);
+      } else if (row.captured_at !== L.got.captured_at && t.getTime() > (toDate(L.got.captured_at) || 0) &&
+                 (Number(row.accuracy_m) || 9999) <= (Number(L.got.accuracy_m) || 9999)){
+        // 첫 점 뒤 30초 안에 더 정확한 점이 오면 바꾼다
+        L.got = row; LOC.last = row; repaint = true; lnMoveMap(row);
+      }
+    }
+    if (repaint) lnPaint();
+  }catch(e){ console.warn('지금 위치 확인 실패:', e && e.name, e && e.message); }
+  finally{ L.busy = false; }
+}
+/** 1초마다 — 숫자·막대·잠금만 바꾼다(카드를 통째로 다시 그리면 누르는 중인 버튼이 사라진다) */
+function lnPaintTick(){
+  const L = LOCNOW; if (!L) return;
+  const now = Date.now();
+  const left = document.getElementById('lnLeft');
+  if (left) left.textContent = Math.max(0, Math.ceil((LN_WAIT_MS - (now - L.t0)) / 1000)) + '초 남았어요';
+  const bar = document.getElementById('lnBar');
+  if (bar) bar.style.width = Math.min(100, (now - L.t0) / LN_WAIT_MS * 100).toFixed(1) + '%';
+  const b = document.getElementById('lnBtn'), lk = document.getElementById('lnLock');
+  const locked = now < L.lockUntil;
+  if (lk) lk.textContent = locked ? ' (' + Math.ceil((L.lockUntil - now) / 1000) + '초)' : '';
+  if (b && L.phase !== 'ask') b.disabled = locked;
+  const ag = document.getElementById('lnAge');
+  if (ag && L.got) ag.textContent = locAgeTxt(L.got.captured_at);
+  const na = document.getElementById('lnNavAge');
+  if (na && L.got) na.textContent = locAgeTxt(L.got.captured_at);
+}
+/** 지도 점을 그 자리에서 옮긴다(다시 그리지 않는다) */
+function lnMoveMap(P){
+  if (!LMAP || !window.L) return;
+  const a = locNum(P.lat), o = locNum(P.lng);
+  if (a === null || o === null) return;
+  const c = [a, o];
+  try{
+    if (LMAP_L.kidM){ LMAP_L.kidM.setLatLng(c); LMAP_L.kidM.setIcon(kidPinIcon(window.L, false)); }
+    else LMAP_L.kidM = window.L.marker(c, { icon:kidPinIcon(window.L, false), zIndexOffset:1000, interactive:false }).addTo(LMAP);
+    const acc = Math.min(Number(P.accuracy_m) || 0, 500);
+    if (LMAP_L.accC){ LMAP_L.accC.setLatLng(c); LMAP_L.accC.setRadius(Math.max(acc, 1)); }
+    else if (acc > 0) LMAP_L.accC = window.L.circle(c, { radius:acc, stroke:false, fillColor:NAVER_GREEN, fillOpacity:.14, interactive:false }).addTo(LMAP);
+    LMAP_L.kid = c;
+    LMAP.setView(c, 16, { animate:true });
+  }catch(e){ console.warn('지도 점 옮기기 실패:', e && e.message); }
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  if (lnActive() && (LOCNOW.phase === 'ask' || LOCNOW.phase === 'got') && lnOnScreen()){
+    LOCNOW.lastPoll = 0;
+    if (!LOCNOW.timer) lnStartTimer();
+    lnTick();
+  }
+});
+
+/** 그림 1 가운데 — 물어보는 중 */
+function lnAskHtml(P){
+  const L = LOCNOW, now = Date.now();
+  const left = Math.max(0, Math.ceil((LN_WAIT_MS - (now - L.t0)) / 1000));
+  const pct = Math.min(100, (now - L.t0) / LN_WAIT_MS * 100);
+  return '<div class="lmPlace">📡 아이 폰에 물어보는 중이에요…</div>' +
+    '<div class="lmMeta">보통 10~30초 · 최대 1분 30초 · <span id="lnLeft">' + left + '초 남았어요</span></div>' +
+    '<div class="lxBar"><i id="lnBar" style="width:' + pct.toFixed(1) + '%"></i></div>' +
+    (L.exec ? '<div class="lxStep">📶 아이 폰이 요청을 받았어요 — 위치 잡는 중</div>'
+            : '<div class="lxStep wait">⏳ 아이 폰에 요청을 보냈어요 — 받기를 기다리는 중</div>') +
+    (P ? '<div class="lmHint">지금 지도에 보이는 건 <b>' + locHm(P.captured_at) + '</b> 위치예요. 새 위치가 오면 바로 바뀌어요.</div>' : '') +
+    '<div class="lmBtns"><button class="lmBtn" id="lnBtn" disabled>📍 지금 위치 받기 (잠시만요)</button></div>';
+}
+/** 그림 1 오른쪽 — 받았어요 */
+function lnGotHtml(P){
+  const L = LOCNOW;
+  const z = locZoneAt(Number(P.lat), Number(P.lng));
+  const acc = Number(P.accuracy_m) > 0 ? ' · 오차 약 ' + Math.round(P.accuracy_m) + 'm' : '';
+  let h = '<div class="lxGot">🟢 <span id="lnAge">' + locAgeTxt(P.captured_at) + '</span> 받았어요 · ' + locHm(P.captured_at) + acc + '</div>';
+  h += '<div class="lmPlace">' + (z ? locZoneEmo(z.name) + ' <b>' + esc(z.name) + '</b>에 있어요' : '🚶 <b class="o">등록한 장소 밖</b>이에요') + '</div>';
+  if (Number(P.battery) > 0) h += '<div class="lmMeta">🔋 ' + Math.round(P.battery) + '%</div>';
+  h += locNearHtml(P, z);
+  const call = locNavCall(P);
+  if (call) h += '<button class="lxNav" onclick="' + call + '">🧭 새 위치로 길찾기 (<span id="lnNavAge">' + locAgeTxt(P.captured_at) + '</span>)</button>';
+  if (call && L && L.mode === 'nav') h += '<div class="lmHint" style="margin-top:6px">👆 이 초록 버튼을 누르면 네이버지도가 열려요.</div>';
+  const locked = lnLocked();
+  h += '<div class="lmBtns"><button class="lmBtn" id="lnBtn" onclick="locNowStart(\'refresh\')"' + (locked ? ' disabled' : '') + '>📍 다시 받기<span id="lnLock">' +
+       (locked ? ' (' + Math.ceil((LOCNOW.lockUntil - Date.now()) / 1000) + '초)' : '') + '</span></button></div>';
+  if (L && L.phase === 'got') h += '<div class="lmHint">더 정확한 위치가 오면 30초 안에 한 번 더 바뀔 수 있어요.</div>';
+  return h;
+}
+/** 그림 3 왼쪽 — 90초가 지나도 답이 없을 때 (실패라고 단정하지 않는다) */
+function lnTimeoutHtml(P){
+  const p = ST.pol || {}, L = LOCNOW;
+  let h = '';
+  // 원인을 아는 경우는 그것부터 정직하게
+  if (p.location_perm_ok === 'false') h += '<div class="lmNear warn" style="margin:0 0 10px">📍 <b>아이 폰 위치 권한이 꺼져 있어요.</b> 그래서 새 위치를 못 잡아요.</div>';
+  if (p.location_service_on === 'false') h += '<div class="lmNear warn" style="margin:0 0 10px">🛰️ <b>아이 폰 위치(GPS)가 꺼져 있어요.</b> 그래서 새 위치를 못 잡아요.</div>';
+  h += '<div class="lmPlace">😶 아이 폰이 아직 답을 안 했어요</div>';
+  h += '<div class="lmMeta">' + (L && L.exec ? '요청은 받았는데 아직 위치를 못 잡았어요. 실내·지하일 수 있어요.'
+                                              : '인터넷이 끊겼거나 폰이 깊이 잠들어 있을 수 있어요.') + '</div>';
+  if (P) h += '<div class="lxLast">마지막 위치 <b>' + locHm(P.captured_at) + '</b> · ' + esc(locAgeTxt(P.captured_at)) + '</div>';
+  h += locSmsAskHtml();
+  const call = P ? locNavCall(P) : '';
+  if (call) h += '<button class="lmBtn wide" onclick="' + call + '">🧭 ' + esc(locAgeTxt(P.captured_at)) + ' 위치로 길찾기</button>';
+  const locked = lnLocked();
+  h += '<div class="lmBtns"><button class="lmBtn" id="lnBtn" onclick="locNowStart(\'refresh\')"' + (locked ? ' disabled' : '') + '>📍 다시 받기<span id="lnLock"></span></button></div>';
+  h += '<div class="lmHint">늦게라도 아이 폰이 답하면, 조금 뒤 이 화면을 다시 열었을 때 새 위치가 보여요.</div>';
+  return h;
+}
+
+// ══════════ ✉️ 문자로 물어보기 (2026-11-21 · 설계서 2-1 · 2-4) ══════════
+//  아이 번호 = child_devices.child_phone. 안드로이드 `sms:번호?body=위치` · 아이폰 `sms:번호&body=위치`.
+//  🔴 아이 폰은 **등록된 부모 번호(parent_phone)에서 온 「위치」에만** 답한다 — 문자로 받기가 켜져 있어야 한다(sms_fallback_enabled).
+//  🔴 sms_locate_ok 는 폰이 권한까지 실제로 있을 때만 'true' 로 올린다 — 아니면 버튼을 띄우지 않는다(띄우면 답이 안 온다 · 3-11).
+function locSmsAskHtml(){
+  const p = ST.pol || {};
+  const ok = p.sms_locate_ok === 'true', on = p.sms_fallback_enabled === 'true', tel = (p.parent_phone || '').trim();
+  if (!ok) return '<div class="lmNear">✉️ 아이 폰이 아직 <b>문자 「위치」 답장</b>을 못 해요 — 자녀앱 업데이트와 문자 권한이 필요해요.</div>';
+  if (!on || !tel) return '<div class="lmNear warn">✉️ 문자로 물어보려면 <b>「문자로 받기」를 먼저 켜 주세요.</b> ' +
+                         '<button class="lxLink" onclick="locGoSms()">켜러 가기 ›</button></div>';
+  const num = String(LOC.childPhone || '').replace(/[^0-9+]/g, '');
+  if (!num) return '<div class="lmNear">✉️ 아이 폰 번호로 <b>『위치』</b>라고 문자 보내 주세요. 등록된 부모님 번호(' + esc(tel) + ')에서 보내야 답장이 와요.</div>';
+  const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+  const href = 'sms:' + num + (ios ? '&' : '?') + 'body=' + encodeURIComponent('위치');
+  return '<a class="lxSms" href="' + esc(href) + '">✉️ 문자로 물어보기</a>' +
+    '<div class="lmHint">아이 번호와 「위치」가 채워진 문자창이 열려요 — <b>보내기</b>만 누르세요. 등록된 번호(' + esc(tel) + ')에서 보내야 답장이 와요.<br>' +
+    '📨 갤럭시끼리 「채팅+」로 가면 못 받을 수 있어요 — <b>일반 문자(SMS)</b>로 보내 주세요.</div>';
+}
+function locGoSms(){ const s = document.getElementById('locSmsSec'); if (s) s.scrollIntoView({ behavior:'smooth', block:'start' }); }
 
 /**
  * 동선 — 좌표를 늘어놓지 않고 **「머문 곳」과 「이동 중」으로 묶어서**, 최근 것이 위로.
@@ -8936,6 +9680,16 @@ function locSmsHtml(){
     '<div class="lmHint" style="margin:2px 4px 12px">링크를 누르면 네이버지도에 아이 위치가 떠요. 한 번 끊길 때 <b>한 통만</b> 보내고, ' +
     '인터넷이 다시 연결됐다가 또 끊기면 그때 다시 보내요. 하루 최대 30통까지예요.</div>';
 
+  // ✉️ 2026-11-21 : 「위치」라고 문자를 보내면 아이 폰이 답장한다 (설계서 2-1 · 2-2 ⑤ · 그림 3)
+  //   ⚠️ 답장 모양은 자녀앱 다음 버전 문구(연결코드 끝 4자리)에 맞췄다 — 자녀앱 문구가 바뀌면 여기도(3-13).
+  h += '<div class="sec">✉️ 지금 위치가 궁금할 때 — 「위치」라고 문자 보내기</div>' +
+    '<div class="smsb lxMe"><div class="smsf">부모님 → 아이 폰</div>위치</div>' +
+    '<div class="smsb"><div class="smsf">아이 폰 → 부모님 · 답장</div>[시내모바일] 자녀 휴대폰(…' + esc(String(ST.code || '').slice(-4)) +
+    ') 지금 위치 (21:31 · 약 8m 오차)<br><span class="smsl">https://map.naver.com/p/?lng=…</span></div>' +
+    '<div class="lmHint" style="margin:2px 4px 8px">아이 폰 인터넷이 끊겨 있어도 <b>아이 폰 번호로 「위치」라고 문자</b>를 보내면, ' +
+    '아이 폰이 GPS 로 위치를 잡아 <b>최대 90초 안에</b> 문자로 답해요. <b>아래 ①에 저장한 번호</b>에서 보낸 「위치」에만 답해요 ' +
+    '(다른 번호에는 아무 답도 안 해요). 부모님 문자앱에서 직접 보내셔도 돼요.</div>' +
+    '<div class="card">' + locSmsAskHtml() + '</div>';
   h += '<div class="sec">켜는 법 — 두 단계</div>';
   if(on && !tel){
     h += '<div class="note warn">⚠️ <b>켜져 있는데 번호가 비어 있어요.</b> 아래 ①에 번호를 넣어야 문자가 가요.</div>';
@@ -9016,17 +9770,17 @@ function openLocConsent(){
 
 async function locTurnOn(){
   if(!LOC_AGREE){ toast('동의에 체크해 주세요'); return; }
-  // 👆 2026-11-12 : 서버가 PIN 으로 부모 열쇠를 다시 내주므로 비밀번호가 꼭 필요하다(지문으로 열었으면 없다)
-  if(!locPinHash()){ needPinThen(() => locTurnOn(), '위치를 켜려면 비밀번호를 한 번 더 넣어 주세요'); return; }
+  // 🔐 2026-11-21 : 이 브라우저에 쓸 수 있는 열쇠가 있으면 그것을 쓴다(새로 받으면 먼저 연결한 폰이 있는 집에선 스스로 대기에 걸린다 · ★-4).
+  //   열쇠가 없을 때만 PIN 이 필요하다 — 지문으로 열었으면 비밀번호를 한 번 더 받는다.
+  if(!locTokenOf(ST.code) && !locPendingOf(ST.code) && !locPinHash()){
+    needPinThen(() => locTurnOn(), '위치를 켜려면 비밀번호를 한 번 더 넣어 주세요'); return;
+  }
   loading(true);
   try{
     // ⓞ **이 서버에 위치 표가 깔려 있나부터 본다.**
     //   🔴 안 깔린 서버에서 정책만 켜면 부모는 「켰다」고 믿는데 **아무 일도 안 일어난다**
     //      (CLAUDE.md 3-11 의 모양 — 스위치는 켜졌는데 받을 곳이 없다).
-    //      15곳에 다 깔리기 전까지는 서버마다 이 상태가 다를 수 있다.
-    //   🔴 **표가 아니라 함수를 찔러 본다.** 서버 I 는 2026-10-31 에 표만 깔린 「반쪽」 상태였다 —
-    //      표만 보면 「준비됨」으로 보이고, 정작 부모 토큰 발급 함수가 없어 그 뒤에서 터진다.
-    //      일부러 틀린 해시를 넣는다 → 깔린 서버는 `BAD_INPUT`(200), 안 깔린 서버는 404. 쓰기는 없다.
+    //   🔴 **표가 아니라 함수를 찔러 본다.** 일부러 틀린 해시를 넣는다 → 깔린 서버는 `BAD_INPUT`(200), 안 깔린 서버는 404. 쓰기는 없다.
     try{ await locRpc(ST.server, 'loc_register_parent_token', { p_device: ST.code, p_pin_hash: 'probe' }); }
     catch(e){
       if(e.status === 404){
@@ -9039,18 +9793,24 @@ async function locTurnOn(){
       }
       // 404 가 아니면(네트워크 등) 그냥 진행한다 — 켜기 자체를 막을 이유는 없다
     }
-    // ① 먼저 **정책을 켠다** — 서버가 「켠 기기만」 자녀 토큰 등록을 받아주므로 순서가 중요하다
-    await savePol([{ key:'location_tracking_enabled', value:'true' }]);
-    // ② 부모 토큰을 받는다 (PIN 확인 뒤 발급)
-    const tok = await locEnsureToken(true);
-    if(!tok){
-      loading(false);
-      const n=LOC.note;
-      toast(n==='LOCKED' ? '비밀번호를 여러 번 틀려 10분 잠겼어요' :
-            n==='BAD_PIN'? '이 자녀의 비밀번호로 들어와 주세요' : '비밀번호 확인이 필요해요');
-      return;
+    // ① 열쇠부터 — 가진 열쇠를 먼저 쓰고, 없을 때만 받는다
+    let c = await locTokenCheck(ST.code, ST.server);
+    if(c.state === 'none'){
+      if(!locPinHash()){ loading(false); needPinThen(() => locTurnOn(), '위치를 켜려면 비밀번호를 한 번 더 넣어 주세요'); return; }
+      const r = await locRegister(ST.code, ST.server, locPinHash());
+      if(r.state === 'err'){
+        loading(false);
+        toast(r.note==='BAD_PIN' ? '이 자녀의 비밀번호로 들어와 주세요'
+            : r.note==='NO_DEVICE' ? '이 자녀의 비밀번호가 서버에 없어요 — 매장에 문의해 주세요' : '열쇠를 받지 못했어요 — 잠시 뒤 다시 해 주세요');
+        return;
+      }
+      c = await locTokenCheck(ST.code, ST.server);
     }
-    // ③ 동의를 **기록**한다
+    // 🔴 대기·막힘이면 동의 기록을 쓰려 하지 않는다(대기 열쇠는 아무것도 못 쓴다 · ★-4 5번) — 정책도 안 켠다
+    if(c.state === 'pending' || c.state === 'denied'){ loading(false); LOC_AGREE = false; locWaitScreen(c); return; }
+    if(c.state !== 'active'){ loading(false); toast('열쇠를 확인하지 못했어요 — 잠시 뒤 다시 해 주세요'); return; }
+    // ② 동의를 **먼저 기록**한다 — 🔴 실패를 삼키지 않는다. 자녀폰은 동의 기록이 없으면 켜짐을 받아도 위치를 안 켠다(contract).
+    //   (예전엔 정책을 먼저 켰는데, 그건 「자녀 열쇠 등록」 순서 때문이었다 — 부모 동의 기록은 정책과 상관없이 열쇠로 쓴다)
     try{
       await locApi(ST.server, ST.code, 'location_consents', 'POST', [{
         device_code: ST.code,
@@ -9059,9 +9819,18 @@ async function locTurnOn(){
                  retain_days:7, notified_child:true },
         agreed_ua: (navigator.userAgent||'').slice(0,300)
       }]);
-      await locApi(ST.server, ST.code, 'location_access_log', 'POST',
-        [{ device_code:ST.code, action:'CONSENT', actor:'parent' }]);
-    }catch(e){ console.warn('동의 기록 실패:', e && e.name, e && e.message); }
+    }catch(e){
+      loading(false);
+      toast('동의를 기록하지 못해 켜지 않았어요 — 잠시 뒤 다시 해 주세요');
+      console.warn('동의 기록 실패:', e && e.name, e && e.message);
+      return;
+    }
+    LOC_CONSENT[ST.code] = true;
+    try{ await locApi(ST.server, ST.code, 'location_access_log', 'POST',
+           [{ device_code:ST.code, action:'CONSENT', actor:'parent' }]); }
+    catch(e){ console.warn('동의 열람기록 실패:', e && e.message); }
+    // ③ 그다음 정책을 켠다
+    await savePol([{ key:'location_tracking_enabled', value:'true' }]);
     loading(false);
     LOC_AGREE = false;
     toast('위치 확인을 켰어요');
@@ -9069,18 +9838,40 @@ async function locTurnOn(){
   }catch(e){ loading(false); toast('켜기 실패: '+e.message); }
 }
 
-async function locTurnOff(){
-  if(!confirm('위치 확인을 끌까요?\n자녀폰이 더 이상 위치를 보내지 않아요.')) return;
+/**
+ * 위치 확인 끄기 (★-2 #10)
+ *  ① 부모 열쇠로 동의 철회(loc_consent_revoke_tok) → 안 되면 PIN 해시로(loc_consent_revoke) → 둘 다 없으면 PIN 을 받는다.
+ *  🔴 결과가 `OK:` 로 시작해야 「껐어요」 — 실패를 삼키지 않는다(동의가 남아 있으면 값이 지워진 폰에서 다시 「켜짐」으로 보인다 · 3장 ①).
+ *  ② 그 뒤 정책 false.
+ */
+async function locTurnOff(skipAsk){
+  if(!skipAsk && !confirm('위치 확인을 끌까요?\n자녀폰이 더 이상 위치를 보내지 않아요.')) return;
   loading(true);
-  try{
-    await savePol([{ key:'location_tracking_enabled', value:'false' }]);
+  let res = '', why = '';
+  const tok = locTokenOf(ST.code);
+  if(tok){
+    try{ res = String(await locRpc(ST.server, 'loc_consent_revoke_tok', { p_device:ST.code }, tok) || ''); }
+    catch(e){ why = e.message || ''; }
+  }
+  if(!res.startsWith('OK:')){
     const h = locPinHash();
-    if(h){ try{ await locRpc(ST.server, 'loc_consent_revoke', { p_device:ST.code, p_pin_hash:h }); }
-           catch(e){ console.warn('동의 철회 기록 실패:', e && e.message); } }
+    if(!h){ loading(false); needPinThen(() => locTurnOff(true), '위치를 끄려면 비밀번호를 한 번 더 넣어 주세요'); return; }
+    try{ res = String(await locRpc(ST.server, 'loc_consent_revoke', { p_device:ST.code, p_pin_hash:h }) || ''); }
+    catch(e){ why = e.message || ''; }
+  }
+  if(!res.startsWith('OK:')){
     loading(false);
-    toast('위치 확인을 껐어요');
-    show('scMain'); paintMain();
-  }catch(e){ loading(false); toast('끄기 실패: '+e.message); }
+    toast(res === 'BAD_PIN' ? '비밀번호가 맞지 않아요 — 이 자녀의 비밀번호로 다시 해 주세요'
+        : '끄지 못했어요 — 잠시 뒤 다시 해 주세요' + (why ? ' (' + why.slice(0, 60) + ')' : (res ? ' (' + res + ')' : '')));
+    return;
+  }
+  try{ await savePol([{ key:'location_tracking_enabled', value:'false' }]); }
+  catch(e){ loading(false); toast('동의는 거뒀는데 스위치를 끄지 못했어요 — 다시 눌러 주세요: ' + e.message); return; }
+  LOC_CONSENT[ST.code] = false;
+  lnStop(); LOCNOW = null;
+  loading(false);
+  toast('위치 확인을 껐어요');
+  show('scMain'); paintMain();
 }
 
 // ── 세이프존 ──────────────────────────────────────────────────────────────
@@ -9108,23 +9899,42 @@ function zoneExplainHtml(){
     (ZONE_PUSH_READY
       ? '<div class="zbub in">🔔 시내모바일 · <b>학교 근처에 도착했어요!</b></div><div class="zbub out">🔔 시내모바일 · <b>학교 근처를 벗어났어요</b></div>'
       : '<div class="xwhen">🔔 「학교 근처에 도착했어요!」 폰 알림은 <b>준비 중</b>이에요. 지금은 이 화면에서 도착·출발 기록을 볼 수 있어요.</div>') +
-    '<div class="xd" style="margin-top:8px">여러 곳을 등록할 수 있어요. 크기는 <b>반경 200m</b>로 정해져 있어요 — 건물 안에서 위치가 조금 틀려도 헷갈리지 않는 크기예요.</div>' +
+    '<div class="xd" style="margin-top:8px">여러 곳을 등록할 수 있어요. 새로 등록하면 <b>반경 200m</b>로 시작해요 — 건물 안에서 위치가 조금 틀려도 헷갈리지 않는 크기예요. 등록한 장소를 누르면 <b>이름·위치·반경(150·200·300m)·켜기/끄기</b>를 고칠 수 있어요.</div>' +
     '</div></div>';
 }
 
+let LOC_ZMSG = '';     // 📍 2026-11-21 : 저장·지우기 뒤 목록 위에 한 번 보여 줄 말
+let LOC_ZDEL = null;  // { oldId, name } — 고치기에서 새 줄은 넣었는데 옛 줄을 못 지웠을 때 (다시 시도)
+/** 저장 뒤 문구 — 자녀앱이 「지금 위치 받기」를 아는 폰(새 버전)은 장소 목록도 바로 다시 받는다 → 10분 · 옛 폰 30분 (Z-4 · ★-2 #9) */
+function zoneSavedMsg(what){
+  return '✅ ' + (what || '저장했어요') + '. 아이 폰에는 <b>' + (lnSupported() ? '10분' : '30분') + ' 안에</b> 반영돼요.';
+}
+function zoneRecTxt(z){
+  const i = z.notify_enter !== false, o = z.notify_exit !== false;
+  return i && o ? '도착·출발 기록' : i ? '도착만 기록' : o ? '나감만 기록' : '기록 안 함';
+}
 function openZones(){
   let h = '<div class="lmapw sm" id="lmapw"><div id="lmap"></div>' +
           '<div class="lmChip">📍 자주 가는 장소 ' + (LOC.zones.length ? LOC.zones.length + '곳' : '') + '</div></div>';
-  h += '<div style="height:12px"></div>' + zoneExplainHtml();
+  h += '<div style="height:12px"></div>';
+  if (LOC_ZDEL){
+    h += '<div class="note warn">⚠️ <b>옛 장소를 지우지 못했어요</b> — 새 장소(「' + esc(LOC_ZDEL.name) + '」)는 저장됐는데 옛것이 남아 같은 이름이 두 개로 보여요. 다시 눌러 주세요.' +
+         '<button class="btn btn-p" style="margin-top:10px" onclick="zoneDelRetry()">다시 시도</button></div>';
+  } else if (LOC_ZMSG){
+    h += '<div class="note">' + LOC_ZMSG + '</div>';
+    LOC_ZMSG = '';
+  }
+  h += zoneExplainHtml();
   if (LOC.zones.length){
-    h += '<div class="sec">등록한 장소 ' + LOC.zones.length + '곳</div><div class="card">';
+    h += '<div class="sec">등록한 장소 ' + LOC.zones.length + '곳 · 누르면 고칠 수 있어요</div><div class="card">';
     h += LOC.zones.map(z => {
       const on = z.enabled !== false;
-      return '<div class="item"><div class="grow">' +
-        '<div class="nm">' + locZoneEmo(z.name) + ' ' + esc(z.name) + (on ? '' : ' (꺼짐)') + '</div>' +
-        '<div class="val">반경 ' + Number(z.radius_m||ZONE_RADIUS_M) + 'm · 도착·출발 기록</div></div>' +
-        '<button class="x" onclick="zoneDel(\'' + z.id + '\')">삭제</button>' +
-        '</div>';
+      const r = Number(z.radius_m || ZONE_RADIUS_M);
+      // 🔴 onclick 안에 장소 id 를 넣지 않는다(3-43) — data-id 로 넘긴다
+      return '<div class="item lxZi" data-id="' + esc(z.id) + '" onclick="openZoneEdit(this.dataset.id)"><div class="grow">' +
+        '<div class="nm">' + locZoneEmo(z.name) + ' ' + esc(z.name) + (on ? '' : ' <span class="lxOff">(꺼짐)</span>') + '</div>' +
+        '<div class="val">' + (on ? '반경 ' + r + 'm · ' + zoneRecTxt(z) : '잠깐 꺼 둠 · 반경 ' + r + 'm') + '</div></div>' +
+        '<div class="chev">›</div></div>';
     }).join('');
     h += '</div>';
   }
@@ -9255,34 +10065,175 @@ async function zoneSave(){
   if(LOC.zones.some(z=>z.name===name)){ toast('같은 이름이 이미 있어요'); return; }
   loading(true);
   try{
-    await locApi(ST.server, ST.code, 'safe_zones', 'POST', [{
+    // 📍 2026-11-21 : 돌아온 줄이 1개인지 센다 — 권한이 없는 서버는 오류 없이 0줄일 수 있다(★-2 #8 · 3-18)
+    const ins = await locApi(ST.server, ST.code, 'safe_zones', 'POST', [{
       device_code: ST.code, name, lat: LOC_NEW.lat, lng: LOC_NEW.lng,
       radius_m: LOC_NEW.radius, enabled: true, notify_enter: true, notify_exit: true
-    }]);
-    pokeChild(ST.code, ST.server);     // 자녀폰이 바로 받아가게 깨운다
+    }], { Prefer:'return=representation' });
+    if(!Array.isArray(ins) || ins.length !== 1) throw Object.assign(new Error('0줄'), { zero:true });
+    pokeChild(ST.code, ST.server);     // 자녀폰 깨우기 — ⚠️ 옛 폰은 장소 목록을 30분마다만 다시 받는다(Z-1)
     LOC_NEW = null;
     await locLoad(LOC.day);
     loading(false);
-    toast(name+' 등록했어요');
+    LOC_ZMSG = zoneSavedMsg(esc(name) + ' 등록했어요');
     openZones();
   }catch(e){
     loading(false);
-    toast((e.status===401||e.status===403) ? '권한 확인이 필요해요 — 앱을 다시 열어 주세요' : '등록 실패: '+e.message);
+    toast(e.zero ? '등록되지 않았어요 — 권한 확인이 필요해요. 앱을 다시 열어 주세요'
+        : (e.status===401||e.status===403) ? '권한 확인이 필요해요 — 앱을 다시 열어 주세요' : '등록 실패: '+e.message);
   }
 }
 
+/** 장소 지우기 — 고치기 화면 맨 아래에서 (확인창) · 돌아온 줄이 1개인지 센다 */
 async function zoneDel(id){
   const z = LOC.zones.find(x=>String(x.id)===String(id));
-  if(!confirm((z? z.name : '이 구역')+' 을(를) 삭제할까요?')) return;
+  if(!z){ toast('장소를 찾지 못했어요'); return; }
+  if(!confirm(z.name + ' 을(를) 지울까요?\n도착·출발 기록은 그대로 남아요.')) return;
   loading(true);
   try{
-    await locApi(ST.server, ST.code, 'safe_zones?id=eq.'+encodeURIComponent(id), 'DELETE');
+    const del = await locApi(ST.server, ST.code, 'safe_zones?id=eq.'+encodeURIComponent(id), 'DELETE', null, { Prefer:'return=representation' });
+    if(!Array.isArray(del) || del.length !== 1) throw Object.assign(new Error('0줄'), { zero:true });
     pokeChild(ST.code, ST.server);
+    LOC_NEW = null;
     await locLoad(LOC.day);
     loading(false);
-    toast('삭제했어요');
-    openZones();
-  }catch(e){ loading(false); toast('삭제 실패: '+e.message); }
+    LOC_ZMSG = zoneSavedMsg(esc(z.name) + ' 을(를) 지웠어요');
+    closeSub();                        // 고치기 화면을 닫으면 목록(openZones)으로 돌아간다
+  }catch(e){ loading(false); toast(e.zero ? '지우지 못했어요 — 권한이 없거나 이미 지워진 장소예요' : '지우기 실패: '+e.message); }
+}
+
+// ══════════ ✏️ 세이프존 고치기 (2026-11-21 · 설계서 Z-2 · Z-3 · ★-2 #6~#9 · 그림 2 오른쪽) ══════════
+//  🔴 자녀폰은 장소마다 「안/밖」을 **장소 id** 로 기억한다 → 핀(5m 넘게)·반경을 바꾸거나 꺼짐→켜짐이면
+//     **새 줄을 넣고 → 성공하면 옛 줄을 지운다**(새 id 라 폰이 첫 판정을 조용히 한다 = 거짓 「출발」 0).
+//     이름·도착/나감 기록·끄기만 바꿨으면 같은 줄 PATCH. 거꾸로(지우고 넣기)는 넣기가 실패하면 장소가 사라진다.
+//  🔴 반경을 200 으로 덮지 않는다(옛 300m 장소가 조용히 200m 가 되던 것 · ★-2 #7) · 지도 첫 그리기의 미세 이동은 5m 로 거른다.
+const ZONE_EDIT_RADII = [150, 200, 300];
+function openZoneEdit(id){
+  const z = LOC.zones.find(x => String(x.id) === String(id));
+  if (!z){ toast('장소를 찾지 못했어요'); return; }
+  const r = Number(z.radius_m) || ZONE_RADIUS_M;
+  const o = { name:z.name, lat:Number(z.lat), lng:Number(z.lng), radius:r,
+              enabled: z.enabled !== false, nin: z.notify_enter !== false, nout: z.notify_exit !== false };
+  LOC_NEW = Object.assign({ edit:true, id:z.id, from:'edit', orig:o }, o);
+  zoneEditHtml();
+}
+function zoneEditHtml(){
+  const n = LOC_NEW;
+  const radii = ZONE_EDIT_RADII.slice();
+  if (!radii.includes(n.orig.radius)) radii.push(n.orig.radius);      // 예전 장소의 반경(100·500m 등)도 그대로 고를 수 있게
+  radii.sort((a, b) => a - b);
+  const h =
+    '<div class="card"><div class="field" style="margin-bottom:0"><label>이름</label>' +
+      '<input id="zName" maxlength="12" value="' + esc(n.name) + '" oninput="if(LOC_NEW)LOC_NEW.name=this.value"></div></div>' +
+    '<div class="lxLbl">위치 — 지도를 움직여 핀을 맞춰요</div>' +
+    '<div class="lmapw" id="lmapw" style="margin:0;border-radius:18px;height:40vh;min-height:240px"><div id="lmap"></div>' +
+      '<div class="pickPin"><span>📍</span></div>' +
+      '<div class="lmChip">지도를 움직여 핀을 맞춰요</div>' +
+      '<div class="lmFabs"><button class="lmFab" onclick="zonePickTo(\'child\')" aria-label="자녀 위치로">🧒</button>' +
+      '<button class="lmFab" onclick="zonePickTo(\'me\')" aria-label="내 위치로">🧍</button></div>' +
+    '</div>' +
+    '<div class="lxLbl">반경</div><div class="lxRad" id="zRad">' +
+      radii.map(r => '<button class="lxRc' + (r === n.radius ? ' on' : '') + '" data-r="' + r + '" onclick="zoneSetR(' + Number(r) + ')">' + Number(r) + 'm</button>').join('') +
+    '</div>' +
+    '<div class="lmHint" style="margin:0 4px 12px">반경이 너무 작으면 건물 안에서 도착을 못 알아챌 수 있어요 — 폰 위치 오차가 반경보다 크면 그때는 판정을 건너뛰어요.</div>' +
+    '<div class="card"><div class="row"><div class="grow"><div class="ttl">이 장소 켜기</div>' +
+      '<div class="val">끄면 지우지 않고 잠깐 쉬어요 (방학 동안 학원 등)</div></div>' +
+      '<label class="sw"><input type="checkbox" id="zOn" ' + (n.enabled ? 'checked ' : '') + 'onchange="if(LOC_NEW){LOC_NEW.enabled=this.checked;zoneOverlapPaint()}"><i></i></label></div>' +
+      '<div class="lxChk"><label><input type="checkbox" id="zIn" ' + (n.nin ? 'checked ' : '') + 'onchange="if(LOC_NEW)LOC_NEW.nin=this.checked"> 도착하면 기록</label>' +
+      '<label><input type="checkbox" id="zOut" ' + (n.nout ? 'checked ' : '') + 'onchange="if(LOC_NEW)LOC_NEW.nout=this.checked"> 나가면 기록</label></div></div>' +
+    '<div id="zOverlap"></div>' +
+    '<button class="btn btn-p" onclick="zoneEditSave()">저장하기</button>' +
+    '<button class="lxDel" data-id="' + esc(n.id) + '" onclick="zoneDel(this.dataset.id)">🗑 이 장소 지우기</button>' +
+    '<button class="btn btn-g" style="margin-top:6px" onclick="closeSub()">취소</button>';
+  openSub(locZoneEmo(n.orig.name) + ' ' + n.orig.name + ' 고치기', h, () => openZones());
+  locDrawMap('pick');
+  zoneOverlapPaint();
+}
+function zoneSetR(r){
+  if (!LOC_NEW) return;
+  LOC_NEW.radius = Number(r);
+  if (LMAP_L.circ) LMAP_L.circ.setRadius(LOC_NEW.radius);
+  document.querySelectorAll('#zRad .lxRc').forEach(b => b.classList.toggle('on', Number(b.dataset.r) === LOC_NEW.radius));
+  zoneOverlapPaint();
+}
+/** 겹침 경고 — 다른 켜진 장소와 중심 거리 < 두 반경 합 (막지는 않는다) · 자기 자신과 「옛 줄」은 뺀다 */
+function zoneOverlapHtml(n){
+  if (!n || !n.enabled) return '';
+  const skip = new Set([String(n.id || ''), String(LOC_ZDEL ? LOC_ZDEL.oldId : '')]);
+  const hits = (LOC.zones || []).filter(z => z.enabled !== false && !skip.has(String(z.id)))
+    .map(z => ({ z, d: locDist(n.lat, n.lng, Number(z.lat), Number(z.lng)), lim: n.radius + (Number(z.radius_m) || ZONE_RADIUS_M) }))
+    .filter(x => x.d < x.lim).sort((a, b) => a.d - b.d);
+  if (!hits.length) return '';
+  const x = hits[0];
+  return '<div class="note warn">⚠️ 「' + esc(x.z.name) + '」' + locGwa(x.z.name) + ' ' + locM(x.d) + ' 떨어져 겹쳐요. ' +
+    '아이가 두 곳에 동시에 있는 걸로 보일 수 있어요 — 반경을 줄이거나 핀을 옮겨 보세요.' +
+    (hits.length > 1 ? ' (겹치는 곳 ' + hits.length + '곳)' : '') + '</div>';
+}
+function zoneOverlapPaint(){ const el = document.getElementById('zOverlap'); if (el && LOC_NEW) el.innerHTML = zoneOverlapHtml(LOC_NEW); }
+
+async function zoneEditSave(){
+  const n = LOC_NEW;
+  if (!n || !n.edit) return;
+  const el = document.getElementById('zName');
+  const name = ((el ? el.value : n.name) || '').trim();
+  if (!name){ toast('이름을 넣어 주세요'); return; }
+  const skip = new Set([String(n.id), String(LOC_ZDEL ? LOC_ZDEL.oldId : '')]);
+  if (LOC.zones.some(z => z.name === name && !skip.has(String(z.id)))){ toast('같은 이름이 이미 있어요'); return; }
+  const o = n.orig;
+  const moved = locDist(o.lat, o.lng, n.lat, n.lng) > 5;       // 지도 첫 그리기(moveend)의 소수점 이동은 무시
+  const rCh = n.radius !== o.radius;
+  const reOn = !o.enabled && n.enabled;
+  if (!moved && !rCh && name === o.name && n.enabled === o.enabled && n.nin === o.nin && n.nout === o.nout){
+    toast('바뀐 게 없어요'); closeSub(); return;
+  }
+  const H = { Prefer:'return=representation' };
+  loading(true);
+  try{
+    if (!moved && !rCh && !reOn){
+      // 이름 · 끄기 · 도착/나감 기록만 → 같은 줄을 고친다
+      const rows = await locApi(ST.server, ST.code, 'safe_zones?id=eq.' + encodeURIComponent(n.id), 'PATCH',
+        { name, enabled:n.enabled, notify_enter:n.nin, notify_exit:n.nout }, H);
+      if (!Array.isArray(rows) || rows.length !== 1) throw Object.assign(new Error('0줄'), { zero:true });
+    } else {
+      // 핀 · 반경 · 꺼짐→켜짐 → 새 줄을 넣고, 성공하면 옛 줄을 지운다
+      const lat = moved ? n.lat : o.lat, lng = moved ? n.lng : o.lng;
+      const ins = await locApi(ST.server, ST.code, 'safe_zones', 'POST', [{
+        device_code: ST.code, name, lat, lng, radius_m: n.radius,
+        enabled: n.enabled, notify_enter: n.nin, notify_exit: n.nout }], H);
+      if (!Array.isArray(ins) || ins.length !== 1) throw Object.assign(new Error('0줄'), { zero:true });
+      let delOk = false;
+      try{
+        const del = await locApi(ST.server, ST.code, 'safe_zones?id=eq.' + encodeURIComponent(n.id), 'DELETE', null, H);
+        delOk = Array.isArray(del) && del.length === 1;
+      }catch(e){ console.warn('옛 장소 지우기 실패:', e && e.message); }
+      if (!delOk) LOC_ZDEL = { oldId:n.id, name };
+    }
+    pokeChild(ST.code, ST.server);
+    LOC_NEW = null;
+    await locLoad(LOC.day);
+    loading(false);
+    if (!LOC_ZDEL) LOC_ZMSG = zoneSavedMsg();
+    closeSub();                        // 고치기 화면을 닫으면 목록(openZones)으로 돌아간다
+  }catch(e){
+    loading(false);
+    toast(e.zero ? '저장하지 못했어요 — 권한이 없거나 이미 지워진 장소예요'
+        : (e.status === 401 || e.status === 403) ? '권한 확인이 필요해요 — 앱을 다시 열어 주세요' : '저장 실패: ' + e.message);
+  }
+}
+/** 옛 줄 지우기 다시 시도 — 다 지워졌는지는 **다시 읽어서** 본다 */
+async function zoneDelRetry(){
+  const d = LOC_ZDEL;
+  if (!d) return;
+  loading(true);
+  try{
+    await locApi(ST.server, ST.code, 'safe_zones?id=eq.' + encodeURIComponent(d.oldId), 'DELETE', null, { Prefer:'return=representation' });
+  }catch(e){ console.warn('옛 장소 지우기 다시 실패:', e && e.message); }
+  try{ await locLoad(LOC.day); }catch(e){ console.warn(e && e.message); }
+  loading(false);
+  if (!LOC.zones.some(z => String(z.id) === String(d.oldId))){
+    LOC_ZDEL = null; LOC_ZMSG = zoneSavedMsg(); pokeChild(ST.code, ST.server);
+  } else toast('또 지우지 못했어요 — 잠시 뒤 다시 눌러 주세요');
+  openZones();
 }
 
 function doLogout(){ removeChildUI(ST.code); }
