@@ -1268,6 +1268,8 @@
   .lxTag.old{background:#F2F4F7;color:#475467;margin-left:0}
   .lxEv{white-space:normal !important;font-size:14px !important;line-height:1.5}
   .lxEvL{color:#667085;font-weight:600}
+  .lxTagRow{margin-top:4px}
+  .lxTagRow .lxTag{margin-left:0}
   .lxZi{cursor:pointer}
   .lxOff{color:#98A2B3;font-weight:700}
   .lxLbl{font-size:13px;font-weight:800;color:#475467;margin:14px 4px 7px}
@@ -1988,7 +1990,7 @@ async function ensureParentToken(k, h){
   try{
     const c = await locTokenCheck(k.code, k.server);
     if (c.state !== 'none') return;          // active · pending · denied — 새로 받지 않는다
-    await locRegister(k.code, k.server, h);
+    await locRegister(k.code, k.server, h, 'general');   // 🤫 22차 : PIN 풀 때는 조용한 대기 — 위치 화면을 열 때 진짜 요청으로 바꾼다
   }catch(e){ console.warn('부모 열쇠 챙기기 실패 (다음 기회에):', e && e.message); }
 }
 async function verifyPin(){
@@ -2191,7 +2193,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월21일 21차 테스트판 · 위치 개편';
+const WEB_LABEL = '11월21일 22차 테스트판 · 위치 개편 점검 반영';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -7507,6 +7509,7 @@ document.addEventListener('visibilitychange', async ()=>{
   //   ⚠️ 리스너를 따로 달지 않고 **여기 한 곳에** 모은다 (위 주석 — 파일 전체에서 하나만)
   checkNewBuild();
   if (!LINK_REPORT_OK && ST.code) reportParentLink();
+  try{ lnOnVisible(); }catch(e){ console.warn('지금 위치 받기 이어하기 실패:', e && e.message); }   // 📍 22차
   // ── 아래는 「자녀 실시간 제한 상황」 화면일 때만 ──────────────────
   if(!LIVE_TIMER) return;
   const t=document.getElementById('sTitle');
@@ -8447,11 +8450,14 @@ function locLabel(){
   return dev + ' · ' + br;
 }
 
-/** 열쇠 받기 (PIN 이 서버에서 맞아야 준다) → { state:'active'|'pending'|'err', tok, note } */
-async function locRegister(code, server, h){
+/** 열쇠 받기 (PIN 이 서버에서 맞아야 준다) → { state:'active'|'pending'|'err', tok, note }
+ *  🤫 22차 purpose : 'general' = PIN 을 풀 때(일반 기능용) — 이미 허락된 열쇠가 있으면 **조용한 대기**(알림·24시간 시계 없음 · 남의 목록에도 안 보임)
+ *                    'location'(기본) = 위치 화면·켜기 — 진짜 요청(24시간 · 기존 보호자 배너). 같은 브라우저가 'location' 으로 다시 부르면 조용한 대기가 진짜 요청으로 바뀐다. */
+async function locRegister(code, server, h, purpose){
   const pid = parentId();
   const res = await locRpc(server, 'loc_register_parent_token',
-    { p_device:code, p_pin_hash:h, p_parent_id: pid || null, p_label: locLabel() });
+    { p_device:code, p_pin_hash:h, p_parent_id: pid || null, p_label: locLabel(),
+      p_purpose: purpose === 'general' ? 'general' : 'location' });
   const s = (typeof res === 'string') ? res : '';
   if (/^[0-9a-f]{64}$/.test(s)){ setLocTokenOf(code, s); setLocPendingOf(code, ''); return { state:'active', tok:s }; }
   if (/^PENDING:[0-9a-f]{64}$/.test(s)){ setLocPendingOf(code, s.slice(8)); return { state:'pending' }; }
@@ -8501,7 +8507,7 @@ async function locEnsureToken(){
   if (locPendingOf(ST.code)){ LOC.note = 'PENDING'; return ''; }
   const h = locPinHash();
   if (!h){ LOC.note = 'NOPIN'; return ''; }
-  const r = await locRegister(ST.code, ST.server, h);
+  const r = await locRegister(ST.code, ST.server, h, 'location');
   if (r.state === 'active'){ LOC.note = ''; return r.tok; }
   LOC.note = r.state === 'pending' ? 'PENDING' : r.note;
   return '';
@@ -8518,7 +8524,8 @@ function locOn(){
   if (v === 'false') return false;
   return LOC_CONSENT[ST.code] === true;
 }
-/** 철회 안 된 동의 기록이 있나 — 열쇠가 있어야 읽힌다(없으면 꺼짐으로 본다). 한 번 묻고 기억한다. */
+/** 철회 안 된 동의 기록이 있나 — 열쇠가 있어야 읽힌다(없으면 꺼짐으로 본다). 한 번 묻고 기억한다.
+ *  🔴 22차 : 네트워크·서버 오류면 **null**(「모른다」) — 꺼짐으로 단정해 동의 화면을 띄우지 않는다(3-10). 기억하지도 않는다. */
 async function locConsentCheck(code, server){
   if (LOC_CONSENT[code] !== undefined) return LOC_CONSENT[code];
   if (!locTokenOf(code)) return false;
@@ -8526,7 +8533,7 @@ async function locConsentCheck(code, server){
     const rows = await locApi(server, code, 'location_consents?device_code=eq.' + encodeURIComponent(code) +
                               '&revoked_at=is.null&select=device_code&limit=1');
     LOC_CONSENT[code] = Array.isArray(rows) && rows.length > 0;
-  }catch(e){ console.warn('동의 기록 확인 실패:', e && e.message); return false; }
+  }catch(e){ console.warn('동의 기록 확인 실패:', e && e.message); return null; }
   return LOC_CONSENT[code];
 }
 
@@ -8544,7 +8551,7 @@ function locDate(iso){ const d = toDate(iso); return d ? (d.getMonth()+1) + '월
 /** 받침 있으면 「과」, 없으면 「와」 */
 function locGwa(w){ const c = String(w||'').charCodeAt(String(w||'').length - 1); return (c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28) ? '과' : '와'; }
 
-/** 대기·막힘 화면 (그림 4 가운데) */
+/** 대기·막힘 화면 (그림 4 가운데) — approve_after 가 없으면(조용한 대기) 시각 문구를 빼고 말한다 */
 function locWaitScreen(chk){
   const st = (chk && chk.st) || {};
   let h;
@@ -8554,10 +8561,10 @@ function locWaitScreen(chk){
   } else {
     const at = toDate(st.approve_after);
     h = '<div class="lxWait"><div class="lxWh">⏳ 기존 보호자 허락을 기다리고 있어요</div>' +
-        '<div class="lxWd">허락되면 바로 보여요. 아니면 ' + (at ? '<b>' + esc(locDayHm(at)) + '</b> 에' : '<b>하루 뒤</b>') + ' 저절로 열려요.<br>' +
+        '<div class="lxWd">허락되면 바로 보여요.' + (at ? ' 아니면 <b>' + esc(locDayHm(at)) + '</b> 에 저절로 열려요.' : '') + '<br>' +
         '급하시면 매장에 말씀해 주세요.</div></div>' +
-        '<div class="note">🔐 이 아이 위치를 <b>먼저 연결한 보호자 폰</b>이 있어요. 새 폰은 그 보호자가 「허락」을 누르거나 하루가 지나야 볼 수 있어요. ' +
-        '아이 위치를 다른 사람이 몰래 보지 못하게 하려는 거예요.</div>';
+        '<div class="note">🔐 이 아이 위치를 <b>먼저 연결한 보호자 폰</b>이 있어요. 새 폰은 그 보호자가 「허락」을 누르거나 ' +
+        (at ? '하루가 지나야' : '정해진 시간이 지나야') + ' 볼 수 있어요. 아이 위치를 다른 사람이 몰래 보지 못하게 하려는 거예요.</div>';
   }
   h += '<button class="btn btn-p" onclick="openLoc(LOC.day)">다시 확인하기</button>' +
        '<button class="btn btn-g" onclick="closeSub()">닫기</button>';
@@ -8629,7 +8636,8 @@ async function openLocPhones(review){
     const tag = t.status === 'pending' ? '<span class="lxTag p">허락 기다리는 중</span>'
               : t.mine ? '<span class="lxTag me">지금 이 폰</span>' : '';
     const used = t.status === 'pending' ? '' : (t.last_used_at ? ' · 마지막 사용 ' + ago(t.last_used_at) : ' · 아직 안 씀');
-    return '<div class="item"><div class="grow"><div class="nm">📱 ' + esc(t.label || '이름 모르는 폰') + ' ' + tag + '</div>' +
+    return '<div class="item"><div class="grow"><div class="nm">📱 ' + esc(t.label || '이름 모르는 폰') + '</div>' +
+      (tag ? '<div class="lxTagRow">' + tag + '</div>' : '') +
       '<div class="val">받은 날 ' + esc(locDate(t.created_at)) + (t.legacy ? ' · <span class="lxTag old">예전에 연결됨</span>' : '') + esc(used) + '</div></div>' +
       (t.can_cut ? '<button class="x" data-id="' + esc(t.id) + '" data-mine="' + (t.mine ? '1' : '') + '" onclick="locRevoke(this)">끊기</button>' : '') +
       '</div>';
@@ -8741,6 +8749,14 @@ function locEventsHtml(st){
     rows.map(r => '<div class="item"><div class="grow"><div class="nm lxEv">' + r.txt + '</div>' +
       '<div class="val">' + esc(locDayHm(toDate(r.at))) + '</div></div></div>').join('') + '</div>' +
     '<div class="lmHint" style="margin:-4px 4px 12px">누가 언제 무엇을 바꿨는지 서버에 남아요. 직접 하신 게 아니면 매장에 알려 주세요.</div>';
+}
+/** ⚠️ 22차 : 아이 폰이 「켜짐」을 받았는데 철회 안 된 동의 기록을 못 찾아 위치를 안 켰다(location_blocked_no_consent · 폰이 올린다)
+ *  → 동의 화면으로 보낸다(5칸 체크 → 동의 기록 → 정책 저장 → pokeChild). 동의는 부모가 직접 다시 해야 한다(위치정보법 제16조 증빙). */
+function locBlockedHtml(){
+  if ((ST.pol || {}).location_blocked_no_consent !== 'true') return '';
+  return '<div class="lxWarnO">⚠️ <b>아이 폰이 동의 기록을 못 찾아 위치를 켜지 않았어요.</b><br>' +
+         '동의를 한 번 다시 해 주시면 아이 폰이 바로 위치를 켜요.' +
+         '<button class="btn btn-p" style="margin-top:10px" onclick="openLocConsent()">동의 다시 하기</button></div>';
 }
 /** 📞 부모 번호가 7일 안에 바뀌었으면 위치 화면 맨 위 주황 배너 */
 function locPhoneChangedHtml(st){
@@ -8890,15 +8906,26 @@ function locStateNote(){
   //   preset_cleanup_status 가 'nodo' 로 시작하면 DO 가 아닌 폰 — 그 폰만 예전처럼 자녀가 허용을 눌러야 한다
   const p = ST.pol || {};
   const autoGrant = (Number(p.app_version_code)||0) >= 68 && !!p.preset_cleanup_status && !String(p.preset_cleanup_status).startsWith('nodo');
+  // ⚠️ 22차 : 동의 기록을 못 찾아 폰이 위치를 안 켰으면 맨 위 배너(locBlockedHtml)가 말한다 — 여기서 「곧 켜요」 같은 말을 겹쳐 하지 않는다
+  if(p.location_blocked_no_consent === 'true') return '';
   if(!s.perm && autoGrant) rows.push('⏳ <b>자녀폰이 곧 위치를 켜요.</b> 따로 누르실 건 없어요 — 보통 몇 분 안에 켜져요');
   else if(!s.perm) rows.push('📍 <b>자녀폰에서 위치 허용이 필요해요.</b> 자녀폰에 안내 화면이 떠요 — 「위치 허용하기」를 눌러 주세요');
   if(!s.svc)  rows.push('🛰️ 자녀폰의 <b>위치 서비스(GPS)가 꺼져 있어요.</b> 설정에서 켜 주세요');
   if(s.q>0)   rows.push('📦 인터넷이 끊겨서 <b>'+s.q+'곳이 폰에 쌓여 있어요.</b> 연결되면 자동으로 올라와요');
-  if(s.perm && s.svc && !s.okSent) rows.push('⏳ 아직 첫 위치를 기다리고 있어요. 바깥에 나가면 더 빨리 잡혀요');
+  // 📡 22차 : 폰이 「실제로 보내는 중인가」(location_tracking_on_phone) — 권한·GPS 안내가 먼저고, 그게 다 괜찮을 때만 말한다
+  if(s.perm && s.svc && p.location_tracking_on_phone === 'false')
+    rows.push('📡 <b>아이 폰이 아직 위치를 보내지 않아요.</b> 아이 폰이 인터넷에 연결되면 보통 몇 분 안에 시작해요 — 계속 이러면 매장에 말씀해 주세요');
+  else if(s.perm && s.svc && !s.okSent) rows.push('⏳ 아직 첫 위치를 기다리고 있어요. 바깥에 나가면 더 빨리 잡혀요');
   return rows.length ? '<div class="note warn">'+rows.join('<br>')+'</div>' : '';
 }
 
 // ── 메인 화면 ─────────────────────────────────────────────────────────────
+/** 「확인하지 못했어요 · 다시 시도」 — 못 물어본 것을 「없다」·「대기」로 단정하지 않는다(3-10) */
+function locErrScreen(msg){
+  openSub('어디 있나요', '<div class="note warn">⚠️ <b>' + esc(msg) + '</b><br>인터넷 연결을 확인하고 다시 눌러 주세요.</div>' +
+    '<button class="btn btn-p" onclick="openLoc(LOC.day)">다시 시도</button>' +
+    '<button class="btn btn-g" onclick="closeSub()">닫기</button>');
+}
 async function openLoc(day){
   // 🔐 2026-11-21 : 열쇠 상태부터 본다(loc_token_status) — 대기·막힘이면 그 화면, 끊겼으면 PIN 으로 다시 받기.
   const v = ST.pol?.location_tracking_enabled;
@@ -8909,13 +8936,34 @@ async function openLoc(day){
   catch(e){ chk = { state: locTokenOf(ST.code) ? 'active' : 'none' }; }
   if(chk.state === 'none' && locPinHash()){
     try{
-      const r = await locRegister(ST.code, ST.server, locPinHash());
+      const r = await locRegister(ST.code, ST.server, locPinHash(), 'location');
       if(r.state === 'active' || r.state === 'pending') chk = await locTokenCheck(ST.code, ST.server);
       else LOC.note = r.note;
     }catch(e){ if(!(e && e.status === 404)) console.warn('열쇠 다시 받기 실패:', e && e.message); }
   }
+  // 🔴 22차 : 대기 열쇠 상태를 **못 물어봤으면** 대기 화면이 아니라 오류 안내(3-10)
+  if(chk.state === 'pending' && chk.err){ loading(false); locErrScreen('연결 상태를 확인하지 못했어요'); return; }
+  // 🤫 22차 : PIN 을 풀 때 받은 「조용한 대기」(p_purpose 'general' · approve_after 없음 · 아무에게도 안 보임)
+  //   → 위치를 보려고 들어왔으니 여기서 'location' 으로 다시 불러 **진짜 요청**(24시간 · 기존 보호자 배너)으로 바꾼다.
+  if(chk.state === 'pending' && chk.st && !chk.st.approve_after){
+    if(!locPinHash()){ loading(false); needPinThen(() => openLoc(day), '위치를 보려면 비밀번호를 한 번 더 넣어 주세요'); return; }
+    try{
+      const r = await locRegister(ST.code, ST.server, locPinHash(), 'location');
+      if(r.state === 'err'){
+        loading(false);
+        locErrScreen(r.note === 'BAD_PIN' ? '이 자녀의 비밀번호가 맞지 않아요 — 앱을 다시 열어 이 자녀 비밀번호를 넣어 주세요' : '위치 확인 요청을 보내지 못했어요');
+        return;
+      }
+      chk = await locTokenCheck(ST.code, ST.server);
+    }catch(e){ loading(false); locErrScreen('위치 확인 요청을 보내지 못했어요'); return; }
+    if(chk.state === 'pending' && chk.err){ loading(false); locErrScreen('연결 상태를 확인하지 못했어요'); return; }
+  }
   if(chk.state === 'pending' || chk.state === 'denied'){ loading(false); locWaitScreen(chk); return; }
-  if(v !== 'true' && chk.state === 'active') await locConsentCheck(ST.code, ST.server);
+  if(v !== 'true' && chk.state === 'active'){
+    // 🔴 22차 : 동의 기록을 **못 물어봤으면** 「꺼짐」으로 단정하지 않는다 — 동의 화면을 띄우면 동의가 또 쌓인다
+    const cc = await locConsentCheck(ST.code, ST.server);
+    if(cc === null){ loading(false); locErrScreen('위치 동의 기록을 확인하지 못했어요'); return; }
+  }
   if(!locOn()){ loading(false); openLocConsent(); return; }
   try{ await locLoad(day); }
   catch(e){
@@ -9171,7 +9219,7 @@ function locHtml(){
   const sup = today && lnSupported();
 
   // 🔐 2026-11-21 : 맨 위 — 부모 번호 바뀜(주황) · 새 폰 요청(노랑)
-  let top = locPhoneChangedHtml(LOC.ts) + locReqBannerHtml(ST.code, nm, LOC.ts);
+  let top = locBlockedHtml() + locPhoneChangedHtml(LOC.ts) + locReqBannerHtml(ST.code, nm, LOC.ts);
   let h = top ? '<div class="lxTop">' + top + '</div>' : '';
   h += '<div class="lmapw" id="lmapw"><div id="lmap"></div>' +
     '<div class="lmChip">🧒 ' + esc(nm) + ' · ' + dayTxt + '</div>' +
@@ -9399,7 +9447,7 @@ function lnTick(){
   if (L.phase === 'ask' && now - L.t0 >= LN_WAIT_MS){ L.phase = 'timeout'; lnStop(); lnPaint(); return; }
   if (L.phase === 'got' && now - L.firstAt >= LN_MORE_MS){ L.phase = 'done'; lnStop(); lnPaint(); return; }
   if (L.phase !== 'ask' && L.phase !== 'got'){ lnStop(); return; }
-  if (now - L.lastPoll >= LN_POLL_MS) lnPoll();
+  if (!document.hidden && now - L.lastPoll >= LN_POLL_MS) lnPoll();   // 22차 : 화면이 숨겨진 동안은 묻지 않는다(시계는 그대로 간다)
   lnPaintTick();
 }
 async function lnPoll(){
@@ -9465,14 +9513,14 @@ function lnMoveMap(P){
     LMAP.setView(c, 16, { animate:true });
   }catch(e){ console.warn('지도 점 옮기기 실패:', e && e.message); }
 }
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState !== 'visible') return;
+/** 화면이 다시 보이면 즉시 한 번 확인 — 🔴 리스너는 파일 전체에 하나(실시간 제한 상황 쪽 리스너가 이걸 부른다 · 점검 PART 4-12) */
+function lnOnVisible(){
   if (lnActive() && (LOCNOW.phase === 'ask' || LOCNOW.phase === 'got') && lnOnScreen()){
     LOCNOW.lastPoll = 0;
     if (!LOCNOW.timer) lnStartTimer();
     lnTick();
   }
-});
+}
 
 /** 그림 1 가운데 — 물어보는 중 */
 function lnAskHtml(P){
@@ -9797,7 +9845,7 @@ async function locTurnOn(){
     let c = await locTokenCheck(ST.code, ST.server);
     if(c.state === 'none'){
       if(!locPinHash()){ loading(false); needPinThen(() => locTurnOn(), '위치를 켜려면 비밀번호를 한 번 더 넣어 주세요'); return; }
-      const r = await locRegister(ST.code, ST.server, locPinHash());
+      const r = await locRegister(ST.code, ST.server, locPinHash(), 'location');
       if(r.state === 'err'){
         loading(false);
         toast(r.note==='BAD_PIN' ? '이 자녀의 비밀번호로 들어와 주세요'
@@ -9805,6 +9853,16 @@ async function locTurnOn(){
         return;
       }
       c = await locTokenCheck(ST.code, ST.server);
+    }
+    // 🔴 22차 : 대기 열쇠 상태를 못 물어봤으면 멈춘다(3-10)
+    if(c.state === 'pending' && c.err){ loading(false); toast('연결 상태를 확인하지 못했어요 — 잠시 뒤 다시 해 주세요'); return; }
+    // 🤫 22차 : PIN 풀 때 받은 조용한 대기 → 'location' 으로 다시 불러 진짜 요청으로
+    if(c.state === 'pending' && c.st && !c.st.approve_after){
+      if(!locPinHash()){ loading(false); needPinThen(() => locTurnOn(), '위치를 켜려면 비밀번호를 한 번 더 넣어 주세요'); return; }
+      const r2 = await locRegister(ST.code, ST.server, locPinHash(), 'location');
+      if(r2.state === 'err'){ loading(false); toast(r2.note === 'BAD_PIN' ? '이 자녀의 비밀번호로 들어와 주세요' : '위치 확인 요청을 보내지 못했어요'); return; }
+      c = await locTokenCheck(ST.code, ST.server);
+      if(c.state === 'pending' && c.err){ loading(false); toast('연결 상태를 확인하지 못했어요 — 잠시 뒤 다시 해 주세요'); return; }
     }
     // 🔴 대기·막힘이면 동의 기록을 쓰려 하지 않는다(대기 열쇠는 아무것도 못 쓴다 · ★-4 5번) — 정책도 안 켠다
     if(c.state === 'pending' || c.state === 'denied'){ loading(false); LOC_AGREE = false; locWaitScreen(c); return; }
@@ -9826,11 +9884,14 @@ async function locTurnOn(){
       return;
     }
     LOC_CONSENT[ST.code] = true;
+    const consentAt = Date.now();
     try{ await locApi(ST.server, ST.code, 'location_access_log', 'POST',
            [{ device_code:ST.code, action:'CONSENT', actor:'parent' }]); }
     catch(e){ console.warn('동의 열람기록 실패:', e && e.message); }
     // ③ 그다음 정책을 켠다
     await savePol([{ key:'location_tracking_enabled', value:'true' }]);
+    // 📣 22차 : 동의를 기록한 뒤엔 **늘** 폰을 깨운다 — savePol 의 깨우기가 8초 디바운스에 걸렸으면 한 번 더(폰이 동의 기록을 보고 위치를 켠다)
+    if((POKE_AT[ST.code] || 0) < consentAt){ POKE_AT[ST.code] = 0; pokeChild(ST.code, ST.server); }
     loading(false);
     LOC_AGREE = false;
     toast('위치 확인을 켰어요');
@@ -9903,12 +9964,35 @@ function zoneExplainHtml(){
     '</div></div>';
 }
 
-let LOC_ZMSG = '';     // 📍 2026-11-21 : 저장·지우기 뒤 목록 위에 한 번 보여 줄 말
-let LOC_ZDEL = null;  // { oldId, name } — 고치기에서 새 줄은 넣었는데 옛 줄을 못 지웠을 때 (다시 시도)
+// 📍 2026-11-21 (22차) : 저장 뒤 문구 · 「옛 줄을 못 지웠다」는 **그 자녀 것만** 보이게 자녀 코드를 같이 든다.
+//   「옛 줄」 기록은 sessionStorage 에도 남긴다 — 새로고침해도 「다시 시도」가 남아 있게(같은 이름이 둘로 보이는 이유를 알려 준다).
+let LOC_ZMSG = null;       // { code, msg } — 목록 위에 한 번 보여 줄 말
+let LOC_ZRELOAD = null;    // 자녀 코드 — 저장은 됐는데 목록을 다시 못 읽었다(「새로고침 실패」)
+const ZDEL_KEY = 'sinae_zdel';   // sessionStorage { 자녀코드: { oldId, name } }
+function zdelAll(){ try{ return JSON.parse(sessionStorage.getItem(ZDEL_KEY) || '{}') || {}; }catch(e){ return {}; } }
+function zdelOf(code){ const d = zdelAll()[code || ST.code]; return (d && d.oldId) ? d : null; }
+function setZdel(code, v){
+  try{ const o = zdelAll(); if (v) o[code] = v; else delete o[code]; sessionStorage.setItem(ZDEL_KEY, JSON.stringify(o)); }catch(e){}
+}
 /** 저장 뒤 문구 — 자녀앱이 「지금 위치 받기」를 아는 폰(새 버전)은 장소 목록도 바로 다시 받는다 → 10분 · 옛 폰 30분 (Z-4 · ★-2 #9) */
 function zoneSavedMsg(what){
   return '✅ ' + (what || '저장했어요') + '. 아이 폰에는 <b>' + (lnSupported() ? '10분' : '30분') + ' 안에</b> 반영돼요.';
 }
+function zoneSetMsg(msg){ LOC_ZMSG = { code:ST.code, msg }; }
+/** 저장·지우기가 **성공한 뒤** 목록 다시 읽기 — 실패해도 「저장 실패」가 아니다(서버엔 이미 들어갔다) */
+async function zoneReload(){
+  try{
+    await locLoad(LOC.day);
+    if (!LOC.ready) throw new Error('열쇠 확인 필요');
+    if (LOC_ZRELOAD === ST.code) LOC_ZRELOAD = null;
+    return true;
+  }catch(e){
+    console.warn('장소 목록 다시 읽기 실패 (저장은 됐다):', e && e.message);
+    LOC_ZRELOAD = ST.code;
+    return false;
+  }
+}
+async function zoneReloadTap(){ loading(true); await zoneReload(); loading(false); openZones(); }
 function zoneRecTxt(z){
   const i = z.notify_enter !== false, o = z.notify_exit !== false;
   return i && o ? '도착·출발 기록' : i ? '도착만 기록' : o ? '나감만 기록' : '기록 안 함';
@@ -9917,12 +10001,17 @@ function openZones(){
   let h = '<div class="lmapw sm" id="lmapw"><div id="lmap"></div>' +
           '<div class="lmChip">📍 자주 가는 장소 ' + (LOC.zones.length ? LOC.zones.length + '곳' : '') + '</div></div>';
   h += '<div style="height:12px"></div>';
-  if (LOC_ZDEL){
-    h += '<div class="note warn">⚠️ <b>옛 장소를 지우지 못했어요</b> — 새 장소(「' + esc(LOC_ZDEL.name) + '」)는 저장됐는데 옛것이 남아 같은 이름이 두 개로 보여요. 다시 눌러 주세요.' +
+  const zd = zdelOf(ST.code);
+  if (zd){
+    h += '<div class="note warn">⚠️ <b>옛 장소를 지우지 못했어요</b> — 새 장소(「' + esc(zd.name) + '」)는 저장됐는데 옛것이 남아 같은 이름이 두 개로 보여요. 다시 눌러 주세요.' +
          '<button class="btn btn-p" style="margin-top:10px" onclick="zoneDelRetry()">다시 시도</button></div>';
-  } else if (LOC_ZMSG){
-    h += '<div class="note">' + LOC_ZMSG + '</div>';
-    LOC_ZMSG = '';
+  } else if (LOC_ZMSG && LOC_ZMSG.code === ST.code){
+    h += '<div class="note">' + LOC_ZMSG.msg + '</div>';
+  }
+  LOC_ZMSG = null;
+  if (LOC_ZRELOAD === ST.code){
+    h += '<div class="note warn">🔄 <b>목록을 새로 불러오지 못했어요.</b> 저장은 됐어요 — 아래 목록이 조금 예전 것일 수 있어요.' +
+         '<button class="btn btn-g" style="margin-top:10px" onclick="zoneReloadTap()">다시 불러오기</button></div>';
   }
   h += zoneExplainHtml();
   if (LOC.zones.length){
@@ -10073,15 +10162,18 @@ async function zoneSave(){
     if(!Array.isArray(ins) || ins.length !== 1) throw Object.assign(new Error('0줄'), { zero:true });
     pokeChild(ST.code, ST.server);     // 자녀폰 깨우기 — ⚠️ 옛 폰은 장소 목록을 30분마다만 다시 받는다(Z-1)
     LOC_NEW = null;
-    await locLoad(LOC.day);
-    loading(false);
-    LOC_ZMSG = zoneSavedMsg(esc(name) + ' 등록했어요');
-    openZones();
+    LOC.zones = LOC.zones.concat(ins);  // 22차 : 돌려받은 줄로 먼저 맞춘다(다시 읽기가 실패해도 목록이 맞다)
   }catch(e){
     loading(false);
     toast(e.zero ? '등록되지 않았어요 — 권한 확인이 필요해요. 앱을 다시 열어 주세요'
         : (e.status===401||e.status===403) ? '권한 확인이 필요해요 — 앱을 다시 열어 주세요' : '등록 실패: '+e.message);
+    return;
   }
+  // 🔴 여기부터는 **이미 저장된 뒤**다 — 다시 읽기가 실패해도 「등록 실패」라고 하지 않는다
+  await zoneReload();
+  loading(false);
+  zoneSetMsg(zoneSavedMsg(esc(name) + ' 등록했어요'));
+  openZones();
 }
 
 /** 장소 지우기 — 고치기 화면 맨 아래에서 (확인창) · 돌아온 줄이 1개인지 센다 */
@@ -10095,11 +10187,12 @@ async function zoneDel(id){
     if(!Array.isArray(del) || del.length !== 1) throw Object.assign(new Error('0줄'), { zero:true });
     pokeChild(ST.code, ST.server);
     LOC_NEW = null;
-    await locLoad(LOC.day);
-    loading(false);
-    LOC_ZMSG = zoneSavedMsg(esc(z.name) + ' 을(를) 지웠어요');
-    closeSub();                        // 고치기 화면을 닫으면 목록(openZones)으로 돌아간다
-  }catch(e){ loading(false); toast(e.zero ? '지우지 못했어요 — 권한이 없거나 이미 지워진 장소예요' : '지우기 실패: '+e.message); }
+    LOC.zones = LOC.zones.filter(x => String(x.id) !== String(id));
+  }catch(e){ loading(false); toast(e.zero ? '지우지 못했어요 — 권한이 없거나 이미 지워진 장소예요' : '지우기 실패: '+e.message); return; }
+  await zoneReload();                  // 실패해도 「지웠어요」 — 이미 지워졌다
+  loading(false);
+  zoneSetMsg(zoneSavedMsg(esc(z.name) + ' 을(를) 지웠어요'));
+  closeSub();                          // 고치기 화면을 닫으면 목록(openZones)으로 돌아간다
 }
 
 // ══════════ ✏️ 세이프존 고치기 (2026-11-21 · 설계서 Z-2 · Z-3 · ★-2 #6~#9 · 그림 2 오른쪽) ══════════
@@ -10159,7 +10252,7 @@ function zoneSetR(r){
 /** 겹침 경고 — 다른 켜진 장소와 중심 거리 < 두 반경 합 (막지는 않는다) · 자기 자신과 「옛 줄」은 뺀다 */
 function zoneOverlapHtml(n){
   if (!n || !n.enabled) return '';
-  const skip = new Set([String(n.id || ''), String(LOC_ZDEL ? LOC_ZDEL.oldId : '')]);
+  const skip = new Set([String(n.id || ''), String((zdelOf(ST.code) || {}).oldId || '')]);
   const hits = (LOC.zones || []).filter(z => z.enabled !== false && !skip.has(String(z.id)))
     .map(z => ({ z, d: locDist(n.lat, n.lng, Number(z.lat), Number(z.lng)), lim: n.radius + (Number(z.radius_m) || ZONE_RADIUS_M) }))
     .filter(x => x.d < x.lim).sort((a, b) => a.d - b.d);
@@ -10177,7 +10270,7 @@ async function zoneEditSave(){
   const el = document.getElementById('zName');
   const name = ((el ? el.value : n.name) || '').trim();
   if (!name){ toast('이름을 넣어 주세요'); return; }
-  const skip = new Set([String(n.id), String(LOC_ZDEL ? LOC_ZDEL.oldId : '')]);
+  const skip = new Set([String(n.id), String((zdelOf(ST.code) || {}).oldId || '')]);
   if (LOC.zones.some(z => z.name === name && !skip.has(String(z.id)))){ toast('같은 이름이 이미 있어요'); return; }
   const o = n.orig;
   const moved = locDist(o.lat, o.lng, n.lat, n.lng) > 5;       // 지도 첫 그리기(moveend)의 소수점 이동은 무시
@@ -10187,51 +10280,59 @@ async function zoneEditSave(){
     toast('바뀐 게 없어요'); closeSub(); return;
   }
   const H = { Prefer:'return=representation' };
+  const code = ST.code;
   loading(true);
+  let zdelNow = null;
   try{
     if (!moved && !rCh && !reOn){
       // 이름 · 끄기 · 도착/나감 기록만 → 같은 줄을 고친다
-      const rows = await locApi(ST.server, ST.code, 'safe_zones?id=eq.' + encodeURIComponent(n.id), 'PATCH',
+      const rows = await locApi(ST.server, code, 'safe_zones?id=eq.' + encodeURIComponent(n.id), 'PATCH',
         { name, enabled:n.enabled, notify_enter:n.nin, notify_exit:n.nout }, H);
       if (!Array.isArray(rows) || rows.length !== 1) throw Object.assign(new Error('0줄'), { zero:true });
+      LOC.zones = LOC.zones.map(z => String(z.id) === String(n.id) ? rows[0] : z);
     } else {
       // 핀 · 반경 · 꺼짐→켜짐 → 새 줄을 넣고, 성공하면 옛 줄을 지운다
       const lat = moved ? n.lat : o.lat, lng = moved ? n.lng : o.lng;
-      const ins = await locApi(ST.server, ST.code, 'safe_zones', 'POST', [{
-        device_code: ST.code, name, lat, lng, radius_m: n.radius,
+      const ins = await locApi(ST.server, code, 'safe_zones', 'POST', [{
+        device_code: code, name, lat, lng, radius_m: n.radius,
         enabled: n.enabled, notify_enter: n.nin, notify_exit: n.nout }], H);
       if (!Array.isArray(ins) || ins.length !== 1) throw Object.assign(new Error('0줄'), { zero:true });
+      LOC.zones = LOC.zones.concat(ins);
       let delOk = false;
       try{
-        const del = await locApi(ST.server, ST.code, 'safe_zones?id=eq.' + encodeURIComponent(n.id), 'DELETE', null, H);
+        const del = await locApi(ST.server, code, 'safe_zones?id=eq.' + encodeURIComponent(n.id), 'DELETE', null, H);
         delOk = Array.isArray(del) && del.length === 1;
       }catch(e){ console.warn('옛 장소 지우기 실패:', e && e.message); }
-      if (!delOk) LOC_ZDEL = { oldId:n.id, name };
+      if (delOk) LOC.zones = LOC.zones.filter(z => String(z.id) !== String(n.id));
+      else { zdelNow = { oldId:n.id, name }; setZdel(code, zdelNow); }   // 그 자녀 것으로 남긴다(새로고침해도 남는다)
     }
-    pokeChild(ST.code, ST.server);
+    pokeChild(code, ST.server);
     LOC_NEW = null;
-    await locLoad(LOC.day);
-    loading(false);
-    if (!LOC_ZDEL) LOC_ZMSG = zoneSavedMsg();
-    closeSub();                        // 고치기 화면을 닫으면 목록(openZones)으로 돌아간다
   }catch(e){
     loading(false);
     toast(e.zero ? '저장하지 못했어요 — 권한이 없거나 이미 지워진 장소예요'
         : (e.status === 401 || e.status === 403) ? '권한 확인이 필요해요 — 앱을 다시 열어 주세요' : '저장 실패: ' + e.message);
+    return;
   }
+  // 🔴 여기부터는 **이미 저장된 뒤**다 — 다시 읽기가 실패해도 「저장 실패」라고 하지 않고, 고치기 화면도 닫는다
+  await zoneReload();
+  loading(false);
+  if (!zdelNow) zoneSetMsg(zoneSavedMsg());
+  closeSub();                          // 고치기 화면을 닫으면 목록(openZones)으로 돌아간다
 }
-/** 옛 줄 지우기 다시 시도 — 다 지워졌는지는 **다시 읽어서** 본다 */
+/** 옛 줄 지우기 다시 시도 — **지금 보는 자녀 것만** · 다 지워졌는지는 다시 읽어서 본다 */
 async function zoneDelRetry(){
-  const d = LOC_ZDEL;
+  const code = ST.code, d = zdelOf(code);
   if (!d) return;
   loading(true);
   try{
-    await locApi(ST.server, ST.code, 'safe_zones?id=eq.' + encodeURIComponent(d.oldId), 'DELETE', null, { Prefer:'return=representation' });
+    await locApi(ST.server, code, 'safe_zones?id=eq.' + encodeURIComponent(d.oldId), 'DELETE', null, { Prefer:'return=representation' });
   }catch(e){ console.warn('옛 장소 지우기 다시 실패:', e && e.message); }
-  try{ await locLoad(LOC.day); }catch(e){ console.warn(e && e.message); }
+  const ok = await zoneReload();
   loading(false);
-  if (!LOC.zones.some(z => String(z.id) === String(d.oldId))){
-    LOC_ZDEL = null; LOC_ZMSG = zoneSavedMsg(); pokeChild(ST.code, ST.server);
+  if (!ok) toast('목록을 다시 읽지 못했어요 — 잠시 뒤 다시 눌러 주세요');
+  else if (!LOC.zones.some(z => String(z.id) === String(d.oldId))){
+    setZdel(code, null); zoneSetMsg(zoneSavedMsg()); pokeChild(code, ST.server);
   } else toast('또 지우지 못했어요 — 잠시 뒤 다시 눌러 주세요');
   openZones();
 }
