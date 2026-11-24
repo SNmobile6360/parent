@@ -125,41 +125,6 @@
   .ntTa{width:100%;min-height:96px;border:1.5px solid #E4E7EC;border-radius:14px;padding:12px 13px;font-size:15px;font-family:inherit;line-height:1.6;resize:vertical;box-sizing:border-box}
   .ntTa:focus{outline:none;border-color:#F97316}
   .ntCnt{text-align:right;font-size:12px;color:#98A2B3;margin-top:4px}
-  /* 🎬 2026-11-11 30초 요약 플레이어 */
-  .svCard{background:linear-gradient(135deg,#FFF7ED 0%,#FFFFFF 70%)}
-  .sv{position:fixed;inset:0;z-index:95;background:#0B1020;color:#fff;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:manipulation}
-  .sv.hide{display:none}
-  .svBars{position:absolute;top:calc(10px + env(safe-area-inset-top));left:12px;right:12px;display:flex;gap:4px;z-index:4}
-  .svBars i{flex:1;height:3.5px;border-radius:3px;background:rgba(255,255,255,.28);overflow:hidden}
-  .svBars i b{display:block;height:100%;width:0;background:#fff;border-radius:3px}
-  .svTop{position:absolute;top:calc(22px + env(safe-area-inset-top));left:14px;right:14px;display:flex;align-items:center;gap:8px;z-index:4;font-size:13px;font-weight:700}
-  .svTop .sp{flex:1;opacity:.9;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-  .svBtn{background:rgba(255,255,255,.18);border:0;color:#fff;border-radius:999px;padding:8px 12px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer}
-  .svScene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:96px 26px 128px;text-align:center;box-sizing:border-box;overflow:hidden}
-  .svBg{position:absolute;inset:-8%;z-index:-1;animation:svKen 6s ease-out both}
-  .svBg::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.18),transparent 60%)}
-  @keyframes svKen{from{transform:scale(1.1)}to{transform:scale(1)}}
-  .svImg{width:150px;height:150px;object-fit:contain;filter:drop-shadow(0 18px 28px rgba(0,0,0,.35));animation:svPop .65s cubic-bezier(.2,1.4,.4,1) both}
-  .svImgW{animation:svFloat 3.4s ease-in-out .7s infinite}
-  @keyframes svFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-  @keyframes svPop{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:scale(1)}}
-  @keyframes svUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-  .svK{font-size:13px;font-weight:800;letter-spacing:.3px;opacity:.88;margin-top:16px;animation:svUp .5s .1s both}
-  .svT{font-size:26px;font-weight:800;line-height:1.32;margin-top:8px;animation:svUp .55s .2s both;word-break:keep-all}
-  .svBig{font-size:46px;font-weight:800;line-height:1.15;margin-top:8px;animation:svPop .6s .25s both;letter-spacing:-.5px}
-  .svBig small{font-size:20px;font-weight:700;opacity:.9;margin-left:4px}
-  .svD{font-size:15.5px;line-height:1.65;margin-top:12px;opacity:.95;animation:svUp .55s .35s both;word-break:keep-all}
-  .svChips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;max-width:420px}
-  .svChip{background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:8px 13px;font-size:14px;font-weight:700;animation:svUp .45s both}
-  .svChip.off{opacity:.55;text-decoration:none}
-  .svCap{position:absolute;left:14px;right:14px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:4;background:rgba(0,0,0,.45);border-radius:14px;padding:11px 14px;font-size:14.5px;line-height:1.55;text-align:center;font-weight:600}
-  .svTapL,.svTapR{position:absolute;top:70px;bottom:96px;z-index:3}
-  .svTapL{left:0;width:32%}.svTapR{right:0;width:68%}
-  .svEnd{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-top:22px;animation:svUp .5s .45s both;position:relative;z-index:5}
-  .svEnd button{border:0;border-radius:14px;padding:15px;font-size:16px;font-weight:800;font-family:inherit;cursor:pointer}
-  .svEnd .a{background:#fff;color:#1D2939}.svEnd .b{background:rgba(255,255,255,.18);color:#fff}
-  .svPause{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;font-size:54px;opacity:0;transition:opacity .2s;pointer-events:none}
-  .sv.paused .svPause{opacity:.85}
   .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;
     background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
     border-top:1px solid #E6EAF0;padding-bottom:var(--safe-b);max-width:640px;margin:0 auto}
@@ -342,7 +307,7 @@
      ⚠️ 2026-08-31: 이 정의를 빠뜨려 막대가 통째로 안 보였다. 쓰는 곳: paintLive 2군데 */
   .abar{height:8px;border-radius:99px;background:#EEF2F7;overflow:hidden}
   .abar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#2563EB,#1B3A8F)}
-  /* 「지금 상태」 뱃지 — 보안 설정 */
+  /* 「지금 상태」 뱃지 — Play 스토어 막기 (새 앱 설치) */
   .stat{display:inline-block;margin-top:8px;padding:6px 11px;border-radius:9px;
         font-size:13.5px;font-weight:800;line-height:1.35}
   .stat.on{background:#FEF3F2;color:#B42318;border:1px solid #FECDCA}
@@ -834,6 +799,15 @@
   .lvx{display:flex;gap:14px;align-items:center;border-radius:22px;padding:18px 16px;margin-bottom:12px}
   .lvx.free{background:linear-gradient(135deg,#E9FBF1,#F3FFF8);border:1.5px solid #ABEFC6}
   .lvx.lock{background:linear-gradient(135deg,#FFF1F0,#FFF8F6);border:1.5px solid #FECDCA}
+  /* 🆕 28차 실시간 제한 상황 — 다음에 잠기는 때 · 오늘 쓴 시간 · 알아두세요 · 앱 묶음 */
+  .lvNext{margin-top:8px;font-size:13.6px;font-weight:700;color:#5B21B6;background:#F4F0FF;border-radius:11px;padding:7px 10px;line-height:1.5}
+  .lvUse{font-size:15px;color:#475467;font-weight:700} .lvUse b{font-size:24px;font-weight:800;color:#1D2939}
+  .lvTip{margin-top:12px;background:#FFFAEB;border:1px solid #FEDF89;border-radius:14px;padding:11px 12px}
+  .lvTipH{font-size:14px;font-weight:800;color:#B54708;margin-bottom:4px}
+  .lvTipR{font-size:13.4px;color:#344054;line-height:1.6;margin-top:5px;word-break:keep-all}
+  .lvGh{font-size:15px;font-weight:800;color:#1D2939}
+  .lvGs{font-size:12.8px;color:#667085;margin-top:2px}
+  .lvBand{font-size:13.6px;color:#344054;margin-bottom:5px;line-height:1.5}
   .lvx img{width:86px;height:86px;object-fit:contain;flex:none;filter:drop-shadow(0 4px 8px rgba(16,24,40,.14))}
   .lvx .t{font-size:19px;font-weight:900;letter-spacing:-.02em;line-height:1.35}
   .lvx.free .t{color:#05603A} .lvx.lock .t{color:#B42318}
@@ -1183,26 +1157,6 @@
   .lkI{font-size:26px}
   .lkT{font-size:16px;font-weight:800;color:#1D2939}
   .lkD{font-size:13px;color:#667085;margin-top:3px;line-height:1.5}
-  /* 🎬 2026-11-12 요약 영상 2판 — 아래 조작줄 · 경고 장면 · 고치러 가기 */
-  .svBot{position:absolute;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:4;display:flex;flex-direction:column;gap:8px}
-  .svBot .svCap{position:static}
-  .svCtl{display:flex;gap:8px;align-items:center}
-  .svCb{border:0;border-radius:12px;padding:11px 12px;font-size:15px;font-weight:800;font-family:inherit;background:rgba(255,255,255,.2);color:#fff;cursor:pointer}
-  .svCb.big{flex:1;background:#fff;color:#1D2939}
-  .svCb.wide{flex:0 0 auto;font-size:13px}
-  .svTapL,.svTapR{bottom:180px}
-  .svScene{padding-bottom:190px}
-  .svScene.end{justify-content:flex-start;padding-top:86px;overflow-y:auto}
-  .svChip.bad{background:#FEE4E2;color:#B42318;border-color:#FDA29B}
-  .svChip.amb{background:#FFFAEB;color:#B54708;border-color:#FEC84B}
-  .svScene.warn .svT{font-size:24px}
-  .svFix{border:0;border-radius:13px;padding:12px 14px;font-size:14.5px;font-weight:800;font-family:inherit;background:#FFFAEB;color:#B54708;text-align:left;cursor:pointer}
-  .svFix.r{background:#FEF3F2;color:#B42318}
-  .svFixN{font-size:13px;opacity:.9;text-align:left;padding:2px 4px}
-  #svBox.endmode .svCap{display:none}
-  .svScene.end{padding-bottom:96px}
-  .svScene.end .svImg{width:92px;height:92px}
-  .svScene.end .svT{font-size:22px}
   /* ══ 🆕 2026-11-13 (13차) — 대표점장 「설명 폴더 · 기능 ON/OFF 를 더!! 눈에 띄게」 ══
      · 📘 설명 = 진한 노랑 실선 상자 + 주황 「📘 설명」 이름표 + 「펼치기 ▾」 단추 모양
      · ⚙️ 켜고 끄는 곳 = 파란 테두리 + 굵은 왼쪽 줄 + 파란 바탕 이름표 + 스위치 둘레 빛
@@ -1224,8 +1178,6 @@
   .xm-ye{background:linear-gradient(135deg,#FFFBEB,#FFFDF5);border-color:#FBE3A3}
   .xmini .xmE{font-size:30px;line-height:1;flex:none;width:50px;text-align:center}
   .bnNow{font-size:14px;font-weight:700;color:#B54708;background:#FFFAEB;border-radius:10px;padding:7px 10px;margin-bottom:9px}
-  /* 🎬 13차 : 「30초 요약 영상으로 보기」를 따로 크게 */
-  .svHot{display:inline-flex;align-items:center;gap:6px;margin:7px 0 5px;padding:6px 14px;border-radius:999px;background:linear-gradient(135deg,#FF7A30,#F04438);color:#fff;font-size:15px;font-weight:900;box-shadow:0 3px 10px rgba(240,68,56,.28)}
   /* 📝 13차 : 설문 안 한 부모님께 — 홈 맨 위 알림 */
   .ntNudge{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#FFF1E5,#FFF8F1);border:2px solid #FDBA8C;border-radius:18px;padding:13px 13px;margin:4px 0 14px;cursor:pointer;box-shadow:0 4px 14px rgba(249,115,22,.15)}
   .ntNudge .nnI{font-size:30px;line-height:1;flex:none}
@@ -1308,7 +1260,8 @@
   .afRow > .grow, .afCard > .grow{flex:1 1 auto;min-width:0}
   .afRi{width:36px;height:36px;border-radius:11px;background:#F4F7FC;display:flex;align-items:center;justify-content:center;font-size:19px;flex:0 0 auto}
   .afRt{font-size:15px;font-weight:800;color:#1D2939;line-height:1.35}
-  .afRs{font-size:12.6px;color:#667085;margin-top:2px;line-height:1.45}
+  .afRs{font-size:12.8px;color:#475467;margin-top:3px;line-height:1.5}
+  .afNow{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:#6172F3;border-radius:6px;padding:1px 6px;margin-right:5px;vertical-align:1px}
   .afTag{display:inline-block;font-size:11px;font-weight:800;padding:1px 7px;border-radius:999px;background:#F2F4F7;color:#667085;vertical-align:1px}
   .afTag.on{background:#DCFAE6;color:#067647}
   .afGo{font-size:13px;font-weight:800;color:#4F46E5;white-space:nowrap;flex:0 0 auto}
@@ -1474,11 +1427,6 @@
       <div class="row"><div class="ic" style="background:#FEF3F2">🚦</div>
         <div class="grow"><div class="ttl">자녀 실시간 제한 상황</div><div class="val" id="vLive">-</div></div><div class="chev">›</div></div>
     </div>
-    <!-- 🎬 2026-11-11 : 30초 요약 (대표점장 「실시간 자녀폰 상황 30초 영상+설명 요약」) — openSummary -->
-    <div class="card tap svCard" onclick="openSummary()">
-      <div class="row"><div class="ic" style="background:#FFF4ED">🎬</div>
-        <div class="grow"><div class="ttl">자녀 실시간 제한 상황 <span class="betabadge">새 기능</span></div><div class="svHot">▶ 30초 요약 영상으로 보기</div><div class="val">지금 걸린 제한과 <b>잘못 설정된 곳</b>까지 그림 · 소리로 알려 드려요</div></div><div class="chev">›</div></div>
-    </div>
     <!-- 🔄 2026-11-11 : 「새로고침」을 더보기 → 홈으로 옮겼다 (대표점장) · id vSync 는 하나만 둔다 -->
     <div class="card tap" onclick="refreshAll(true)">
       <div class="row">
@@ -1552,7 +1500,7 @@
     <div class="card tap" onclick="openApps()">
       <div class="row">
         <div class="ic" style="background:#FEF3F2">📵</div>
-        <div class="grow"><div class="ttl">앱 차단 · 앱별 시간</div><div class="val" id="vApps">-</div></div>
+        <div class="grow"><div class="ttl">앱마다 막기 · 시간 정하기</div><div class="val" id="vApps">-</div></div>
         <div class="chev">›</div>
       </div>
     </div>
@@ -1601,7 +1549,7 @@
     </div>
     <div class="card tap" onclick="openSecurity()">
       <div class="row"><div class="ic" style="background:#F0FDF4">🔐</div>
-        <div class="grow"><div class="ttl">보안 설정</div><div class="val" id="vSecurity">-</div></div><div class="chev">›</div></div>
+        <div class="grow"><div class="ttl">Play 스토어 막기 (새 앱 설치)</div><div class="val" id="vSecurity">-</div></div><div class="chev">›</div></div>
     </div>
     <!-- 💬 2026-10-15 : 카톡 차단이 7개로 늘어 한 곳에 모았어요 -->
     <div class="card tap" onclick="openKakao()">
@@ -2228,7 +2176,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월24일 27차 테스트판 · 모아보기 색 · 숨기기 이름';
+const WEB_LABEL = '11월24일 28차 테스트판 · 요약영상 삭제 · 실시간 상황 쉽게';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -2834,7 +2782,9 @@ function paintMain(){
     if(m.mode==='BLOCK') blocked++; else if(m.mode==='WEEKLY') timed++;
   });
   const unlimited = J(p.whitelist_apps,[]).length;
-  document.getElementById('vApps').textContent = `차단 ${blocked} · 시간제한 ${timed} · 무제한 ${unlimited}`;
+  // 🆕 28차 : 이름만 봐서는 뭘 하는 곳인지 몰라 다들 지나쳤다(대표점장) → 예시 한 줄 + 지금 개수
+  document.getElementById('vApps').innerHTML = '게임은 막고, 유튜브는 30분처럼 <b>앱마다 따로</b> 정해요<br>' +
+    `⛔ 막음 ${blocked} · ⏱ 시간 ${timed} · ♾️ 상관없이 ${unlimited}`;
 
   document.getElementById('vUninst').innerHTML = badge(p.uninstall_blocked==='true','켜짐') +
     ' ' + J(p.uninstall_blocked_apps,[]).length+'개 앱 보호 중';
@@ -2845,7 +2795,7 @@ function paintMain(){
     if (el) el.innerHTML = p.unknown_call_ok !== 'true' ? '자녀폰 업데이트 후 쓸 수 있어요'
       : (p.unknown_call_blocked === 'true' ? badge(true, '막는 중') + ' 받을 번호 ' + J(p.call_allow_numbers,[]).length + '개' : '꺼져 있어요 — 모든 전화를 받아요'); }
   document.getElementById('vSecurity').innerHTML =
-    `Play스토어 ${p.play_store_blocked==='true'?'차단':'허용'}`;
+    (p.play_store_blocked==='true' ? '지금 막고 있어요 — 아이가 새 앱을 못 깔아요' : '⚠️ 지금 열려 있어요 — 아이가 새 앱을 깔 수 있어요');
   // 💬 2026-10-15 : 카톡 차단 몇 개 켜져 있나
   { const ks = ['open_chat_blocked','kakao_inapp_browser_blocked','kakao_openchat_create_blocked',
                 'kakao_openprofile_blocked','kakao_multiprofile_blocked','kakao_shortform_blocked','kakao_now_tab_blocked'];
@@ -3163,7 +3113,7 @@ const REC_LIM_WD = [60, 90, 120, 150, 180];        // 월~금 (limit_day_2~6)
 const REC_LIM_WE = [90, 120, 150, 180, 240];       // 일·토 (limit_day_1·7)
 let REC = { sel:{}, opt:{ dtWd:'22:00|07:00', dtWe:'23:00|08:00', limWd:120, limWe:180 }, touched:{} };
 
-/** 부모 비밀번호가 쉬운가 — 요약 영상(svWarnings)과 같이 쓴다. 기준을 한 곳에만 둔다(3-13) */
+/** 부모 비밀번호가 쉬운가 — 기준을 한 곳에만 둔다(3-13) · 2026-11-24 28차에 요약 영상을 지웠다 */
 function isEasyPin(pin){
   pin = String(pin || '');
   return /^[0-9]{6}$/.test(pin) && (/^(.)\1{5}$/.test(pin) || '0123456789'.includes(pin) || '9876543210'.includes(pin) ||
@@ -3219,7 +3169,7 @@ function recBuild(ans, p){
     if (p.play_store_blocked !== 'true')
       put('auto', { id:'ps', t:'🛡️ Play 스토어 초강력 차단 켜기', before:'열려 있어요 — 앱을 마음대로 받을 수 있어요', after:'막혀요 — 새 앱은 부모님이 잠깐 열어 주실 때만',
         rows:[{ key:'play_store_blocked', value:'true' }], def:true,
-        warn:'필요한 앱을 더 까셔야 하면 그때 「보안 설정」에서 잠깐 끄시면 돼요.' }, 'bypass');
+        warn:'필요한 앱을 더 까셔야 하면 그때 「Play 스토어 막기 (새 앱 설치)」에서 잠깐 끄시면 돼요.' }, 'bypass');
     else put('done', { id:'ps', t:'Play 스토어 초강력 차단 — 이미 켜져 있어요' }, 'bypass');
     if (kakao){
       if (p.kakao_inapp_browser_blocked === 'false')   // 값이 없으면 차단이 기본이다(3-23)
@@ -3563,7 +3513,7 @@ function recHome(){
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-//  🧮 앱 차단·시간제한 묶음 — 「실시간 제한 상황」과 「30초 요약」이 **같이** 쓴다 (2026-11-11 · 3-13)
+//  🧮 앱 차단·시간제한 묶음 — 「실시간 제한 상황」 · 「기능 모아보기」가 같이 쓴다 (2026-11-11 · 3-13 · 30초 요약은 28차에 지웠다)
 //  (paintLive 안에 있던 계산을 그대로 옮겼다. 두 화면이 서로 다른 개수를 말하면 안 된다)
 //   ⚠️ 「완전 차단」은 두 군데에 적힌다. 둘 다 봐야 한다.
 //     · blocked_apps  — 전산 「차단」 칩은 이것만 바꾼다 (rule_ 은 손대지 않는다)
@@ -3592,399 +3542,6 @@ function liveAppSets(){
   return { appB, blSet, timedMap, blocked, timed, free };
 }
 
-// ══════════════════════════════════════════════════════════════════════════
-//  🎬 자녀 실시간 제한 상황 요약 영상 (2026-11-11 신설 · 🆕 2026-11-12 2판)
-//  대표점장 (11-12) : 「안내 목소리 톤 마음에 안 듦 · 멈추는 기능이 없음 · 딱 30초 맞출 필요 없음(30~50초)
-//                     · 주의가 필요해 보이거나 잘못 설정한 것 같은 건 강조해서 알려 줘야 됨
-//                       예) 현재 Play 스토어가 열려 있어 지금 앱을 다운받을 수 있어요」
-//
-//  🔴 영상 파일을 만들지 않는다 — 자녀마다·시각마다 내용이 달라서 미리 만든 영상은 그 순간 거짓이 된다.
-//     「실시간 제한 상황」과 **같은 계산 함수**(liveSummary · liveTodayLimit · liveDowntime · liveAppSets …)로
-//     장면을 그때그때 만든다. 숫자가 화면마다 다르면 안 된다(3-6 · 3-25b).
-//  🔴 **켜져 있는 것만** 「막고 있어요」라고 말한다. 꺼진 차단을 막고 있다고 하면 그게 제일 큰 거짓말이다.
-//  🆕 2판 :
-//    ▸ ⚠️ 「꼭 확인해 주세요」 장면 — svWarnings() 가 **잘못됐거나 위험한 설정**을 찾아 빨갛게 보여 주고 읽어 준다.
-//       마지막 장면에서 「고치러 가기」 버튼으로 그 화면을 바로 연다.
-//    ▸ 장면 길이 = **말이 끝날 때까지** (소리를 끄면 글자 수로) → 합쳐서 30~50초.
-//    ▸ ⏸ 멈춤 버튼 · 🗣 목소리 바꾸기(폰에 있는 한국어 목소리 중 고름 · 기억함).
-//    ▸ 안드로이드 크롬은 speechSynthesis.pause() 가 잘 안 먹는다 → 멈추면 말을 끊고, 계속하면 **그 장면을 처음부터** 다시 읽는다.
-// ══════════════════════════════════════════════════════════════════════════
-let SV = null;
-const SV_TITLE = '자녀 실시간 제한 상황 30초 요약';
-const SV_BG = ['linear-gradient(160deg,#FF8A4C,#E8505B)', 'linear-gradient(160deg,#3B82F6,#6366F1)',
-               'linear-gradient(160deg,#10B981,#0EA5A4)', 'linear-gradient(160deg,#7C3AED,#C026D3)',
-               'linear-gradient(160deg,#F59E0B,#F97316)', 'linear-gradient(160deg,#0EA5E9,#2563EB)',
-               'linear-gradient(160deg,#14B8A6,#22C55E)', 'linear-gradient(160deg,#334155,#1E293B)'];
-const SV_BG_WARN = 'linear-gradient(160deg,#B42318,#7A271A)';
-
-function svVoiceOn(){ try{ return localStorage.getItem('sv_voice') !== '0'; }catch(e){ return true; } }
-function svHM(d){ return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
-function svDayRange(key){ const v = ST.pol[key] || '미설정'; if (v === '미설정' || v.indexOf('|') < 0) return null; const a = v.split('|'); return a[0] + ' ~ ' + a[1]; }
-
-/**
- * ⚠️ 잘못됐거나 위험해 보이는 설정 — 「요약 영상」과 끝 장면 「고치러 가기」가 같이 쓴다.
- *   lv : 'red'(꼭) · 'amber'(알아 두세요)   go : 누르면 열 화면(함수 이름 · 없으면 매장 문의)
- *   🔴 **확실한 것만** 넣는다 — 추측으로 「잘못됐어요」라고 하면 부모가 멀쩡한 걸 고친다.
- */
-function svWarnings(){
-  const p = ST.pol || {}, W = [];
-  const days = k => [1,2,3,4,5,6,7].map(i => p[k + i]);
-  if (p.play_store_blocked !== 'true')
-    W.push({ lv:'red', t:'Play 스토어가 열려 있어요', d:'지금 아이가 <b>앱을 마음대로 다운받을 수</b> 있어요.',
-             say:'지금 플레이 스토어가 열려 있어서, 아이가 앱을 마음대로 다운받을 수 있어요.', go:'openSecurity', btn:'Play 스토어 막으러 가기' });
-  // 하루 한도 — 스위치와 요일값이 어긋나면 **에러 없이** 안 걸린다(CLAUDE.md ⏰ 규칙 · 3-11)
-  { const on = p.daily_limit_enabled === 'true', set = days('limit_day_').some(v => Number(v ?? -1) >= 0);
-    if (on && !set) W.push({ lv:'red', t:'하루 한도가 실제로는 안 걸려요', d:'한도를 켜 두셨는데 <b>요일별 시간이 비어</b> 있어요.',
-                             say:'하루 한도를 켜 두셨는데, 요일별 시간이 비어 있어서 실제로는 안 걸려요.', go:'openLimit', btn:'하루 한도 고치기' });
-    if (!on && set) W.push({ lv:'red', t:'하루 한도 스위치가 꺼져 있어요', d:'요일별 시간은 적혀 있는데 <b>스위치가 꺼져</b> 있어 안 걸려요.',
-                             say:'요일별 시간은 적어 두셨는데, 하루 한도 스위치가 꺼져 있어서 안 걸려요.', go:'openLimit', btn:'하루 한도 켜기' }); }
-  { const on = p.dt_enabled === 'true', set = days('dt_day_').some(v => v && v !== '미설정');
-    if (on && !set) W.push({ lv:'red', t:'취침시간이 실제로는 안 걸려요', d:'취침시간을 켜 두셨는데 <b>요일별 시간이 비어</b> 있어요.',
-                             say:'취침시간을 켜 두셨는데, 요일별 시간이 비어 있어서 실제로는 안 걸려요.', go:'openDt', btn:'취침시간 고치기' });
-    if (!on && set) W.push({ lv:'red', t:'취침시간 스위치가 꺼져 있어요', d:'시간은 정해 두셨는데 <b>스위치가 꺼져</b> 있어 안 잠겨요.',
-                             say:'취침시간은 정해 두셨는데, 스위치가 꺼져 있어서 안 잠겨요.', go:'openDt', btn:'취침시간 켜기' });
-    // 취침 중엔 「허용 앱」에 없는 앱이 전부 막힌다 — 전화 **걸기**·문자도(받기는 된다 · 3-30)
-    if (on && set && !J(p.ignore_dt_apps, []).length)
-      W.push({ lv:'amber', t:'취침시간엔 전화 걸기·문자도 막혀요', d:'받기는 돼요. 걸게 하려면 「다운타임 허용 앱」에 넣어 주세요.',
-               say:'참고로 취침시간에는 전화 걸기와 문자도 막혀요. 받는 건 돼요.', go:'openIgnoreDt', btn:'허용 앱 정하기' }); }
-  // 부모 비밀번호가 너무 쉬우면 아이가 맞힌다 — 2026-10-26 실측 333대 중 64대가 123456 (3-11)
-  { const easy = isEasyPin(p.pin_plain);   // 기준은 isEasyPin 한 곳(맞춤 설정과 같이 쓴다)
-    if (easy) W.push({ lv:'red', t:'부모님 비밀번호가 너무 쉬워요', d:'아이가 <b>맞힐 수 있는</b> 숫자예요. 바꾸는 걸 권해요.',
-                       say:'부모님 비밀번호가 너무 쉬워서 아이가 맞힐 수 있어요. 바꾸시는 걸 권해요.', go:'openPinChange', btn:'비밀번호 바꾸기' }); }
-  if (p.kakao_inapp_browser_blocked === 'false')
-    W.push({ lv:'red', t:'카톡 링크로 인터넷이 열려요', d:'카톡 대화방 링크를 누르면 <b>인터넷이 열려요</b>.',
-             say:'지금은 카톡 대화방 링크를 누르면 인터넷이 열려요.', go:'openKakao', btn:'카톡 링크 막기' });
-  if (p.uninstall_blocked !== 'true')
-    W.push({ lv:'amber', t:'앱 삭제 방지가 꺼져 있어요', d:'아이가 깔려 있는 앱을 <b>지울 수</b> 있어요.',
-             say:'앱 삭제 방지가 꺼져 있어서, 아이가 앱을 지울 수 있어요.', go:'openUninstall', btn:'앱 삭제 방지 켜기' });
-  if (p.apk_install_blocked === 'false')
-    W.push({ lv:'amber', t:'앱 파일(APK) 설치가 열려 있어요', d:'인터넷에서 받은 <b>앱 파일로도</b> 설치할 수 있어요. 매장에서 막아 드려요.',
-             say:'인터넷에서 받은 앱 파일로도 설치할 수 있게 열려 있어요. 매장에서 막아 드릴 수 있어요.', go:'', btn:'' });
-  return W.sort((a, b) => (a.lv === 'red' ? 0 : 1) - (b.lv === 'red' ? 0 : 1));
-}
-
-/** 장면 목록 — 지금 데이터로 만든다 */
-function svBuild(){
-  const p = ST.pol, name = ST.dev?.child_name || ST.name || '우리 아이';
-  const idx = _dayIdx(), now = new Date();
-  const lv = liveSummary(), lim = liveTodayLimit(), base = liveLimitBaseMin(), screen = liveUsedMin();
-  const dt = liveDowntime(), nd = liveNextDowntime(), ac = liveAcademy(), fl = forceLockLeft();
-  const A = liveAppSets(), W = svWarnings();
-  const appNm = k => ((ST.apps || []).find(a => a.app_package === k) || {}).app_name || k;
-  const lvTxt = String(lv.txt || '').split(' ').slice(1).join(' ');     // 앞의 🔴/🟢 를 뗀다
-  const S = [];
-
-  // ① 표지
-  S.push({ img:'live', k:'실시간 · ' + svHM(now) + ' 기준', t:esc(name) + '의 공신폰', d:'지금 어떻게 지켜지고 있는지<br>같이 살펴볼게요',
-           vk:'01', say:SV_LINE['01'] });
-
-  // ② 지금 상태
-  S.push({ img: lv.lock ? 'lockhero' : 'freehero', k:'지금 이 순간', big: lv.lock ? '🔒 잠겨 있어요' : '✅ 쓸 수 있어요',
-           d: esc(lvTxt) + '<br><span style="opacity:.85">오늘 화면을 켠 시간 ' + fmtMin(screen) + '</span>',
-           vk: lv.lock ? '02' : '03', say: SV_LINE[lv.lock ? '02' : '03'] });
-
-  // ③ ⚠️ 꼭 확인해 주세요 — 있을 때만 · 빨간 배경으로 눈에 띄게
-  if (W.length){
-    const red = W.filter(w => w.lv === 'red').length;
-    S.push({ img:'security', warn:true, k:'⚠️ 꼭 확인해 주세요', t:(red ? '확인이 필요한 곳이 ' : '알아 두실 것이 ') + W.length + '개 있어요',
-             chips: W.slice(0, 5).map(w => ({ t:(w.lv === 'red' ? '🔴 ' : '🟠 ') + w.t, bad: w.lv === 'red', amb: w.lv !== 'red' })),
-             d: W.length > 5 ? '그 밖에 ' + (W.length - 5) + '개 더 있어요 — 마지막 화면에서 볼 수 있어요' : '',
-             vk:'04', say:SV_LINE['04'] });
-  }
-
-  // ④ 하루 한도
-  if (lim < 0){
-    S.push({ img:'limit', k:'하루 사용시간', t:'하루 한도는 정해져 있지 않아요', d:'필요하시면 「기능 → 하루 사용시간 한도」에서<br>요일마다 정할 수 있어요',
-             vk:'05', say:SV_LINE['05'] });
-  } else {
-    const left = Math.max(0, lim - base);
-    const extra = (A.timed.length || A.free.length) ? '<br><span style="opacity:.85">⚠️ 앱별 시간을 정한 앱 · 무제한 앱은 한도와 따로 세요</span>' : '';
-    S.push({ img:'limit', k:'오늘 하루 한도 ' + fmtMin(lim), big: lim === 0 ? '오늘은 쉬는 날' : fmtMin(left) + '<small>남았어요</small>',
-             d: lim === 0 ? '오늘은 폰을 쓸 수 없게 정해 두셨어요' : ('한도 ' + fmtMin(lim) + ' 중 ' + fmtMin(Math.min(base, lim)) + ' 썼어요' + extra),
-             vk: lim === 0 ? '06' : '07', say: SV_LINE[lim === 0 ? '06' : '07'] });
-  }
-
-  // ⑤ 취침 · 학원 · 즉시 차단
-  { const chips = [];
-    const dr = p.dt_enabled === 'true' ? svDayRange('dt_day_' + idx) : null;
-    const ar = p.dt2_enabled === 'true' ? svDayRange('dt2_day_' + idx) : null;
-    chips.push(dr ? { t:'🌙 오늘 취침 ' + dr } : { t: p.dt_enabled === 'true' ? '🌙 오늘은 취침시간 없음' : '🌙 취침시간 꺼짐', off:true });
-    chips.push(ar ? { t:'📚 오늘 학원 ' + ar } : { t: p.dt2_enabled === 'true' ? '📚 오늘은 학원시간 없음' : '📚 학원시간 꺼짐', off:true });
-    if (fl.on) chips.unshift({ t:'🔒 부모님이 잠가 두셨어요' + (fl.txt ? ' (' + fl.txt + ')' : '') });
-    const t = fl.on ? '지금 부모님이 잠가 두셨어요' : dt ? '지금은 취침시간이에요' : ac ? '지금은 학원시간이에요'
-            : nd ? '오늘 밤 ' + nd.s + '부터 잠겨요' : '정해 둔 시간에 저절로 잠겨요';
-    S.push({ img:'dt', k:'잠기는 시간', t, chips,
-             vk: fl.on ? '08' : dt ? '09' : ac ? '10' : nd ? '11' : (dr || ar) ? '12' : '13' });
-    { const z = S[S.length - 1]; z.say = SV_LINE[z.vk]; }
-  }
-
-  // ⑥ 앱
-  { const U = (typeof LIVE_APPUSE === 'object' && LIVE_APPUSE) ? LIVE_APPUSE : {};
-    const top = Object.keys(U).map(k => ({ k, m:Number(U[k]) || 0 })).filter(x => x.m > 0)
-                  .sort((a, b) => b.m - a.m).slice(0, 3);
-    const chips = [{ t:'⛔ 막은 앱 ' + A.blocked.length + '개' }, { t:'⏱️ 시간 정한 앱 ' + A.timed.length + '개' }, { t:'♾️ 무제한 앱 ' + A.free.length + '개' }];
-    S.push({ img:'apps', k:'앱 관리', t:'오늘 가장 많이 쓴 앱',
-             d: top.length ? top.map(x => esc(appNm(x.k)) + ' <b>' + fmtMin(x.m) + '</b>').join(' · ') : '오늘은 아직 쓴 앱이 없어요',
-             chips,
-             vk:'14', say:SV_LINE['14'] });
-  }
-
-  // ⑦ 인터넷 · 우회 차단 — ⭐ 시내모바일 핵심 기술. 🔴 켜져 있는 것만 「막아요」라고 말한다
-  { const chips = [];
-    // 카톡 링크 차단은 「값이 없으면 차단」이 기본이다(전산 kakaoBlocked · 3-23)
-    chips.push(p.kakao_inapp_browser_blocked !== 'false' ? { t:'💬 카톡 링크로 인터넷 열기 차단' } : { t:'💬 카톡 링크로 인터넷이 열려요', bad:true });
-    const ks = ['open_chat_blocked','kakao_openchat_create_blocked','kakao_openprofile_blocked','kakao_multiprofile_blocked','kakao_shortform_blocked','kakao_now_tab_blocked'];
-    const kn = ks.filter(k => p[k] === 'true').length;
-    if (kn) chips.push({ t:'💬 카톡 오픈채팅·숏폼 등 ' + kn + '가지 차단' });
-    if (p.youtube_outside_tube_blocked === 'true') chips.push({ t:'📺 유튜브는 시내YouTube 에서만' });
-    if (p.instagram_outside_dm_blocked === 'true') chips.push({ t:'📷 인스타는 시내디엠 DM 만' });
-    chips.push(p.chrome_enabled === 'true' ? { t:'🌐 크롬은 허락한 사이트 ' + J(p.chrome_allowed_domains, []).length + '개만' } : { t:'🌐 인터넷(크롬) 꺼짐', off:true });
-    const real = chips.filter(c => !c.off && !c.bad).length;
-    S.push({ img:'kakao', k:'인터넷 · 우회 차단', t: real ? '앱 속 인터넷 · 유튜브<br>우회도 막고 있어요' : '인터넷 차단을 확인해 주세요',
-             chips,
-             vk: real ? '15' : '16', say: SV_LINE[real ? '15' : '16'] });
-  }
-
-  // ⑧ 안전
-  { const chips = [
-      { t: locOn() ? '📍 위치 확인 켜짐' : '📍 위치 확인 꺼짐', off: !locOn() },
-      { t: '🆘 긴급 연락처 ' + J(p.sos_whitelist, []).length + '개', off: !J(p.sos_whitelist, []).length },
-      { t: p.uninstall_blocked === 'true' ? '🛡️ 앱 삭제 방지 켜짐' : '🛡️ 앱 삭제 방지 꺼짐', off: p.uninstall_blocked !== 'true' },
-      { t: p.play_store_blocked === 'true' ? '🏪 Play 스토어 차단' : '🏪 Play 스토어 열림', bad: p.play_store_blocked !== 'true' } ];
-    const onN = chips.filter(c => !c.off && !c.bad).length;
-    S.push({ img:'security', k:'안전장치', t: onN ? '안전장치도 함께 지키고 있어요' : '안전장치를 한 번 확인해 주세요', chips,
-             vk: onN ? '17' : '18', say: SV_LINE[onN ? '17' : '18'] });
-  }
-
-  // ⑨ 마무리 — 확인할 것이 있으면 「고치러 가기」 버튼을 같이 보여 준다
-  S.push({ img:'store', k:'마지막으로', t: W.length ? '고칠 곳은 아래에서 바로 열 수 있어요' : '끝까지 봐 주셔서 고마워요',
-           d: W.length ? '' : '궁금한 게 있으면 매장 카카오톡으로<br>편하게 물어봐 주세요', end:true, warns:W,
-           vk: W.length ? '19' : '20', say: SV_LINE[W.length ? '19' : '20'] });
-
-  // 장면 길이 — 소리를 켜면 「말이 끝날 때까지」(svLoop), 끄면 글자 수로. 이 값은 진행 막대와 「소리 끔」일 때 쓴다
-  S.forEach((s, i) => { s.bg = s.warn ? SV_BG_WARN : SV_BG[i % SV_BG.length];
-    s.dur = Math.max(3500, Math.min(9000, 1500 + (s.say || '').length * 95)); });
-  return S;
-}
-
-// ── 🎙 2026-11-20 : 녹음한 아나운서 목소리 (대표점장 「차분하고 귀에 쏙쏙 · 여자 아나운서 부드러운 톤 · 한국 사람 말투」) ──
-//  ▸ 폰 기계 목소리(speechSynthesis)는 폰마다 다르고 여자 목소리를 못 고르는 폰이 많아서, 문장 20개를 미리 녹음해 둔다
-//    (Qwen TTS · 한국어 · 「서울 표준어 여자 아나운서 · 차분하게」 · 대표점장이 샘플 B 로 고름 · 파일 `audio/svNN.mp3`).
-//  ▸ 녹음은 **정해진 문장만** 된다 → 숫자 · 앱 이름 · 시각은 **소리로 읽지 않고 화면 글씨로만** 보여 준다.
-//  🔴 문장을 바꾸면 **녹음도 다시** 해야 한다 — 글자만 바꾸면 자막과 소리가 어긋난다. 새 문장은 새 번호로.
-//  ▸ 녹음이 안 열리면(오프라인 · 자동재생 막힘) 같은 문장을 폰 기계 목소리로 읽는다 — 소리가 아예 없는 것보다 낫다.
-const SV_LINE = {
-  '01':'우리 아이 폰이 지금 어떻게 지켜지고 있는지, 함께 살펴볼게요.',
-  '02':'지금은 폰이 잠겨 있어요. 잠긴 이유는 화면에 적어 두었어요.',
-  '03':'지금은 폰을 쓸 수 있어요. 오늘 화면을 켠 시간도 함께 보여 드릴게요.',
-  '04':'잠깐, 꼭 확인해 주세요. 설정이 잘못된 곳이 있어요. 화면에서 하나씩 확인해 보세요.',
-  '05':'하루 사용시간 한도는 아직 정해져 있지 않아요.',
-  '06':'오늘은 폰을 쓸 수 없는 날로 정해 두셨어요.',
-  '07':'오늘 하루 한도 중에 남은 시간이에요. 다 쓰면 앱이 잠겨요.',
-  '08':'지금은 부모님이 직접 잠가 두셨어요.',
-  '09':'지금은 취침시간이라 잠겨 있어요. 끝나는 시각은 화면에서 보실 수 있어요.',
-  '10':'지금은 학원시간이라 잠겨 있어요. 끝나는 시각은 화면에서 보실 수 있어요.',
-  '11':'오늘 밤 취침시간이 되면 저절로 잠겨요.',
-  '12':'정해 둔 시간이 되면 저절로 잠겨요.',
-  '13':'오늘은 시간 맞춰 잠기는 설정이 없어요.',
-  '14':'막아 둔 앱과 시간을 정해 둔 앱, 그리고 오늘 가장 많이 쓴 앱이에요.',
-  '15':'카톡 같은 앱 안에서 인터넷이나 유튜브로 빠져나가는 길도 막고 있어요.',
-  '16':'인터넷 차단 설정을 한 번 확인해 주세요.',
-  '17':'위치 확인과 앱 삭제 방지 같은 안전장치도 함께 지키고 있어요.',
-  '18':'안전장치가 꺼져 있어요. 한 번 확인해 주세요.',
-  '19':'확인이 필요한 곳은 아래 버튼을 눌러 바로 고치실 수 있어요. 끝까지 봐 주셔서 고마워요.',
-  '20':'궁금한 게 있으면 매장 카카오톡으로 편하게 물어봐 주세요. 끝까지 봐 주셔서 고마워요.'
-};
-const SV_AUDIO_V = '20261120';
-let SV_AUD = null;   // 한 개를 계속 쓴다 — 아이폰은 「누른 순간 한 번 틀어 본」 그 소리만 나중에도 틀어 준다
-function svAud(){ if (!SV_AUD){ SV_AUD = new Audio(); SV_AUD.preload = 'auto'; } return SV_AUD; }
-/** 영상을 여는 「누른 순간」에 소리를 깨운다(아이폰 · 일부 안드로이드는 누른 순간이 아니면 소리를 막는다) */
-function svUnlockAudio(){
-  try{ const a = svAud(); a.src = 'audio/sv01.mp3?v=' + SV_AUDIO_V; a.muted = true;
-    const p = a.play(); if (p && p.then) p.then(() => { a.pause(); a.muted = false; }).catch(() => { a.muted = false; }); else a.muted = false;
-  }catch(e){}
-}
-/** 지금 나오는 소리를 멈춘다 — 녹음 · 기계 목소리 둘 다 */
-function svHush(){
-  try{ if (SV_AUD){ SV_AUD.pause(); } }catch(e){}
-  try{ if ('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){}
-}
-// ── 목소리 ────────────────────────────────────────────────────────────
-//  폰마다 들어 있는 한국어 목소리가 다르다 — 이름에 「Google·Neural·Natural·Premium·Enhanced·유나·Yuna·Sora」가 들어간
-//  것이 대체로 자연스럽다. 부모가 「목소리 바꾸기」로 고르면 그 이름을 기억한다(sv_voice_name).
-function svKoVoices(){
-  try{
-    const all = (speechSynthesis.getVoices() || []).filter(v => String(v.lang || '').toLowerCase().indexOf('ko') === 0);
-    const score = v => { const n = String(v.name || ''); let s = 0;
-      if (/Neural|Natural|Premium|Enhanced|향상/i.test(n)) s += 5;
-      if (/Google/i.test(n)) s += 3;
-      if (/Yuna|유나|Sora|Samsung|SMT/i.test(n)) s += 2;
-      if (v.localService) s += 1;
-      return s; };
-    return all.sort((a, b) => score(b) - score(a));
-  }catch(e){ return []; }
-}
-function svPickVoice(){
-  const list = svKoVoices(); if (!list.length) return null;
-  let want = ''; try{ want = localStorage.getItem('sv_voice_name') || ''; }catch(e){}
-  return list.find(v => v.name === want) || list[0];
-}
-async function openSummary(){
-  svUnlockAudio();   // 🎙 누른 순간에 — await 뒤면 아이폰이 소리를 막는다
-  loading(true);
-  const ok = await liveReload();
-  try{ const M = ST.appMeta; await loadAppMeta(!!(M && M.code === ST.code && !Object.keys(M.icons || {}).length && (ST.apps || []).length)); }catch(e){}
-  try{ speechSynthesis.getVoices(); }catch(e){}           // 목소리 목록을 미리 깨운다(크롬은 처음에 빈 배열을 준다)
-  loading(false);
-  if (ok === false){ toast('자녀폰 정보를 불러오지 못했어요. 잠시 뒤 다시 눌러 주세요'); return; }
-  let el = document.getElementById('svBox');
-  if (!el){ el = document.createElement('div'); el.id = 'svBox'; el.className = 'sv hide'; document.body.appendChild(el); }
-  SV = { i:0, scenes:svBuild(), el:0, last:performance.now(), paused:false, hold:null, raf:0, voice:svVoiceOn(), spoke:false, doneAt:0, uid:0 };
-  el.innerHTML =
-    '<div class="svBars">' + SV.scenes.map(() => '<i><b></b></i>').join('') + '</div>' +
-    '<div class="svTop"><span class="sp">🎬 ' + esc(ST.dev?.child_name || ST.name || '') + ' · 실시간 요약</span>' +
-      '<button class="svBtn" id="svVoice" onclick="svToggleVoice()"></button><button class="svBtn" onclick="navBack()">닫기 ✕</button></div>' +
-    '<div id="svStage"></div><div class="svPause">⏸</div>' +
-    '<div class="svTapL" id="svL"></div><div class="svTapR" id="svR"></div>' +
-    '<div class="svBot"><div class="svCap" id="svCap"></div>' +
-      '<div class="svCtl"><button class="svCb" onclick="svGo(SV.i-1)" aria-label="이전">◀</button>' +
-      '<button class="svCb big" id="svPP" onclick="svPause(!SV.paused)">⏸ 멈춤</button>' +
-      '<button class="svCb" onclick="svGo(SV.i+1)" aria-label="다음">▶</button></div></div>';
-  el.classList.remove('hide');
-  document.body.style.overflow = 'hidden';
-  navPush(() => svClose());
-  svWireTap(document.getElementById('svL'), -1);
-  svWireTap(document.getElementById('svR'), +1);
-  svPaintVoice();
-  svGo(0);
-  // ⏱ requestAnimationFrame 은 화면을 안 그리는 동안 멈춘다(폰 절전·창 가림) → 0.1초 간격 타이머로 잰다
-  clearInterval(SV.tick); SV.tick = setInterval(svLoop, 100);
-}
-
-/** 눌렀다 떼면 넘기고, 꾹 누르고 있으면 멈춘다 */
-function svWireTap(el, dir){
-  if (!el) return;
-  el.addEventListener('pointerdown', () => { if (!SV) return; SV.hold = setTimeout(() => { if (SV){ SV.hold = 'held'; svPause(true); } }, 280); });
-  el.addEventListener('pointerup', () => { if (!SV) return;
-    if (SV.hold === 'held'){ SV.hold = null; svPause(false); return; }
-    clearTimeout(SV.hold); SV.hold = null; svGo(SV.i + dir); });
-  el.addEventListener('pointercancel', () => { if (!SV) return; clearTimeout(SV.hold); if (SV.hold === 'held') svPause(false); SV.hold = null; });
-}
-
-/** 멈춤 / 계속 — 멈추면 말을 끊고, 계속하면 그 장면을 처음부터 다시 읽는다(안드로이드 pause 가 불안정하다) */
-function svPause(on){
-  if (!SV) return;
-  SV.paused = on;
-  const b = document.getElementById('svBox'); if (b) b.classList.toggle('paused', on);
-  const pp = document.getElementById('svPP'); if (pp) pp.textContent = on ? '▶ 계속' : '⏸ 멈춤';
-  if (on) svHush();
-  else svGo(SV.i, true);
-}
-
-function svGo(i, keepPause){
-  if (!SV) return;
-  i = Math.max(0, Math.min(SV.scenes.length - 1, i));
-  SV.i = i; SV.el = 0; SV.last = performance.now(); SV.spoke = false; SV.doneAt = 0;
-  const s = SV.scenes[i];
-  const chips = (s.chips || []).map((c, j) => '<span class="svChip' + (c.off ? ' off' : '') + (c.bad ? ' bad' : '') + (c.amb ? ' amb' : '') +
-    '" style="animation-delay:' + (0.45 + j * 0.12).toFixed(2) + 's">' + esc(c.t) + '</span>').join('');
-  const fix = (s.warns || []).filter(w => w.go).map(w => '<button class="svFix' + (w.lv === 'red' ? ' r' : '') + '" onclick="svFixGo(&#39;' + w.go + '&#39;)">' +
-    (w.lv === 'red' ? '🔴 ' : '🟠 ') + esc(w.btn || w.t) + ' ›</button>').join('');
-  const noFix = (s.warns || []).filter(w => !w.go).map(w => '<div class="svFixN">🟠 ' + esc(w.t) + ' — 매장에 말씀해 주세요</div>').join('');
-  document.getElementById('svStage').innerHTML =
-    '<div class="svScene' + (s.warn ? ' warn' : '') + (s.end ? ' end' : '') + '"><div class="svBg" style="background:' + s.bg + '"></div>' +
-      '<div class="svImgW">' + icoImg(s.img, 'svImg') + '</div>' +
-      '<div class="svK">' + esc(s.k || '') + '</div>' +
-      (s.big ? '<div class="svBig">' + s.big + '</div>' : '') +
-      (s.t ? '<div class="svT">' + s.t + '</div>' : '') +
-      (s.d ? '<div class="svD">' + s.d + '</div>' : '') +
-      (chips ? '<div class="svChips">' + chips + '</div>' : '') +
-      (s.end ? '<div class="svEnd">' + fix + noFix +
-               '<button class="b" onclick="svGo(0)">🔁 처음부터 다시 보기</button><button class="b" onclick="navBack()">닫기</button></div>' : '') +
-    '</div>';
-  // 마지막 장면에서는 버튼을 눌러야 하니 넘기기 영역을 치운다
-  ['svL','svR'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = s.end ? 'none' : ''; });
-  const cap = document.getElementById('svCap'); if (cap) cap.textContent = s.say || '';
-  { const bx = document.getElementById('svBox'); if (bx) bx.classList.toggle('endmode', !!s.end); }   // 마지막 장면은 자막을 숨겨 버튼을 가리지 않게
-  document.querySelectorAll('#svBox .svBars i b').forEach((b, j) => { b.style.width = j < i ? '100%' : '0'; });
-  if (!keepPause && SV.paused){ SV.paused = false; const bx = document.getElementById('svBox'); if (bx) bx.classList.remove('paused');
-    const pp = document.getElementById('svPP'); if (pp) pp.textContent = '⏸ 멈춤'; }
-  if (!SV.paused) svSay(s);
-}
-
-/** 다음 장면으로 넘기는 판단 — 소리를 켜면 「말이 끝나고 1초 뒤」, 끄면 글자 수로 정한 시간 */
-function svLoop(){
-  if (!SV) return;
-  const now = performance.now();
-  if (!SV.paused && !document.hidden) SV.el += now - SV.last;
-  SV.last = now;
-  const s = SV.scenes[SV.i];
-  let f, next = false;
-  if (SV.voice && SV.canSpeak){
-    f = SV.spoke ? 1 : Math.min(0.95, SV.el / s.dur);
-    // 말이 끝났으면 1초 쉬고 넘긴다 · 말이 안 끝나도 너무 오래면(소리가 막힌 폰) 넘긴다
-    next = (SV.spoke && now - SV.doneAt > 1000 && SV.el > 2500) || SV.el > s.dur + 9000;
-  } else {
-    f = Math.min(1, SV.el / s.dur);
-    next = f >= 1;
-  }
-  const bars = document.querySelectorAll('#svBox .svBars i b');
-  if (bars[SV.i]) bars[SV.i].style.width = (f * 100).toFixed(1) + '%';
-  if (next && !SV.paused && SV.i < SV.scenes.length - 1) svGo(SV.i + 1);
-}
-
-function svSay(s){
-  if (!SV) return;
-  SV.canSpeak = false;
-  svHush();
-  if (!SV.voice || !s || !s.say) return;
-  const uid = ++SV.uid;
-  const done = () => { if (SV && SV.uid === uid){ SV.spoke = true; SV.doneAt = performance.now(); } };
-  // ① 녹음한 아나운서 목소리
-  if (s.vk){
-    try{
-      const a = svAud();
-      a.onended = done;
-      a.onerror = () => { if (SV && SV.uid === uid) svSayTts(s.say, uid, done); };
-      a.muted = false; a.src = 'audio/sv' + s.vk + '.mp3?v=' + SV_AUDIO_V; a.currentTime = 0;
-      SV.canSpeak = true;
-      const p = a.play();
-      if (p && p.catch) p.catch(e => { console.warn('녹음 재생 실패:', e && e.name, e && e.message); if (SV && SV.uid === uid) svSayTts(s.say, uid, done); });
-      return;
-    }catch(e){ console.warn('녹음 재생 실패:', e && e.name, e && e.message); }
-  }
-  svSayTts(s.say, uid, done);
-}
-/** ② 녹음이 안 될 때만 — 폰 기계 목소리로 같은 문장을 읽는다 */
-function svSayTts(t, uid, done){
-  if (!SV || SV.uid !== uid) return;
-  try{
-    if (!('speechSynthesis' in window)){ SV.canSpeak = false; return; }
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(t);
-    u.lang = 'ko-KR'; u.rate = 0.95; u.pitch = 1.0;
-    const v = svPickVoice(); if (v) u.voice = v;
-    u.onend = done; u.onerror = done;
-    SV.canSpeak = true;
-    speechSynthesis.speak(u);
-  }catch(e){ console.warn('읽어주기 실패:', e && e.name, e && e.message); SV.canSpeak = false; }
-}
-function svPaintVoice(){ const b = document.getElementById('svVoice'); if (b) b.textContent = SV && SV.voice ? '🔊 소리 켬' : '🔇 소리 끔'; }
-function svToggleVoice(){
-  if (!SV) return;
-  SV.voice = !SV.voice;
-  try{ localStorage.setItem('sv_voice', SV.voice ? '1' : '0'); }catch(e){}
-  svPaintVoice();
-  if (SV.voice) svGo(SV.i, true); else { svHush(); SV.canSpeak = false; }
-}
-function svClose(){
-  if (SV){ clearInterval(SV.tick); clearTimeout(SV.hold); }
-  SV = null;
-  svHush();
-  const el = document.getElementById('svBox'); if (el){ el.classList.add('hide'); el.innerHTML = ''; }
-  document.body.style.overflow = '';
-}
-/** 「고치러 가기」 — 영상을 닫고 그 화면을 연다 */
 // ══════════════════════════════════════════════════════════════════════════
 //  👆 지문 · 얼굴로 열기 (2026-11-12 · 대표점장)
 //  「부모폰에서 비밀번호 치고 들어가는 거 지문이나 얼굴인식으로 할 수 있는지 · 갤럭시 지문 · 아이폰 Face ID
@@ -4117,10 +3674,6 @@ async function lockPickBio(){
   toast('✅ 다음부터 ' + bioName() + '으로 열어요'); openLockType();
 }
 
-function svFixGo(fn){
-  navBack();
-  setTimeout(() => { try{ if (typeof window[fn] === 'function') window[fn](); }catch(e){ toast('화면을 열지 못했어요'); } }, 80);
-}
 
 
 const DM_PKG = 'com.example.dmonly_v2';
@@ -4611,7 +4164,7 @@ const CARD_EXP = {
 function cardExpText(fn){
   if (CARD_EXP[fn]) return CARD_EXP[fn];
   // F_OPEN 은 {키:'함수명'} 이라 뒤집어 찾는다. 같은 함수를 여러 키가 쓰면
-  // **FEATURES 에 먼저 나오는 쪽**이 대표다 (apps→'앱 차단·앱별 시간', sound→'소리 변경').
+  // **FEATURES 에 먼저 나오는 쪽**이 대표다 (apps→'앱마다 막기 · 시간 정하기', sound→'소리 변경').
   const k = Object.keys(F_OPEN).find(x => F_OPEN[x] === fn);
   return (k && F_BY_K[k]) ? F_BY_K[k].one : '';
 }
@@ -4929,7 +4482,7 @@ const FEATURES = [
   art:{ kind:'list', rows:[{ ok:true, w:52 },{ ok:true, w:40 },{ ok:false, w:58 },{ ok:false, w:34 },{ ok:true, w:46 }],
         lc:'넣은 주소만 열려요', alt:'허용 사이트 목록' } },
 
-{ k:'apps', t:'📵 앱 차단 · 앱별 시간', sub:'앱 차단 · 앱별 시간',
+{ k:'apps', t:'📵 앱마다 막기 · 시간 정하기', sub:'앱마다 막기 · 시간 정하기',
   one:'앱마다 다르게 정해요. 아예 막거나, 요일별로 시간을 줄 수 있어요.',
   what:['앱 하나를 골라 <b>①아예 차단 ②요일마다 몇 분 ③시간 무제한</b> 중에서 정해요.',
         '「차단 + 아이콘 숨기기」를 고르면 <b>아이콘 자체가 사라져요</b> — 앱이 있는 줄도 모르게 돼요.'],
@@ -4938,10 +4491,10 @@ const FEATURES = [
         '숨긴 앱을 되돌리려면 이 화면에서 그 앱을 찾아 숨김을 풀어주세요.'],
   art:{ kind:'grid', hi:1, st:'time', lc:'제한 없음', rc:'하루 30분', alt:'앱별 시간 제한' } },
 
-// 🔀 2026-11-10 (4차) : 「앱 차단」 화면에서 빼고 **보안 설정** 아래로 옮겼다(대표점장). sub 는 null — 보안 설정의 설명은 security 가 한다
+// 🔀 2026-11-10 (4차) : 「앱 차단」 화면에서 빼고 **Play 스토어 막기 (새 앱 설치)** 아래로 옮겼다(대표점장). sub 는 null — Play 스토어 막기 (새 앱 설치)의 설명은 security 가 한다
 { k:'newapp', t:'🆕 새로 생긴 앱 알아보기', sub:null,
-  one:'보안 설정에서 최근 한 달 안에 새로 깔린 앱을 모아 봐요.',
-  what:['<b>안전 → 보안 설정</b> 아래에 최근 한 달 안에 새로 깔린 앱이 <b>아이콘과 함께</b> 나와요.',
+  one:'Play 스토어 막기 (새 앱 설치)에서 최근 한 달 안에 새로 깔린 앱을 모아 봐요.',
+  what:['<b>안전 → Play 스토어 막기 (새 앱 설치)</b> 아래에 최근 한 달 안에 새로 깔린 앱이 <b>아이콘과 함께</b> 나와요.',
         '앱마다 <b>「N일 전 설치」</b>가 붙어요. 한 달이 지난 앱은 목록에서 빠져요.'],
   when:['「우리 아이가 뭘 새로 깔았지?」가 궁금할 때요.'],
   note:['🔴 <b>「N일 전 설치」와 「N일 전부터」는 다른 뜻이에요.</b> <b>「설치」</b>는 그 앱을 <b>깐 날</b>이고, <b>「부터」</b>는 깐 날을 모를 때 <b>처음 쓴 날</b>로 대신 보여드리는 거예요. 자녀폰 앱이 최신으로 올라가면 전부 「설치」로 바뀌어요.',
@@ -5004,13 +4557,13 @@ const FEATURES = [
         r:{ emo:'📞', txt:'아는 번호', sub:'그대로 울려요', bg:'#EAF7F0', fg:'#2B8A5A' },
         lc:'모르는 번호', rc:'아는 번호', rok:true, alt:'모르는 번호 전화 막기' } },
 
-{ k:'security', t:'🔐 보안 설정', sub:'보안 설정',
+{ k:'security', t:'🛡️ Play 스토어 막기 (새 앱 설치)', sub:'Play 스토어 막기 (새 앱 설치)',
   one:'Play 스토어를 초강력 차단해서 아이가 새 앱을 못 깔게 해요.',
   what:['아이콘만 숨기는 게 아니라 <b>기기 관리(MDM) 권한</b>으로 Play 스토어를 아예 꺼 둬요.',
         '최근 한 달 안에 새로 깔린 앱도 여기서 모아 봐요.'],
   when:['아이가 몰래 게임 · SNS 앱을 깔까 걱정될 때요.'],
   note:['새 앱을 깔아야 할 때는 스위치를 끄고 → 아이 폰을 <b>한 번 껐다 켜고</b> → 다 깐 뒤 <b>다시 켜</b> 주세요.'],
-  art:{ kind:'grid', hi:3, st:'lock', ring:true, lc:'새 앱 설치 가능', rc:'설치 못 해요', rok:true, alt:'보안 설정' } },
+  art:{ kind:'grid', hi:3, st:'lock', ring:true, lc:'새 앱 설치 가능', rc:'설치 못 해요', rok:true, alt:'Play 스토어 막기 (새 앱 설치)' } },
 
 { k:'kakao', t:'💬 카톡 차단', sub:'카톡 차단',
   one:'카톡은 쓰면서, 카톡 안의 인터넷·영상만 막아요.',
@@ -5112,56 +4665,77 @@ const AF_KAKAO = ['open_chat_blocked','kakao_inapp_browser_blocked','kakao_openc
 //  kind 'sw' = 스위치 · 'go' = 설정 화면으로
 //  need(p) : 켜기 전에 꼭 있어야 하는 것이 없으면 안내 문구 · lockNow(p) : 켜면 지금 바로 잠기면 true
 //  gate(p) : 자녀앱이 아직 못 하면 안내 문구(스위치 대신)
+// 🆕 2026-11-24 (28차) 대표점장 「모아보기 밑 설명에 『현재는 이렇게 되어 있다』는 느낌 — 『오늘은 무제한』처럼 단순해서 헷갈린다」
+//   ▸ 상태 문구(st)는 **지금 정해진 모양을 한 문장으로** — 앞에 「지금」 이름표를 붙인다(afOpen). 설명뿐인 줄(info:true)은 이름표 없이.
+//   ▸ 🔴 스위치가 꺼져 있으면 값이 있어도 **적용이 안 된다** — 「오늘 2시간」만 적으면 걸려 있는 줄 안다(⏰ 규칙 · 3-11).
+//     꺼져 있으면 「꺼져 있어요 — …」를 먼저 쓰고, 정해 둔 값은 「켜면 …」으로 붙인다.
+//   ▸ st 는 esc 로 찍힌다 → 태그 없이 글자만.
+const afRng = raw => { const d = dtParse(raw); if (!d) return '';   // 자정을 넘기면 「내일」을 붙인다 — 「22:30 ~ 07:00」만 쓰면 같은 날로 읽힌다
+  const over = d.sh * 60 + d.sm > d.eh * 60 + d.em;
+  return p2(d.sh) + ':' + p2(d.sm) + ' ~ ' + (over ? '내일 ' : '') + p2(d.eh) + ':' + p2(d.em); };
 const AF = [
  { g:'⏰ 시간 정하기' },
  { k:'limit', ico:'⏱️', t:'하루 사용시간 한도', kind:'sw', key:'daily_limit_enabled', open:'openLimit',
-   st:p => { const v = parseInt(p['limit_day_' + afTodayIdx()] ?? '-1', 10); return isNaN(v) || v < 0 ? '오늘은 무제한' : '오늘 ' + minLabel(v); },
+   st:p => { const v = parseInt(p['limit_day_' + afTodayIdx()] ?? '-1', 10), has = !isNaN(v) && v >= 0;
+     const today = !has ? '' : (v === 0 ? '오늘은 쓰지 않는 날' : '오늘 하루 ' + minLabel(v) + '까지');
+     if (p.daily_limit_enabled !== 'true') return '꺼져 있어요 — 시간 제한 없이 쓸 수 있어요' + (has ? ' (켜면 ' + today + ')' : '');
+     return has ? today + (v === 0 ? '이에요' : ' 쓸 수 있어요') : '오늘 요일은 시간을 안 정해서 제한 없이 쓸 수 있어요'; },
    need:p => afLimitHas(p) ? '' : '요일별 시간을 먼저 정해 주세요',
    lockNow:p => { const v = parseInt(p['limit_day_' + afTodayIdx()] ?? '-1', 10); return !isNaN(v) && v >= 0 && liveLimitBaseMin() >= v; } },   // 부모 화면 「잠김」 판정과 같은 값(②, 없으면 ①)
  { k:'dt', ico:'🌙', t:'다운타임 (취침시간)', kind:'sw', key:'dt_enabled', open:'openDt',
-   st:p => '오늘 ' + dtLabel(p['dt_day_' + afTodayIdx()] || '미설정'),
+   st:p => { const r = afRng(p['dt_day_' + afTodayIdx()]);
+     if (p.dt_enabled !== 'true') return '꺼져 있어요 — 밤에도 취침시간으로는 안 잠겨요' + (r ? ' (켜면 오늘 ' + r + ')' : '');
+     return r ? '오늘 ' + r + ' 에 잠겨요' : '오늘 요일은 취침시간을 안 정했어요'; },
    need:p => afDtHas(p, 'dt_day_') ? '' : '잠자는 시간을 먼저 정해 주세요',
    lockNow:p => afInDt(p, 'dt_day_') },
  { k:'academy', ico:'📚', t:'학원 시간', kind:'sw', key:'dt2_enabled', open:'openAcademy',
-   st:p => '오늘 ' + dtLabel(p['dt2_day_' + afTodayIdx()] || '미설정'),
+   st:p => { const r = afRng(p['dt2_day_' + afTodayIdx()]);
+     if (p.dt2_enabled !== 'true') return '꺼져 있어요 — 학원 시간으로는 안 잠겨요' + (r ? ' (켜면 오늘 ' + r + ')' : '');
+     if ((p.dt2_skip_today || '').trim() === _acToday()) return '오늘은 학원 쉬는 날로 해 두셨어요';
+     return r ? '오늘 ' + r + ' 에 잠겨요' : '오늘 요일은 학원 시간을 안 정했어요'; },
    gate:p => afVer(p) && afVer(p) < ACADEMY_MIN_VER ? '아이 폰 앱이 업데이트되면 쓸 수 있어요' : '',
    need:p => afDtHas(p, 'dt2_day_') ? '' : '학원 가는 시간을 먼저 정해 주세요',
    lockNow:p => afInDt(p, 'dt2_day_') },
- { k:'force', ico:'🔒', t:'폰 즉시 차단', kind:'go', open:'openForceLock', st:() => '지금 바로 잠그기 · 시간 정해서' },
+ { k:'force', ico:'🔒', t:'폰 즉시 차단', kind:'go', open:'openForceLock',
+   st:() => { const f = forceLockLeft(); return f.on ? '잠가 두셨어요' + (f.txt ? ' · ' + f.txt : '') : '안 잠가 두셨어요 — 누르면 바로 잠글 수 있어요'; } },
 
  { g:'📱 앱 · 인터넷' },
- { k:'apps', ico:'📵', t:'앱 차단 · 앱별 시간', kind:'go', open:'openApps',
-   st:p => { const n = Object.keys(p).filter(x => x.startsWith('rule_')).length; return n ? '앱별 규칙 ' + n + '개' : '아직 정한 앱이 없어요'; } },
+ { k:'apps', ico:'📵', t:'앱마다 막기 · 시간 정하기', kind:'go', open:'openApps',
+   st:p => { const A = liveAppSets(); const b = A.blocked.length, t = A.timed.length, f = A.free.length;
+     if (!b && !t && !f) return '아직 앱마다 정한 게 없어요 — 모든 앱을 하루 시간 안에서 똑같이 써요';
+     return [b ? '아예 막은 앱 ' + b + '개' : '', t ? '시간 정한 앱 ' + t + '개' : '', f ? '시간 상관없는 앱 ' + f + '개' : ''].filter(Boolean).join(' · '); } },
  { k:'allow', ico:'🌐', t:'허용 사이트', kind:'go', open:'openAllow',
-   st:p => p.chrome_enabled === 'true' ? '크롬에서 ' + J(p.chrome_allowed_domains, []).length + '개 사이트만 열려요' : '크롬(인터넷)이 꺼져 있어요' },
+   st:p => p.chrome_enabled === 'true' ? '크롬에서 허락한 ' + J(p.chrome_allowed_domains, []).length + '개 사이트만 열려요' : '크롬(인터넷)이 꺼져 있어 인터넷을 못 써요' },
  { k:'kakao', ico:'💬', t:'카톡 차단', kind:'go', open:'openKakao',
-   st:p => '7가지 중 ' + AF_KAKAO.filter(k => afKakaoOn(p, k)).length + '가지 막는 중' },
+   st:p => { const n = AF_KAKAO.filter(k => afKakaoOn(p, k)).length; return n ? '7가지 중 ' + n + '가지를 막고 있어요' : '카톡 안에서 막는 것이 없어요'; } },
  { k:'unknowncall', ico:'📵', t:'모르는 번호 전화 막기', kind:'sw', key:'unknown_call_blocked', open:'openUnknownCall',
-   st:p => p.unknown_call_blocked === 'true' ? '저장된 번호만 울려요' : '모든 전화가 와요',
+   st:p => p.unknown_call_blocked === 'true' ? '저장된 번호 전화만 울려요' : '꺼져 있어요 — 모르는 번호 전화도 다 와요',
    gate:p => p.unknown_call_ok === 'true' ? '' : '아이 폰 앱이 업데이트되면 쓸 수 있어요' },
- { k:'security', ico:'🛡️', t:'Play 스토어 초강력 차단', kind:'sw', key:'play_store_blocked', open:'openSecurity',
-   st:p => p.play_store_blocked === 'true' ? '새 앱을 못 깔아요' : '⚠️ 새 앱을 깔 수 있어요' },
+ { k:'security', ico:'🛡️', t:'Play 스토어 막기 (새 앱 설치)', kind:'sw', key:'play_store_blocked', open:'openSecurity',
+   st:p => p.play_store_blocked === 'true' ? '새 앱을 못 깔게 막고 있어요' : '⚠️ 꺼져 있어요 — 새 앱을 깔 수 있어요' },
 
  { g:'🛟 안전' },
  { k:'loc', ico:'📍', t:'위치 확인 · 세이프존', kind:'go', open:'openLoc',
-   st:() => locOn() ? '켜져 있어요' : '꺼져 있어요 · 켜려면 동의가 필요해요' },
+   st:() => locOn() ? '켜져 있어요 — 아이 위치를 볼 수 있어요' : '꺼져 있어요 — 켜려면 동의가 필요해요' },
  { k:'power', ico:'⏻', t:'전원 끄기 막기', kind:'sw', key:'power_off_blocked', open:'openLoc',
-   st:p => p.power_off_blocked === 'true' ? '아이가 전원을 못 꺼요' : '아이가 전원을 끌 수 있어요',
+   st:p => p.power_off_blocked === 'true' ? '아이가 전원을 못 꺼요' : '꺼져 있어요 — 아이가 전원을 끌 수 있어요',
    gate:p => afVer(p) < POWER_OFF_MIN_VER ? '아이 폰 앱이 업데이트되면 쓸 수 있어요' : '' },
  { k:'uninst', ico:'🗑️', t:'앱 삭제 방지', kind:'sw', key:'uninstall_blocked', open:'openUninstall',
-   st:p => p.uninstall_blocked === 'true' ? J(p.uninstall_blocked_apps, []).length + '개 앱을 못 지워요' : '앱을 지울 수 있어요' },
+   st:p => p.uninstall_blocked === 'true' ? J(p.uninstall_blocked_apps, []).length + '개 앱을 못 지우게 막고 있어요' : '꺼져 있어요 — 앱을 지울 수 있어요' },
  { k:'pinlock', ico:'🔑', t:'앱 PIN 잠금', kind:'go', open:'openPinLock',
-   st:p => { const n = J(p.pin_locked_apps, []).length; return n ? n + '개 앱이 잠겨 있어요' : '잠근 앱이 없어요'; } },
- { k:'sos', ico:'🆘', t:'긴급 연락처 (SOS)', kind:'go', open:'openSos', st:() => '3번 안 받으면 4번째에 자동으로 받아요' },
+   st:p => { const n = J(p.pin_locked_apps, []).length; return n ? n + '개 앱에 비밀번호를 걸어 두셨어요' : '비밀번호를 걸어 둔 앱이 없어요'; } },
+ { k:'sos', ico:'🆘', t:'긴급 연락처 (SOS)', kind:'go', open:'openSos',
+   st:p => { const n = J(p.sos_whitelist, []).length; return n ? n + '개 번호를 넣어 두셨어요 — 3번 안 받으면 4번째에 자동으로 받아요' : '넣어 둔 번호가 없어요'; } },
 
  { g:'🙈 아이 폰에 보이는 것' },
  { k:'hideicon', ico:'🙈', t:'공신폰 앱 <span class="afKw">"아이콘"</span> 숨기기', kind:'sw', key:'app_icon_hidden', open:'openStealth',
-   st:p => p.app_icon_hidden === 'true' ? '아이 폰에 아이콘이 안 보여요' : '아이콘이 보여요',
+   st:p => p.app_icon_hidden === 'true' ? '아이 폰에서 아이콘을 숨겨 두셨어요' : '꺼져 있어요 — 아이 폰에 아이콘이 보여요',
    gate:p => afVer(p) < 43 ? '아이 폰 앱이 업데이트되면 쓸 수 있어요' : '' },
  { k:'hidenotify', ico:'🔕', t:'공신폰 앱 <span class="afKw">"알림"</span> 숨기기', kind:'sw', key:'app_notify_hidden', open:'openStealth',
-   st:p => p.app_notify_hidden === 'true' ? '막혀도 「지금은 못 써요」 알림이 안 떠요' : '막힐 때 「지금은 못 써요」 알림이 떠요',
+   st:p => p.app_notify_hidden === 'true' ? '막혀도 「지금은 못 써요」 알림이 안 떠요' : '꺼져 있어요 — 막힐 때 「지금은 못 써요」 알림이 떠요',
    gate:p => afVer(p) < 43 ? '아이 폰 앱이 업데이트되면 쓸 수 있어요' : '' },
- { k:'sound', ico:'🔔', t:'소리 · 진동 · 무음 바꾸기', kind:'go', open:'openStealth', st:() => '아이 폰 소리를 여기서 바꿔요' },
+ { k:'sound', ico:'🔔', t:'소리 · 진동 · 무음 바꾸기', kind:'go', open:'openStealth',
+   st:p => SND_NAME[p.ringer_mode_now] ? '아이 폰은 ' + SND_NAME[p.ringer_mode_now] + ' 모드예요' : '아이 폰 소리를 여기서 바꿔요', info:p => !SND_NAME[p.ringer_mode_now] },
 ];
 
 function afIsOn(it, p){ return it.kind === 'sw' && p[it.key] === 'true'; }
@@ -5188,7 +4762,7 @@ function afPaintCards(){
 /** 모아보기 화면 */
 function afOpen(){
   const p = ST.pol || {};
-  let h = '<div class="xd" style="margin:2px 2px 12px">스위치를 누르면 <b>바로 아이 폰에 적용</b>돼요. 줄을 누르면 자세한 설정으로 가요.</div>';
+  let h = '<div class="xd" style="margin:2px 2px 12px">스위치를 누르면 <b>바로 아이 폰에 적용</b>돼요. 줄을 누르면 자세한 설정으로 가요.<br><span class="afNow">지금</span> 뒤에 적힌 글이 <b>지금 아이 폰에 정해져 있는 모양</b>이에요.</div>';
   let open = false;
   AF.forEach((it, i) => {
     if (it.g){ if (open) h += '</div>'; h += '<div class="sec">' + it.g + '</div><div class="card afList">'; open = true; return; }
@@ -5206,7 +4780,8 @@ function afOpen(){
     h += '<div class="afRow" onclick="afGoTo(' + i + ')">' +
       '<div class="afRi">' + it.ico + '</div>' +
       '<div class="grow"><div class="afRt">' + it.t + '</div>' +
-      '<div class="afRs">' + (gate ? '⏳ ' + gate : esc(st).replace(/^⚠️/, '<b style="color:#B54708">⚠️</b>')) + '</div></div>' +
+      '<div class="afRs">' + (gate ? '⏳ ' + gate
+        : (st ? ((it.info && it.info(p)) ? '' : '<span class="afNow">지금</span>') + esc(st).replace(/^⚠️/, '<b style="color:#B54708">⚠️</b>') : '')) + '</div></div>' +
       right + '</div>';
   });
   if (open) h += '</div>';
@@ -5309,7 +4884,7 @@ const XP = {
     ex:() => appsCalcHtml(), exT:'하루 한도와 같이 쓰면 이렇게 계산해요',
     how:['위 검색칸에 <b>앱 이름</b>을 넣어 찾아요',
          '<b>「설정」</b>을 눌러 막기 · 시간 · 무제한 중에 골라요'],
-    w:['아이가 <b>새로 깐 앱</b>은 「안전 → 보안 설정」 아래에서 한 달 치를 모아 볼 수 있어요.'] },
+    w:['아이가 <b>새로 깐 앱</b>은 「안전 → Play 스토어 막기 (새 앱 설치)」 아래에서 한 달 치를 모아 볼 수 있어요.'] },
 
   tube:{ h:'부모님이 <b>고른 영상만</b> 볼 수 있는 유튜브예요',
     d:'시내모바일이 <b>직접 만든</b> 영상 앱이에요. 여기 넣은 영상만 아이 폰에 보여요.',
@@ -5590,7 +5165,7 @@ function openDmHub(){
     (using ? cancelLinkHtml('dm_cancel_requested', '시내디엠') : ''));
 }
 
-// ── 🛡️ 보안 설정 — 최근 한 달 안에 새로 깔린 앱 (「앱 차단」에서 옮겨 왔다) ──
+// ── 🛡️ Play 스토어 막기 (새 앱 설치) — 최근 한 달 안에 새로 깔린 앱 (「앱 차단」에서 옮겨 왔다) ──
 function openSecurityNew(){ openSecurity(); }
 function recentAppsHtml(){
   const M = ST.appMeta;
@@ -5609,7 +5184,7 @@ function recentAppsHtml(){
       ? '<div class="card">' + list.map(a => '<div class="item">' + appIcoHtml(a.app_package) +
           '<div class="grow"><div class="nm">' + esc(a.app_name || a.app_package) + '</div><div class="sm">' + appAgeTag(a.app_package) + '</div></div></div>').join('') + '</div>'
       : '<div class="card"><div class="empty">최근 한 달 동안 새로 깔린 앱이 없어요 🙂</div></div>') +
-    '<div class="xcap">한 달이 지난 앱은 여기서 빠져요. 막고 싶은 앱은 <a class="xl" onclick="openApps()">앱 차단 · 앱별 시간 ›</a></div>';
+    '<div class="xcap">한 달이 지난 앱은 여기서 빠져요. 막고 싶은 앱은 <a class="xl" onclick="openApps()">앱마다 막기 · 시간 정하기 ›</a></div>';
 }
 
 // ── 📍 위치 확인 동의 — 5가지를 하나씩 체크해야 켤 수 있다 (대표점장 「4~5개 동의 체크해야 쓸 수 있게」) ──
@@ -5716,8 +5291,8 @@ function mockUninstHtml(){
 }
 
 // ── 🔑 앱 PIN 잠금 — 「Play 스토어 지금 상태」 두 가지를 같이 보여준다 (2026-11-10 6차 대표점장) ──
-//  「초강력 차단(보안 설정) ON/OFF」 와 「PIN 잠금 걸림/안 걸림」 을 **같이** 봐야 이해된다.
-//  🔴 풀라고 유도하지 않는다 — 버튼을 두지 않고, OFF 일 때만 「보안 설정에서 켜기」로 **더 안전한 쪽**만 안내한다.
+//  「초강력 차단(Play 스토어 막기 (새 앱 설치)) ON/OFF」 와 「PIN 잠금 걸림/안 걸림」 을 **같이** 봐야 이해된다.
+//  🔴 풀라고 유도하지 않는다 — 버튼을 두지 않고, OFF 일 때만 「Play 스토어 막기 (새 앱 설치)에서 켜기」로 **더 안전한 쪽**만 안내한다.
 const VENDING_PKG = 'com.android.vending';
 function playStatusHtml(){
   const blocked = ST.pol?.play_store_blocked === 'true';
@@ -5726,10 +5301,10 @@ function playStatusHtml(){
     '<div class="psv ' + cls + '">' + val + '</div></div>';
   const msg = blocked
     ? ['g', '✅ <b>가장 안전한 상태예요.</b> 아이 폰에 Play 스토어가 아예 안 보여서 새 앱을 못 깔아요.']
-    : pin ? ['y', '🟡 Play 스토어는 보이지만, <b>부모님 비밀번호</b>를 넣어야 열려요.<br>더 안전하게 하시려면 <a class="xl" onclick="openSecurity()">보안 설정에서 초강력 차단 켜기 ›</a>']
-          : ['r', '⚠️ 아이가 Play 스토어를 <b>자유롭게 열어 새 앱을 깔 수 있어요.</b><br><a class="xl" onclick="openSecurity()">보안 설정에서 초강력 차단 켜기 ›</a>'];
+    : pin ? ['y', '🟡 Play 스토어는 보이지만, <b>부모님 비밀번호</b>를 넣어야 열려요.<br>더 안전하게 하시려면 <a class="xl" onclick="openSecurity()">Play 스토어 막기 (새 앱 설치)에서 초강력 차단 켜기 ›</a>']
+          : ['r', '⚠️ 아이가 Play 스토어를 <b>자유롭게 열어 새 앱을 깔 수 있어요.</b><br><a class="xl" onclick="openSecurity()">Play 스토어 막기 (새 앱 설치)에서 초강력 차단 켜기 ›</a>'];
   return '<div class="sec">📲 Play 스토어 지금 상태</div><div class="pss">' +
-    row('🛡️', '초강력 차단', blocked ? 'ON' : 'OFF', blocked ? '아이 폰에 Play 스토어가 아예 안 보여요' : 'Play 스토어가 아이 폰에 보여요 · 안전 → 보안 설정', blocked ? 'g' : 'r') +
+    row('🛡️', '초강력 차단', blocked ? 'ON' : 'OFF', blocked ? '아이 폰에 Play 스토어가 아예 안 보여요' : 'Play 스토어가 아이 폰에 보여요 · 안전 → Play 스토어 막기 (새 앱 설치)', blocked ? 'g' : 'r') +
     row('🔑', 'PIN 잠금', pin ? '걸림' : '안 걸림', pin ? '열 때 부모님 비밀번호를 물어요' : '비밀번호 없이 열려요 · 아래 목록에서', pin ? 'g' : 'n') +
     '<div class="psm ' + msg[0] + '">' + msg[1] + '</div></div>';
 }
@@ -5819,7 +5394,7 @@ function icoImg(k, cls){
 const ICO_BY_FN = (() => {
   const m = { togglePush:'push', refreshAll:'refresh', openList:'kids', doLogout:'logout', openDocs:'docs',
               openChromeHub:'allow', openTubeHub:'tube', openDmHub:'dm',
-              openNote:'store', openSummary:'live', openLockType:'pin' };   // 🆕 2026-11-11
+              openNote:'store', openLockType:'pin' };   // 🆕 2026-11-11
   Object.keys(F_OPEN).forEach(k => { const fn = F_OPEN[k]; if (!m[fn]) m[fn] = k; });
   return m;
 })();
@@ -5932,7 +5507,7 @@ function dscRemember(el, k){ try{ localStorage.setItem('dsc_' + k, el.open ? '1'
 
 const GUIDE_SKIP = ['기능 설명', '어디 있나요', '장소 관리', '자주 가는 장소 (세이프존)', '장소 등록',
                     '자녀 실시간 제한 상황', '허용 사이트 관리', '소리 변경 · 앱 숨기기',
-                    '보안 설정',    // 🛡️ 4차 : 상태 → 스위치 → 설명 순서로 openSecurity 가 직접 그린다
+                    'Play 스토어 막기 (새 앱 설치)',    // 🛡️ 4차 : 상태 → 스위치 → 설명 순서로 openSecurity 가 직접 그린다
                     '시내YouTube'];  // 🎨 5차 : 사용 중 상자 → 설명 순서로 openTube 가 직접 그린다
 
 // ══════════════════════════════════════════════════════════════════
@@ -7028,14 +6603,14 @@ function openApps(){
       <button class="add" onclick="openAppMode('${esc(a.app_package)}')">설정</button></div>`;
 
   // 🔀 2026-11-10 (4차) 대표점장 : 「앱차단·앱별시간 — 1개월 안에 다운받은 앱 목록 표기 없애줘」
-  //    → 「최근 한 달」 칩 · 날짜 배지 · 날짜 안내를 여기서 뺐다. **보안 설정 아래(recentAppsHtml)** 로 옮겼다.
+  //    → 「최근 한 달」 칩 · 날짜 배지 · 날짜 안내를 여기서 뺐다. **Play 스토어 막기 (새 앱 설치) 아래(recentAppsHtml)** 로 옮겼다.
   //    아이콘은 그대로 쓴다(loadAppMeta).
   const body = !list.length
     ? `<div class="card"><div class="empty">앱이 없습니다<br><span class="sm">자녀폰이 접속하면 목록이 올라옵니다</span></div></div>`
     : (set.length ? `<div class="sec">✅ 설정된 앱 (${set.length}개)</div><div class="card">${set.map(row).join('')}</div>` : '')
       + `<div class="sec">설정 안 된 앱 (${unset.length}개)</div>`
       + (unset.length ? `<div class="card">${unset.map(row).join('')}</div>` : `<div class="card"><div class="empty">없습니다</div></div>`);
-  openSub('앱 차단 · 앱별 시간', `
+  openSub('앱마다 막기 · 시간 정하기', `
     <div class="card"><input type="text" id="appQ" placeholder="앱 이름 검색" value="${esc(appQuery)}"
       oninput="appQuery=this.value; clearTimeout(window._aq); window._aq=setTimeout(openApps,250)"></div>
     ${body}
@@ -7046,7 +6621,7 @@ function openApps(){
   if (!ST.appMeta || ST.appMeta.code !== ST.code){
     loadAppMeta().then(() => {
       const t = document.getElementById('sTitle');
-      if (t && t.textContent === '앱 차단 · 앱별 시간') openApps();
+      if (t && t.textContent === '앱마다 막기 · 시간 정하기') openApps();
     });
   }
 }
@@ -7430,7 +7005,7 @@ async function ucDel(n){
   catch(e){ loading(false); toast('실패: '+e.message); }
 }
 
-// ══════════ 보안 설정 ══════════
+// ══════════ Play 스토어 막기 (새 앱 설치) ══════════
 function openSecurity(){
   // 🛡️ 2026-11-10 (4차) : 「초강력 차단」을 크게 · 끄면 경고 · 아래에 최근 한 달 새로 깔린 앱 (대표점장)
   const p = ST.pol, on = p.play_store_blocked === 'true';
@@ -7442,7 +7017,7 @@ function openSecurity(){
     : `<div class="sbig off"><div class="sbt">⚠️ 지금 Play 스토어가 열려 있어요</div>
          <div class="sbd">아이가 새 앱을 깔 수 있어요. 필요한 앱을 다 깔았으면 아래 스위치를 <b>다시 켜</b> 주세요.</div></div>`;
   //   ▸ 순서 : 지금 상태(크게) → 스위치 → 설명(새 앱 깔 때 세 단계) → 최근 한 달 새 앱. 그래서 GUIDE_SKIP 에 넣고 직접 그린다
-  openSub('보안 설정', `
+  openSub('Play 스토어 막기 (새 앱 설치)', `
     ${state}
     <div class="card"><div class="row"><div class="grow">
       <div class="ttl">🛡️ Play 스토어 초강력 차단</div>
@@ -7455,7 +7030,7 @@ function openSecurity(){
   if (!ST.appMeta || ST.appMeta.code !== ST.code){
     loadAppMeta().then(() => {
       const t = document.getElementById('sTitle');
-      if (t && t.textContent === '보안 설정') openSecurity();
+      if (t && t.textContent === 'Play 스토어 막기 (새 앱 설치)') openSecurity();
     });
   }
 }
@@ -7465,7 +7040,7 @@ function openSecurity(){
 //      구버전 폰에 토글을 보여주면 켜도 아무 일이 없는 「조용한 무동작」이 된다
 //      (2026-09-16 실제 사고). 그래서 버전이 43 미만이면 안내만 띄운다.
 // ══════════ 💬 2026-10-15 : 카톡 차단 모음 (대표점장 지시) ══════════
-//   카톡 차단이 7개로 늘어 「보안 설정」에 섞여 있던 것을 한 폴더로 모았다.
+//   카톡 차단이 7개로 늘어 「Play 스토어 막기 (새 앱 설치)」에 섞여 있던 것을 한 폴더로 모았다.
 //   ⛔ 아래 5개(만들기·오픈프로필·멀티프로필·숏폼·커뮤니티)는 **자녀앱 v54 이상**에서만 동작한다.
 //      구버전 폰에 토글을 보여주면 켜도 아무 일이 없는 「조용한 무동작」이 된다(2026-09-16 실제 사고).
 //      그래서 버전이 54 미만이면 그 5개는 **보여주지 않고** 안내만 띄운다.
@@ -7902,7 +7477,20 @@ function dayBandHtml(){
   }
   const now = _nowMin(), pct = m => (m / 1440 * 100).toFixed(2) + '%';
   const hasDt = segs.some(s => s[0] === 'dt'), hasAc = segs.some(s => s[0] === 'ac');
-  return '<div class="sec">오늘 하루 한눈에</div><div class="card">' +
+  // 🆕 28차 : 따로 있던 「취침시간(다운타임)」 카드를 여기 한 줄로 합쳤다 — 같은 말을 세 군데서 하던 것
+  const dtNow = liveDowntime(), dtNx = liveNextDowntime(), acNow = liveAcademy();
+  const rngTxt = raw => { const v = String(raw || '미설정'); return v.indexOf('|') < 0 ? '' : v.replace('|', ' ~ '); };
+  let dtLine = '';
+  if (p.dt_enabled !== 'true') dtLine = '🌙 취침시간은 <b>꺼져 있어요</b> — 취침시간으로는 안 잠겨요';
+  else if (dtNow) dtLine = '🌙 취침시간 <b>' + dtNow.s + ' ~ ' + dtNow.e + '</b> — <b style="color:#B42318">지금 잠겨 있어요</b>';
+  else if (dtNx && dtNx.s !== dtNx.e) dtLine = '🌙 취침시간 <b>' + dtNx.s + ' ~ ' + dtNx.e + '</b> — ' + fmtMin(dtNx.inMin) + ' 뒤 시작';
+  else dtLine = rngTxt(p['dt_day_' + td]) ? '🌙 오늘 취침시간 <b>' + rngTxt(p['dt_day_' + td]) + '</b>' : '🌙 오늘 요일은 취침시간을 <b>정해 두지 않았어요</b>';
+  let acLine = '';
+  if (p.dt2_enabled === 'true'){
+    if (acNow) acLine = '📚 학원시간 <b>' + acNow.s + ' ~ ' + acNow.e + '</b> — <b style="color:#B42318">지금 잠겨 있어요</b>';
+    else acLine = rngTxt(p['dt2_day_' + td]) ? '📚 오늘 학원시간 <b>' + rngTxt(p['dt2_day_' + td]) + '</b>' : '📚 오늘 요일은 학원시간을 <b>정해 두지 않았어요</b>';
+  }
+  return '<div class="sec">오늘 잠기는 시간표</div><div class="card">' +
     // ⏰ 2026-11-10 (6차) 대표점장 : 「지금 ??시??분 시간이 잘 안 보임」 — 11px 글씨가 띠 안에 묻혀 잘렸다
     //   → 띠 **위**에 큰 말풍선(13.5px)으로 꺼내고, 띠 안에는 굵은 「지금」 선만 남긴다. 말풍선은 양 끝에서 잘리지 않게 안쪽으로 붙인다.
     '<div class="daywrap"><div class="nowt2" style="left:' + pct(Math.min(1250, Math.max(190, now))) + '">⏰ 지금 ' +
@@ -7916,7 +7504,8 @@ function dayBandHtml(){
       (hasDt ? '<span style="--c:#C9B8F5">취침시간 (잠김)</span>' : '') +
       (hasAc ? '<span style="--c:#FFD3A6">학원시간 (잠김)</span>' : '') + '</div>' +
     '<div style="margin-top:9px;font-size:12.8px;color:#667085;line-height:1.6">' +
-      (hasDt || hasAc ? '색칠된 시간에는 자녀폰이 저절로 잠기고, 끝나면 저절로 풀려요.' : '오늘은 정해진 잠금 시간이 없어요.') +
+      '<div class="lvBand">' + dtLine + '</div>' + (acLine ? '<div class="lvBand">' + acLine + '</div>' : '') +
+      (hasDt || hasAc ? '색칠된 시간에는 자녀폰이 저절로 잠기고, 끝나면 저절로 풀려요.' : '오늘은 시각으로 잠기는 때가 없어요.') +
       ((liveSummary().lock && !liveDowntime() && !liveAcademy())
         ? '<br><b style="color:#B42318">다만 지금은 ' + (forceLockLeft().on ? '부모님이 <u>즉시 차단</u>으로 잠가 두셔서' : '오늘 <u>하루 사용시간</u> 때문에') + ' 잠겨 있어요.</b>'
         : '') +
@@ -7924,9 +7513,6 @@ function dayBandHtml(){
     '</div>';
 }
 
-/** 「그 밖의 잠금」 줄마다 붙는 그림 (이름 → 그림 키) */
-const LIVE_RICO = { '크롬(안전검색)':'allow', 'Play 스토어 차단':'security', '카톡 오픈채팅 차단':'kakao',
-  '카톡 링크 열기 차단':'kakao', '카톡 세부차단':'kakao', '앱 삭제 방지':'uninst', '앱 PIN 잠금':'pinlock' };
 // 🚦 2026-11-10 (3차) — 「아이 폰은 이럴 때만 잠겨요」 4칸 (대표점장 : 「실시간 제한 상황 더 잘 이해되게」)
 //   ▸ 잠기는 이유는 **딱 네 가지**다 — 하루 시간 · 취침 · 학원 · 즉시 차단. 넷을 늘 같은 자리에 그리고 **지금 걸린 것에 불**을 켠다.
 //     「왜 잠겼어요?」를 글로 읽지 않고 **어느 칸이 빨간지**로 본다.
@@ -7963,7 +7549,7 @@ function paintLive(){
   // ── 🆕 2026-11-03 : 앱별 제한 집계를 **여기로 올렸다** ──
   //   아래 ④ 에서만 쓰던 것인데, 설계안 E(「합쳐서 최대 N분」)를 ② 막대 카드에 적어야 해서
   //   그보다 먼저 계산해야 한다. 🔴 **같은 값을 두 번 자르지 않는다**(CLAUDE.md 3-13) — 옮긴 것이다.
-  const { appB, blSet, timedMap, blocked, timed, free } = liveAppSets();   // 🆕 2026-11-11 : 30초 요약과 같은 계산을 쓴다(3-13)
+  const { appB, blSet, timedMap, blocked, timed, free } = liveAppSets();   // 🆕 2026-11-11 : 모아보기와 같은 계산을 쓴다(3-13)
 
   // ══════════ ⭐ 설계안 E : 「하루 60분 + 앱별 80분 = 최대 140분」을 **화면에 적는다** ══════════
   //
@@ -7982,159 +7568,140 @@ function paintLive(){
   //   그래야 「최대 140분」이 거짓말이 안 된다.
   const appLimitSum = timed.reduce((t,a)=>t+a.min, 0);
   const maxToday = (lim > 0) ? lim + appLimitSum : 0;
-  //   🎨 2026-11-10 (3차) : 같은 내용을 **식 모양**으로 — [하루 한도] + [앱별] = [오늘 최대]. 글 세 줄보다 한눈에 읽힌다.
-  const limitSumLine = (lim > 0 && (appLimitSum > 0 || free.length))
-    ? '<div class="eqw"><div class="eqt">⚠️ 하루 한도를 다 써도 열리는 앱이 있어요</div>'
-      + (appLimitSum > 0
-          ? '<div class="eqr"><span>하루 한도<br><b>' + minLabel(lim) + '</b></span><i>+</i>'
-            + '<span>앱별 ' + timed.length + '개<br><b>' + fmtMin(appLimitSum) + '</b></span><i>=</i>'
-            + '<span class="tot">오늘 최대<br><b>' + fmtMin(maxToday) + '</b></span></div>'
-            + '<div class="eqs">앱별 시간 : ' + timed.slice(0,3).map(t=>esc(appNm(t.pkg))+' '+t.min+'분').join(' · ')
-            + (timed.length>3 ? ' …' : '') + '</div>'
-          : '<div class="eqs"><b>무제한 앱만 쓰면</b> 하루 한도에 걸리지 않아요.</div>')
-      + (free.length
-          ? '<div class="eqs">♾️ <b>시간 무제한 ' + free.length + '개</b>는 한도를 안 깎아요'
-            + (appLimitSum > 0 ? ' — 위 「오늘 최대」에도 안 들어가요' : '')
-            + ' (' + free.slice(0,3).map(x=>esc(appNm(x))).join(' · ') + (free.length>3 ? ' …' : '') + ')</div>'
-          : '')
-      + '<div class="eqs" style="color:#98A2B3">더 조이시려면 <a class="xl" style="color:#B54708;font-weight:800;cursor:pointer" onclick="openApps()">앱 차단 · 앱별 시간 ›</a> 에서 그 앱 시간을 줄여 주세요.</div>'
-      + '</div>'
-    : '';
 
-  // ⭐ 설계안 A : ① 화면을 켠 시간은 **작은 회색 보조줄**로 내린다.
-  //   🔴 **지우지 않는다.** 부모가 패밀리링크·디지털웰빙과 비교하는 숫자이고,
-  //     7일 막대가 아직 이 기준이다 — 없애면 「막대와 메인이 왜 달라요?」가 새로 생긴다.
-  //   ⚠️ v60 이하 폰(② 를 안 올리는 폰)에서는 ②=① 이라 **이 줄을 안 띄운다**
-  //     (같은 숫자를 두 번 쓰면 혼란만 는다).
-  const screenLine = (hasPhoneCut && exemptGap >= 1)
-    ? '<div style="margin-top:9px;font-size:12.5px;color:#98A2B3;font-weight:600;line-height:1.7">'
-      + '화면을 켠 시간은 <b>' + fmtMin(screenMin) + '</b>이에요'
-      + '<br>그중 <b>' + fmtMin(exemptGap) + '</b>은 ' + (noAppCounted() ? '전화·문자처럼 <b>한도를 안 깎는 앱</b>이에요' : '<b>홈 화면만 보던 시간</b>이나 <b>한도를 안 깎는 앱</b>이에요')
-      + '</div>'
-    : '';
-
-  // ── ① 큰 상태 카드 — 🎨 2026-11-10 : 그림 + 「왜」 + 「언제 풀리나」 ──
-  //   🔴 예전 카드는 **즉시차단·학원시간으로 잠겼을 때 「왜」를 안 적었다** — 잠김인데 「오늘 남은 시간 N분」이
-  //      같이 떠서 「잠겼다는 거야 안 잠겼다는 거야」가 됐다. 판정 순서는 liveSummary 와 똑같이 둔다(3-25b).
+  // ══════════ 🆕 2026-11-24 (28차) 대표점장 「아직 봐도 설명이 이해 안 될 때가 있어 — 보기 쉽고 이해되기 쉽게」 ══════════
+  //  ▸ 벤치마킹 : iOS 스크린 타임 · 패밀리 링크 기기 카드 = 「지금 상태 → 다음에 무슨 일이 → 남은 시간 → 앱마다」 순서 · 용어 대신 행동 문장.
+  //  ▸ 바꾼 것 (판정·숫자는 그대로 — liveSummary · liveLimitBaseMin · liveAppSets 를 그대로 쓴다 · 3-6 · 3-25b) :
+  //    ① 큰 카드에 「다음에 잠기는 때」(N분 뒤 취침·학원) 한 줄 — 맨 아래 취침 카드까지 안 내려가도 된다
+  //    ② 따로 있던 「취침시간(다운타임)」 카드를 「오늘 잠기는 시간표」 띠 아래 줄로 합쳤다(같은 말을 세 번 하던 것)
+  //    ③ 「화면을 켠 시간 … 그중 N분은 …」 · 「⚠️ 하루 한도를 다 써도 열리는 앱 / 무제한 앱만 쓰면 …」 →
+  //       「💡 알아두세요」 상자 한 개에 **앱 이름을 넣은 문장**으로 (코드에만 있는 면제는 고객에겐 없는 것 · 3-19)
+  //    ④ 「완전 차단 / 오늘 시간제한 / 하루한도에서 빠지는 앱」 → 「⛔ 아예 못 여는 앱 / ⏱ 시간을 정해 둔 앱 / ♾️ 시간 상관없이 쓰는 앱」
+  //    ⑤ 「켜짐」 배지 옆에 「차단중」이 같이 붙어 「켜졌다는 거야 막았다는 거야」 → 배지를 「막는 중 / 안 막음」으로
+  const fmtList = (arr, n) => arr.slice(0, n).map(x => '<b>' + esc(appNm(x)) + '</b>').join(' · ') + (arr.length > n ? ' 외 ' + (arr.length - n) + '개' : '');
   const _fl = forceLockLeft(), _ac = liveAcademy();
+
+  // ── 다음에 잠기는 때 (오늘 · 아직 시작 전인 것만) ──
+  const nextLocks = [];
+  if (!dt && nx && nx.s !== nx.e) nextLocks.push({ ico:'🌙', nm:'취침시간', s:nx.s, e:nx.e, inMin:nx.inMin });
+  if (p.dt2_enabled === 'true' && !_ac && (p.dt2_skip_today || '').trim() !== _acToday() && !_acUnlockLeft().on){
+    const r = _bandParse(p['dt2_day_' + _dayIdx()]);
+    if (r && r.s !== r.e && _nowMin() < r.s){ const v = String(p['dt2_day_' + _dayIdx()]).split('|');
+      nextLocks.push({ ico:'📚', nm:'학원시간', s:v[0], e:v[1], inMin:r.s - _nowMin() }); }
+  }
+  nextLocks.sort((a,b) => a.inMin - b.inMin);
+  const nextLine = (!sum.lock && nextLocks.length)
+    ? '<div class="lvNext">' + nextLocks[0].ico + ' <b>' + fmtMin(nextLocks[0].inMin) + ' 뒤</b>(' + nextLocks[0].s + ')부터 ' + nextLocks[0].nm + '이라 잠겨요'
+      + ' · ' + nextLocks[0].e + '에 풀려요</div>'
+    : '';
+
+  // ── ① 큰 상태 카드 — 그림 + 「왜」 + 「언제 풀리나」 + 「다음에 언제 잠기나」 ──
+  //   🔴 판정 순서는 liveSummary 와 똑같이 둔다(3-25b).
   let why='', when='', heroIco='freehero';
   if(_fl.on){ why='부모님이 <b>폰 즉시 차단</b>으로 잠그셨어요'; when=_fl.txt ? '<b>'+esc(_fl.txt)+'</b>' : '풀려면 「폰 즉시 차단」에서 풀어 주세요'; heroIco='force'; }
   else if(dt){ why='지금은 약속한 <b>취침시간</b>이에요'; when='<b>'+dt.e+'</b> 이 되면 저절로 풀려요'; heroIco='dt'; }
   else if(_ac){ why='지금은 <b>학원 시간</b>이에요'; when='<b>'+_ac.e+'</b> 이 되면 저절로 풀려요'; heroIco='academy'; }
-  else if(lim===0){ why='오늘은 <b>사용 불가</b>로 정해 두셨어요'; when='<b>내일 0시</b>에 저절로 풀려요'; heroIco='lockhero'; }
-  else if(lim>0 && lim-used<=0){ why='오늘 쓸 수 있는 <b>시간을 다 썼어요</b>'; when='<b>내일 0시</b>에 저절로 풀려요 · 지금 풀어 주시려면 「하루 사용시간 한도」에서 🎁 오늘만 보너스'; heroIco='lockhero'; }
+  else if(lim===0){ why='오늘은 <b>쓰지 않는 날</b>로 정해 두셨어요'; when='<b>내일 0시</b>에 저절로 풀려요'; heroIco='lockhero'; }
+  else if(lim>0 && lim-used<=0){ why='오늘 쓸 수 있는 <b>시간을 다 썼어요</b>'; when='<b>내일 0시</b>에 저절로 풀려요 · 오늘만 더 주시려면 「하루 사용시간 한도」에서 🎁 보너스'; heroIco='lockhero'; }
   const hero = '<div class="lvx '+(sum.lock?'lock':'free')+'">' + icoImg(heroIco, '')
     + '<div style="min-width:0"><div class="t">'+(sum.lock?'지금 자녀폰이<br>잠겨 있어요':'지금 자녀폰을<br>쓸 수 있어요')+'</div>'
     + (why ? '<div class="d">'+why+'<br>'+when+'</div>'
-           : '<div class="d">'+(lim>0?'오늘 남은 시간 <b>'+fmtMin(lim-used)+'</b>':'오늘은 하루 사용시간 한도를 걸어 두지 않으셨어요')+'</div>')
+           : '<div class="d">'+(lim>0?'오늘 <b>'+fmtMin(lim-used)+'</b> 더 쓸 수 있어요':'하루 사용시간 한도를 걸어 두지 않아서 <b>사용시간으로는 안 잠겨요</b>')+'</div>')
+    + nextLine
     + '<div class="n">📞 잠겨 있어도 <b>긴급전화</b>는 언제나 돼요</div></div></div>';
 
-  // ── ② 오늘 사용시간 막대 ──
+  // ── ② 오늘 쓴 시간 ──
+  //   🔴 큰 숫자·막대·남은 시간은 전부 `used`(폰이 깎은 값) — 28일·13대 사고의 해답(8-22). 한 군데만 바꾸면 또 갈라진다.
+  const tips = [];
+  if (hasPhoneCut && exemptGap >= 1)
+    tips.push('📞 ' + (noAppCounted() ? '전화·문자처럼 <b>시간을 안 깎는 앱</b>' : '<b>홈 화면만 보던 시간</b>이나 전화·문자처럼 <b>시간을 안 깎는 앱</b>')
+      + ' <b>' + fmtMin(exemptGap) + '</b>은 빼고 셌어요 <span style="color:#98A2B3">(화면을 켠 시간은 모두 ' + fmtMin(screenMin) + ')</span>');
+  if (lim > 0 && timed.length)
+    tips.push('⏱ <b>따로 시간을 준 앱</b>(' + timed.slice(0,3).map(t => '<b>' + esc(appNm(t.pkg)) + '</b> ' + fmtMin(t.min)).join(' · ') + (timed.length > 3 ? ' 외 ' + (timed.length - 3) + '개' : '')
+      + ')은 하루 시간을 다 써도 그만큼 더 열려요 → 오늘 <b>최대 ' + fmtMin(maxToday) + '</b>까지 쓸 수 있어요'
+      + (free.length ? ' (아래 「시간 상관없이 쓰게 한 앱」은 이 최대에도 안 들어가요)' : ''));   // 🔴 무제한 앱은 더할 수가 없다 — 빼면 「최대」가 거짓이 된다(설계안 E · 3-19)
+  if (lim > 0 && free.length)
+    tips.push('♾️ <b>시간 상관없이 쓰게 한 앱</b>(' + fmtList(free, 3) + ')은 하루 시간을 다 써도 <b>계속 열려요</b>');
+  const tipBox = tips.length
+    ? '<div class="lvTip"><div class="lvTipH">💡 알아두세요</div>' + tips.map(t => '<div class="lvTipR">' + t + '</div>').join('')
+      + ((lim > 0 && (timed.length || free.length)) ? '<div class="lvTipR" style="color:#667085">더 줄이시려면 <a class="xl" style="color:#B54708;font-weight:800;cursor:pointer" onclick="openApps()">앱마다 막기 · 시간 정하기 ›</a></div>' : '')
+      + '</div>'
+    : '';
   let bar;
   if(lim>0){
     const pct=Math.min(100, Math.round(used/lim*100));
     const grad = pct>=100 ? 'linear-gradient(90deg,#F97316,#B42318)' : 'linear-gradient(90deg,#2563EB,#1B3A8F)';
-    bar = '<div class="sec">오늘 사용시간</div><div class="card">'
-      + '<div style="display:flex;align-items:baseline;gap:8px">'
-      + '<div style="flex:1;font-size:15px;font-weight:800">오늘 '+fmtMin(used)+' 썼어요</div>'
-      + '<div style="font-size:14px;color:var(--muted);font-weight:700">하루 한도 '+minLabel(lim)+'</div></div>'
-      + '<div class="abar" style="height:12px;margin-top:9px"><i style="width:'+pct+'%;background:'+grad+'"></i></div>'
-      + '<div style="margin-top:8px;font-size:14px;font-weight:800;color:'+(pct>=100?'#B42318':'#1B3A8F')+'">'
-      + (lim-used>0 ? '앞으로 '+fmtMin(lim-used)+' 더 쓸 수 있어요' : '오늘 쓸 시간을 다 썼어요')+'</div>'
-      + (bonus>0 ? '<div style="margin-top:7px;font-size:13.5px;color:#B54708;font-weight:700">🎁 오늘만 보너스 '+fmtMin(bonus)+'가 더해진 한도예요</div>' : '')
-      + screenLine + limitSumLine
+    bar = '<div class="sec">오늘 쓴 시간</div><div class="card">'
+      + '<div class="lvUse"><b>' + fmtMin(used) + '</b> <span>/ 하루 ' + minLabel(lim) + '</span></div>'
+      + '<div class="abar" style="height:14px;margin-top:9px"><i style="width:'+pct+'%;background:'+grad+'"></i></div>'
+      + '<div style="margin-top:8px;font-size:15px;font-weight:800;color:'+(pct>=100?'#B42318':'#1B3A8F')+'">'
+      + (lim-used>0 ? '👉 앞으로 <b>'+fmtMin(lim-used)+'</b> 더 쓸 수 있어요' : '오늘 쓸 시간을 다 썼어요')+'</div>'
+      + (bonus>0 ? '<div style="margin-top:7px;font-size:13.5px;color:#B54708;font-weight:700">🎁 오늘만 보너스 '+fmtMin(bonus)+'를 더한 시간이에요</div>' : '')
+      + tipBox
       + '</div>';
   }else{
-    // ⭐ 2026-11-03 설계안 A : **한도가 없는 날은 ①(화면을 켠 시간)을 보여준다.**
-    //   🔴 깎을 한도가 없으니 ② 를 보여줄 이유가 없고, ② 는 전화·문자를 빼서 **더 작다** —
-    //     부모가 「폰을 얼마나 썼나」를 알고 싶은 자리에 작은 숫자를 띄우면 「측정이 안 된다」가 된다.
-    //     7일 막대와도 같은 기준이 된다.
-    bar = '<div class="sec">오늘 사용시간</div><div class="card">'
-      + '<div style="font-size:15px;font-weight:800">오늘 '+fmtMin(screenMin)+' 썼어요</div>'
+    //   한도가 없는 날은 ①(화면을 켠 시간) — 7일 막대와 같은 기준(설계안 A).
+    bar = '<div class="sec">오늘 쓴 시간</div><div class="card">'
+      + '<div class="lvUse"><b>' + fmtMin(screenMin) + '</b> <span>화면을 켠 시간</span></div>'
       + '<div style="margin-top:6px;font-size:13.5px;color:var(--muted);font-weight:600">'
-      + (lim===0?'오늘은 <b>사용 불가</b>로 설정돼 있어요':'오늘은 하루한도가 <b>없어요</b> (제한 없이 쓸 수 있음)')+'</div></div>';
+      + (lim===0?'오늘은 <b>쓰지 않는 날</b>로 정해 두셨어요':'하루 사용시간 한도를 <b>걸어 두지 않았어요</b> — 사용시간으로는 안 잠겨요')+'</div></div>';
   }
 
-  // ── ③ 취침시간 ──
-  let dtBox;
-  if(p.dt_enabled!=='true'){
-    dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div><div class="val">꺼져 있어요 — 밤에도 제한이 없어요</div></div>';
-  }else if(dt){
-    dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div>'
-      + '<div class="stat on">🔴 지금 취침시간이에요 ('+dt.s+' ~ '+dt.e+')</div>'
-      + '<div class="val" style="margin-top:7px">'+dt.e+' 이 되면 저절로 풀려요</div></div>';
-  }else if(nx){
-    dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div>'
-      + '<div class="stat off">⚪ 아직 아니에요 — 오늘 '+nx.s+' 에 시작해요</div>'
-      + '<div class="val" style="margin-top:7px">'+fmtMin(nx.inMin)+' 뒤에 잠겨요</div></div>';
-  }else{
-    const v=p['dt_day_'+_dayIdx()]||'미설정';
-    dtBox = '<div class="card"><div class="ttl">🌙 취침시간</div>'
-      + '<div class="stat off">⚪ 지금은 취침시간이 아니에요</div>'
-      + '<div class="val" style="margin-top:7px">'+(v==='미설정'?'오늘 요일은 설정돼 있지 않아요':'오늘 '+v.replace('|',' ~ '))+'</div></div>';
-  }
-
-  // ── ④ 앱별 제한 (지금 걸려 있는 것만) ──
-  //   ⚠️ 2026-11-03 : `appB`·`blSet`·`timedMap`·`blocked`·`timed`·`free` 계산은 **위로 옮겼다**
-  //     (설계안 E 가 ② 막대 카드에서 먼저 써야 한다). 여기서 다시 계산하지 마라 — CLAUDE.md 3-13.
-  let appBox = '<div class="sec">지금 걸려 있는 앱 제한</div><div class="card">';
+  // ── ③ 앱마다 정해 둔 것 ──
+  //   ⚠️ appB·blSet·timedMap·blocked·timed·free 는 위에서 한 번만 계산한다(liveAppSets · 3-13).
+  let appBox = '<div class="sec">앱마다 정해 둔 것</div><div class="card">';
   if(!blocked.length && !timed.length && !free.length){
-    appBox += '<div class="empty">앱별로 걸어둔 제한이 없어요</div>';
+    appBox += '<div class="empty">앱마다 따로 정해 둔 게 없어요<br><span class="sm">모든 앱이 하루 사용시간 안에서 똑같이 쓰여요</span></div>';
   }else{
-    if(blocked.length) appBox += '<div style="padding:10px 0"><div class="stat on">🔴 완전 차단 '+blocked.length+'개</div>'
-      + '<div class="achips">'+blocked.map(x=>'<span class="achip">'+appIcoHtml(x)+esc(appNm(x))+'</span>').join('')+'</div></div>';
-    if(timed.length) appBox += '<div style="padding:10px 0;border-top:'+(blocked.length?'1px solid #F2F4F7':'0')+'">'
-      + '<div class="stat on" style="background:#FFF7ED;color:#B54708;border-color:#FED7AA">⏱️ 오늘 시간제한 '+timed.length+'개</div>'
-      + timed.map(t=>{
-          const u = Number(LIVE_APPUSE[t.pkg])||0;          // 오늘 이 앱을 쓴 분
-          const left = Math.max(0, t.min - u);
-          const pct = Math.min(100, Math.round(u / t.min * 100));
-          const done = left<=0;
-          return '<div style="margin-top:11px">'
-            + '<div style="display:flex;gap:8px;align-items:baseline;font-size:14px">'
-            + '<div style="flex:1;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:7px" class="achipT">'+appIcoHtml(t.pkg)+esc(appNm(t.pkg))+'</div>'
-            + '<div style="font-weight:800;white-space:nowrap;color:'+(done?'#B42318':'var(--navy)')+'">'
-            + (done ? '다 썼어요' : fmtMin(left)+' 남음') + (t.bonus?' 🎁':'') + '</div></div>'
-            + '<div class="abar" style="margin-top:6px"><i style="width:'+pct+'%;background:'
-            + (done?'linear-gradient(90deg,#F97316,#B42318)':'linear-gradient(90deg,#2563EB,#1B3A8F)')+'"></i></div>'
-            + '<div style="margin-top:5px;font-size:12.5px;color:var(--muted);font-weight:600">'
-            + '오늘 '+fmtMin(t.min)+' 중 '+fmtMin(u)+' 사용'+'</div></div>';
-        }).join('')
-      + '</div>';
-    if(free.length) appBox += '<div style="padding:10px 0;border-top:'+((blocked.length||timed.length)?'1px solid #F2F4F7':'0')+'">'
-      + '<div class="stat off">⚪ 하루한도에서 빠지는 앱 '+free.length+'개</div>'
-      + '<div class="achips">'+free.map(x=>'<span class="achip">'+appIcoHtml(x)+esc(appNm(x))+'</span>').join('')+'</div></div>';
+    const grp = (first, head, sub, inner) => '<div style="padding:11px 0;border-top:'+(first?'0':'1px solid #F2F4F7')+'">'
+      + '<div class="lvGh">' + head + '</div><div class="lvGs">' + sub + '</div>' + inner + '</div>';
+    let first = true;
+    if(blocked.length){ appBox += grp(first, '⛔ 아예 못 여는 앱 ' + blocked.length + '개', '시간과 상관없이 늘 막혀 있어요',
+      '<div class="achips">'+blocked.map(x=>'<span class="achip">'+appIcoHtml(x)+esc(appNm(x))+'</span>').join('')+'</div>'); first = false; }
+    if(timed.length){ appBox += grp(first, '⏱ 시간을 정해 둔 앱 ' + timed.length + '개', '정해 둔 시간을 다 쓰면 그 앱만 잠겨요',
+      timed.map(t=>{
+        const u = Number(LIVE_APPUSE[t.pkg])||0;          // 오늘 이 앱을 쓴 분
+        const left = Math.max(0, t.min - u);
+        const pct = Math.min(100, Math.round(u / t.min * 100));
+        const done = left<=0;
+        return '<div style="margin-top:11px">'
+          + '<div style="display:flex;gap:8px;align-items:baseline;font-size:14px">'
+          + '<div style="flex:1;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:7px" class="achipT">'+appIcoHtml(t.pkg)+esc(appNm(t.pkg))+'</div>'
+          + '<div style="font-weight:800;white-space:nowrap;color:'+(done?'#B42318':'var(--navy)')+'">'
+          + (done ? '오늘은 다 썼어요' : fmtMin(left)+' 남음') + (t.bonus?' 🎁':'') + '</div></div>'
+          + '<div class="abar" style="margin-top:6px"><i style="width:'+pct+'%;background:'
+          + (done?'linear-gradient(90deg,#F97316,#B42318)':'linear-gradient(90deg,#2563EB,#1B3A8F)')+'"></i></div>'
+          + '<div style="margin-top:5px;font-size:12.5px;color:var(--muted);font-weight:600">'
+          + '오늘 '+fmtMin(t.min)+' 중 '+fmtMin(u)+' 썼어요</div></div>';
+      }).join('')); first = false; }
+    if(free.length){ appBox += grp(first, '♾️ 하루 시간 상관없이 쓰는 앱 ' + free.length + '개', '하루 사용시간을 안 깎고, 다 써도 계속 열려요 (취침·학원 시간은 따로예요)',
+      '<div class="achips">'+free.map(x=>'<span class="achip">'+appIcoHtml(x)+esc(appNm(x))+'</span>').join('')+'</div>'); }
   }
-  appBox += '</div>';
+  appBox += '<div style="padding-top:10px;border-top:1px solid #F2F4F7;margin-top:4px"><a class="xl" style="font-weight:800;cursor:pointer" onclick="openApps()">앱마다 막기 · 시간 정하기에서 바꾸기 ›</a></div></div>';
 
-  // ── ⑤ 인터넷 · 그 밖의 잠금 ──
+  // ── ④ 인터넷 · 그 밖에 막아 둔 것 ──
+  //   🔴 「켜짐」 배지 + 「차단중」 글이 같이 있으면 헷갈린다 → 배지 자체를 「막는 중 / 안 막음」으로.
   const nAllow = J(p.chrome_allowed_domains,[]).length;
   const nUn = J(p.uninstall_blocked_apps,[]).length, nPin = J(p.pin_locked_apps,[]).length;
+  const KK = ['kakao_openchat_create_blocked','kakao_openprofile_blocked','kakao_multiprofile_blocked','kakao_shortform_blocked','kakao_now_tab_blocked'];
+  const kkOn = KK.filter(k=>p[k]==='true').length;
+  //   [이름, 그림키, 막는 중?, 막을 때 설명, 안 막을 때 설명, 배지(막는 중), 배지(안 막음)]
   const rows = [
-    ['크롬(안전검색)', p.chrome_enabled==='true', '켜짐 — 허용한 '+nAllow+'개 사이트만 열려요', '꺼짐 — 인터넷을 쓸 수 없어요'],
-    ['Play 스토어 차단', p.play_store_blocked==='true', '차단중 — 새 앱을 못 깔아요', '막고 있지 않아요'],
-    ['카톡 오픈채팅 차단', p.open_chat_blocked==='true', '차단중 — 오픈채팅방에 못 들어가요', '막고 있지 않아요'],
-    ['카톡 링크 열기 차단', p.kakao_inapp_browser_blocked==='true', '차단중 — 링크를 눌러도 안 열려요', '막고 있지 않아요'],
-    // 💬 2026-10-15 카톡 세부차단 5가지 (자녀앱 v54+)
-    ['카톡 세부차단',
-      ['kakao_openchat_create_blocked','kakao_openprofile_blocked','kakao_multiprofile_blocked',
-       'kakao_shortform_blocked','kakao_now_tab_blocked'].some(k=>p[k]==='true'),
-      ['kakao_openchat_create_blocked','kakao_openprofile_blocked','kakao_multiprofile_blocked',
-       'kakao_shortform_blocked','kakao_now_tab_blocked'].filter(k=>p[k]==='true').length + '가지 막는 중',
-      '만들기·오픈프로필·멀티프로필·숏폼·커뮤니티 전부 꺼져 있어요'],
-    ['앱 삭제 방지', p.uninstall_blocked==='true', nUn+'개 앱을 못 지워요', '꺼져 있어요'],
-    ['앱 PIN 잠금', nPin>0, nPin+'개 앱에 비밀번호가 걸려 있어요', '걸어둔 앱이 없어요']
+    ['🌐 인터넷 (공신폰 크롬)', 'allow', p.chrome_enabled==='true', '허락한 <b>'+nAllow+'개 사이트만</b> 열려요', '크롬이 꺼져 있어 <b>인터넷을 못 써요</b>', '일부만 열림', '꺼짐'],
+    ['🛒 Play 스토어 (새 앱 깔기)', 'security', p.play_store_blocked==='true', '새 앱을 <b>못 깔아요</b>', '새 앱을 <b>깔 수 있어요</b>'],
+    ['💬 카톡 오픈채팅 들어가기', 'kakao', p.open_chat_blocked==='true', '모르는 사람 단톡방에 <b>못 들어가요</b>', '오픈채팅방에 <b>들어갈 수 있어요</b>'],
+    ['🔗 카톡 속 링크 누르기', 'kakao', p.kakao_inapp_browser_blocked!=='false', '링크를 눌러도 <b>인터넷이 안 열려요</b>', '링크를 누르면 <b>인터넷이 열려요</b>'],
+    ['🎬 카톡 숏폼 · 오픈프로필 등', 'kakao', kkOn>0, '5가지 중 <b>'+kkOn+'가지</b>를 막고 있어요', '5가지 모두 막지 않아요'],
+    ['🗑 앱 지우기', 'uninst', p.uninstall_blocked==='true', '<b>'+nUn+'개 앱</b>을 못 지워요', '앱을 <b>지울 수 있어요</b>'],
+    ['🔑 앱 비밀번호 잠금', 'pinlock', nPin>0, '<b>'+nPin+'개 앱</b>은 비밀번호를 알아야 열려요', '비밀번호를 걸어 둔 앱이 없어요', '잠금 중', '안 씀']
   ].map((r,i)=>'<div class="row" style="padding:11px 0'+(i?';border-top:1px solid #F2F4F7':'')+'">'
-      + (icoSrc(LIVE_RICO[r[0]]) ? '<img src="'+icoSrc(LIVE_RICO[r[0]])+'" alt="" style="width:38px;height:38px;object-fit:contain;flex:none">' : '')
+      + (icoSrc(r[1]) ? '<img src="'+icoSrc(r[1])+'" alt="" style="width:38px;height:38px;object-fit:contain;flex:none">' : '')
       + '<div class="grow"><div class="ttl" style="font-size:14.5px">'+r[0]+'</div>'
-      + '<div class="val">'+(r[1]?r[2]:r[3])+'</div></div>'
-      + '<span class="badge '+(r[1]?'b-on':'b-off')+'">'+(r[1]?'켜짐':'꺼짐')+'</span></div>').join('');
+      + '<div class="val">'+(r[2]?r[3]:r[4])+'</div></div>'
+      + '<span class="badge '+(r[2]?'b-on':'b-off')+'" style="white-space:nowrap">'+(r[2]?(r[5]||'막는 중'):(r[6]||'안 막음'))+'</span></div>').join('');
 
-  // ── ⑥ 자료 시점 ──
-  //   ⚠️ 「N시간 전에 마지막으로 알려온 내용이에요」는 쓰지 않는다.
-  //     부모가 "그럼 지금 화면이 틀렸다는 건가" 하고 혼란스러워한다(2026-08-31 대표점장 지적).
-  //     지금 연결돼 있는지 아닌지만 짧게 알린다.
-  const ltd = toDate(ST.dev?.last_seen_at);
+  // ── ⑤ 자료 시점 ──
+  //   ⚠️ 「N시간 전에 마지막으로 알려온 내용이에요」는 쓰지 않는다(2026-08-31 대표점장 지적). 연결됐나만 짧게.
   const online = isOnline(ST.usage, ST.dev);
   const foot = '<div class="note '+(online?'':'warn')+'" style="margin-top:12px">'
     + (online ? '자녀폰이 <b>지금 연결돼 있어요.</b>'
@@ -8142,9 +7709,8 @@ function paintLive(){
     + '<br>이 화면은 <b>30초마다</b> 저절로 새로고침돼요.</div>';
 
   openSub('자녀 실시간 제한 상황', hero + why4Html() + dayBandHtml() + bar
-    + '<div class="sec">취침시간 (다운타임)</div>' + dtBox
     + appBox
-    + '<div class="sec">인터넷 · 그 밖의 잠금</div><div class="card" style="padding-top:2px">'+rows+'</div>'
+    + '<div class="sec">인터넷 · 그 밖에 막아 둔 것</div><div class="card" style="padding-top:2px">'+rows+'</div>'
     + foot
     + '<button class="btn btn-g" onclick="closeSub()">닫기</button>');
 }
