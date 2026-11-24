@@ -1283,17 +1283,25 @@
   .lxChk input{width:18px;height:18px;margin:0}
   .lxDel{display:block;width:100%;margin-top:10px;border:0;background:none;color:#B42318;font-size:14.5px;font-weight:800;font-family:inherit;padding:10px 0;cursor:pointer}
   .smsb.lxMe{background:#FFF3B0;border-radius:18px 18px 6px 18px;margin:0 0 9px 40%}
-  /* 🎛️ 2026-11-24 (26차) 기능 모아보기 */
-  .afCard{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:15px 14px;border-radius:20px;cursor:pointer;
-    background:linear-gradient(135deg,#EEF4FF 0%,#F3EDFF 100%);border:2px solid #C7D7FE;box-shadow:0 6px 18px rgba(79,70,229,.10)}
+  /* 🎛️ 2026-11-24 (26차) 기능 모아보기 · 27차 : 대표점장 「조금 더 눈에 띄는 색」 → 분홍·보라 그라데이션(위 파란 사용시간 카드와 다른 색) + 흰 글씨 + 은은한 빛 */
+  .afCard{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:16px 14px;border-radius:20px;cursor:pointer;color:#fff;
+    background:linear-gradient(135deg,#F43F5E 0%,#EC4899 45%,#A855F7 100%);border:0;box-shadow:0 8px 22px rgba(236,72,153,.34);
+    animation:afGlow 2.6s ease-in-out infinite}
+  @keyframes afGlow{0%,100%{box-shadow:0 8px 22px rgba(236,72,153,.30)}50%{box-shadow:0 8px 32px rgba(244,63,94,.55)}}
+  @media (prefers-reduced-motion:reduce){.afCard{animation:none}}
   .afCard:active{transform:scale(.99)}
-  .afIco{width:48px;height:48px;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;flex:0 0 auto;box-shadow:0 2px 6px rgba(16,24,40,.06)}
-  .afT{font-size:16.5px;font-weight:800;color:#1D2939}
+  .afIco{width:48px;height:48px;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;flex:0 0 auto;box-shadow:0 2px 8px rgba(16,24,40,.18)}
+  .afT{font-size:17px;font-weight:800;color:#1D2939}
+  .afCard .afT{color:#fff}
+  .afCard .afT .betabadge{background:#FDE047;border-color:#FDE047;color:#713F12}
   .afS{font-size:13.4px;color:#475467;margin-top:3px}
+  .afCard .afS{color:#FFF1F5}
+  .afCard .afS b{color:#fff}
   .afN{margin-top:7px;display:flex;gap:6px;flex-wrap:wrap}
   .afN span{font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px}
   .afN .afOn{background:#DCFAE6;color:#067647} .afN .afOff{background:#fff;color:#667085;border:1px solid #E4E7EC}
-  .afArw{font-size:24px;color:#6172F3;font-weight:700}
+  .afArw{font-size:26px;color:#fff;font-weight:700}
+  .afKw{color:#C2410C;font-weight:900;background:#FFEDD5;border-radius:6px;padding:0 4px}
   .afList{padding:2px 0}
   .afRow{display:flex;align-items:center;gap:11px;padding:12px 12px;border-bottom:1px solid #F2F4F7;cursor:pointer}
   .afRow:last-child{border-bottom:0}
@@ -2220,7 +2228,7 @@ async function enterMain(){
 //   ※ PIN 통과 후에만 기록한다 (코드만 아는 사람이 연동 표시를 남기지 못하게)
 const WEB_VER = '1.0';
 // 🆕 배포할 때마다 여기만 고치면 전산 표시가 바뀝니다. (부모앱 VERSION_LABEL 과 같은 역할)
-const WEB_LABEL = '11월24일 26차 테스트판 · 기능 모아보기';
+const WEB_LABEL = '11월24일 27차 테스트판 · 모아보기 색 · 숨기기 이름';
 // 🆕 2026-10-06 : 기록이 실패했는지 기억한다. 실패했으면 다음에 앱으로 돌아올 때 다시 시도한다.
 //   ※ 예전에는 실패를 조용히 삼켜서(아래 catch), 한 번 실패하면 전산에 **영원히 「미연동」**으로 남았다.
 //      부모님은 멀쩡히 쓰고 계신데 매장에만 안 뜨는 상태가 된다. 실제로 그런 문의가 있었다.
@@ -3237,15 +3245,15 @@ function recBuild(ans, p){
   }
   // ── 폰 제어를 아이가 몰랐으면 ──────────────────────────────
   if (A('ctl_know') === 'no'){
-    if (ver < 43) put('info', { id:'icon', t:'🙈 공신폰 앱 아이콘 숨기기', d:'아이 폰 앱이 업데이트된 뒤에 쓸 수 있어요. 업데이트되면 이 화면에서 다시 권해 드려요.' }, 'ctl_know');
+    if (ver < 43) put('info', { id:'icon', t:'🙈 공신폰 앱 "아이콘" 숨기기', d:'아이 폰 앱이 업데이트된 뒤에 쓸 수 있어요. 업데이트되면 이 화면에서 다시 권해 드려요.' }, 'ctl_know');
     else {
       if (p.app_icon_hidden !== 'true')
-        put('auto', { id:'icon', t:'🙈 공신폰 앱 아이콘 숨기기', before:'아이 폰 앱 목록에 공신폰 앱이 보여요', after:'아이콘만 안 보여요 — 기능은 그대로',
+        put('auto', { id:'icon', t:'🙈 공신폰 앱 "아이콘" 숨기기', before:'아이 폰 앱 목록에 공신폰 앱이 보여요', after:'아이콘만 안 보여요 — 기능은 그대로',
           rows:[{ key:'app_icon_hidden', value:'true' }], def:true,
           warn:'바로 안 사라지면 아이 폰을 한 번 껐다 켜 주세요.' }, 'ctl_know');
       else put('done', { id:'icon', t:'공신폰 앱 아이콘 — 이미 숨겨져 있어요' }, 'ctl_know');
       if (p.app_notify_hidden !== 'true')
-        put('auto', { id:'notify', t:'🔕 「지금은 못 써요」 안내창 숨기기 (원하시면)', before:'막힌 앱을 누르면 안내창이 떠요', after:'안내창 없이 그냥 안 열려요',
+        put('auto', { id:'notify', t:'🔕 공신폰 앱 "알림" 숨기기 (원하시면)', before:'막힌 앱을 누르면 안내창이 떠요', after:'안내창 없이 그냥 안 열려요',
           rows:[{ key:'app_notify_hidden', value:'true' }], def:false,
           warn:'아이가 <b>왜 막혔는지 모르게</b> 돼요. 시간 요청 안내도 같이 안 떠요 — 그래서 처음엔 체크를 빼 뒀어요.' }, 'ctl_know');
     }
@@ -5025,7 +5033,7 @@ const FEATURES = [
         r:{ emo:'🔔', txt:'소리가 켜졌어요', sub:'벨소리 최대', bg:'#EAF7F0', fg:'#2B8A5A' },
         lc:'누르기 전', rc:'누른 뒤', rok:true, alt:'소리 변경' } },
 
-{ k:'hideicon', t:'🙈 자녀앱 아이콘 숨기기', sub:'소리 변경 · 앱 숨기기',
+{ k:'hideicon', t:'🙈 공신폰 앱 <span class="afKw">"아이콘"</span> 숨기기', sub:'소리 변경 · 앱 숨기기',
   one:'자녀폰 앱 목록에서 시내모바일 앱 아이콘만 안 보이게 해요.',
   what:['자녀폰에는 <b>「시내모바일」 앱이 하나 깔려 있어요.</b> 시간을 세고 앱을 잠그는, 이 모든 기능을 실제로 하는 앱이에요.',
         '이 스위치를 켜면 그 <b>아이콘만 자녀 눈에 안 보이게</b> 돼요. 앱이 사라지는 게 아니에요.',
@@ -5036,7 +5044,7 @@ const FEATURES = [
         '다시 보이게 하려면 이 스위치를 끄면 돼요. 끄면 아이콘이 <b>홈 화면 맨 뒤쪽</b>에 다시 생겨요 — 고장이 아니에요 🙂'],
   art:{ kind:'grid', hi:0, st:'gone', lc:'아이콘이 보여요', rc:'아이콘이 없어졌어요', rok:true, alt:'앱 아이콘 숨기기 전후' } },
 
-{ k:'hidenotify', t:'🔕 자녀앱 알림 숨기기', sub:'소리 변경 · 앱 숨기기',
+{ k:'hidenotify', t:'🔕 공신폰 앱 <span class="afKw">"알림"</span> 숨기기', sub:'소리 변경 · 앱 숨기기',
   one:'막힌 앱을 눌렀을 때 뜨는 「지금은 쓸 수 없어요」 안내창을 안 띄워요.',
   what:['평소에는 자녀가 막힌 앱을 누르면 <b>「지금은 쓸 수 없어요」 같은 안내</b>가 떠요.',
         '이 스위치를 켜면 <b>그 안내를 띄우지 않아요.</b> 막히는 건 똑같지만, 왜 안 되는지 설명이 안 나와요.'],
@@ -5147,11 +5155,11 @@ const AF = [
  { k:'sos', ico:'🆘', t:'긴급 연락처 (SOS)', kind:'go', open:'openSos', st:() => '3번 안 받으면 4번째에 자동으로 받아요' },
 
  { g:'🙈 아이 폰에 보이는 것' },
- { k:'hideicon', ico:'🙈', t:'공신폰 앱 아이콘 숨기기', kind:'sw', key:'app_icon_hidden', open:'openStealth',
+ { k:'hideicon', ico:'🙈', t:'공신폰 앱 <span class="afKw">"아이콘"</span> 숨기기', kind:'sw', key:'app_icon_hidden', open:'openStealth',
    st:p => p.app_icon_hidden === 'true' ? '아이 폰에 아이콘이 안 보여요' : '아이콘이 보여요',
    gate:p => afVer(p) < 43 ? '아이 폰 앱이 업데이트되면 쓸 수 있어요' : '' },
- { k:'hidenotify', ico:'🔕', t:'「지금은 못 써요」 안내창 숨기기', kind:'sw', key:'app_notify_hidden', open:'openStealth',
-   st:p => p.app_notify_hidden === 'true' ? '안내창이 안 떠요' : '막힐 때 안내창이 떠요',
+ { k:'hidenotify', ico:'🔕', t:'공신폰 앱 <span class="afKw">"알림"</span> 숨기기', kind:'sw', key:'app_notify_hidden', open:'openStealth',
+   st:p => p.app_notify_hidden === 'true' ? '막혀도 「지금은 못 써요」 알림이 안 떠요' : '막힐 때 「지금은 못 써요」 알림이 떠요',
    gate:p => afVer(p) < 43 ? '아이 폰 앱이 업데이트되면 쓸 수 있어요' : '' },
  { k:'sound', ico:'🔔', t:'소리 · 진동 · 무음 바꾸기', kind:'go', open:'openStealth', st:() => '아이 폰 소리를 여기서 바꿔요' },
 ];
@@ -7536,17 +7544,17 @@ function openStealth(){
   openSub('소리 변경 · 앱 숨기기', `
     <div class="xbox"><div class="xi">${icoImg('sound','')}</div><div class="xt">
       <div class="xh">이 화면에서는 <b>3가지</b>를 할 수 있어요</div>
-      <div class="xd">① 아이 폰 소리 · 진동 · 무음 바꾸기 · ② 공신폰 앱 아이콘 숨기기 · ③ 「지금은 못 써요」 안내창 숨기기</div></div></div>
+      <div class="xd">① 아이 폰 소리 · 진동 · 무음 바꾸기 · ② 공신폰 앱 <span class="afKw">"아이콘"</span> 숨기기 · ③ 공신폰 앱 <span class="afKw">"알림"</span> 숨기기</div></div></div>
     ${xpHtml('sound', { mini:true })}
     ${soundCard()}
     ${xpHtml('hideicon', { mini:true })}
-    ${sw('app_icon_hidden','🙈 공신폰 앱 아이콘 숨기기',
+    ${sw('app_icon_hidden','🙈 공신폰 앱 <span class="afKw">"아이콘"</span> 숨기기',
          '켜면 아이 폰 앱 목록에서 아이콘만 안 보여요',
          '지금 숨김 중이에요 — 아이 폰 앱 목록에 안 보여요',
          '지금은 보여요 — 아이 폰 앱 목록에 아이콘이 있어요')}
     ${xpHtml('hidenotify', { mini:true })}
-    ${sw('app_notify_hidden','🔕 「지금은 못 써요」 안내창 숨기기',
-         '켜면 막힌 앱을 눌러도 안내창 없이 그냥 안 열려요',
+    ${sw('app_notify_hidden','🔕 공신폰 앱 <span class="afKw">"알림"</span> 숨기기',
+         '켜면 막힌 앱을 눌러도 「지금은 못 써요」 알림 없이 그냥 안 열려요',
          '지금 숨김 중이에요 — 아이에게 안내가 안 보여요',
          '지금은 보여요 — 막힐 때 아이에게 안내가 떠요')}
     <button class="btn btn-g" onclick="closeSub()">닫기</button>`);
