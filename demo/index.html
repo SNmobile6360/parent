@@ -738,7 +738,7 @@ const SCENES = {
             if (ev === 'child:linkOpened') done('부모님이 차단을 끄면 열리고, 다시 켜면 바로 막혀요.'); } },
   S4: { emoji:'⏰', title:'부모님이 정하면\n자녀 폰에 바로 걸려요', short:'하루 사용시간',
     steps:[() => `부모님 화면에서 오늘(${TODAY_LABEL()}) 칸을 눌러요`, '시간을 「0시간 30분」으로 돌리고 「완료」를 눌러요', '자녀 폰이 바로 잠겨요 — 오늘 벌써 47분 썼거든요'],
-    tip:'<b>요일마다 다르게</b> 정할 수 있어요. 화면이 켜져 있으면 무엇을 하든 시간이 세져요.',
+    tip:'<b>요일마다 다르게</b> 정할 수 있어요. 집 밖에서도 부모님 폰으로 바로 바꿀 수 있어요.',
     staff:'집에서도 부모님 폰으로 이렇게 바로 바뀌어요. 아이 폰을 뺏을 필요가 없어요.',
     real:'옆 시연폰은 하루 사용시간이 걸려 있어요. 직원이 잠긴 화면을 보여 드릴게요.',
     async setup(){ view('home'); await parentGo('openLimit'); watchSheet(); },
@@ -756,7 +756,7 @@ const SCENES = {
     async setup(){ setPol('limit_day_' + (simNow().getDay() + 1), '40'); setPol('daily_limit_enabled', 'true'); setPol('time_request', ''); setPol('bonus_today', '');
       LOCK = lockState(); view('home'); await parentGo(null); },
     on(ev){
-      if (ev === 'child:timeRequest'){ step(1); setTimeout(() => push(`🙋 시간을 더 쓰고 싶어해요`, '오늘 쓸 수 있는 시간을 다 썼어요. 눌러서 시간을 줄 수 있어요', async () => { await parentGo(null); step(2); try{ W.scrollTo(0, 0); }catch(e){} }), 900); }
+      if (ev === 'child:timeRequest'){ step(1); setTimeout(() => push(`🙋 시간을 더 쓰고 싶어해요`, '오늘 쓸 수 있는 시간을 다 썼어요. 눌러서 시간을 줄 수 있어요', async () => { await parentGo(null); step(2); setTimeout(() => { try{ const c = W.document.querySelector('#timeReqBox .card'); if (c) c.scrollIntoView({ block:'center' }); }catch(e){} }, 300); }), 900); }   // 2026-11-25 : 고객판은 아래 탭 줄에 허락 버튼이 가려져 가운데로 올린다(태블릿 실측)
       if (ev === 'parent:bonus') setTimeout(() => { if (!LOCK) done(`부모님이 고른 만큼 바로 풀렸어요 (오늘 보너스 +${bonusToday()}분).`); }, 900);
       if (ev === 'parent:timeCleared' && !bonusToday()) note('「오늘은 그만」 — 요청은 사라지고 폰은 그대로 잠겨 있어요.'); } },
   S5: { emoji:'🌙', title:'밤에는 자녀 폰이\n저절로 쉬어요', short:'취침시간',
