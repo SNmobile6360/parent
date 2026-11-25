@@ -1,8 +1,8 @@
 /* 시연 키트 오프라인 — 매장 와이파이가 끊겨도 시연이 돈다.
  * 키트·부모웹앱은 「인터넷 되면 새것, 안 되면 저장해 둔 것」. 그림 등은 저장해 둔 것을 먼저 쓴다.
  * 🔴 서버(*.supabase.co)로는 원래 아무 요청도 안 나간다(shim 이 막는다). 여기서는 건드리지 않는다. */
-const C = 'snkit-v1';
-const PRE = ['./', './index.html', './data.js', './icons.js', './shim.js', './manifest.json', '../test.html', '../icon-192.png', '../icon.png'];
+const C = 'snkit-v2';   // 2026-11-25 : 부모 화면을 고객판 index.html 로 바꿔 저장 목록도 바꿈
+const PRE = ['./', './index.html', './data.js', './icons.js', './shim.js', './manifest.json', '../index.html', '../icon-192.png', '../icon.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(C).then(c => c.addAll(PRE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== C).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {
