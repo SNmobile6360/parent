@@ -90,6 +90,50 @@ input{font:inherit}
 @keyframes glow{50%{box-shadow:0 0 0 8px rgba(61,107,240,.25)}}
 .tipbox{background:var(--warmS);color:#6B4A12;border-radius:18px;padding:12px 18px;font-size:15.5px;line-height:1.5}
 
+/* 4차 : 탭 두 개 · 버튼 5개 · 뚫는 길 */
+.tabs{display:flex;gap:6px;margin-left:14px;background:#EFE8DC;border-radius:99px;padding:4px}
+.tb{font-size:16px;font-weight:800;padding:9px 18px;border-radius:99px;color:var(--sub)}
+.tb.on{background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.big{grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr}
+.bb{padding:12px 10px;gap:6px}
+.bb .e{width:66px;height:66px;border-radius:22px;font-size:34px}
+.bb b{font-size:20px}
+.bb span{font-size:14px}
+.bb.onState{border-color:var(--green);background:#F3FBF7}
+.bb.note{background:transparent;box-shadow:none;cursor:default}
+.main2{display:grid;grid-template-columns:330px 1fr;gap:20px;padding:14px 26px 20px;height:calc(100% - 62px)}
+.hl{display:flex;flex-direction:column;gap:8px;min-height:0;overflow-y:auto}
+.hhead{background:linear-gradient(150deg,#1F2A37,#3A4A5E);color:#fff;border-radius:22px;padding:16px 18px}
+.hhead b{display:block;font-size:19px;line-height:1.35}
+.hhead span{font-size:14px;opacity:.85}
+.rc{display:flex;gap:10px;align-items:center;text-align:left;background:#fff;border-radius:16px;padding:10px 12px;box-shadow:var(--sh);border:2.5px solid transparent}
+.rc .e{font-size:26px;flex:none}
+.rc b{display:block;font-size:15.5px;line-height:1.3}
+.rc small{font-size:12.5px;color:var(--sub)}
+.rc.on{border-color:var(--blue);background:var(--blueS)}
+.hr{display:flex;flex-direction:column;gap:12px;min-height:0}
+.rbox{background:#fff;border-radius:24px;box-shadow:var(--sh);padding:20px 24px;flex:1;min-height:0;overflow-y:auto}
+.rbox h3{margin:0 0 12px;font-size:24px;letter-spacing:-.3px}
+.rbox .lab{font-size:14px;font-weight:800;color:var(--sub);margin-bottom:8px}
+#rSteps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+#rSteps li{display:flex;gap:12px;align-items:flex-start;font-size:19px;line-height:1.45}
+#rSteps i{font-style:normal;flex:none;width:32px;height:32px;border-radius:16px;background:var(--blue);color:#fff;font-weight:800;font-size:16px;display:grid;place-items:center;margin-top:1px}
+.rend{margin-top:16px;background:var(--greenS);color:#0B4F35;border-radius:16px;padding:13px 16px;font-size:18px;line-height:1.45}
+.rask{margin-top:10px;background:var(--warmS);color:#6B4A12;border-radius:14px;padding:10px 14px;font-size:15px}
+.rrun{display:flex;gap:12px;align-items:center}
+#rRun{flex:none;height:62px;padding:0 26px;border-radius:18px;background:var(--blue);color:#fff;font-size:20px;font-weight:800;box-shadow:0 6px 14px rgba(61,107,240,.25)}
+#rRun[disabled]{background:#DDE3EC;color:#7A8698;box-shadow:none;font-size:16px}
+.rmsg{flex:1;font-size:16px;font-weight:700;color:var(--sub);line-height:1.4}
+.rmsg.wait{color:#22408F}
+.rmsg.ok{color:#0B4F35}
+.st{padding:6px 9px;font-size:14.5px;line-height:1.35}
+.st i{width:24px;height:24px;font-size:13px}
+.who{padding:14px 18px}
+.who .e{font-size:28px}
+.who b{font-size:20px;margin-top:4px}
+.who span{font-size:14px}
+.steps{overflow-y:auto;gap:2px}
+
 /* 처음 설정 */
 #setup{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:50}
 .sbox{width:min(520px,92vw);background:#fff;border-radius:26px;box-shadow:var(--sh);padding:26px 26px 22px}
@@ -114,10 +158,11 @@ input{font:inherit}
   <img src="../icon-192.png" alt="" id="logo">
   <span class="t">시내모바일 공신폰</span>
   <span class="pill" id="conn">아이 폰 찾는 중…</span>
+  <div class="tabs"><button class="tb on" type="button" data-v="ctl">👩 부모님 폰으로 해 보기</button><button class="tb" type="button" data-v="hole">🕳 아이들이 뚫는 길</button></div>
   <button class="again" type="button" id="again">↺ 처음으로</button>
 </div>
 
-<div class="main">
+<div class="main" id="vCtl">
   <div class="left">
     <div class="who">
       <div class="e">👩</div>
@@ -130,6 +175,7 @@ input{font:inherit}
       <div class="st" data-s="2"><i>3</i><span><b>🔑 풀어 주기</b>로 다시 풀어 보세요.</span></div>
       <div class="st" data-s="3"><i>4</i><span><b>⏰ 오늘 시간 다 썼어요</b>를 누르면 아이 폰에 「사용 시간 끝」이 떠요.</span></div>
       <div class="st" data-s="4"><i>5</i><span>아이 폰에서 <b>「🙋 더 쓰고 싶다고 알리기」</b>를 누르면 여기로 와요. 시간을 골라 주세요.</span></div>
+      <div class="st" data-s="5"><i>6</i><span><b>🛡️ Play 스토어</b> · <b>📵 카톡 막기</b>도 눌러 보세요. 아이 폰에서 아이콘이 사라지거나 회색이 돼요.</span></div>
     </div>
     <a class="sim" href="sim.html">아이 폰이 없을 때 — 그림으로 보기</a>
   </div>
@@ -164,9 +210,40 @@ input{font:inherit}
         <b>오늘 시간 다 썼어요</b>
         <span>하루 사용시간을 다 쓰면<br>이렇게 잠겨요</span>
       </button>
+      <button class="bb" type="button" id="bPlay">
+        <span class="e" style="background:var(--blueS)">🛡️</span>
+        <b id="bPlayT">Play 스토어 막기</b>
+        <span id="bPlayS">아이콘이 통째로 사라져서<br>새 앱을 못 깔아요</span>
+      </button>
+      <button class="bb" type="button" id="bKakao">
+        <span class="e" style="background:#FFF6C2">📵</span>
+        <b id="bKakaoT">카톡 잠깐 막기</b>
+        <span id="bKakaoS">앱 하나만 골라서<br>막을 수 있어요</span>
+      </button>
+      <div class="bb note">
+        <span style="font-size:15px;line-height:1.55;color:var(--sub)">👉 위쪽 <b style="font-size:16px;color:var(--ink)">「🕳 아이들이 뚫는 길」</b>도<br>눌러 보세요.<br>아이들이 실제로 쓰는<br>우회 방법을 막는 걸<br>직접 볼 수 있어요.</span>
+      </div>
+
     </div>
 
     <div class="tipbox">💡 진짜 부모님 화면에서는 <b>요일마다 하루 사용시간</b>, <b>잠자는 시간</b>, <b>앱 하나씩 막기</b>도 정할 수 있어요. 집 밖에서도 부모님 폰으로 바로 바꿔요.</div>
+  </div>
+</div>
+
+<div class="main2 hide" id="vHole">
+  <div class="hl">
+    <div class="hhead"><b>🕳 아이들이 실제로 쓰는 우회 방법</b><span>필요한 앱 속에도 인터넷으로 빠지는 길이 숨어 있어요. 우리 폰은 막아요.</span></div>
+    <div id="rList" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+  <div class="hr">
+    <div class="rbox">
+      <h3 id="rTitle"></h3>
+      <div class="lab">아이들은 이렇게 들어가요 — 손에 든 폰으로 따라 해 보세요</div>
+      <ol id="rSteps"></ol>
+      <div class="rend" id="rEnd"></div>
+      <div class="rask">💬 다른 곳에서 상담하실 때도 <b>「이 길도 막히나요?」</b> 꼭 물어보세요.</div>
+    </div>
+    <div class="rrun"><button type="button" id="rRun">▶ 폰이 알아서 보여 주기</button><div class="rmsg" id="rMsg">버튼을 누르면 시연폰이 스스로 이 길을 따라 들어가요.</div></div>
   </div>
 </div>
 
@@ -263,7 +340,7 @@ input{font:inherit}
   ['pointerup','pointerleave','pointercancel'].forEach(function(ev){ $('logo').addEventListener(ev, function(){ clearTimeout(lp); }); });
 
   // ── 읽기 ──
-  var KEYS = ['force_lock_until','daily_limit_enabled','daily_limit_lock_enabled','bonus_today','time_request','app_version_code','limit_used_min_today'];
+  var KEYS = ['force_lock_until','daily_limit_enabled','daily_limit_lock_enabled','bonus_today','time_request','app_version_code','limit_used_min_today','play_store_blocked','blocked_apps','demo_runner_ok','demo_run_status'];
   async function readPol(){
     var k = KEYS.concat([todayKey()]);
     var rows = await rest(srv(), 'policies?device_code=eq.' + encodeURIComponent(CFG.code) + '&key=in.(' + k.join(',') + ')&select=key,value,updated_at');
@@ -308,7 +385,7 @@ input{font:inherit}
       all[i].classList.toggle('done', i < n);
     }
   }
-  function busy(on){ ['bLock','bFree','bLimit'].forEach(function(id){ $(id).disabled = on; }); }
+  function busy(on){ ['bLock','bFree','bLimit','bPlay','bKakao'].forEach(function(id){ $(id).disabled = on; }); }
 
   // 폰이 받았는지 — 폰은 받은 값을 다시 올린다(updated_at 이 보낸 뒤로 새로 찍힘). 그걸 기다린다.
   //   🔴 「폰이 올렸다」는 폰만 올리는 줄(app_version_code)의 시각이 바뀐 것으로 본다 — 서버 시각끼리 비교하니
@@ -365,6 +442,36 @@ input{font:inherit}
     step(4);
   }); };
 
+  // 🛡️ Play 스토어 · 📵 카톡 — 누를 때마다 켜고 끈다
+  var KAKAO = 'com.kakao.talk';
+  function blockedList(){ try { var a = JSON.parse(POL.blocked_apps && POL.blocked_apps.v || '[]'); return Array.isArray(a) ? a : []; } catch(_) { return []; } }
+  function paintToggles(){
+    var ps = POL.play_store_blocked && POL.play_store_blocked.v === 'true';
+    $('bPlay').classList.toggle('onState', ps);
+    $('bPlayT').textContent = ps ? 'Play 스토어 다시 열기' : 'Play 스토어 막기';
+    $('bPlayS').innerHTML = ps ? '지금 막혀 있어요<br>(아이콘이 사라졌어요)' : '아이콘이 통째로 사라져서<br>새 앱을 못 깔아요';
+    var kk = blockedList().indexOf(KAKAO) >= 0;
+    $('bKakao').classList.toggle('onState', kk);
+    $('bKakaoT').textContent = kk ? '카톡 다시 열기' : '카톡 잠깐 막기';
+    $('bKakaoS').innerHTML = kk ? '지금 막혀 있어요<br>(아이콘이 회색이에요)' : '앱 하나만 골라서<br>막을 수 있어요';
+  }
+  $('bPlay').onclick = function(){ act(async function(){
+    var on = !(POL.play_store_blocked && POL.play_store_blocked.v === 'true');
+    say('wait', '📨', '아이 폰에 보내는 중… <b>손에 든 폰을 보세요!</b>');
+    await save([['play_store_blocked', String(on)]]);
+    watchAck('play_store_blocked', String(on), on ? '<b>Play 스토어가 사라졌어요!</b> 아이 폰 홈 화면에서 찾아 보세요. 새 앱을 못 깔아요.' : 'Play 스토어가 다시 보여요.');
+    step(5);
+  }); };
+  $('bKakao').onclick = function(){ act(async function(){
+    var a = blockedList(), on = a.indexOf(KAKAO) < 0;
+    a = a.filter(function(x){ return x !== KAKAO; }); if (on) a.push(KAKAO);
+    var v = JSON.stringify(a);
+    say('wait', '📨', '아이 폰에 보내는 중… <b>손에 든 폰을 보세요!</b>');
+    await save([['blocked_apps', v]]);
+    watchAck('blocked_apps', v, on ? '<b>카톡이 막혔어요!</b> 아이 폰에서 카톡을 눌러 보세요. 다른 앱은 그대로예요.' : '카톡이 다시 열려요.');
+    step(5);
+  }); };
+
   // 시간 요청 → 시간 주기
   var reqBtns = document.querySelectorAll('#req .row button');
   for (var i = 0; i < reqBtns.length; i++) reqBtns[i].onclick = function(){
@@ -397,9 +504,85 @@ input{font:inherit}
     if (on) $('reqS').textContent = (age < 1 ? '방금' : age + '분 전에') + ' 아이 폰에서 알림이 왔어요. 얼마나 줄지 골라 주세요.';
   }
 
+
+  // ══════════ 🕳 아이들이 실제로 쓰는 우회 방법 ══════════
+  //   🔴 화면에는 「다른 공신폰·다른 앱은 뚫려요」라고 쓰지 않는다(표시광고법 비방 · 실증책임). 「아이들이 쓰는 길 — 우리 폰은 막아요」 + 검증 질문.
+  //   steps 는 시연폰(SM-M156S)에서 실제로 누른 순서다. 앱이 업데이트되면 메뉴 이름이 바뀔 수 있다.
+  var ROUTES = [
+    { id:'gallery', e:'🖼️', t:'갤러리 → 설정 → 개인정보 처리방침', one:'사진 앱 속 안내 글로 인터넷 열기', auto:true,
+      steps:['<b>갤러리</b>를 열어요','오른쪽 아래 <b>☰ 메뉴 → ⚙️ 설정</b>','맨 아래 <b>갤러리 정보</b>','<b>개인정보 처리방침</b>을 눌러요 — 인터넷 화면이 열리려고 해요'],
+      end:'인터넷 화면이 뜨는 순간 닫아요.' },
+    { id:'sms', e:'✉️', t:'문자 속 링크', one:'문자로 온 주소를 눌러 인터넷 열기', auto:true,
+      steps:['<b>메시지</b> 앱을 열어요','링크가 든 문자를 열어요','<b>링크</b>를 눌러요'],
+      end:'링크로 열린 인터넷을 바로 닫아요. 문자는 그대로 읽고 보낼 수 있어요.' },
+    { id:'kakao', e:'💬', t:'카톡 속 링크 · 광고', one:'대화방 링크 · 친구 탭 광고로 인터넷 열기', auto:true,
+      steps:['<b>카카오톡</b>을 열어요','대화방에서 <b>링크</b>를 눌러요','친구 탭 맨 위 <b>광고</b>를 눌러 봐도 돼요'],
+      end:'카톡 안 인터넷 창을 바로 닫아요. 채팅 · 단톡방은 그대로예요.' },
+    { id:'dict', e:'📖', t:'네이버사전 속 검색', one:'사전에서 인터넷 검색으로 빠져나가기', auto:true,
+      steps:['<b>네이버사전</b>을 열어요','단어를 찾아요','결과 아래 <b>웹 검색 · 블로그</b> 링크를 눌러요'],
+      end:'사전은 그대로 쓰고, 인터넷으로 나가는 길만 닫아요.' },
+    { id:'map', e:'🗺️', t:'네이버지도 속 웹페이지', one:'가게 홈페이지 · 블로그로 빠져나가기', auto:true,
+      steps:['<b>네이버지도</b>에서 가게를 찾아요','<b>홈페이지</b>나 <b>블로그 리뷰</b>를 눌러요'],
+      end:'길 찾기는 그대로 쓰고, 웹페이지로 나가는 길만 닫아요.' },
+    { id:'playstore', e:'🛍️', t:'Play 스토어에서 브라우저 받기', one:'새 브라우저 · VPN 앱을 깔아서 뚫기', auto:false,
+      steps:['아이 폰에서 <b>Play 스토어</b>를 찾아 봐요','태블릿 첫 화면에서 <b>🛡️ Play 스토어 막기</b>를 눌러요','다시 찾아 봐요 — <b>아이콘이 없어요</b>'],
+      end:'Play 스토어를 통째로 숨겨 새 앱을 못 깔아요. 깔린 브라우저 · VPN 앱도 막아요.' }
+  ];
+  var curRoute = 0;
+  function paintRoutes(){
+    var h = '';
+    ROUTES.forEach(function(r, i){
+      h += '<button type="button" class="rc' + (i === curRoute ? ' on' : '') + '" data-i="' + i + '"><span class="e">' + r.e + '</span><span><b>' + r.t + '</b><small>' + r.one + '</small></span></button>';
+    });
+    $('rList').innerHTML = h;
+    var b = $('rList').querySelectorAll('.rc');
+    for (var k = 0; k < b.length; k++) b[k].onclick = function(){ curRoute = +this.dataset.i; paintRoutes(); };
+    var r = ROUTES[curRoute];
+    $('rTitle').innerHTML = r.e + ' ' + r.t;
+    $('rSteps').innerHTML = r.steps.map(function(s, i){ return '<li><i>' + (i + 1) + '</i><span>' + s + '</span></li>'; }).join('');
+    $('rEnd').innerHTML = '🛡️ <b>우리 폰은</b> ' + r.end;
+    paintRun();
+  }
+  function paintRun(){
+    var ok = POL.demo_runner_ok && POL.demo_runner_ok.v === 'true';
+    var r = ROUTES[curRoute];
+    $('rRun').disabled = !ok || !r.auto;
+    $('rRun').textContent = !ok ? '▶ 폰이 알아서 보여 주기 (시연폰 전용판 필요)' : (r.auto ? '▶ 폰이 알아서 보여 주기' : '이 길은 직접 따라 해 주세요');
+  }
+  $('rRun').onclick = function(){
+    var r = ROUTES[curRoute];
+    act(async function(){
+      await rest(srv(), 'remote_commands', { method:'POST', body:{ child_device_id: CFG.devId, command:'DEMO_RUN', payload: r.id, executed:false }, prefer:'return=minimal' });
+      $('rMsg').className = 'rmsg wait';
+      $('rMsg').innerHTML = '📲 시연폰이 지금 <b>' + r.t + '</b> 길을 따라 들어가요. <b>손에 든 폰을 보세요!</b>';
+    });
+  };
+
+  // ── 화면 바꾸기 (탭) ──
+  var tbs = document.querySelectorAll('.tabs .tb');
+  for (var t = 0; t < tbs.length; t++) tbs[t].onclick = function(){
+    for (var q = 0; q < tbs.length; q++) tbs[q].classList.toggle('on', tbs[q] === this);
+    $('vCtl').classList.toggle('hide', this.dataset.v !== 'ctl');
+    $('vHole').classList.toggle('hide', this.dataset.v !== 'hole');
+    if (this.dataset.v === 'hole') paintRoutes();
+  };
+
+  // 시연폰 전용판이 올리는 진행 상황 (demo_run_status = "route|단계|ISO")
+  function paintRunStatus(){
+    var v = POL.demo_run_status && POL.demo_run_status.v || '';
+    if (!v) return;
+    var p = v.split('|'), t = Date.parse(p[2] || '');
+    if (isNaN(t) || Date.now() - t > 60000) return;
+    var m = $('rMsg');
+    if (p[1] === 'blocked'){ m.className = 'rmsg ok'; m.innerHTML = '🛡️ <b>막혔어요!</b> 인터넷 화면이 열리자마자 닫혔어요. 손에 든 폰을 보세요.'; }
+    else if (p[1] === 'fail'){ m.className = 'rmsg'; m.innerHTML = '이번엔 끝까지 못 들어갔어요. 손으로 따라 해 보세요.'; }
+    else { m.className = 'rmsg wait'; m.innerHTML = '📲 시연폰이 들어가는 중… <b>' + p[1] + '</b>'; }
+  }
+
   // ↺ 처음으로 — 폰을 원래대로 (다음 손님)
   async function resetAll(quiet){
-    await save([['force_lock_until', '0'], ['daily_limit_enabled', 'false'], [todayKey(), '-1'], ['bonus_today', ''], ['time_request', '']]);
+    await save([['force_lock_until', '0'], ['daily_limit_enabled', 'false'], [todayKey(), '-1'], ['bonus_today', ''], ['time_request', ''],
+                ['play_store_blocked', 'false'], ['blocked_apps', JSON.stringify(blockedList().filter(function(x){ return x !== KAKAO; }))]]);
     watch = null; $('req').classList.add('hide'); step(0);
     if (!quiet) say('ok', '↺', '처음으로 돌렸어요. 아이 폰도 원래대로 풀려요.');
     else say('', '👇', '먼저 아이 폰을 마음대로 눌러 보세요. 그다음 아래 버튼을 눌러 보세요.');
@@ -415,7 +598,7 @@ input{font:inherit}
   var tick = 0, timer = null;
   async function loop(){
     if (document.hidden) return;
-    try { await readPol(); paintReq(); await checkAck(); } catch(e){ /* 다음 바퀴에 다시 */ }
+    try { await readPol(); paintReq(); paintToggles(); paintRun(); paintRunStatus(); await checkAck(); } catch(e){ /* 다음 바퀴에 다시 */ }
     if (tick++ % 5 === 0) readSeen().catch(function(){});
   }
   function start(){
