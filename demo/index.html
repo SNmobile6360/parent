@@ -178,7 +178,7 @@ input{font:inherit}
     <label for="inCode">연동코드</label>
     <input id="inCode" autocomplete="off" autocapitalize="characters" placeholder="ABCD-1234">
     <label for="inPin">부모 PIN</label>
-    <input id="inPin" type="password" inputmode="numeric" autocomplete="off" placeholder="숫자">
+    <input id="inPin" type="text" inputmode="numeric" autocomplete="off" name="sn-demo-pin" style="-webkit-text-security:disc" placeholder="숫자">   <!-- password 칸이면 크롬이 「비밀번호 저장」을 띄운다(태블릿 실측) -->
     <button class="go" type="button" id="goSetup">연결하기</button>
     <div class="err" id="sErr"></div>
   </div>
