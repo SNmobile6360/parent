@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>시내모바일 공신폰 · 상담 도우미</title>
+<meta name="theme-color" content="#FBF6EE">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="../icon.png">
+<!--
+  🎬 시연 태블릿 「상담 도우미」 (1차 · 2026-11-13)
+  설계서 : 내 드라이브\시내모바일\시연 태블릿 상담도우미 설계 (11월13일).md
+
+  ● 오른쪽 「부모님 폰」은 진짜 부모웹앱(PARENT_FILE)을 그대로 띄운다.
+    서버 대신 demo/shim.js 가 가짜 데이터로 답한다 → 부모웹앱 코드는 한 줄도 안 바꾼다.
+  ● 왼쪽 「자녀 폰」은 자녀앱 실제 화면 문구(v67 소스)를 그대로 옮긴 흉내 화면이다.
+  ● 진짜 서버로는 요청이 0건 나간다. 나가려 하면 빨간 경고가 뜬다.
+  ● 가격·개통 안내는 없다(2026-11-13 대표점장 결정 — 공신폰 기능 설명만).
+-->
+<style>
+:root{
+  --bg:#FBF6EE; --card:#FFFFFF; --ink:#1F2A37; --sub:#5B6676; --mute:#97A1AE; --line:#ECE4D8;
+  --blue:#3D6BF0; --blue2:#2F56C8; --blueS:#EAF0FF; --warm:#FFB547; --warmS:#FFF3DC; --green:#1F9D6B; --greenS:#E4F6EE;
+  --coral:#FF7A59; --coralS:#FFEDE6; --red:#D93025;
+  --r:22px; --sh:0 6px 22px rgba(80,60,30,.08);
+  --font: -apple-system, "SamsungOne", "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);overflow:hidden;font-family:var(--font);color:var(--ink);
+  user-select:none;-webkit-user-select:none;touch-action:manipulation}
+button{font-family:inherit;cursor:pointer;border:0}
+#stage{position:absolute;left:0;top:0;width:1180px;height:720px;transform-origin:0 0;background:var(--bg)}
+.scr{position:absolute;inset:0;display:none}
+.scr.on{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;font-weight:700}
+.btn{height:52px;padding:0 24px;border-radius:16px;font-size:19px;font-weight:700;background:var(--card);color:var(--ink);
+  box-shadow:0 0 0 1.5px var(--line) inset;transition:transform .12s}
+.btn:active{transform:scale(.97)}
+.btn.pri{background:var(--blue);color:#fff;box-shadow:none}
+.btn.warm{background:var(--warm);color:#4A2E00;box-shadow:none}
+.btn.sm{height:42px;font-size:16px;padding:0 16px;border-radius:13px}
+
+/* ── A. 대기화면 ── */
+#scA{cursor:pointer}
+#scA .left{position:absolute;left:70px;top:0;bottom:0;width:560px;display:flex;flex-direction:column;justify-content:center}
+#scA .brand{font-size:20px;font-weight:700;color:var(--sub);margin-bottom:22px;display:flex;align-items:center;gap:10px}
+#scA .brand img{width:34px;height:34px;border-radius:9px}
+#aHead{font-size:52px;line-height:1.28;font-weight:800;letter-spacing:-1.2px;min-height:200px;transition:opacity .45s,transform .45s}
+#aHead em{font-style:normal;color:var(--blue)}
+#aSub{font-size:22px;line-height:1.6;color:var(--sub);margin-top:14px;min-height:72px;transition:opacity .45s}
+#aDots{display:flex;gap:8px;margin:26px 0 34px}
+#aDots i{height:9px;width:9px;border-radius:9px;background:#E2D7C6;transition:width .35s,background .35s}
+#aDots i.on{width:30px;background:var(--blue)}
+#scA .cta{font-size:22px;padding:16px 28px;background:var(--blue);color:#fff;align-self:flex-start;animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+#scA .right{position:absolute;right:70px;top:70px;width:440px;height:580px}
+.aPhone{position:absolute;left:80px;top:0;width:290px;height:580px;border-radius:44px;background:#1E2530;padding:12px;box-shadow:0 30px 60px rgba(40,30,10,.18)}
+.aPhone .in{width:100%;height:100%;border-radius:34px;background:linear-gradient(170deg,#F4F0FF,#E8F3FF 55%,#FFF4E4);padding:46px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px 10px;align-content:start}
+.aApp{text-align:center;font-size:13px;font-weight:600;color:#33404F;position:relative}
+.aApp img{width:58px;height:58px;border-radius:16px;display:block;margin:0 auto 6px;box-shadow:0 3px 8px rgba(0,0,0,.08)}
+.aApp b{position:absolute;right:6px;top:-6px;width:24px;height:24px;border-radius:12px;background:var(--green);color:#fff;font-size:14px;line-height:24px}
+.aBad{position:absolute;left:-30px;bottom:34px;background:#fff;border-radius:18px;padding:14px 18px;box-shadow:var(--sh);font-size:17px;font-weight:700;display:flex;gap:10px;align-items:center;animation:bob 3s ease-in-out infinite .6s}
+.aBad .x{width:30px;height:30px;border-radius:15px;background:var(--coralS);color:var(--coral);text-align:center;line-height:30px;font-size:18px}
+.aGood{position:absolute;right:-40px;top:-18px;background:#fff;border-radius:18px;padding:14px 18px;box-shadow:var(--sh);font-size:17px;font-weight:700;display:flex;gap:10px;align-items:center;animation:bob 3.4s ease-in-out infinite}
+.aGood .o{width:30px;height:30px;border-radius:15px;background:var(--greenS);color:var(--green);text-align:center;line-height:30px;font-size:18px}
+
+/* ── B. 걱정 고르기 ── */
+#scB{padding:44px 70px}
+.h1{font-size:38px;font-weight:800;letter-spacing:-.8px}
+.h1sub{font-size:20px;color:var(--sub);margin-top:8px}
+.qlab{font-size:19px;font-weight:700;margin:26px 0 12px;color:var(--sub)}
+.chips{display:flex;gap:12px;flex-wrap:wrap}
+.chip{height:54px;padding:0 26px;border-radius:16px;background:var(--card);font-size:20px;font-weight:700;box-shadow:0 0 0 1.5px var(--line) inset;color:var(--ink)}
+.chip.on{background:var(--blueS);color:var(--blue2);box-shadow:0 0 0 2.5px var(--blue) inset}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.tile{height:100px;border-radius:20px;background:var(--card);box-shadow:0 0 0 1.5px var(--line) inset;display:flex;align-items:center;gap:14px;padding:0 20px;font-size:20px;font-weight:700;text-align:left;color:var(--ink);position:relative}
+.tile .e{font-size:34px}
+.tile.on{background:var(--blueS);box-shadow:0 0 0 2.5px var(--blue) inset;color:var(--blue2)}
+.tile.on::after{content:'✓';position:absolute;right:14px;top:10px;width:26px;height:26px;border-radius:13px;background:var(--blue);color:#fff;font-size:15px;text-align:center;line-height:26px}
+#bFoot{position:absolute;left:70px;right:70px;bottom:36px;display:flex;align-items:center;gap:14px}
+#bNote{flex:1;font-size:17px;color:var(--sub)}
+#bErr{color:var(--coral);font-weight:700}
+
+/* ── C. 나란히 보기 ── */
+#cTop{position:absolute;left:0;right:0;top:0;height:66px;display:flex;align-items:center;gap:12px;padding:0 22px}
+#cLogo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--sub)}
+#cLogo img{width:30px;height:30px;border-radius:8px}
+#cCourse{flex:1;display:flex;gap:8px;justify-content:center;overflow:hidden}
+.cc{height:40px;padding:0 14px;border-radius:12px;background:var(--card);font-size:15px;font-weight:700;color:var(--sub);box-shadow:0 0 0 1.5px var(--line) inset;white-space:nowrap}
+.cc.on{background:var(--ink);color:#fff;box-shadow:none}
+.cc.done{color:var(--green)}
+#cBody{position:absolute;left:22px;right:22px;top:66px;height:592px;display:flex;gap:22px}
+.col{display:flex;flex-direction:column}
+.colLab{font-size:15px;font-weight:700;color:var(--sub);margin:4px 0 8px 6px;display:flex;align-items:center;gap:6px}
+#cBot{position:absolute;left:22px;right:22px;bottom:0;height:62px;display:flex;align-items:center;gap:12px}
+#staff{flex:1;font-size:15px;color:var(--mute);line-height:1.45;padding-right:10px}
+#staff b{color:var(--sub)}
+
+/* 자녀폰 틀 */
+.pFrame{width:312px;height:556px;border-radius:40px;background:#1E2530;padding:10px;box-shadow:0 14px 34px rgba(40,30,10,.16);position:relative}
+#child{width:360px;height:670px;transform:scale(.811);transform-origin:0 0;border-radius:36px;overflow:hidden;position:relative;background:#fff;font-size:16px}
+/* 부모폰 틀 */
+.qFrame{width:376px;height:556px;border-radius:40px;background:#fff;padding:10px;box-shadow:0 14px 34px rgba(40,30,10,.12),0 0 0 2px #E2D9CB inset;position:relative;overflow:hidden}
+#pWrap{width:356px;height:536px;border-radius:30px;overflow:hidden;position:relative;background:#F2F4F7}
+#pFr{width:390px;height:587px;border:0;transform:scale(.9128);transform-origin:0 0;background:#fff}
+#pTag{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:var(--warmS);color:#8A5A12;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;z-index:5;pointer-events:none;opacity:.95}
+#pLoad{position:absolute;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-size:16px;color:var(--sub);z-index:6}
+#pLoad .sp{width:36px;height:36px;border-radius:50%;border:4px solid #E6ECFA;border-top-color:var(--blue);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* 부모폰 알림 배너 */
+#push{position:absolute;left:18px;right:18px;top:-120px;z-index:8;background:rgba(255,255,255,.98);border-radius:20px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:flex;gap:12px;align-items:flex-start;transition:top .45s cubic-bezier(.2,.9,.3,1.2);cursor:pointer}
+#push.on{top:22px}
+#push img{width:38px;height:38px;border-radius:10px}
+#push .t{font-size:15px;font-weight:800;color:var(--ink)}
+#push .b{font-size:13.5px;color:var(--sub);margin-top:3px;line-height:1.45}
+#push .w{font-size:11.5px;color:var(--mute);margin-bottom:2px}
+
+/* 안내 칸 */
+#guide{flex:1;min-width:0;display:flex;flex-direction:column}
+#gHead{display:flex;align-items:center;gap:14px;margin:2px 0 16px}
+#gEmoji{width:62px;height:62px;border-radius:20px;background:var(--warmS);font-size:34px;display:flex;align-items:center;justify-content:center;flex:none}
+#gTitle{font-size:27px;font-weight:800;letter-spacing:-.6px;line-height:1.3}
+#gSteps{display:flex;flex-direction:column;gap:10px}
+.gs{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:18px;background:var(--card);box-shadow:0 0 0 1.5px var(--line) inset;font-size:19px;line-height:1.45;font-weight:600;color:var(--mute);transition:all .3s}
+.gs .n{width:32px;height:32px;border-radius:16px;background:#F0E9DE;color:var(--sub);font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none;margin-top:-1px}
+.gs.on{background:var(--blueS);box-shadow:0 0 0 2.5px var(--blue) inset;color:var(--ink)}
+.gs.on .n{background:var(--blue);color:#fff}
+.gs.done{color:var(--green)}
+.gs.done .n{background:var(--green);color:#fff}
+#gExtra{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+#gTip{margin-top:auto;background:var(--warmS);border-radius:18px;padding:14px 16px;font-size:16.5px;line-height:1.55;color:#6B4A12}
+#gTip b{color:#4A2E00}
+#gDone{display:none;margin-top:14px;background:var(--greenS);border-radius:18px;padding:14px 16px;font-size:18px;font-weight:700;color:#0E6B47;line-height:1.5}
+#gDone.on{display:block;animation:fade .4s}
+
+/* ── 자녀폰 안쪽 (360 x 670 기준) ── */
+.sb{height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font-size:14px;font-weight:600}
+.cs{position:absolute;inset:0;display:none;flex-direction:column}
+.cs.on{display:flex}
+#csHome{background:linear-gradient(170deg,#EEF0FF,#E6F2FF 55%,#FFF2E2)}
+#csHome .clock{text-align:center;font-size:54px;font-weight:300;margin-top:26px;color:#1F2A37;letter-spacing:-1px}
+#csHome .date{text-align:center;font-size:15px;color:#4B5563;margin-top:2px}
+#hUse{margin:16px 26px 0;background:rgba(255,255,255,.75);border-radius:16px;padding:10px 14px;font-size:14px;color:#374151;text-align:center}
+#hGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 4px;padding:22px 16px 0}
+.ap{text-align:center;font-size:12px;color:#1F2937;font-weight:500;line-height:1.25;cursor:pointer}
+.ap img{width:52px;height:52px;border-radius:15px;display:block;margin:0 auto 5px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.ap.hl img{animation:ring 1.3s infinite}
+@keyframes ring{0%,100%{box-shadow:0 0 0 0 rgba(61,107,240,.0)}50%{box-shadow:0 0 0 7px rgba(61,107,240,.35)}}
+/* 카톡 */
+#csTalk{background:#B2C7DA}
+.tkTop{background:#B2C7DA;display:flex;align-items:center;gap:10px;padding:6px 14px 10px;font-size:17px;font-weight:700;color:#1F2937}
+.tkBody{flex:1;padding:6px 12px;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.mRow{display:flex;gap:8px;align-items:flex-start}
+.mAv{width:38px;height:38px;border-radius:14px;background:#E6D3B3;flex:none;display:flex;align-items:center;justify-content:center;font-size:20px}
+.mNm{font-size:12.5px;color:#374151;margin-bottom:3px}
+.mB{background:#fff;border-radius:4px 16px 16px 16px;padding:9px 12px;font-size:15px;line-height:1.4;max-width:230px;color:#111}
+.mMe{align-self:flex-end;background:#FEE500;border-radius:16px 4px 16px 16px;padding:9px 12px;font-size:15px;max-width:230px;color:#111}
+.lnk{background:#fff;border-radius:4px 16px 16px 16px;max-width:236px;overflow:hidden;cursor:pointer;position:relative}
+.lnk .th{height:96px;background:linear-gradient(135deg,#FF5A5A,#FF9E6B);display:flex;align-items:center;justify-content:center;color:#fff;font-size:34px}
+.lnk .tx{padding:9px 12px;font-size:14px;line-height:1.4;color:#111}
+.lnk .ur{font-size:12px;color:#6B7280;margin-top:2px}
+.lnk.hl{animation:ring 1.3s infinite}
+.tkIn{background:#fff;margin:0;padding:10px 12px;display:flex;gap:8px;align-items:center}
+.tkIn div{flex:1;height:38px;border-radius:19px;background:#F3F4F6;color:#9CA3AF;font-size:14px;display:flex;align-items:center;padding:0 14px}
+.tkIn b{width:38px;height:38px;border-radius:19px;background:#FEE500;display:flex;align-items:center;justify-content:center;font-size:17px}
+/* 인앱 브라우저 */
+#iab{position:absolute;left:0;right:0;bottom:-100%;height:100%;background:#fff;z-index:20;transition:bottom .32s ease;display:flex;flex-direction:column}
+#iab.on{bottom:0}
+#iab .bar{height:52px;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid #EEE;font-size:14px;color:#374151}
+#iab .prog{height:3px;background:#FEE500;width:0;transition:width .7s}
+#iab .pg{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:#6B7280;font-size:15px;text-align:center;padding:30px}
+/* 토스트 */
+#cToast{position:absolute;left:50%;bottom:70px;transform:translateX(-50%) translateY(20px);background:rgba(40,40,40,.92);color:#fff;font-size:15px;border-radius:22px;padding:11px 18px;opacity:0;transition:all .3s;z-index:40;white-space:nowrap}
+#cToast.on{opacity:1;transform:translateX(-50%)}
+/* 잠금 화면 (자녀앱 실제 색 : #0B1220 / #101418) */
+.lk{background:#0B1220;color:#fff;padding:20px 22px 16px;overflow:hidden}
+.lk .ti{font-size:25px;font-weight:800;text-align:center;margin-top:14px}
+.lk .bd{font-size:15.5px;color:#B0B8C0;text-align:center;line-height:1.55;margin-top:14px;white-space:pre-line}
+.lk .bb{margin-top:12px;border-radius:14px;background:#161B22;border:1.5px solid #2A313B;color:#E2E7EE;font-size:16px;font-weight:700;text-align:center;padding:13px 10px;cursor:pointer}
+.lk .bb.req{background:#16304A;border-color:#2A4E78}
+.lk .bb.req.hl{animation:ringW 1.3s infinite}
+@keyframes ringW{0%,100%{box-shadow:0 0 0 0 rgba(120,170,255,0)}50%{box-shadow:0 0 0 6px rgba(120,170,255,.45)}}
+.lk .sent{margin-top:12px;border-radius:14px;background:#16304A;border:1.5px solid #2A4E78;text-align:center;padding:12px 10px}
+.lk .sent b{display:block;font-size:16px}
+.lk .sent span{font-size:13px;color:#9FB8E8}
+.lk .ft{margin-top:auto;font-size:13px;color:#8A94A6;text-align:center;padding-top:10px}
+.lk .used{font-size:13px;color:#8A94A6;text-align:center;margin-top:12px;line-height:1.6}
+/* 카메라 · 크롬 · 시내YouTube */
+#csCam{background:#0F1115;color:#fff}
+.vf{margin:40px auto 0;width:250px;height:250px;border-radius:24px;position:relative;background:#2A2F38;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px}
+.vf::before,.vf::after{content:'';position:absolute;inset:-6px;border-radius:28px;border:3px solid rgba(255,255,255,.75);clip-path:polygon(0 0,22% 0,22% 4%,4% 4%,4% 22%,0 22%,0 78%,4% 78%,4% 96%,22% 96%,22% 100%,78% 100%,78% 96%,96% 96%,96% 78%,100% 78%,100% 22%,96% 22%,96% 4%,78% 4%,78% 0,100% 0,100% 100%,0 100%)}
+.qrbox{width:130px;height:130px;background:#fff;border-radius:8px;padding:10px}
+.camTxt{font-size:15px;color:#D1D5DB;text-align:center;margin-top:20px;line-height:1.6}
+.shot{margin:26px auto 0;width:74px;height:74px;border-radius:37px;border:5px solid #fff;background:#fff;box-shadow:0 0 0 4px #0F1115 inset;cursor:pointer}
+.shot.hl{animation:ringW 1.3s infinite}
+.chrBar{height:54px;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid #EEE}
+.chrBar .u{flex:1;height:38px;border-radius:19px;background:#F1F3F4;font-size:14px;color:#3C4043;display:flex;align-items:center;padding:0 14px}
+.tb{background:#0B1220;color:#fff;padding:22px 20px 16px}
+.tb .ti{font-size:21px;font-weight:800;text-align:center;line-height:1.4;margin-top:20px}
+.tb .vd{margin-top:16px;background:#161B22;border-radius:16px;padding:12px;display:flex;gap:12px;align-items:center}
+.tb .vd .th{width:96px;height:56px;border-radius:10px;background:linear-gradient(135deg,#4F7DF3,#7B5CFA);display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+.tb .vd .t{font-size:14px;line-height:1.4;color:#E2E7EE}
+.tb .bd{font-size:14.5px;color:#B0B8C0;line-height:1.55;margin-top:14px;text-align:center;white-space:pre-line}
+.tb .rb{margin-top:16px;border-radius:14px;background:#D93025;color:#fff;font-size:17px;font-weight:800;text-align:center;padding:14px 10px;cursor:pointer}
+.tb .rb.hl{animation:ringW 1.3s infinite}
+.tb .rb.dis{background:#2E3A4A;color:#9AA4B2}
+.tb .gb{margin-top:10px;border-radius:14px;background:#161B22;border:1.5px solid #2A313B;color:#E2E7EE;font-size:15px;font-weight:700;text-align:center;padding:12px 10px;cursor:pointer}
+.tb .ok{margin-top:14px;font-size:14.5px;line-height:1.55;color:#B8F0D2;background:#123528;border-radius:14px;padding:12px;white-space:pre-line;text-align:center}
+#csTube{background:#fff}
+.tuTop{display:flex;align-items:center;gap:10px;padding:8px 16px 12px;font-size:19px;font-weight:800}
+.tuTop img{width:30px;height:30px;border-radius:8px}
+.tuV{margin:0 14px 14px;border-radius:16px;overflow:hidden;box-shadow:0 0 0 1px #EEE}
+.tuV .th{height:160px;background:linear-gradient(135deg,#4F7DF3,#7B5CFA);display:flex;align-items:center;justify-content:center;color:#fff;font-size:46px;position:relative}
+.tuV .th small{position:absolute;right:10px;bottom:8px;font-size:12px;background:rgba(0,0,0,.55);border-radius:6px;padding:2px 6px}
+.tuV .t{padding:10px 12px;font-size:15px;font-weight:700;line-height:1.4}
+.tuV .s{padding:0 12px 12px;font-size:12.5px;color:#6B7280}
+.tuE{margin:30px 20px;text-align:center;color:#6B7280;font-size:15px;line-height:1.6}
+
+/* ── F. 기능 지도 ── */
+#scF{padding:36px 60px}
+#fGrid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:22px}
+.fCol h3{margin:0 0 12px;font-size:21px;display:flex;align-items:center;gap:8px;color:var(--sub)}
+.fi{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:18px;padding:12px 16px;margin-bottom:10px;box-shadow:0 0 0 1.5px var(--line) inset;cursor:pointer;text-align:left;width:100%}
+.fi .e{font-size:28px;width:40px;text-align:center}
+.fi .t{font-size:18.5px;font-weight:800;color:var(--ink)}
+.fi .d{font-size:14.5px;color:var(--sub);margin-top:2px;line-height:1.4}
+.fi .g{margin-left:auto;font-size:13px;font-weight:800;border-radius:999px;padding:5px 11px;white-space:nowrap;background:var(--blueS);color:var(--blue2)}
+.fi.seen{background:var(--greenS);box-shadow:0 0 0 1.5px #BFE8D4 inset}
+.fi.seen .g{background:var(--green);color:#fff}
+#fBack{position:absolute;right:60px;top:36px}
+
+/* ── G. 마무리 ── */
+#scG{padding:50px 70px}
+#gList{display:flex;flex-direction:column;gap:10px;margin-top:24px;max-width:600px}
+.gl{display:flex;gap:12px;align-items:center;background:var(--card);border-radius:16px;padding:12px 16px;font-size:19px;font-weight:700;box-shadow:0 0 0 1.5px var(--line) inset}
+.gl i{font-style:normal;width:30px;height:30px;border-radius:15px;background:var(--green);color:#fff;text-align:center;line-height:30px;font-size:16px}
+#gQr{position:absolute;right:70px;top:110px;display:flex;gap:22px}
+.qr{width:210px;background:var(--card);border-radius:22px;padding:16px;text-align:center;box-shadow:var(--sh)}
+.qr svg{width:178px;height:178px;display:block}
+.qr b{display:block;font-size:17px;margin-top:10px}
+.qr span{font-size:13.5px;color:var(--sub)}
+#gLetter{position:absolute;left:70px;right:70px;bottom:110px;font-size:21px;line-height:1.7;color:var(--sub)}
+#gFoot{position:absolute;left:70px;right:70px;bottom:36px;display:flex;gap:12px;justify-content:flex-end}
+
+/* ── 공용 창 ── */
+#modal{position:absolute;inset:0;background:rgba(30,25,15,.35);display:none;align-items:center;justify-content:center;z-index:50}
+#modal.on{display:flex}
+#mBox{width:560px;background:var(--card);border-radius:28px;padding:30px 32px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+#mBox h2{margin:0 0 12px;font-size:26px}
+#mBox p{font-size:19px;line-height:1.65;color:var(--sub);margin:0 0 20px}
+#mBtns{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+#alarm{position:absolute;left:20px;right:20px;top:10px;z-index:99;background:#D93025;color:#fff;border-radius:14px;padding:12px 16px;font-size:16px;font-weight:700;display:none}
+#alarm.on{display:block}
+#staffPad{display:grid;grid-template-columns:repeat(3,72px);gap:10px;justify-content:center;margin:10px 0 18px}
+#staffPad button{height:60px;border-radius:16px;background:#F4EFE6;font-size:24px;font-weight:700}
+#pinDots{text-align:center;font-size:30px;letter-spacing:10px;height:40px;color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- ═══ A. 대기화면 ═══ -->
+  <section class="scr on" id="scA">
+    <div class="left">
+      <div class="brand"><img src="../icon-192.png" alt="">시내모바일 공신폰</div>
+      <div id="aHead"></div>
+      <div id="aSub"></div>
+      <div id="aDots"></div>
+      <div class="pill cta">👆 화면을 눌러 직접 해 보세요</div>
+    </div>
+    <div class="right">
+      <div class="aPhone"><div class="in" id="aGrid"></div></div>
+      <div class="aGood"><span class="o">✓</span>카톡·토스·사전은 그대로</div>
+      <div class="aBad"><span class="x">✕</span>앱 속 링크·유튜브는 막아요</div>
+    </div>
+  </section>
+
+  <!-- ═══ B. 걱정 고르기 ═══ -->
+  <section class="scr" id="scB">
+    <div class="h1">무엇이 가장 걱정되세요? 🤔</div>
+    <div class="h1sub">골라 주시면 딱 맞는 것부터 보여 드릴게요 · 여러 개 골라도 돼요</div>
+    <div class="qlab">자녀가 몇 학년인가요?</div>
+    <div class="chips" id="bGrade">
+      <button class="chip" data-g="초등">초등학생</button>
+      <button class="chip on" data-g="중학생">중학생</button>
+      <button class="chip" data-g="고등학생">고등학생</button>
+    </div>
+    <div class="qlab">이런 게 걱정돼요</div>
+    <div class="tiles" id="bTiles"></div>
+    <div id="bFoot">
+      <div id="bNote">💡 공신폰은 <b>갤럭시</b>로 만들어요</div>
+      <button class="btn" id="bAll">전부 차례대로 볼게요</button>
+      <button class="btn pri" id="bGo">맞춤 시연 시작 →</button>
+    </div>
+  </section>
+
+  <!-- ═══ C. 나란히 보기 ═══ -->
+  <section class="scr" id="scC">
+    <div id="cTop">
+      <div id="cLogo"><img src="../icon-192.png" alt="" id="staffKey">상담 도우미</div>
+      <div id="cCourse"></div>
+      <button class="btn sm" id="cMap">🗂 기능 전체</button>
+      <button class="btn sm" id="cHome">🏠 처음으로</button>
+    </div>
+    <div id="cBody">
+      <div class="col">
+        <div class="colLab">📱 자녀 폰</div>
+        <div class="pFrame"><div id="child">
+          <div id="csHome" class="cs">
+            <div class="sb"><span class="tm"></span><span>📶 🔋</span></div>
+            <div class="clock tm"></div><div class="date" id="hDate"></div>
+            <div id="hUse"></div>
+            <div id="hGrid"></div>
+          </div>
+          <div id="csTalk" class="cs">
+            <div class="sb"><span class="tm"></span><span>📶 🔋</span></div>
+            <div class="tkTop"><span style="cursor:pointer" data-go="home">‹</span>2학년 3반 단톡 <span style="color:#4B5563;font-weight:500">28</span></div>
+            <div class="tkBody" id="tkBody"></div>
+            <div class="tkIn" id="tkIn"><div>메시지 입력</div><b>➤</b></div>
+            <div id="iab"><div class="bar"><span id="iabX" style="font-size:22px;cursor:pointer">✕</span><span id="iabUrl" style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">youtube.com/shorts/…</span></div><div class="prog" id="iabP"></div><div class="pg" id="iabPg"></div></div>
+          </div>
+          <div id="csCam" class="cs">
+            <div class="sb"><span class="tm"></span><span>📶 🔋</span></div>
+            <div style="text-align:center;font-size:16px;margin-top:10px;color:#E5E7EB">📷 카메라 · QR 코드 찍기</div>
+            <div class="vf"><div class="qrbox" id="qrBox"></div><div style="font-size:13px;color:#D1D5DB">수학 교재 34쪽 · 개념 영상</div></div>
+            <div class="camTxt">교재에 있는 QR 코드를<br>네모 안에 맞춰 주세요</div>
+            <div class="shot hl" id="camShot"></div>
+          </div>
+          <div id="csChrome" class="cs" style="background:#fff">
+            <div class="sb"><span class="tm"></span><span>📶 🔋</span></div>
+            <div class="chrBar"><span style="font-size:18px">🏠</span><div class="u">youtu.be/SnDemoMat01</div></div>
+            <div style="height:3px;background:#1A73E8;width:60%"></div>
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:15px">불러오는 중…</div>
+          </div>
+          <div id="csTubeBlock" class="cs tb">
+            <div class="sb" style="padding:0 2px"><span class="tm"></span><span>📶 🔋</span></div>
+            <div class="ti">📺 이 영상은 시내YouTube 에서<br>볼 수 있어요</div>
+            <div class="vd"><div class="th">▶</div><div class="t" id="tbTitle"></div></div>
+            <div class="bd">크롬에서는 유튜브를 열 수 없어요.
+부모님이 허락해 주시면 시내YouTube 에서 볼 수 있어요.</div>
+            <div id="tbAct"></div>
+          </div>
+          <div id="csTube" class="cs">
+            <div class="sb"><span class="tm"></span><span>📶 🔋</span></div>
+            <div class="tuTop"><span style="cursor:pointer" data-go="home">‹</span><img id="tuIcon" alt="">시내YouTube</div>
+            <div id="tuList" style="flex:1;overflow:hidden"></div>
+          </div>
+          <div id="csLock" class="cs lk"></div>
+          <div id="cToast"></div>
+        </div></div>
+      </div>
+      <div class="col">
+        <div class="colLab">👩 부모님 폰 · 실제 관리 화면</div>
+        <div class="qFrame"><div id="pWrap">
+          <iframe id="pFr" title="부모님 관리 화면"></iframe>
+          
+          <div id="pLoad"><div class="sp"></div>부모님 화면을 여는 중…</div>
+          <div id="push"><img src="../icon-192.png" alt=""><div><div class="w">자녀 공신폰 관리 · 지금</div><div class="t" id="pushT"></div><div class="b" id="pushB"></div></div></div>
+        </div></div>
+      </div>
+      <div id="guide">
+        <div class="colLab">💡 이렇게 해 보세요</div>
+        <div id="gHead"><div id="gEmoji"></div><div id="gTitle"></div></div>
+        <div id="gSteps"></div>
+        <div id="gExtra"></div>
+        <div id="gDone"></div>
+        <div id="gTip"></div>
+      </div>
+    </div>
+    <div id="cBot">
+      <div id="staff"></div>
+      <button class="btn sm" id="cPrev">◀ 이전</button>
+      <button class="btn sm warm" id="cReal">📱 옆 진짜 폰으로</button>
+      <button class="btn sm pri" id="cNext">다음 ▶</button>
+    </div>
+  </section>
+
+  <!-- ═══ F. 기능 지도 ═══ -->
+  <section class="scr" id="scF">
+    <div class="h1">공신폰으로 이런 걸 할 수 있어요 🗂</div>
+    <div class="h1sub">눌러 보시면 그 기능을 바로 보여 드려요</div>
+    <button class="btn sm" id="fBack">← 돌아가기</button>
+    <div id="fGrid">
+      <div class="fCol"><h3>📱 자녀 폰에서</h3><div id="fA"></div></div>
+      <div class="fCol"><h3>👩 부모님 폰으로</h3><div id="fB"></div></div>
+    </div>
+  </section>
+
+  <!-- ═══ G. 마무리 ═══ -->
+  <section class="scr" id="scG">
+    <div class="h1">오늘 직접 보신 것 😊</div>
+    <div class="h1sub">궁금한 건 언제든 카카오톡으로 물어봐 주세요</div>
+    <div id="gList"></div>
+    <div id="gQr"></div>
+    <div id="gLetter">아이를 믿고 환경을 만들어 주시는 마음,<br>그 시간이 쌓여 아이의 방향이 돼요. 시내모바일이 함께할게요.</div>
+    <div id="gFoot"><button class="btn" id="gMap">🗂 기능 전체 보기</button><button class="btn pri" id="gHomeBtn">🏠 처음으로</button></div>
+  </section>
+
+  <div id="modal"><div id="mBox"><h2 id="mT"></h2><p id="mP"></p><div id="mExtra"></div><div id="mBtns"></div></div></div>
+  <div id="alarm"></div>
+</div>
+
+<script src="data.js"></script>
+<script src="icons.js"></script>
+<script>
+'use strict';
+/* ═══════════════════════ 설정 ═══════════════════════ */
+const PARENT_FILE = 'index.html';    // 2026-11-25 고객판으로 (지금 고객에게 나가 있는 기능만 보여 준다 · 온라인 체험판과 같게)
+const CODE = 'DEMO-2026', SERVER = 'A', KID = '김시내';
+const IDLE_MS = 3 * 60 * 1000;       // 3분 아무도 안 만지면 처음으로
+const B = window.SN_DEMO_BASE, ICON = window.SN_DEMO_ICONS || {};
+const $ = id => document.getElementById(id);
+const ico = p => ICON[p] ? 'data:image/png;base64,' + ICON[p] : '../icon-192.png';
+const DAYS = ['일','월','화','수','목','금','토'];
+const ymd = d => d.toLocaleDateString('en-CA');
+const LS = { get(k, d){ try{ const v = localStorage.getItem('snkit:' + k); return v == null ? d : v; }catch(e){ return d; } },
+             set(k, v){ try{ localStorage.setItem('snkit:' + k, v); }catch(e){} } };
+
+/* ═══════════════════════ 화면 맞춤 (어떤 크기든 1180×720 을 꽉 차게) ═══════════════════════ */
+function fit(){
+  const s = Math.min(innerWidth / 1180, innerHeight / 720);
+  const st = $('stage'); st.style.transform = `scale(${s})`;
+  st.style.left = Math.round((innerWidth - 1180 * s) / 2) + 'px';
+  st.style.top = Math.round((innerHeight - 720 * s) / 2) + 'px';
+}
+addEventListener('resize', fit); fit();
+
+/* ═══════════════════════ 시연 데이터 (가짜 서버) ═══════════════════════ */
+let DB, SIM_OFFSET = 0;   // 자녀폰 시계를 앞으로 돌린 만큼(ms)
+const simNow = () => new Date(Date.now() + SIM_OFFSET);
+function buildDB(){
+  const now = new Date(), iso = now.toISOString();
+  const db = { policies:[], child_devices:[], usage_history:[], app_usage_history:[], installed_apps:[], app_icons:[],
+               access_requests:[], remote_commands:[], global_policies:[], push_subscriptions:[], _tube:{ videos:[], reqs:[] } };
+  const pol = Object.assign({}, B.policies, { limit_used_min_today:'47' });
+  for (const k in pol) db.policies.push({ device_code:CODE, key:k, value:String(pol[k]) });
+  const made = new Date(now - 41 * 86400000).toISOString();
+  db.child_devices.push({ id:'demo-dev-1', device_code:CODE, device_name:'Galaxy (시연)', child_name:KID,
+                          last_seen_at:iso, created_at:made, yt_token:'demo-yt-token' });
+  B.apps.forEach(([p, n]) => {
+    db.installed_apps.push({ device_code:CODE, app_package:p, app_name:n, first_install_at:made });
+    if (ICON[p]) db.app_icons.push({ app_package:p, icon_base64:ICON[p] });
+  });
+  // 사용기록 : 오늘 47분 + 지난 6일
+  const NM = Object.fromEntries(B.apps);
+  let tot = 0; for (const p in B.today){ tot += B.today[p]; db.app_usage_history.push({ device_code:CODE, date:ymd(now), app_package:p, app_name:NM[p] || p, minutes:B.today[p] }); }
+  db.usage_history.push({ id:'u0', device_code:CODE, date:ymd(now), total_minutes:tot, total_seconds:tot * 60, updated_at:iso });
+  B.past.forEach((m, i) => {
+    const d = new Date(now - (6 - i) * 86400000), day = ymd(d);
+    db.usage_history.push({ id:'u' + (i + 1), device_code:CODE, date:day, total_minutes:m, total_seconds:m * 60, updated_at:d.toISOString() });
+    for (const p in B.pastApps) db.app_usage_history.push({ device_code:CODE, date:day, app_package:p, app_name:NM[p] || p, minutes:Math.round(m * B.pastApps[p]) });
+  });
+  // 시내YouTube : 이미 허락된 공부 영상 2개
+  db._tube.videos.push({ video_id:'SnDemoEng01', title:'[중2 영어] 현재완료 10분 정리', channel:'영어 쌤 채널', added_at:new Date(now - 3 * 86400000).toISOString(), added_by:'parent' });
+  db._tube.videos.push({ video_id:'SnDemoSci01', title:'[중2 과학] 전기 회로 실험 한눈에', channel:'과학 실험실', added_at:new Date(now - 6 * 86400000).toISOString(), added_by:'parent' });
+  return db;
+}
+function pol(k){ const r = DB.policies.find(x => x.key === k); return r ? r.value : undefined; }
+function setPol(k, v){ const r = DB.policies.find(x => x.key === k); if (r){ r.value = String(v); r.updated_at = new Date().toISOString(); } else DB.policies.push({ device_code:CODE, key:k, value:String(v) }); }
+
+/* 부모웹앱 안 shim 이 부르는 창구 */
+let PARENT_HTML = '', ALARMS = 0;
+window.SN_KIT = {
+  db: () => DB,
+  latency: () => 90,
+  parentHtml: () => PARENT_HTML,
+  touch(t){ if (t === 'usage_history'){ const r = DB.usage_history.find(x => x.date === ymd(new Date())); if (r) r.updated_at = new Date().toISOString(); }
+            if (t === 'child_devices'){ DB.child_devices.forEach(r => r.last_seen_at = new Date().toISOString()); } },
+  alarm(m){ ALARMS++; const a = $('alarm'); a.textContent = '🔴 진짜 서버로 나가려던 요청을 막았어요 : ' + m; a.classList.add('on'); console.error('[시연] 막은 요청', m); },
+  seedStorage(ls, ss){
+    try{ ls.clear(); ss.clear(); }catch(e){}
+    ls.setItem('sinae_parent_children', JSON.stringify([{ code:CODE, server:SERVER, name:KID }]));
+    ls.setItem('sinae_parent_current', CODE);
+    ls.setItem('sinae_loc_token', JSON.stringify({ [CODE]: 'd'.repeat(64) }));
+    ls.setItem('sinae_loc_token_at', JSON.stringify({ [CODE]: Date.now() }));
+    ls.setItem('sinae_intro_seen', '99');
+    ss.setItem('sinae_auth', '1'); ss.setItem('sinae_auth_by', 'pin'); ss.setItem('sinae_pinh', 'd'.repeat(64));
+  },
+  rpc(fn, a){
+    const T = DB._tube, now = new Date().toISOString();
+    switch (fn){
+      case 'sn_parent_unlock': return { data:'OK', error:null };
+      case 'loc_register_parent_token': return { data:'d'.repeat(64), error:null };
+      case 'loc_consent_revoke': return { data:'OK', error:null };
+      case 'yt_list': return { data:JSON.parse(JSON.stringify(T.videos)), error:null };
+      case 'yt_request_list': return { data:JSON.parse(JSON.stringify(T.reqs)), error:null };
+      case 'yt_request_decide': {
+        const q = T.reqs.find(r => r.video_id === a.p_video_id && r.status === 'pending');
+        if (q){ q.status = a.p_approve ? 'approved' : 'rejected';
+          if (a.p_approve && !T.videos.some(v => v.video_id === q.video_id)) T.videos.unshift({ video_id:q.video_id, title:q.title, channel:q.channel, added_at:now, added_by:'parent' }); }
+        onWrite('_tube', a.p_approve ? 'approve' : 'reject', [q]); return { data:'OK', error:null };
+      }
+      case 'yt_add': T.videos.unshift({ video_id:a.p_video_id, title:a.p_title || '공부 영상', channel:a.p_channel || '', added_at:now, added_by:'parent' }); onWrite('_tube','add',[]); return { data:'OK', error:null };
+      case 'yt_remove': T.videos = T.videos.filter(v => v.video_id !== a.p_video_id); onWrite('_tube','remove',[]); return { data:'OK', error:null };
+    }
+    console.warn('[시연] 모르는 서버 함수', fn, a); return { data:null, error:null };
+  },
+  onWrite: (t, op, rows) => onWrite(t, op, rows)
+};
+
+/* ═══════════════════════ 부모웹앱 띄우기 ═══════════════════════ */
+let W = null;   // 부모웹앱 창 (iframe 안)
+async function loadParent(){
+  $('pLoad').style.display = 'flex';
+  try{
+    if (!PARENT_HTML){
+      const r = await fetch('../' + PARENT_FILE + '?_=' + Date.now(), { cache:'no-store' }).catch(() => fetch('../' + PARENT_FILE));
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      PARENT_HTML = await r.text();
+    }
+    const SUPA = /<script[^>]+supabase-js[^>]*><\/script>/;
+    if (!SUPA.test(PARENT_HTML)) throw new Error('부모웹앱 모양이 바뀌었어요(supabase 줄 없음)');
+    const base = new URL('../', location.href).href;
+    let h = PARENT_HTML.replace(/<head>/i, () => `<head><base href="${base}">`);
+    h = h.replace(SUPA, () => `<script src="${base}demo/shim.js"><\/script>`);
+    return new Promise(res => {
+      $('pFr').onload = () => {
+        W = $('pFr').contentWindow;
+        try{ W.document.addEventListener('pointerdown', poke, true); }catch(e){}
+        setTimeout(() => { $('pLoad').style.display = 'none'; res(); }, 650);
+      };
+      $('pFr').srcdoc = h;
+    });
+  }catch(e){
+    $('pLoad').innerHTML = '😢 부모님 화면을 열지 못했어요<br><span style="font-size:13px">' + e.message + '</span>';
+    console.error(e);
+  }
+}
+/* 부모웹앱 안에서 화면 열기 (부모웹앱 함수 이름은 그대로 쓴다) */
+async function parentGo(fn){
+  if (!W) return;
+  try{
+    W.eval('try{ navStack.length = 0; }catch(e){}');
+    W.eval("try{ document.getElementById('sheet') && document.getElementById('sheet').classList.add('hide'); }catch(e){}");
+    if (typeof W.refreshAll === 'function'){ W.show('scMain'); await W.refreshAll(false); }
+    if (fn && typeof W[fn] === 'function') W[fn]();
+  }catch(e){ console.warn('부모 화면 이동 실패', fn, e); }
+}
+async function parentRefresh(){ try{ if (W && typeof W.refreshAll === 'function') await W.refreshAll(false); }catch(e){} }
+
+/* ═══════════════════════ 자녀폰 : 지금 잠겨야 하나 (자녀앱 규칙을 그대로) ═══════════════════════ */
+function hm(s){ const m = String(s || '').match(/^(\d{1,2}):(\d{2})$/); return m ? (+m[1]) * 60 + (+m[2]) : null; }
+function inDt(now){
+  if (pol('dt_enabled') !== 'true') return false;
+  const mins = now.getHours() * 60 + now.getMinutes(), d = now.getDay();
+  const span = idx => { const v = String(pol('dt_day_' + idx) || ''); const [a, b] = v.split('|'); return [hm(a), hm(b)]; };
+  const [s, e] = span(d + 1);
+  if (s != null && e != null){ if (s < e ? (mins >= s && mins < e) : (mins >= s)) return true; }
+  const [ps, pe] = span(((d + 6) % 7) + 1);   // 어젯밤에 시작해 오늘 아침에 끝나는 취침
+  if (ps != null && pe != null && ps > pe && mins < pe) return true;
+  return false;
+}
+function bonusToday(){ const v = String(pol('bonus_today') || ''); const [d, m] = v.split('|'); return d === ymd(new Date()) ? (Number(m) || 0) : 0; }
+function todayLimit(){ if (pol('daily_limit_enabled') !== 'true') return -1; const v = Number(pol('limit_day_' + (simNow().getDay() + 1))); return isNaN(v) ? -1 : v; }
+function usedMin(){ return Number(pol('limit_used_min_today')) || 0; }
+function lockState(){
+  if (inDt(simNow())) return 'dt';
+  const L = todayLimit(); if (L >= 0 && usedMin() >= L + bonusToday()) return 'limit';
+  return '';
+}
+let LOCK = '', VIEW = 'home';
+
+/* ═══════════════════════ 자녀폰 화면 ═══════════════════════ */
+function tick(){
+  const n = simNow(), t = n.toLocaleTimeString('ko-KR', { hour:'2-digit', minute:'2-digit', hour12:false });
+  document.querySelectorAll('#child .tm').forEach(e => e.textContent = t);
+  $('hDate').textContent = `${n.getMonth() + 1}월 ${n.getDate()}일 ${DAYS[n.getDay()]}요일`;
+}
+setInterval(tick, 5000);
+function cshow(id){ document.querySelectorAll('#child .cs').forEach(e => e.classList.toggle('on', e.id === id)); }
+function ctoast(m, ms){ const t = $('cToast'); t.textContent = m; t.classList.add('on'); clearTimeout(ctoast.t); ctoast.t = setTimeout(() => t.classList.remove('on'), ms || 2600); }
+function paintHome(){
+  const L = todayLimit(), b = bonusToday();
+  $('hUse').innerHTML = L >= 0 ? `오늘 <b>${usedMin()}분</b> 썼어요 · 오늘 한도 <b>${L + b}분</b>${b ? ` (보너스 +${b}분)` : ''}` : `오늘 <b>${usedMin()}분</b> 썼어요`;
+  const show = ['com.kakao.talk','viva.republica.toss','com.iscreammedia.app.hiclass.android','com.nhn.android.naverdic',
+                'com.sinaemobile.sinaetube','kr.ebs.middle.player','com.Classting','classcard.net',
+                'net.daum.android.map','com.iloen.melon','com.android.chrome','com.sec.android.app.camera'];
+  const nm = Object.fromEntries(B.apps);
+  $('hGrid').innerHTML = show.map(p => `<div class="ap" data-app="${p}"><img src="${ico(p)}" alt="">${nm[p] || ''}</div>`).join('');
+}
+function view(v){
+  VIEW = v;
+  if (LOCK){ paintLock(); cshow('csLock'); return; }
+  if (v === 'home'){ paintHome(); cshow('csHome'); }
+  else if (v === 'talk'){ paintTalk(); cshow('csTalk'); }
+  else if (v === 'cam'){ cshow('csCam'); }
+  else if (v === 'chrome'){ cshow('csChrome'); }
+  else if (v === 'tubeblock'){ paintTubeBlock(); cshow('csTubeBlock'); }
+  else if (v === 'tube'){ paintTube(); cshow('csTube'); }
+  tick();
+}
+$('child').addEventListener('click', e => {
+  const g = e.target.closest('[data-go]'); if (g){ view(g.dataset.go); return; }
+  const a = e.target.closest('[data-app]');
+  if (a){ const p = a.dataset.app;
+    if (p === 'com.kakao.talk') view('talk');
+    else if (p === 'com.sinaemobile.sinaetube') view('tube');
+    else if (p === 'com.sec.android.app.camera') view('cam');
+    else ctoast(`${Object.fromEntries(B.apps)[p]} — 그대로 쓸 수 있어요 🙂`);
+  }
+});
+/* 카톡 */
+let TALK_MINE = [];
+function paintTalk(){
+  const hl = SC && SC.id === 'S1' && STEP === 0 ? 'hl' : '';
+  $('tkBody').innerHTML = `
+    <div class="mRow"><div class="mAv">🐻</div><div><div class="mNm">지우</div><div class="mB">내일 수행평가 범위 어디까지야?</div></div></div>
+    <div class="mMe">3단원 끝까지래!</div>
+    <div class="mRow"><div class="mAv">🐰</div><div><div class="mNm">민서</div><div class="mB">이거 봐 ㅋㅋㅋ 진짜 웃김</div></div></div>
+    <div class="mRow"><div class="mAv">🐰</div><div><div class="lnk ${hl}" id="tkLink"><div class="th">▶</div><div class="tx">[숏츠] 이거 보고 안 웃으면 인정<div class="ur">youtube.com/shorts/…</div></div></div></div></div>
+    ${TALK_MINE.map(m => `<div class="mMe">${m}</div>`).join('')}`;
+}
+$('tkBody').addEventListener('click', e => { if (e.target.closest('#tkLink')) openLink(); });
+$('tkIn').addEventListener('click', () => { TALK_MINE.push(['ㅋㅋㅋ 나중에 볼게','오키 고마워!','나 숙제하러 감 👋'][TALK_MINE.length % 3]); if (TALK_MINE.length > 2) TALK_MINE.shift(); paintTalk(); ctoast('카톡 대화는 그대로 돼요 💬', 1600); event_('child:chat'); });
+function openLink(){
+  const blocked = pol('kakao_inapp_browser_blocked') !== 'false';
+  $('iabUrl').textContent = 'youtube.com/shorts/…'; $('iabPg').innerHTML = ''; $('iabP').style.width = '0';
+  $('iab').classList.add('on'); requestAnimationFrame(() => $('iabP').style.width = '45%');
+  if (blocked){
+    // 자녀앱 실제 동작 : 카톡 인앱 브라우저가 뜨는 순간 닫고 토스트 (BrowserBlockService · 「인터넷 연결은 제한되어 있어요.」)
+    setTimeout(() => { $('iab').classList.remove('on'); ctoast('인터넷 연결은 제한되어 있어요.'); event_('child:linkBlocked'); }, 650);
+  } else {
+    setTimeout(() => { $('iabP').style.width = '100%';
+      $('iabPg').innerHTML = '<div style="font-size:44px">🌐</div><b style="color:#111">링크가 열렸어요</b>부모님이 「링크로 인터넷 열기」 차단을 끄시면<br>이렇게 열려요. 다시 켜면 바로 막혀요.'; event_('child:linkOpened'); }, 700);
+  }
+}
+$('iabX').addEventListener('click', () => $('iab').classList.remove('on'));
+/* QR · 크롬 · 시내YouTube */
+const QV = { video_id:'SnDemoMat01', title:'[중2 수학] 일차함수 개념 한 번에 정리', channel:'수학 선생님 채널' };
+let TB_SENT = false;
+$('camShot').addEventListener('click', () => { view('chrome'); setTimeout(() => { view('tubeblock'); event_('child:tubeBlocked'); }, 900); });
+function paintTubeBlock(){
+  $('tbTitle').textContent = QV.title;
+  const ok = DB._tube.videos.some(v => v.video_id === QV.video_id);
+  const hl = SC && SC.id === 'S8' && STEP === 1 ? 'hl' : '';
+  if (ok) $('tbAct').innerHTML = `<div class="ok">이미 허락된 영상이에요 👍\n시내YouTube 에서 바로 볼 수 있어요.</div><div class="gb" data-go="tube">📺 시내YouTube 열기</div>`;
+  else if (TB_SENT) $('tbAct').innerHTML = `<div class="rb dis">✅ 요청 보냄</div><div class="ok">요청했어요 ✅\n부모님 폰의 「시내YouTube → 자녀의 허락 요청」에 이 영상이 떠요.\n허락해 주시면 시내YouTube 에 나타나요.</div><div class="gb" data-go="tube">📺 시내YouTube 열기</div>`;
+  else $('tbAct').innerHTML = `<div class="rb ${hl}" id="tbAsk">🙋 부모님께 이 영상 요청하기</div><div class="gb" data-go="home">닫기</div>`;
+}
+$('tbAct').addEventListener('click', e => {
+  if (!e.target.closest('#tbAsk')) return;
+  $('tbAct').innerHTML = `<div class="rb dis">요청을 보내고 있어요…</div>`;
+  setTimeout(() => {
+    TB_SENT = true;
+    if (!DB._tube.reqs.some(r => r.video_id === QV.video_id && r.status === 'pending'))
+      DB._tube.reqs.push({ video_id:QV.video_id, title:QV.title, channel:QV.channel, requested_at:new Date().toISOString(), status:'pending' });
+    paintTubeBlock(); event_('child:tubeRequested');
+  }, 700);
+});
+function paintTube(){
+  $('tuIcon').src = ico('com.sinaemobile.sinaetube');
+  const vids = DB._tube.videos.slice(0, 3);
+  $('tuList').innerHTML = vids.length ? vids.map((v, i) => `<div class="tuV"><div class="th" style="${i ? 'background:linear-gradient(135deg,#34B892,#2F80ED)' : ''}">▶<small>${i ? '9:41' : '12:05'}</small></div><div class="t">${v.title}</div><div class="s">${v.channel} · 부모님이 허락한 영상</div></div>`).join('')
+    : `<div class="tuE">아직 볼 수 있는 영상이 없어요.<br>부모님이 허락하면 여기에 나타나요.</div>`;
+  const pend = DB._tube.reqs.some(r => r.status === 'pending' && !DB._tube.videos.some(v => v.video_id === r.video_id));
+  if (pend) $('tuList').insertAdjacentHTML('afterbegin', `<div style="margin:0 14px 12px;background:#FFF7E6;border-radius:12px;padding:10px 12px;font-size:13.5px;color:#7A4E00">⏳ 부모님 허락을 기다리는 영상이 1개 있어요</div>`);
+}
+$('tuList').addEventListener('click', e => { if (e.target.closest('.tuV')) ctoast('▶ 허락된 영상만 볼 수 있어요 · 추천·쇼츠 없음', 2200); });
+/* 잠금 화면 (자녀앱 DailyLimitLockActivity · DowntimeLockActivity 문구 그대로) */
+function paintLock(){
+  const el = $('csLock');
+  const sb = `<div class="sb" style="padding:0 2px;color:#fff"><span class="tm"></span><span>📶 🔋</span></div>`;
+  if (LOCK === 'dt'){
+    el.innerHTML = sb + `<div class="ti">🌙 취침 시간</div>
+      <div class="bd">지금은 약속된 취침(사용 제한) 시간입니다.\n긴급전화와 알람만 사용할 수 있습니다.\n\n취침 시간이 끝나면 자동으로 풀립니다.</div>
+      <div class="bb" data-k="call">📞 긴급전화</div><div class="bb" data-k="alarm">⏰ 알람 (시계)</div>
+      <div class="bb" data-k="app">📱 시내모바일 앱 열기</div>
+      <div class="ft">${(String(pol('dt_day_' + (simNow().getDay() + 1)) || '').replace('|', ' ~ '))}</div>`;
+  } else {
+    const req = String(pol('time_request') || '').trim(), age = req ? (Date.now() - Date.parse(req)) / 60000 : -1;
+    const sent = age >= 0 && age < 120;
+    const hl = SC && SC.id === 'S7' && STEP === 0 ? 'hl' : '';
+    el.innerHTML = sb + `<div class="ti">⛔ 일일 사용시간 종료</div>
+      <div class="bd">오늘 쓸 수 있는 시간을 다 썼어요.\n긴급전화는 쓸 수 있어요.\n\n더 쓰고 싶으면 아래 버튼을 눌러 보세요.</div>
+      <div class="bb" data-k="call">📞 긴급전화</div>
+      ${sent ? `<div class="sent"><b>🙋 엄마·아빠에게 알렸어요</b><span>답을 기다리는 중…</span></div>`
+             : `<div class="bb req ${hl}" data-k="req">🙋 더 쓰고 싶다고 알리기</div>`}
+      <div class="bb" data-k="near">🔑 부모님이 옆에 계신가요?</div><div class="bb" data-k="app">📱 시내모바일 앱 열기</div>
+      <div class="used">오늘 ${usedMin()}분 썼어요 · 많이 쓴 3개는<br>카카오톡 16분 · 네이버 사전 8분 · EBS 중학프리미엄 7분</div>
+      <div class="ft">⏰ 자정(밤 12시)이 지나면 다시 쓸 수 있어요</div>`;
+  }
+  tick();
+}
+$('csLock').addEventListener('click', e => {
+  const b = e.target.closest('[data-k]'); if (!b) return;
+  const k = b.dataset.k;
+  if (k === 'req'){ setPol('time_request', new Date().toISOString()); paintLock(); event_('child:timeRequest'); }
+  else if (k === 'call') ctoast('📞 긴급전화는 언제든 걸 수 있어요');
+  else if (k === 'alarm') ctoast('⏰ 알람은 그대로 울려요');
+  else if (k === 'near') ctoast('🔑 부모님이 옆에 계시면 PIN 으로 바로 시간을 줄 수 있어요', 2800);
+  else ctoast('📱 시내모바일 앱이 열려요');
+});
+/* 정책이 바뀌면 잠금 다시 판정 — 실제처럼 조금 뒤에 */
+function reevaluate(delay){
+  clearTimeout(reevaluate.t);
+  reevaluate.t = setTimeout(() => {
+    const was = LOCK; LOCK = lockState();
+    if (was !== LOCK){ view(VIEW); event_(LOCK ? 'child:locked:' + LOCK : 'child:unlocked'); }
+    else if (LOCK) paintLock(); else if (VIEW === 'home') paintHome();
+  }, delay == null ? 700 : delay);
+}
+function onWrite(t, op, rows){
+  if (t === 'policies'){
+    rows.forEach(r => { if (r && r.key === 'time_request' && !r.value) event_('parent:timeCleared'); if (r && r.key === 'bonus_today') event_('parent:bonus'); });
+    reevaluate(); event_('policy', rows);
+  }
+  if (t === '_tube'){ if (VIEW === 'tubeblock') paintTubeBlock(); if (VIEW === 'tube') paintTube(); event_('tube:' + op); }
+}
+
+/* ═══════════════════════ 부모폰 알림 배너 ═══════════════════════ */
+function push(title, body, onTap){
+  $('pushT').textContent = title; $('pushB').textContent = body;
+  $('push').classList.add('on'); $('push').onclick = () => { $('push').classList.remove('on'); onTap && onTap(); };
+  clearTimeout(push.t);   // 2026-11-25 : 누를 때까지 남긴다(9초에 사라져 놓치던 것 · 15-5)
+}
+
+/* ═══════════════════════ 시나리오 ═══════════════════════
+ * 🔴 문구는 실제 동작과 한 줄씩 대조했다 (자녀앱 v67 소스 · 부모웹앱 test.html)
+ *    S1 카톡 링크 : BrowserBlockService 「인터넷 연결은 제한되어 있어요.」 — 빨간 차단화면이 아니라 「닫히고 토스트」다
+ *    S4·S7 하루 한도 : DailyLimitLockActivity · 부모웹앱 paintTimeRequest / grantTimeRequest
+ *    S5 취침 : DowntimeLockActivity (긴급전화·알람)
+ *    S8 교재 QR : BlockInfoActivity 「📺 이 영상은 시내YouTube 에서 볼 수 있어요」 → yt_request → 부모 허락
+ *       ⚠️ 「한 번에 요청」은 자녀앱 v68(아직 미배포) 모양이다. v67 폰은 시내YouTube 화면에서 한 번 더 누른다.
+ */
+const TODAY_LABEL = () => DAYS[new Date().getDay()] + '요일';
+function dtSpanText(){ const v = String(pol('dt_day_' + (new Date().getDay() + 1)) || ''); const [a, b] = v.split('|'); return a && b ? `${kTime(a)} ~ ${kTime(b)}` : '꺼져 있어요'; }
+function kTime(x){ const m = hm(x); if (m == null) return x; const h = Math.floor(m / 60), mm = m % 60; return (h < 12 ? '오전 ' : '오후 ') + ((h % 12) || 12) + '시' + (mm ? ' ' + mm + '분' : ''); }
+const SCENES = {
+  S1: { emoji:'💬', title:'카톡은 그대로,\n카톡 속 링크는 막혀요', short:'카톡 링크',
+    steps:['단톡방에 온 유튜브 링크를 눌러 보세요', '링크가 열리자마자 닫히고 「인터넷 연결은 제한되어 있어요」', '대화는 그대로 돼요 — 아래 입력칸을 눌러 보세요'],
+    tip:'<b>필요한 앱은 쓰고, 그 앱 속 인터넷만 막아요.</b> 오른쪽 부모님 화면에서 카톡 차단을 하나씩 켜고 끌 수 있어요.',
+    staff:'카톡을 열어 주면 링크·광고로 인터넷이 열리는 경우가 많아요. 그 길만 막아요.',
+    real:'옆 시연폰에서 카카오톡 → 아무 대화방 → 링크를 눌러 보세요. 똑같이 바로 닫혀요.',
+    async setup(){ TALK_MINE = []; view('talk'); await parentGo('openKakao'); },
+    on(ev){ if (ev === 'child:linkBlocked' && STEP < 2) step(2, '카톡 대화는 그대로, 링크로 나가는 길만 막혔어요.');
+            if (ev === 'child:chat' && STEP >= 2) done('카톡 대화는 그대로 되고, 링크로 나가는 길만 막혀요.');
+            if (ev === 'child:linkOpened') done('부모님이 차단을 끄면 열리고, 다시 켜면 바로 막혀요.'); } },
+  S4: { emoji:'⏰', title:'부모님이 정하면\n자녀 폰에 바로 걸려요', short:'하루 사용시간',
+    steps:[() => `부모님 화면에서 오늘(${TODAY_LABEL()}) 칸을 눌러요`, '시간을 「0시간 30분」으로 돌리고 「완료」를 눌러요', '자녀 폰이 바로 잠겨요 — 오늘 벌써 47분 썼거든요'],
+    tip:'<b>요일마다 다르게</b> 정할 수 있어요. 화면이 켜져 있으면 무엇을 하든 시간이 세져요.',
+    staff:'집에서도 부모님 폰으로 이렇게 바로 바뀌어요. 아이 폰을 뺏을 필요가 없어요.',
+    real:'옆 시연폰은 하루 사용시간이 걸려 있어요. 직원이 잠긴 화면을 보여 드릴게요.',
+    async setup(){ view('home'); await parentGo('openLimit'); watchSheet(); },
+    on(ev, x){
+      if (ev === 'sheetOpen' && STEP === 0) step(1);
+      if (ev === 'policy'){ const k = 'limit_day_' + (simNow().getDay() + 1);
+        if ((x || []).some(r => r && r.key === k)){ const v = Number(pol(k));
+          if (v >= 0 && v <= usedMin()) step(2); else note(`오늘 한도가 ${v < 0 ? '무제한' : v + '분'}이 됐어요. 47분보다 적게 고르면 바로 잠기는 걸 볼 수 있어요.`); } }
+      if (ev === 'child:locked:limit') done('저장한 순간 자녀 폰이 잠겼어요. 긴급전화는 그대로 돼요.'); } },
+  S7: { emoji:'🙋', title:'아이가 더 쓰고 싶을 땐\n부모님이 정해요', short:'시간 더 주세요',
+    steps:['잠긴 자녀 폰에서 「🙋 더 쓰고 싶다고 알리기」', '부모님 폰에 알림이 와요 — 알림을 눌러요', '15분·30분·1시간 중 골라요 → 바로 풀려요'],
+    tip:'<b>얼마 줄지는 부모님이 정해요.</b> 「오늘은 그만」을 누르면 그대로 잠겨 있어요. 요청은 2시간 지나면 저절로 사라져요.',
+    staff:'예전엔 아이가 부모님께 전화로 졸랐는데, 이제 버튼 하나로 알리고 부모님이 골라 주세요.',
+    real:'옆 시연폰이 잠겨 있으면 「더 쓰고 싶다고 알리기」를 눌러 보세요.',
+    async setup(){ setPol('limit_day_' + (simNow().getDay() + 1), '40'); setPol('daily_limit_enabled', 'true'); setPol('time_request', ''); setPol('bonus_today', '');
+      LOCK = lockState(); view('home'); await parentGo(null); },
+    on(ev){
+      if (ev === 'child:timeRequest'){ step(1); setTimeout(() => push(`🙋 시간을 더 쓰고 싶어해요`, '오늘 쓸 수 있는 시간을 다 썼어요. 눌러서 시간을 줄 수 있어요', async () => { await parentGo(null); step(2); try{ W.scrollTo(0, 0); }catch(e){} }), 900); }
+      if (ev === 'parent:bonus') setTimeout(() => { if (!LOCK) done(`부모님이 고른 만큼 바로 풀렸어요 (오늘 보너스 +${bonusToday()}분).`); }, 900);
+      if (ev === 'parent:timeCleared' && !bonusToday()) note('「오늘은 그만」 — 요청은 사라지고 폰은 그대로 잠겨 있어요.'); } },
+  S5: { emoji:'🌙', title:'밤에는 자녀 폰이\n저절로 쉬어요', short:'취침시간',
+    steps:[() => `오늘(${TODAY_LABEL()}) 취침시간은 ${dtSpanText()} 이에요`, '아래 「🌙 취침 시각으로 돌려 보기」를 눌러요', '취침 화면이 떠요 — 긴급전화·알람은 그대로'],
+    tip:'<b>요일마다 시간을 다르게</b> 정할 수 있어요. 학원 시간처럼 낮에 잠깐 쉬게 하는 것도 돼요.',
+    staff:'밤에는 긴급전화와 알람만 돼요. 꼭 필요한 앱은 따로 열어 둘 수도 있어요.',
+    real:'옆 시연폰은 직원이 취침시간을 지금 시각으로 걸어서 보여 드릴게요.',
+    extra:[['🌙 취침 시각으로 돌려 보기', () => { const st = hm(String(pol('dt_day_' + (new Date().getDay() + 1)) || '22:00').split('|')[0]) ?? 1320; const n = new Date(); const t = new Date(n); t.setHours(Math.floor(st / 60), st % 60 + 5, 0, 0); SIM_OFFSET = t - n; tick(); reevaluate(300); }],
+           ['☀️ 지금 시각으로', () => { SIM_OFFSET = 0; tick(); reevaluate(300); }]],
+    async setup(){ SIM_OFFSET = 0; view('home'); await parentGo('openDt'); step(1); },
+    on(ev){ if (ev === 'child:locked:dt') done(`취침 시각이 되자 취침 화면으로 바뀌었어요. ${dtSpanText().split(' ~ ')[1] || '아침'}에 저절로 풀려요.`); } },
+  S8: { emoji:'📚', title:'교재 QR 영상은\n부모님 허락 받고 봐요', short:'교재 QR 영상',
+    steps:['자녀 폰으로 교재 QR 코드를 찍어요 (동그란 버튼)', '유튜브는 막히고 — 「🙋 부모님께 이 영상 요청하기」', '부모님 화면 「자녀의 허락 요청」에서 [허락] → 시내YouTube 에 나타나요'],
+    tip:'<b>시내YouTube 는 부모님이 허락한 영상만</b> 나오는 유튜브예요. 추천 영상·쇼츠로 빠질 길이 없어요.',
+    staff:'인강·교재 영상 때문에 유튜브를 열어 주면 쇼츠로 빠져요. 허락한 영상만 보게 해요.',
+    real:'옆 시연폰에서 시내YouTube 를 열어 보세요. 허락된 영상만 나와요.',
+    async setup(){ TB_SENT = false; DB._tube.reqs = []; DB._tube.videos = DB._tube.videos.filter(v => v.video_id !== QV.video_id); view('cam'); await parentGo(null); },
+    on(ev){
+      if (ev === 'child:tubeBlocked') step(1);
+      if (ev === 'child:tubeRequested'){ step(2); setTimeout(() => parentGo('openTube'), 700); }
+      if (ev === 'tube:approve'){ done('허락한 영상이 자녀 폰 시내YouTube 에 바로 나타났어요.'); setTimeout(() => view('tube'), 1200); }
+      if (ev === 'tube:reject') note('거절하면 자녀 폰엔 안 나타나요.'); } }
+};
+const ALL = ['S1','S4','S7','S8','S5'];
+
+/* 코스 · 단계 */
+let COURSE = ALL.slice(), CI = 0, SC = null, STEP = 0, SEEN = new Set(), FREE = null;
+function paintCourse(){
+  $('cCourse').innerHTML = COURSE.map((id, i) => `<button class="cc ${i === CI && !FREE ? 'on' : ''} ${SEEN.has(id) ? 'done' : ''}" data-i="${i}">${SEEN.has(id) ? '✓ ' : ''}${SCENES[id].emoji} ${SCENES[id].short}</button>`).join('');
+}
+$('cCourse').addEventListener('click', e => { const b = e.target.closest('.cc'); if (b) startScene(+b.dataset.i); });
+function paintGuide(){
+  const s = SC;
+  $('gEmoji').textContent = s.emoji; $('gTitle').innerHTML = s.title.replace(/\n/g, '<br>');
+  $('gSteps').innerHTML = s.steps.map((t, i) => `<div class="gs ${i === STEP ? 'on' : i < STEP ? 'done' : ''}"><span class="n">${i < STEP ? '✓' : i + 1}</span><span>${typeof t === 'function' ? t() : t}</span></div>`).join('');
+  $('gExtra').innerHTML = (s.extra || []).map((x, i) => `<button class="btn sm ${i ? '' : 'warm'}" data-x="${i}">${x[0]}</button>`).join('');
+  $('gTip').innerHTML = '💡 ' + s.tip;
+  $('staff').innerHTML = LS.get('staffLine', '1') === '1' ? '🗣 <b>직원 한마디</b> · ' + s.staff : '';
+}
+$('gExtra').addEventListener('click', e => { const b = e.target.closest('[data-x]'); if (b && SC.extra) SC.extra[+b.dataset.x][1](); });
+function step(n, msg){ if (n > STEP){ STEP = n; paintGuide(); if (msg) note(msg); if (SC.id === 'S1' && VIEW === 'talk') paintTalk(); } }
+function note(m){ const d = $('gDone'); d.style.background = 'var(--blueS)'; d.style.color = 'var(--blue2)'; d.textContent = '👉 ' + m; d.classList.add('on'); }
+function done(m){ STEP = SC.steps.length; SEEN.add(SC.id); paintGuide(); paintCourse();
+  const d = $('gDone'); d.style.background = ''; d.style.color = ''; d.innerHTML = '✅ ' + m; d.classList.add('on'); LS.set('cnt:' + ymd(new Date()) + ':' + SC.id, String(Number(LS.get('cnt:' + ymd(new Date()) + ':' + SC.id, '0')) + 1)); }
+function event_(ev, x){ if (SC && SC.on) try{ SC.on(ev, x); }catch(e){ console.warn(e); } }
+let SHEET_T;
+function watchSheet(){ clearInterval(SHEET_T); SHEET_T = setInterval(() => {
+  try{ const sh = W && W.document.getElementById('sheet'); if (sh && !sh.classList.contains('hide')){ event_('sheetOpen'); } }catch(e){}
+  if (!SC || SC.id !== 'S4') clearInterval(SHEET_T); }, 400); }
+async function startScene(i){
+  FREE = null; CI = Math.max(0, Math.min(COURSE.length - 1, i)); SC = Object.assign({ id:COURSE[CI] }, SCENES[COURSE[CI]]); STEP = 0;
+  $('gDone').classList.remove('on'); $('push').classList.remove('on'); $('iab').classList.remove('on');
+  // 장면마다 시연 데이터를 처음 상태로 (앞 장면에서 바꾼 것이 남지 않게)
+  DB = buildDB(); SIM_OFFSET = 0; LOCK = lockState();
+  paintCourse(); paintGuide(); show('scC');
+  if (!W) await loadParent();
+  await SC.setup(); LOCK = lockState(); view(VIEW); paintGuide();
+}
+/* 기능 지도에서 고른 「설명만 하는」 화면 — 부모웹앱 진짜 화면을 연다 */
+async function freeLook(f){
+  FREE = f; SC = { id:'FREE', emoji:f.e, title:f.t, steps:['오른쪽 부모님 화면을 직접 눌러 보세요', '궁금한 건 직원에게 물어보세요'], tip:f.d, staff:f.staff || '실제 부모님 관리 화면이에요. 편하게 눌러 보세요.' };
+  STEP = 0; DB = buildDB(); SIM_OFFSET = 0; LOCK = lockState();
+  $('gDone').classList.remove('on'); paintCourse(); paintGuide(); show('scC');
+  if (!W) await loadParent();
+  view('home'); await parentGo(f.open);
+}
+$('cNext').addEventListener('click', () => { if (FREE || CI >= COURSE.length - 1) openWrap(); else startScene(CI + 1); });
+$('cPrev').addEventListener('click', () => { if (FREE) startScene(CI); else if (CI > 0) startScene(CI - 1); else show('scB'); });
+$('cReal').addEventListener('click', () => modal('📱 옆 진짜 폰으로 해 보세요', (SC && SC.real) || '옆에 있는 진짜 시연폰으로 똑같이 해 보실 수 있어요.', [['좋아요', null, 'pri']]));
+$('cHome').addEventListener('click', goHome);
+$('cMap').addEventListener('click', openMap);
+
+/* ═══════════════════════ A. 대기화면 ═══════════════════════ */
+const AH = [
+  ['필요한 앱은 쓰고,<br><em>인터넷은 막아요</em>', '카톡·토스·하이클래스·네이버사전은 그대로 쓰고<br>그 앱 속 링크·유튜브로 빠지는 길만 막아요'],
+  ['카톡 링크를 눌러도<br><em>인터넷이 안 열려요</em>', '단톡방 링크·광고로 유튜브·인터넷에 들어가는 길까지 막아요'],
+  ['부모님 폰으로<br><em>바로 관리해요</em>', '하루 사용시간·취침시간을 정하면 자녀 폰에 바로 걸려요'],
+  ['공부 영상은<br><em>허락한 것만</em>', '교재 QR 영상은 부모님이 허락한 것만 시내YouTube 에서 봐요']
+];
+let AI = 0, ATIMER;
+function paintA(){
+  const [h, s] = AH[AI]; const hd = $('aHead'), sb = $('aSub');
+  hd.style.opacity = 0; sb.style.opacity = 0; hd.style.transform = 'translateY(8px)';
+  setTimeout(() => { hd.innerHTML = h; sb.innerHTML = s; hd.style.opacity = 1; sb.style.opacity = 1; hd.style.transform = 'none'; }, 260);
+  $('aDots').innerHTML = AH.map((_, i) => `<i class="${i === AI ? 'on' : ''}"></i>`).join('');
+}
+function startA(){ clearInterval(ATIMER); AI = 0; paintA(); ATIMER = setInterval(() => { AI = (AI + 1) % AH.length; paintA(); }, 4200); }
+$('aGrid').innerHTML = [['com.kakao.talk','카카오톡',1],['viva.republica.toss','토스',1],['com.iscreammedia.app.hiclass.android','하이클래스',1],
+  ['com.nhn.android.naverdic','네이버 사전',1],['com.sinaemobile.sinaetube','시내YouTube',1],['kr.ebs.middle.player','EBS 중학',1],
+  ['net.daum.android.map','카카오맵',1],['com.Classting','클래스팅',1],['classcard.net','클래스카드',1]]
+  .map(([p, n, ok]) => `<div class="aApp"><img src="${ico(p)}" alt="">${n}${ok ? '<b>✓</b>' : ''}</div>`).join('');
+$('scA').addEventListener('click', () => { clearInterval(ATIMER); show('scB'); });
+
+/* ═══════════════════════ B. 걱정 고르기 ═══════════════════════ */
+const WORRY = [
+  ['yt','📺','유튜브·쇼츠',['S8','S1']], ['kakao','💬','카톡 링크·광고',['S1']], ['time','⏰','하루 종일 폰만 봐요',['S4']],
+  ['night','🌙','밤늦게까지 해요',['S5']], ['study','📚','공부 영상은 봐야 해요',['S8']], ['fight','🙋','시간 때문에 싸워요',['S7','S4']],
+  ['game','🎮','게임',['S4','S1']], ['need','🧩','필요한 앱은 써야 해요',['S1']]
+];
+$('bTiles').innerHTML = WORRY.map(w => `<button class="tile" data-w="${w[0]}"><span class="e">${w[1]}</span>${w[2]}</button>`).join('');
+$('bTiles').addEventListener('click', e => { const t = e.target.closest('.tile'); if (t){ t.classList.toggle('on'); $('bNote').innerHTML = '💡 공신폰은 <b>갤럭시</b>로 만들어요'; } });
+$('bGrade').addEventListener('click', e => { const c = e.target.closest('.chip'); if (!c) return; document.querySelectorAll('#bGrade .chip').forEach(x => x.classList.toggle('on', x === c)); });
+$('bGo').addEventListener('click', () => {
+  const on = [...document.querySelectorAll('#bTiles .tile.on')].map(t => t.dataset.w);
+  if (!on.length){ $('bNote').innerHTML = '<span id="bErr">👆 걱정되는 걸 하나 이상 골라 주세요</span>'; return; }
+  const list = [];
+  on.forEach(w => WORRY.find(x => x[0] === w)[3].forEach(s => { if (!list.includes(s)) list.push(s); }));
+  ['S4','S7'].forEach(s => { if (!list.includes(s) && list.length < 5) list.push(s); });   // 부모님 관리는 늘 보여 드린다
+  COURSE = list.slice(0, 5); SEEN = new Set(); startScene(0);
+});
+$('bAll').addEventListener('click', () => { COURSE = ALL.slice(); SEEN = new Set(); startScene(0); });
+
+/* ═══════════════════════ F. 기능 지도 ═══════════════════════
+ * 🔴 설명은 실제 기능과 맞춘 것만 적었다. 시연(▶)이 없는 칸은 부모웹앱 진짜 화면을 연다. */
+const FA = [
+  { e:'✅', t:'필요한 앱은 그대로', d:'카톡·토스·하이클래스·네이버사전처럼 필요한 앱은 써요', s:'S1' },
+  { e:'🚫', t:'앱 속 인터넷 차단', d:'카톡 링크·광고로 인터넷·유튜브에 들어가는 길을 막아요', s:'S1' },
+  { e:'📚', t:'교재 QR 영상은 허락받고', d:'막힌 영상을 부모님께 바로 요청해요', s:'S8' },
+  { e:'🙋', t:'「시간 더 주세요」', d:'다 쓰면 버튼 하나로 부모님께 알려요', s:'S7' },
+  { e:'🌙', t:'취침시간엔 쉬어요', d:'긴급전화·알람은 그대로 돼요', s:'S5' },
+  { e:'🛡', t:'앱 지우기·초기화 막기', d:'설정에서 지우거나 초기화해서 푸는 길을 막아요', open:'openSecurity', staff:'아이들이 설정에서 풀어 보려고 하는 길을 매장에서 막아 드려요.' }
+];
+const FB = [
+  { e:'⏰', t:'하루 사용시간', d:'요일마다 따로 정해요', s:'S4' },
+  { e:'🌙', t:'취침시간', d:'요일마다 몇 시부터 몇 시까지', s:'S5' },
+  { e:'🙋', t:'요청 허락하기', d:'얼마 줄지는 부모님이 골라요', s:'S7' },
+  { e:'📺', t:'볼 영상 골라 주기', d:'시내YouTube 에 허락한 영상만', s:'S8' },
+  { e:'📷', t:'앱별 시간', d:'앱마다 하루 몇 분까지', open:'openApps' },
+  { e:'📊', t:'사용기록', d:'오늘·지난 7일 어떤 앱을 얼마나', open:'openHistory' }
+];
+let MAP_FROM = 'scA';
+function openMap(){
+  MAP_FROM = document.querySelector('.scr.on').id;
+  const it = f => `<button class="fi ${f.s && SEEN.has(f.s) ? 'seen' : ''}" data-k="${FA.includes(f) ? 'A' : 'B'}:${(FA.includes(f) ? FA : FB).indexOf(f)}"><span class="e">${f.e}</span><span><div class="t">${f.t}</div><div class="d">${f.d}</div></span><span class="g">${f.s ? (SEEN.has(f.s) ? '✓ 봤어요' : '▶ 시연') : '👀 화면 보기'}</span></button>`;
+  $('fA').innerHTML = FA.map(it).join(''); $('fB').innerHTML = FB.map(it).join(''); show('scF');
+}
+$('fGrid').addEventListener('click', e => {
+  const b = e.target.closest('.fi'); if (!b) return;
+  const [g, i] = b.dataset.k.split(':'); const f = (g === 'A' ? FA : FB)[+i];
+  if (f.s){ let k = COURSE.indexOf(f.s); if (k < 0){ COURSE.push(f.s); k = COURSE.length - 1; } startScene(k); }
+  else freeLook(f);
+});
+$('fBack').addEventListener('click', () => show(MAP_FROM === 'scF' ? 'scA' : MAP_FROM));
+
+/* ═══════════════════════ G. 마무리 ═══════════════════════ */
+function openWrap(){
+  const seen = ALL.filter(id => SEEN.has(id));
+  $('gList').innerHTML = (seen.length ? seen : COURSE).map(id => `<div class="gl"><i>${SEEN.has(id) ? '✓' : '·'}</i>${SCENES[id].emoji} ${SCENES[id].title.replace(/\n/g, ' ')}</div>`).join('');
+  $('gQr').innerHTML = `<div class="qr">${B.qr.kakao}<b>카카오톡 채널</b><span>시내모바일 1호점</span></div><div class="qr">${B.qr.home}<b>홈페이지</b><span>www.시내모바일.com</span></div>`;
+  show('scG');
+}
+$('gMap').addEventListener('click', openMap);
+$('gHomeBtn').addEventListener('click', goHome);
+
+/* ═══════════════════════ 공용 ═══════════════════════ */
+function show(id){ document.querySelectorAll('.scr').forEach(s => s.classList.toggle('on', s.id === id)); if (id === 'scA') startA(); }
+function modal(t, p, btns, extra){
+  $('mT').textContent = t; $('mP').innerHTML = p; $('mExtra').innerHTML = extra || '';
+  $('mBtns').innerHTML = ''; (btns || [['닫기']]).forEach(([lab, fn, cls]) => { const b = document.createElement('button'); b.className = 'btn ' + (cls || ''); b.textContent = lab; b.onclick = () => { $('modal').classList.remove('on'); fn && fn(); }; $('mBtns').appendChild(b); });
+  $('modal').classList.add('on');
+}
+function goHome(){
+  $('modal').classList.remove('on'); SEEN = new Set(); COURSE = ALL.slice(); SC = null; FREE = null; SIM_OFFSET = 0;
+  document.querySelectorAll('#bTiles .tile').forEach(t => t.classList.remove('on'));
+  DB = buildDB(); LOCK = ''; VIEW = 'home';
+  if (W){ PARENT_HTML = ''; loadParent(); }   // 부모 화면도 처음 상태로 + 인터넷 되면 최신 부모웹앱으로 (안 되면 저장해 둔 것)
+  show('scA');
+}
+/* 3분 아무도 안 만지면 처음으로 */
+let IDLE_T;
+function poke(){ clearTimeout(IDLE_T); IDLE_T = setTimeout(() => { if (!$('scA').classList.contains('on')) goHome(); }, IDLE_MS); }
+document.addEventListener('pointerdown', poke, true); poke();
+
+/* 직원 패널 : 왼쪽 위 로고를 3초 꾹 → 직원 PIN */
+let LP_T;
+['pointerdown'].forEach(ev => $('staffKey').addEventListener(ev, () => { LP_T = setTimeout(staffPin, 2500); }));
+['pointerup','pointerleave','pointercancel'].forEach(ev => $('staffKey').addEventListener(ev, () => clearTimeout(LP_T)));
+function staffPin(){
+  let buf = '';
+  const pad = `<div id="pinDots">○○○○</div><div id="staffPad">${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(n => `<button data-n="${n}">${n}</button>`).join('')}</div>`;
+  modal('🔑 직원 확인', '직원 비밀번호 4자리를 눌러 주세요', [['닫기']], pad);
+  $('staffPad').onclick = e => { const b = e.target.closest('button'); if (!b) return; const n = b.dataset.n;
+    if (n === '⌫') buf = buf.slice(0, -1); else if (n !== '') buf += n;
+    $('pinDots').textContent = '●'.repeat(buf.length) + '○'.repeat(4 - buf.length);
+    if (buf.length === 4){ if (buf === LS.get('staffPin', '0000')) staffPanel(); else { buf = ''; $('pinDots').textContent = '틀렸어요'; } } };
+}
+function staffPanel(){
+  const d = ymd(new Date()); const cnt = ALL.map(id => `${SCENES[id].short} ${LS.get('cnt:' + d + ':' + id, '0')}번`).join(' · ');
+  const lineOn = LS.get('staffLine', '1') === '1';
+  modal('🛠 직원 메뉴', `오늘 시연 : ${cnt}<br><span style="font-size:15px">진짜 서버로 나가려다 막힌 요청 : <b>${ALARMS}건</b> (0 이어야 정상)</span>`, [
+    [lineOn ? '직원 한마디 숨기기' : '직원 한마디 보이기', () => { LS.set('staffLine', lineOn ? '0' : '1'); if (SC) paintGuide(); }],
+    ['부모 화면 다시 열기', () => { PARENT_HTML = ''; loadParent().then(() => SC && SC.setup && SC.setup()); }],
+    ['비밀번호 바꾸기', () => { const v = prompt('새 직원 비밀번호 (숫자 4자리)'); if (/^[0-9]{4}$/.test(v || '')) LS.set('staffPin', v); }],
+    ['처음으로', goHome], ['닫기', null, 'pri']
+  ]);
+}
+
+/* QR 상자(자녀폰 카메라) — 진짜로 찍히는 QR 은 아니다 */
+$('qrBox').innerHTML = B.qr.home.replace('<svg', '<svg style="width:110px;height:110px"');
+
+/* 오프라인 */
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+/* 시작 */
+DB = buildDB(); paintHome(); view('home'); startA();
+loadParent();   // 미리 열어 둔다 (S5e 에서 처음 여는 데 1~2초 걸린다)
+</script>
+</body>
+</html>
