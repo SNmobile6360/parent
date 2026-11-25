@@ -175,7 +175,7 @@ input{font:inherit}
       <div class="st" data-s="2"><i>3</i><span><b>🔑 풀어 주기</b>로 다시 풀어 보세요.</span></div>
       <div class="st" data-s="3"><i>4</i><span><b>⏰ 오늘 시간 다 썼어요</b>를 누르면 아이 폰에 「사용 시간 끝」이 떠요.</span></div>
       <div class="st" data-s="4"><i>5</i><span>아이 폰에서 <b>「🙋 더 쓰고 싶다고 알리기」</b>를 누르면 여기로 와요. 시간을 골라 주세요.</span></div>
-      <div class="st" data-s="5"><i>6</i><span><b>🛡️ Play 스토어</b> · <b>📵 카톡 막기</b>도 눌러 보세요. 아이 폰에서 아이콘이 사라지거나 회색이 돼요.</span></div>
+      <div class="st" data-s="5"><i>6</i><span><b>🛡️ Play 스토어</b> · <b>📵 카톡 막기</b>도 눌러 보세요. 아이 폰에서 아이콘이 생기거나 사라지거나 회색이 돼요.</span></div>
     </div>
     <a class="sim" href="sim.html">아이 폰이 없을 때 — 그림으로 보기</a>
   </div>
@@ -212,8 +212,8 @@ input{font:inherit}
       </button>
       <button class="bb" type="button" id="bPlay">
         <span class="e" style="background:var(--blueS)">🛡️</span>
-        <b id="bPlayT">Play 스토어 막기</b>
-        <span id="bPlayS">아이콘이 통째로 사라져서<br>새 앱을 못 깔아요</span>
+        <b id="bPlayT">Play 스토어 잠깐 열어 주기</b>
+        <span id="bPlayS">지금은 초강력 차단 중<br>(아이 폰에 아이콘이 없어요)</span>
       </button>
       <button class="bb" type="button" id="bKakao">
         <span class="e" style="background:#FFF6C2">📵</span>
@@ -448,8 +448,9 @@ input{font:inherit}
   function paintToggles(){
     var ps = POL.play_store_blocked && POL.play_store_blocked.v === 'true';
     $('bPlay').classList.toggle('onState', ps);
-    $('bPlayT').textContent = ps ? 'Play 스토어 다시 열기' : 'Play 스토어 막기';
-    $('bPlayS').innerHTML = ps ? '지금 막혀 있어요<br>(아이콘이 사라졌어요)' : '아이콘이 통째로 사라져서<br>새 앱을 못 깔아요';
+    // 평소(매장 기본 셋팅) = 막힘 → 「잠깐 열어 주기」가 기본 단추
+    $('bPlayT').textContent = ps ? 'Play 스토어 잠깐 열어 주기' : 'Play 스토어 다시 막기';
+    $('bPlayS').innerHTML = ps ? '지금은 초강력 차단 중<br>(아이 폰에 아이콘이 없어요)' : '지금 열려 있어요<br>누르면 아이콘이 사라져요';
     var kk = blockedList().indexOf(KAKAO) >= 0;
     $('bKakao').classList.toggle('onState', kk);
     $('bKakaoT').textContent = kk ? '카톡 다시 열기' : '카톡 잠깐 막기';
@@ -459,7 +460,7 @@ input{font:inherit}
     var on = !(POL.play_store_blocked && POL.play_store_blocked.v === 'true');
     say('wait', '📨', '아이 폰에 보내는 중… <b>손에 든 폰을 보세요!</b>');
     await save([['play_store_blocked', String(on)]]);
-    watchAck('play_store_blocked', String(on), on ? '<b>Play 스토어가 사라졌어요!</b> 아이 폰 홈 화면에서 찾아 보세요. 새 앱을 못 깔아요.' : 'Play 스토어가 다시 보여요.');
+    watchAck('play_store_blocked', String(on), on ? '<b>Play 스토어가 사라졌어요!</b> 아이 폰에서 찾아 보세요. 새 앱을 못 깔아요.' : '<b>Play 스토어가 생겼어요.</b> 부모님이 열어 줄 때만 이렇게 받을 수 있어요.');
     step(5);
   }); };
   $('bKakao').onclick = function(){ act(async function(){
@@ -509,24 +510,21 @@ input{font:inherit}
   //   🔴 화면에는 「다른 공신폰·다른 앱은 뚫려요」라고 쓰지 않는다(표시광고법 비방 · 실증책임). 「아이들이 쓰는 길 — 우리 폰은 막아요」 + 검증 질문.
   //   steps 는 시연폰(SM-M156S)에서 실제로 누른 순서다. 앱이 업데이트되면 메뉴 이름이 바뀔 수 있다.
   var ROUTES = [
+    { id:'kakao', e:'💬', t:'카톡 맨 위 광고', one:'친구 탭 광고를 눌러 인터넷 열기', auto:true,
+      steps:['<b>카카오톡</b>을 열어요','<b>친구 탭</b> 맨 위 <b>AD 광고</b>를 눌러요','광고 페이지(인터넷)가 열리려고 해요'],
+      end:'카톡 안 인터넷 창이 <b>열리자마자 닫혀요.</b> 대화방 링크도 똑같이 막아요. 채팅 · 단톡방은 그대로예요.' },
     { id:'gallery', e:'🖼️', t:'갤러리 → 설정 → 개인정보 처리방침', one:'사진 앱 속 안내 글로 인터넷 열기', auto:true,
-      steps:['<b>갤러리</b>를 열어요','오른쪽 아래 <b>☰ 메뉴 → ⚙️ 설정</b>','맨 아래 <b>갤러리 정보</b>','<b>개인정보 처리방침</b>을 눌러요 — 인터넷 화면이 열리려고 해요'],
-      end:'인터넷 화면이 뜨는 순간 닫아요.' },
-    { id:'sms', e:'✉️', t:'문자 속 링크', one:'문자로 온 주소를 눌러 인터넷 열기', auto:true,
+      steps:['<b>갤러리</b>를 열어요','아래 <b>메뉴 → 설정</b>','<b>개인정보 처리방침</b>을 눌러요 — 인터넷 화면이 열리려고 해요'],
+      end:'<b>「🔒 사용할 수 없습니다」</b> 화면으로 바로 막아요. 사진 보기는 그대로예요.' },
+    { id:'dict', e:'📖', t:'네이버사전 → 네이버 첫 화면', one:'사전에서 네이버 검색으로 빠져나가기', auto:true,
+      steps:['<b>네이버사전</b>을 열어요','왼쪽 위 <b>「네이버」</b> 글자를 눌러요','네이버 첫 화면(인터넷 검색)이 열리려고 해요'],
+      end:'인터넷 주소가 <b>안 열려요.</b> 단어 찾기는 그대로 써요.' },
+    { id:'sms', e:'✉️', t:'문자 속 링크', one:'문자로 온 주소를 눌러 인터넷 열기', auto:false,
       steps:['<b>메시지</b> 앱을 열어요','링크가 든 문자를 열어요','<b>링크</b>를 눌러요'],
-      end:'링크로 열린 인터넷을 바로 닫아요. 문자는 그대로 읽고 보낼 수 있어요.' },
-    { id:'kakao', e:'💬', t:'카톡 속 링크 · 광고', one:'대화방 링크 · 친구 탭 광고로 인터넷 열기', auto:true,
-      steps:['<b>카카오톡</b>을 열어요','대화방에서 <b>링크</b>를 눌러요','친구 탭 맨 위 <b>광고</b>를 눌러 봐도 돼요'],
-      end:'카톡 안 인터넷 창을 바로 닫아요. 채팅 · 단톡방은 그대로예요.' },
-    { id:'dict', e:'📖', t:'네이버사전 속 검색', one:'사전에서 인터넷 검색으로 빠져나가기', auto:true,
-      steps:['<b>네이버사전</b>을 열어요','단어를 찾아요','결과 아래 <b>웹 검색 · 블로그</b> 링크를 눌러요'],
-      end:'사전은 그대로 쓰고, 인터넷으로 나가는 길만 닫아요.' },
-    { id:'map', e:'🗺️', t:'네이버지도 속 웹페이지', one:'가게 홈페이지 · 블로그로 빠져나가기', auto:true,
-      steps:['<b>네이버지도</b>에서 가게를 찾아요','<b>홈페이지</b>나 <b>블로그 리뷰</b>를 눌러요'],
-      end:'길 찾기는 그대로 쓰고, 웹페이지로 나가는 길만 닫아요.' },
+      end:'링크로 열린 인터넷을 막아요. 문자는 그대로 읽고 보낼 수 있어요.' },
     { id:'playstore', e:'🛍️', t:'Play 스토어에서 브라우저 받기', one:'새 브라우저 · VPN 앱을 깔아서 뚫기', auto:false,
-      steps:['아이 폰에서 <b>Play 스토어</b>를 찾아 봐요','태블릿 첫 화면에서 <b>🛡️ Play 스토어 막기</b>를 눌러요','다시 찾아 봐요 — <b>아이콘이 없어요</b>'],
-      end:'Play 스토어를 통째로 숨겨 새 앱을 못 깔아요. 깔린 브라우저 · VPN 앱도 막아요.' }
+      steps:['아이 폰에서 <b>Play 스토어</b>를 찾아 봐요 — <b>없어요</b>','태블릿 첫 화면 <b>🛡️ Play 스토어 잠깐 열어 주기</b>를 누르면 생겨요','<b>다시 막기</b>를 누르면 또 사라져요'],
+      end:'평소엔 Play 스토어를 통째로 숨겨 <b>새 앱을 못 깔아요.</b> 부모님이 열어 줄 때만 받아요.' }
   ];
   var curRoute = 0;
   function paintRoutes(){
@@ -574,7 +572,7 @@ input{font:inherit}
     var p = v.split('|'), t = Date.parse(p[2] || '');
     if (isNaN(t) || Date.now() - t > 60000) return;
     var m = $('rMsg');
-    if (p[1] === 'blocked'){ m.className = 'rmsg ok'; m.innerHTML = '🛡️ <b>막혔어요!</b> 인터넷 화면이 열리자마자 닫혔어요. 손에 든 폰을 보세요.'; }
+    if (p[1] === 'blocked'){ m.className = 'rmsg ok'; m.innerHTML = '🛡️ <b>막혔어요!</b> 인터넷으로 빠지는 길이 닫혔어요. 손에 든 폰을 보세요.'; }
     else if (p[1] === 'fail'){ m.className = 'rmsg'; m.innerHTML = '이번엔 끝까지 못 들어갔어요. 손으로 따라 해 보세요.'; }
     else { m.className = 'rmsg wait'; m.innerHTML = '📲 시연폰이 들어가는 중… <b>' + p[1] + '</b>'; }
   }
@@ -582,8 +580,9 @@ input{font:inherit}
   // ↺ 처음으로 — 폰을 원래대로 (다음 손님)
   async function resetAll(quiet){
     await save([['force_lock_until', '0'], ['daily_limit_enabled', 'false'], [todayKey(), '-1'], ['bonus_today', ''], ['time_request', ''],
-                ['play_store_blocked', 'false'], ['blocked_apps', JSON.stringify(blockedList().filter(function(x){ return x !== KAKAO; }))]]);
-    watch = null; $('req').classList.add('hide'); step(0);
+                ['play_store_blocked', 'true'], ['blocked_apps', JSON.stringify(blockedList().filter(function(x){ return x !== KAKAO; }))]]);
+    watch = null;
+    if (POL.demo_runner_ok && POL.demo_runner_ok.v === 'true') { try { await rest(srv(), 'remote_commands', { method:'POST', body:{ child_device_id: CFG.devId, command:'DEMO_RUN', payload:'home', executed:false }, prefer:'return=minimal' }); } catch(_){} }   // 시연폰도 홈 화면으로 $('req').classList.add('hide'); step(0);
     if (!quiet) say('ok', '↺', '처음으로 돌렸어요. 아이 폰도 원래대로 풀려요.');
     else say('', '👇', '먼저 아이 폰을 마음대로 눌러 보세요. 그다음 아래 버튼을 눌러 보세요.');
   }
